@@ -107,17 +107,11 @@ TRUE		= true
 ### then a change to that file would not cause typesetting to be done
 ### on the next "make" command!
 
-EPSFILES	= fig1.eps			\
-		  fig2.eps 			\
-		  fig3.eps
+EPSFILES	= 
 
-FIGFILES	= fig1.tex			\
-		  fig2.tex 			\
-		  fig3.tex
+FIGFILES	= 
 
-PDFFILES	= fig1.pdf			\
-		  fig2.pdf 			\
-		  fig3.pdf
+PDFFILES	= 
 
 STYFILES	= amssymb.sty			\
 		  amssymbols.sty		\
@@ -139,9 +133,7 @@ TEXFILES        = abstract.tex			\
 		  chap3.tex			\
 		  chap4.tex			\
 		  chap5.tex			\
-		  appa.tex			\
-		  appb.tex			\
-		  appc.tex			\
+		  chap6.tex			\
 		  notation.tex
 
 THESIS		= thesis
