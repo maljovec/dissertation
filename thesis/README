@@ -1,0 +1,28 @@
+This is my actual WIP dissertation.
+
+The easiest way to compile this thesis on any Unix platform is to simply type
+
+	make
+
+That runs the rough equivalent of these commands:
+
+	pdflatex thesis.ltx
+	bibtex thesis
+	fgrep -v fsfname thesis.idx | makeindex -c -s thesis.ist > thesis.ind
+	fgrep bioname thesis.idx | fgrep -v '|see' | makeindex -c -s thesis.ist > thesis-bioname.ind
+	fgrep fsfname thesis.idx | fgrep -v '|see' | makeindex -c -s thesis.ist > thesis-fsfname.ind
+
+Repeat them FOUR (4) times to achieve consistency.
+
+If there are no indexes, then repeat just the first two commands four
+times.
+
+During the writing process, the fastest update is done by
+
+	make pdf-pass
+
+It runs pdflatex, bibtex, and makeindex just once.  If the
+bibliography and index are already stable, then only pdflatex needs to
+be run:
+
+	pdflatex thesis.ltx
