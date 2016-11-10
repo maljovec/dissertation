@@ -114,28 +114,28 @@ FIGFILES        =
 PDFFILES        =
 
 STYFILES        = amssymb.sty                   \
-                  amssymbols.sty                \
-                  diagram.sty                   \
-                  dissertationapproval.sty      \
-                  lamsarrow.sty                 \
-                  mythesis.sty                  \
-                  rgb.sty                       \
-                  tgrind.sty                    \
-                  uuthesis-2016-h.sty           \
-                  uuthesis-chapterbib.sty       \
-                  uuthesis-color-headings.sty   \
-                  uuthesis-index.sty
+				  amssymbols.sty                \
+				  diagram.sty                   \
+				  dissertationapproval.sty      \
+				  lamsarrow.sty                 \
+				  mythesis.sty                  \
+				  rgb.sty                       \
+				  tgrind.sty                    \
+				  uuthesis-2016-h.sty           \
+				  uuthesis-chapterbib.sty       \
+				  uuthesis-color-headings.sty   \
+				  uuthesis-index.sty
 
 TEXFILES       = abstract.tex      \
-                 acknowledge.tex   \
-                 chap1.tex         \
-                 chap2.tex         \
-                 chap3.tex         \
-                 chap4.tex         \
-                 chap5.tex         \
-                 chap6.tex         \
-                 notation.tex      \
-                 appa.tex
+				 acknowledge.tex   \
+				 chap1.tex         \
+				 chap2.tex         \
+				 chap3.tex         \
+				 chap4.tex         \
+				 chap5.tex         \
+				 chap6.tex         \
+				 notation.tex      \
+				 appa.tex
 
 THESIS        = thesis
 
@@ -158,61 +158,61 @@ aux:    $(THESIS).aux
 ### OLD: bbl:
 ### OLD:    -$(BIBTEX) $(THESIS)
 bbl:
-    -for f in $(TEXFILES:.tex=) $(THESIS) ;                             \
-    do                                                                  \
-        echo ========== $$f ;                                           \
-        $(FGREP) -s '\bibstyle' $$f.aux >/dev/null && $(BIBTEX) $$f ;   \
-    done || $(TRUE)
+	-for f in $(TEXFILES:.tex=) $(THESIS) ;                             \
+	do                                                                  \
+		echo ========== $$f ;                                           \
+		$(FGREP) -s '\bibstyle' $$f.aux >/dev/null && $(BIBTEX) $$f ;   \
+	done || $(TRUE)
 
 bbl-ind-toc:
-    -$(MAKE) bbl
-    -$(MAKE) indexes
-    -$(MAKE) toc
+	-$(MAKE) bbl
+	-$(MAKE) indexes
+	-$(MAKE) toc
 
 check:   dw spell syntax-check
 
 clean:
-    -$(RM) *.blg
-    -$(RM) *.dvi*
-    -$(RM) *.dw
-    -$(RM) *.ilg
-    -$(RM) *.log
-    -$(RM) *.o
-    -$(RM) *.ser
-    -$(RM) *.tmp
-    -$(RM) *.old
-    -$(RM) *~
-    -$(RM) \#*
-    -$(RM) core
+	-$(RM) *.blg
+	-$(RM) *.dvi*
+	-$(RM) *.dw
+	-$(RM) *.ilg
+	-$(RM) *.log
+	-$(RM) *.o
+	-$(RM) *.ser
+	-$(RM) *.tmp
+	-$(RM) *.old
+	-$(RM) *~
+	-$(RM) \#*
+	-$(RM) core
 
 clobber:    distclean
 
 distclean:  mostlyclean
-    -$(RM) *.aux
-    -$(RM) *.bbl
-    -$(RM) *.idx
-    -$(RM) *.ind
-    -$(RM) *.toc
-    -$(RM) *.lof
-    -$(RM) *.lot
+	-$(RM) *.aux
+	-$(RM) *.bbl
+	-$(RM) *.idx
+	-$(RM) *.ind
+	-$(RM) *.toc
+	-$(RM) *.lof
+	-$(RM) *.lot
 
 dvi:    $(THESIS).dvi
 
 ### NB: Because we do "\input{}" on the extra indexes, they MUST exist:
 ### create empty files if they do not.
 dvi-pass:
-    -$(LATEX) $(THESIS).ltx
-    -$(MAKE) bbl-ind-toc
+	-$(LATEX) $(THESIS).ltx
+	-$(MAKE) bbl-ind-toc
 
 dw:
-    -$(RM) $(THESIS).dw
-    @echo '==================== doubled words ===================='
-    for f in $(TEXFILES) $(TOPFILE) ;           \
-    do                                          \
-        echo ===== $$f ===== ;                  \
-        echo ===== $$f ===== >> $(THESIS).dw ;  \
-        $(DETEX) $$f  | $(DW) >> $(THESIS).dw ; \
-    done
+	-$(RM) $(THESIS).dw
+	@echo '==================== doubled words ===================='
+	for f in $(TEXFILES) $(TOPFILE) ;           \
+	do                                          \
+		echo ===== $$f ===== ;                  \
+		echo ===== $$f ===== >> $(THESIS).dw ;  \
+		$(DETEX) $$f  | $(DW) >> $(THESIS).dw ; \
+	done
 
 ### dummy target for force make to make a rule
 FRC:
@@ -220,57 +220,57 @@ FRC:
 indexes:    $(THESIS).ind
 
 install:
-    @echo There is nothing to install for this package
+	@echo There is nothing to install for this package
 
 maintainer-clean:   distclean
-    @echo "This command is intended for maintainers to use;"
-    @echo "it deletes files that may require special tools to rebuild."
-    -$(RM) $(THESIS).pdf $(THESIS).ps
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+	-$(RM) $(THESIS).pdf $(THESIS).ps
 
 mostlyclean:    clean
 
 ### NB: Because we do "\input{}" on the extra indexes, they MUST exist:
 ### create empty files if they do not.
 pdf-pass:
-    -$(PDFLATEX) $(THESIS).ltx
-    -$(MAKE) bbl-ind-toc
+	-$(PDFLATEX) $(THESIS).ltx
+	-$(MAKE) bbl-ind-toc
 
 pdf:    $(THESIS).pdf
 
 ps: $(THESIS).ps
 
 spell:  $(TEXFILES) $(TOPFILE)
-    -if [ ! -f $(THESIS).sok ] ; then touch $(THESIS).sok ; fi
-    @echo '==================== spelling exceptions ===================='
-    for f in $(TEXFILES) $(TOPFILE) ;                           \
-    do                                                          \
-        echo ===== $$f ===== ;                                  \
-        g=`basename $$f .tex` ;                                 \
-        $(DETEX) $$f  | $(SPELL) -p $(THESIS).sok > $$g.ser;    \
-        if [ -s $$g.ser ] ;                                     \
-        then cat $$g.ser ;                                      \
-        else $(RM) $$g.ser ;                                    \
-        fi ;                                                    \
-    done
+	-if [ ! -f $(THESIS).sok ] ; then touch $(THESIS).sok ; fi
+	@echo '==================== spelling exceptions ===================='
+	for f in $(TEXFILES) $(TOPFILE) ;                           \
+	do                                                          \
+		echo ===== $$f ===== ;                                  \
+		g=`basename $$f .tex` ;                                 \
+		$(DETEX) $$f  | $(SPELL) -p $(THESIS).sok > $$g.ser;    \
+		if [ -s $$g.ser ] ;                                     \
+		then cat $$g.ser ;                                      \
+		else $(RM) $$g.ser ;                                    \
+		fi ;                                                    \
+	done
 
 syntax-check:
-    $(LACHECK) $(THESIS).ltx
+	$(LACHECK) $(THESIS).ltx
 
 thesis: $(THESIS).pdf
 
 toc:    $(THESIS).toc
 
 $(THESIS).aux:
-    -if [ ! -f $(THESIS).aux ] ; then touch $(THESIS).aux ; fi
+	-if [ ! -f $(THESIS).aux ] ; then touch $(THESIS).aux ; fi
 
 ### NB: Because of extensive cross-referencing in the thesis, and in
 ### the bibliography entries, we need FOUR complete passes to reach
 ### consistency!
 $(THESIS).dvi:  Makefile $(THESIS).bbl $(EPSFILES) $(FIGFILES) $(STYFILES) $(TEXFILES) $(TOPFILE)
-    -$(MAKE) dvi-pass
-    -$(MAKE) dvi-pass
-    -$(MAKE) dvi-pass
-    -$(MAKE) dvi-pass
+	-$(MAKE) dvi-pass
+	-$(MAKE) dvi-pass
+	-$(MAKE) dvi-pass
+	-$(MAKE) dvi-pass
 
 ### Rigorously, the .bbl file also depends on the .aux file, but
 ### because that gets created anew each LaTeX run, a dependency on the
@@ -279,27 +279,27 @@ $(THESIS).dvi:  Makefile $(THESIS).bbl $(EPSFILES) $(FIGFILES) $(STYFILES) $(TEX
 ### $(THESIS).bbl:  $(THESIS).bib $(THESIS).aux
 
 $(THESIS).bbl:  $(THESIS).bib
-    -$(MAKE) $(THESIS).aux
-    -$(BIBTEX) $(THESIS)
+	-$(MAKE) $(THESIS).aux
+	-$(BIBTEX) $(THESIS)
 
 ### NB: We remove the fsfname entries from the topic index, but leave
 ### the bioname ones!
 $(THESIS).ind:  FRC $(THESIS).idx $(THESIS).ist
-    $(MV) $(THESIS).idx $(THESIS).idx.old
-    $(FIXIDX) < $(THESIS).idx.old > $(THESIS).idx
-    -$(FGREP) -v fsfname $(THESIS).idx | $(MAKEINDEX) $(MAKEINDEXFLAGS) -s $(THESIS).ist > $@
+	$(MV) $(THESIS).idx $(THESIS).idx.old
+	$(FIXIDX) < $(THESIS).idx.old > $(THESIS).idx
+	-$(FGREP) -v fsfname $(THESIS).idx | $(MAKEINDEX) $(MAKEINDEXFLAGS) -s $(THESIS).ist > $@
 
 ### NB: Because of extensive cross-referencing in the thesis, and in
 ### the bibliography entries, we need FOUR complete passes to reach
 ### consistency!
 $(THESIS).pdf:  Makefile $(THESIS).bbl $(FIGFILES) $(PDFFILES) $(STYFILES) $(TEXFILES) $(TOPFILE)
-    -$(MAKE) pdf-pass
-    -$(MAKE) pdf-pass
-    -$(MAKE) pdf-pass
-    -$(MAKE) pdf-pass
+	-$(MAKE) pdf-pass
+	-$(MAKE) pdf-pass
+	-$(MAKE) pdf-pass
+	-$(MAKE) pdf-pass
 
 $(THESIS).ps:   $(THESIS).dvi
-    $(DVIPS) -o $@ $?
+	$(DVIPS) -o $@ $?
 
 ### This will strip the sections from appearing in the table of contents.
 # $(THESIS).toc:    FRC
@@ -308,8 +308,8 @@ $(THESIS).toc:
 #   $(SED) '/[AB]\.[12]/d' <$(THESIS).toc.old >$(THESIS).toc
 
 uninstall:
-    @echo There is nothing to uninstall for this package
+	@echo There is nothing to uninstall for this package
 
 2:
-    -$(MAKE) pdf-pass
-    -$(MAKE) pdf-pass
+	-$(MAKE) pdf-pass
+	-$(MAKE) pdf-pass
