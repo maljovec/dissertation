@@ -1,0 +1,34 @@
+\def \noopsort #1{}
+
+%% So we are going to temporarily disable the header for this bibliography
+%% by overriding the section command. In order to get it back, we save the
+%% original command as oldsection.
+
+\let\oldsection\section
+\renewcommand{\section}[2]{}
+
+\begin{thebibliography}{10}
+
+\bibitem{BremerMaljovecSaha2014}
+{\sc P.-T. Bremer, \textbf{D.~Maljovec}, A.~Saha, B.~Wang, J.~Gaffney, B.~K. Spears, and
+  V.~Pascucci}, {\em Nd2av: N-dimensional data analysis and visualization -
+  analysis for the national ignition campaign}, Computing and Visualization in
+  Science,  (2014).
+
+\bibitem{MaljovecLiuWang2016}
+{\sc \textbf{D.~Maljovec}, S.~Liu, B.~Wang, D.~Mandelli, P.-T. Bremer, V.~Pascucci, and
+  C.~Smith}, {\em Analyzing simulation-based {PRA} data through traditional and
+  topological clustering: A {BWR} station blackout case study}, Reliability
+  Engineering \& System Safety, 145 (2016), pp.~262--276.
+
+\bibitem{MaljovecWangKupresanin2013}
+{\sc \textbf{D.~Maljovec}, B.~Wang, A.~Kupresanin, G.~Johannesson, V.~Pascucci, and
+  P.-T. Bremer}, {\em Adaptive sampling with topological scores}, International
+  Journal for Uncertainty Quantification, 3 (2013), pp.~119--141.
+
+\end{thebibliography}
+
+%% Now we reset the section command, and just to be clean we will
+%% undefine the other macro so that the state is pristine
+\let\section\oldsection
+\let\oldsection\undefined

@@ -2,32 +2,32 @@
 ### Makefile for Dan Maljovec's University of Utah Thesis.
 ###
 ### Current target list:
-###	all			make .dvi file
-###	aux			make .aux file
-###	bbl			make .bbl file
-###	check			doubled-word, spelling, and syntax checks
-###	clean			remove intermediate automatically-created
-###				files
-###	clobber			same as distclean
-###	distclean		remove most automatically-created files
-###	dvi			make .dvi file
-###	dw			make double-word check
-###	FRC			dummy target
-###	install			install files on system (dummy target)
-###	maintainer-clean	remove absolutely everything that make can
-###				build
-###	mostlyclean		same as clean
-###	pdf			make PDF file(s)
-###	ps			make PostScript file(s)
-###	spell			make spelling check
-###	thesis			same as thesis.dvi
-###	thesis.aux
-###	thesis.dvi
-###	thesis.bbl
-###	thesis.pdf
-###	thesis.ps
-###	thesis.toc
-###	uninstall		uninstall installed files (dummy target)
+### all         make .dvi file
+### aux         make .aux file
+### bbl         make .bbl file
+### check           doubled-word, spelling, and syntax checks
+### clean           remove intermediate automatically-created
+###             files
+### clobber         same as distclean
+### distclean       remove most automatically-created files
+### dvi         make .dvi file
+### dw          make double-word check
+### FRC         dummy target
+### install         install files on system (dummy target)
+### maintainer-clean    remove absolutely everything that make can
+###             build
+### mostlyclean     same as clean
+### pdf         make PDF file(s)
+### ps          make PostScript file(s)
+### spell           make spelling check
+### thesis          same as thesis.dvi
+### thesis.aux
+### thesis.dvi
+### thesis.bbl
+### thesis.pdf
+### thesis.ps
+### thesis.toc
+### uninstall       uninstall installed files (dummy target)
 ###
 ### [20-Oct-2016] -- personalized to my thesis
 ### [16-Mar-2016] -- update for TeX Live and default of PDF output
@@ -37,34 +37,34 @@
 
 BIBTEX          = bibtex
 
-CAT		= /bin/cat
+CAT             = /bin/cat
 
-CP		= /bin/cp -p
+CP              = /bin/cp -p
 
 DETEX           = detex -n
 
 ### Use whichever of these you have:
-DISTILL		= distill
-DISTILL		= ps2pdf
+DISTILL         = distill
+DISTILL         = ps2pdf
 
 ### The dvips-type1 script is a local wrapper that ensures that Type 1
 ### outline fonts are used, instead of bitmap fonts, because Acrobat
 ### Reader does a poor job of displaying the latter.
-DVIPS		= dvips-type1
-DVIPS		= dvips
+DVIPS           = dvips-type1
+DVIPS           = dvips
 
 ### dw is available at ftp://ftp.math.utah.edu/pub/misc/dw.tar.gz
-DW		= dw
+DW              = dw
 
 ### Filter to tweak .idx file entries.  Usually, this would be
 ### a sed script, but for now, it is just a dummy that copies
 ### its input to its output without changes
-FIXIDX		= $(SED) -e 's/\[-\]/-/g' -e 's/\\ / /g'
-FIXIDX		= $(CAT)
+FIXIDX          = $(SED) -e 's/\[-\]/-/g' -e 's/\\ / /g'
+FIXIDX          = $(CAT)
 
-FGREP		= fgrep
+FGREP           = fgrep
 
-LACHECK		= lacheck
+LACHECK         = lacheck
 
 ### Many sites call this latex, with the old 2.09 version available as
 ### latex209, or not at all.  At the University of Utah Mathematics
@@ -74,31 +74,31 @@ LATEX           = latex2e
 ### TeX Live name
 LATEX           = latex
 
-MAKEINDEX	= makeindex
+MAKEINDEX       = makeindex
 
-MAKEINDEXFLAGS	= -c
+MAKEINDEXFLAGS  = -c
 
-MV		= /bin/mv
+MV              = /bin/mv
 
 ### TeX Live name
-PDFLATEX	= pdflatex
+PDFLATEX        = pdflatex
 
 RM              = rm -f
 
 SED             = sed
 
-SHELL		= /bin/sh
+SHELL           = /bin/sh
 
 ### We used to use "spell +file.sok" on Sun Solaris, but GNU/Linux
 ### systems use a different syntax for that command.  Instead, we use
 ### another spelling program, with the -l option to list spelling
 ### exceptions, and later below, with the "-p $(THESIS).sok" option to
 ### supply a private dictionary for this student thesis.
-SPELL		= hunspell -l
+SPELL           = hunspell -l
 
-TOUCH		= touch
+TOUCH           = touch
 
-TRUE		= true
+TRUE            = true
 
 ### ====================================================================
 ### Personal files to be updated for each student.  It is CRITICAL that
@@ -107,47 +107,48 @@ TRUE		= true
 ### then a change to that file would not cause typesetting to be done
 ### on the next "make" command!
 
-EPSFILES	= 
+EPSFILES        =
 
-FIGFILES	= 
+FIGFILES        =
 
-PDFFILES	= 
+PDFFILES        =
 
-STYFILES	= amssymb.sty			\
-		  amssymbols.sty		\
-		  diagram.sty			\
-		  dissertationapproval.sty	\
-		  lamsarrow.sty			\
-		  mythesis.sty			\
-		  rgb.sty			\
-		  tgrind.sty			\
-		  uuthesis-2016-h.sty		\
-		  uuthesis-chapterbib.sty	\
-		  uuthesis-color-headings.sty	\
-		  uuthesis-index.sty
+STYFILES        = amssymb.sty                   \
+                  amssymbols.sty                \
+                  diagram.sty                   \
+                  dissertationapproval.sty      \
+                  lamsarrow.sty                 \
+                  mythesis.sty                  \
+                  rgb.sty                       \
+                  tgrind.sty                    \
+                  uuthesis-2016-h.sty           \
+                  uuthesis-chapterbib.sty       \
+                  uuthesis-color-headings.sty   \
+                  uuthesis-index.sty
 
-TEXFILES        = abstract.tex			\
-		  acknowledge.tex		\
-		  chap1.tex			\
-		  chap2.tex			\
-		  chap3.tex			\
-		  chap4.tex			\
-		  chap5.tex			\
-		  chap6.tex			\
-		  notation.tex
+TEXFILES       = abstract.tex      \
+                 acknowledge.tex   \
+                 chap1.tex         \
+                 chap2.tex         \
+                 chap3.tex         \
+                 chap4.tex         \
+                 chap5.tex         \
+                 chap6.tex         \
+                 notation.tex      \
+                 appa.tex
 
-THESIS		= thesis
+THESIS        = thesis
 
-TOPFILE		= $(THESIS).ltx
+TOPFILE       = $(THESIS).ltx
 
 .SUFFIXES:
 
 ### ====================================================================
 
-### all:	dvi
-all:	pdf
+### all:    dvi
+all:    pdf
 
-aux:	$(THESIS).aux
+aux:    $(THESIS).aux
 
 ### In the event of chapter bibliographies (required for theses that
 ### include other documents), we also need to run BibTeX on each
@@ -155,170 +156,160 @@ aux:	$(THESIS).aux
 ### solution is to loop over the required *.aux files, and test
 ### their contents.
 ### OLD: bbl:
-### OLD:	-$(BIBTEX) $(THESIS)
+### OLD:    -$(BIBTEX) $(THESIS)
 bbl:
-	-for f in $(TEXFILES:.tex=) $(THESIS) ;					\
-	do									\
-	    echo ========== $$f ;						\
-	    $(FGREP) -s '\bibstyle' $$f.aux >/dev/null && $(BIBTEX) $$f ;	\
-	done || $(TRUE)
+    -for f in $(TEXFILES:.tex=) $(THESIS) ;                             \
+    do                                                                  \
+        echo ========== $$f ;                                           \
+        $(FGREP) -s '\bibstyle' $$f.aux >/dev/null && $(BIBTEX) $$f ;   \
+    done || $(TRUE)
 
 bbl-ind-toc:
-	-$(MAKE) bbl
-	-$(MAKE) indexes
-	-$(MAKE) toc
+    -$(MAKE) bbl
+    -$(MAKE) indexes
+    -$(MAKE) toc
 
-check:	 dw spell syntax-check
+check:   dw spell syntax-check
 
 clean:
-	-$(RM) *.blg
-	-$(RM) *.dvi*
-	-$(RM) *.dw
-	-$(RM) *.ilg
-	-$(RM) *.log
-	-$(RM) *.o
-	-$(RM) *.ser
-	-$(RM) *.tmp
-	-$(RM) *.old
-	-$(RM) *~
-	-$(RM) \#*
-	-$(RM) core
+    -$(RM) *.blg
+    -$(RM) *.dvi*
+    -$(RM) *.dw
+    -$(RM) *.ilg
+    -$(RM) *.log
+    -$(RM) *.o
+    -$(RM) *.ser
+    -$(RM) *.tmp
+    -$(RM) *.old
+    -$(RM) *~
+    -$(RM) \#*
+    -$(RM) core
 
-clobber:	distclean
+clobber:    distclean
 
-distclean:	mostlyclean
-	-$(RM) *.aux
-	-$(RM) *.bbl
-	-$(RM) *.idx
-	-$(RM) *.ind
-	-$(RM) *.toc
-	-$(RM) *.lof
-	-$(RM) *.lot
+distclean:  mostlyclean
+    -$(RM) *.aux
+    -$(RM) *.bbl
+    -$(RM) *.idx
+    -$(RM) *.ind
+    -$(RM) *.toc
+    -$(RM) *.lof
+    -$(RM) *.lot
 
-dvi:	$(THESIS).dvi
+dvi:    $(THESIS).dvi
 
 ### NB: Because we do "\input{}" on the extra indexes, they MUST exist:
 ### create empty files if they do not.
 dvi-pass:
-	test -f $(THESIS)-bioname.ind || $(TOUCH) $(THESIS)-bioname.ind
-	test -f $(THESIS)-fsfname.ind || $(TOUCH) $(THESIS)-fsfname.ind
-	-$(LATEX) $(THESIS).ltx
-	-$(MAKE) bbl-ind-toc
+    -$(LATEX) $(THESIS).ltx
+    -$(MAKE) bbl-ind-toc
 
 dw:
-	-$(RM) $(THESIS).dw
-	@echo '==================== doubled words ===================='
-	for f in $(TEXFILES) $(TOPFILE) ; 		\
-	do						\
-		echo ===== $$f ===== ;			\
-		echo ===== $$f ===== >> $(THESIS).dw ;	\
-		$(DETEX) $$f  | $(DW) >> $(THESIS).dw ; \
-	done
+    -$(RM) $(THESIS).dw
+    @echo '==================== doubled words ===================='
+    for f in $(TEXFILES) $(TOPFILE) ;           \
+    do                                          \
+        echo ===== $$f ===== ;                  \
+        echo ===== $$f ===== >> $(THESIS).dw ;  \
+        $(DETEX) $$f  | $(DW) >> $(THESIS).dw ; \
+    done
 
 ### dummy target for force make to make a rule
 FRC:
 
-indexes:	$(THESIS).ind $(THESIS)-bioname.ind $(THESIS)-fsfname.ind
+indexes:    $(THESIS).ind
 
 install:
-	@echo There is nothing to install for this package
+    @echo There is nothing to install for this package
 
-maintainer-clean:	distclean
-	@echo "This command is intended for maintainers to use;"
-	@echo "it deletes files that may require special tools to rebuild."
-	-$(RM) $(THESIS).pdf $(THESIS).ps
+maintainer-clean:   distclean
+    @echo "This command is intended for maintainers to use;"
+    @echo "it deletes files that may require special tools to rebuild."
+    -$(RM) $(THESIS).pdf $(THESIS).ps
 
-mostlyclean:	clean
+mostlyclean:    clean
 
 ### NB: Because we do "\input{}" on the extra indexes, they MUST exist:
 ### create empty files if they do not.
 pdf-pass:
-	test -f $(THESIS)-bioname.ind || $(TOUCH) $(THESIS)-bioname.ind
-	test -f $(THESIS)-fsfname.ind || $(TOUCH) $(THESIS)-fsfname.ind
-	-$(PDFLATEX) $(THESIS).ltx
-	-$(MAKE) bbl-ind-toc
+    -$(PDFLATEX) $(THESIS).ltx
+    -$(MAKE) bbl-ind-toc
 
-pdf:	$(THESIS).pdf
+pdf:    $(THESIS).pdf
 
-ps:	$(THESIS).ps
+ps: $(THESIS).ps
 
-spell:	$(TEXFILES) $(TOPFILE)
-	-if [ ! -f $(THESIS).sok ] ; then touch $(THESIS).sok ; fi
-	@echo '==================== spelling exceptions ===================='
-	for f in $(TEXFILES) $(TOPFILE) ;						\
-	do								\
-		echo ===== $$f ===== ;					\
-		g=`basename $$f .tex` ;					\
-		$(DETEX) $$f  | $(SPELL) -p $(THESIS).sok > $$g.ser;	\
-		if [ -s $$g.ser ] ;					\
-		then cat $$g.ser ;					\
-		else $(RM) $$g.ser ;					\
-		fi ;							\
-	done
+spell:  $(TEXFILES) $(TOPFILE)
+    -if [ ! -f $(THESIS).sok ] ; then touch $(THESIS).sok ; fi
+    @echo '==================== spelling exceptions ===================='
+    for f in $(TEXFILES) $(TOPFILE) ;                           \
+    do                                                          \
+        echo ===== $$f ===== ;                                  \
+        g=`basename $$f .tex` ;                                 \
+        $(DETEX) $$f  | $(SPELL) -p $(THESIS).sok > $$g.ser;    \
+        if [ -s $$g.ser ] ;                                     \
+        then cat $$g.ser ;                                      \
+        else $(RM) $$g.ser ;                                    \
+        fi ;                                                    \
+    done
 
 syntax-check:
-	$(LACHECK) $(THESIS).ltx
+    $(LACHECK) $(THESIS).ltx
 
-thesis:	$(THESIS).pdf
+thesis: $(THESIS).pdf
 
-toc:	$(THESIS).toc
+toc:    $(THESIS).toc
 
 $(THESIS).aux:
-	-if [ ! -f $(THESIS).aux ] ; then touch $(THESIS).aux ; fi
+    -if [ ! -f $(THESIS).aux ] ; then touch $(THESIS).aux ; fi
 
 ### NB: Because of extensive cross-referencing in the thesis, and in
 ### the bibliography entries, we need FOUR complete passes to reach
 ### consistency!
-$(THESIS).dvi:	Makefile $(THESIS).bbl $(EPSFILES) $(FIGFILES) $(STYFILES) $(TEXFILES) $(TOPFILE)
-	-$(MAKE) dvi-pass
-	-$(MAKE) dvi-pass
-	-$(MAKE) dvi-pass
-	-$(MAKE) dvi-pass
+$(THESIS).dvi:  Makefile $(THESIS).bbl $(EPSFILES) $(FIGFILES) $(STYFILES) $(TEXFILES) $(TOPFILE)
+    -$(MAKE) dvi-pass
+    -$(MAKE) dvi-pass
+    -$(MAKE) dvi-pass
+    -$(MAKE) dvi-pass
 
 ### Rigorously, the .bbl file also depends on the .aux file, but
 ### because that gets created anew each LaTeX run, a dependency on the
 ### .aux file causes $(THESIS).dvi or $(THESIS).pdf to be remade
 ### unnecessarily, so we suppress that dependency.
-### $(THESIS).bbl:	$(THESIS).bib $(THESIS).aux
+### $(THESIS).bbl:  $(THESIS).bib $(THESIS).aux
 
-$(THESIS).bbl:	$(THESIS).bib
-	-$(MAKE) $(THESIS).aux
-	-$(BIBTEX) $(THESIS)
+$(THESIS).bbl:  $(THESIS).bib
+    -$(MAKE) $(THESIS).aux
+    -$(BIBTEX) $(THESIS)
 
 ### NB: We remove the fsfname entries from the topic index, but leave
 ### the bioname ones!
-$(THESIS).ind:	FRC $(THESIS).idx $(THESIS).ist
-	$(MV) $(THESIS).idx $(THESIS).idx.old
-	$(FIXIDX) < $(THESIS).idx.old > $(THESIS).idx
-	-$(FGREP) -v fsfname $(THESIS).idx | $(MAKEINDEX) $(MAKEINDEXFLAGS) -s $(THESIS).ist > $@
+$(THESIS).ind:  FRC $(THESIS).idx $(THESIS).ist
+    $(MV) $(THESIS).idx $(THESIS).idx.old
+    $(FIXIDX) < $(THESIS).idx.old > $(THESIS).idx
+    -$(FGREP) -v fsfname $(THESIS).idx | $(MAKEINDEX) $(MAKEINDEXFLAGS) -s $(THESIS).ist > $@
 
 ### NB: Because of extensive cross-referencing in the thesis, and in
 ### the bibliography entries, we need FOUR complete passes to reach
 ### consistency!
-$(THESIS).pdf:	Makefile $(THESIS).bbl $(FIGFILES) $(PDFFILES) $(STYFILES) $(TEXFILES) $(TOPFILE)
-	-$(MAKE) pdf-pass
-	-$(MAKE) pdf-pass
-	-$(MAKE) pdf-pass
-	-$(MAKE) pdf-pass
+$(THESIS).pdf:  Makefile $(THESIS).bbl $(FIGFILES) $(PDFFILES) $(STYFILES) $(TEXFILES) $(TOPFILE)
+    -$(MAKE) pdf-pass
+    -$(MAKE) pdf-pass
+    -$(MAKE) pdf-pass
+    -$(MAKE) pdf-pass
 
-$(THESIS).ps:	$(THESIS).dvi
-	$(DVIPS) -o $@ $?
+$(THESIS).ps:   $(THESIS).dvi
+    $(DVIPS) -o $@ $?
 
 ### This will strip the sections from appearing in the table of contents.
-# $(THESIS).toc:	FRC
+# $(THESIS).toc:    FRC
 $(THESIS).toc:
-#	$(CP) $(THESIS).toc $(THESIS).toc.old
-#	$(SED) '/[AB]\.[12]/d' <$(THESIS).toc.old >$(THESIS).toc
-
-$(THESIS)-fsfname.ind:	FRC
-	-$(FGREP) fsfname $(THESIS).idx | $(FGREP) -v '|see' | $(MAKEINDEX) -c -s $(THESIS).ist > $@
-
-$(THESIS)-bioname.ind:	FRC
-	-$(FGREP) bioname $(THESIS).idx | $(FGREP) -v '|see' | $(MAKEINDEX) -c -s $(THESIS).ist > $@
+#   $(CP) $(THESIS).toc $(THESIS).toc.old
+#   $(SED) '/[AB]\.[12]/d' <$(THESIS).toc.old >$(THESIS).toc
 
 uninstall:
-	@echo There is nothing to uninstall for this package
+    @echo There is nothing to uninstall for this package
 
 2:
-	-$(MAKE) pdf-pass
-	-$(MAKE) pdf-pass
+    -$(MAKE) pdf-pass
+    -$(MAKE) pdf-pass

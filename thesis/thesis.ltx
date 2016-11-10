@@ -281,7 +281,7 @@
 %%% use, the style is defined in each chapter/appendix file that needs
 %%% a bibliography.  Thus, we suppress it here:
 
-%%% \bibliographystyle{siam}
+\bibliographystyle{siam}
 
 %%% This can also specify a comma-separated list (without embedded
 %%% spaces) of *.bib files found by BibTeX in its BIBINPUTS search
@@ -295,7 +295,7 @@
 %%% \jobname.bbl.  For chapterbib use, there is no end-of-volume
 %%% bibliography, so we suppress it here:
 
-%%% \bibliography{\jobname}
+\bibliography{\jobname}
 
 %%% The last part of this sample thesis is two specialized indexes,
 %%% and a general topic index.  If the companion Makefile is used to
@@ -309,20 +309,7 @@
 
 \singlespace
 
-%%% Define several index cross references (there are many more such
-%%% in chap1.tex, but the examples here give a useful summary of how
-%%% they are made):
-
-\renewcommand {\bioname} [1] {\emph{#1}}   % redefine to suppress color and indexing in index
-\renewcommand {\fsfname} [1] {\texttt{#1}} % redefine to suppress color and indexing in index
-
-\renewcommand {\indexname} {Binomial Nomenclature Index}
-
-\input{\jobname-bioname.ind}
-
-\renewcommand {\indexname} {Free Software Index}
-
-\input{\jobname-fsfname.ind}
+%%% Define several index cross references:
 
 \renewcommand {\indexname} {Topic Index}
 

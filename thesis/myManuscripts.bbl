@@ -1,0 +1,49 @@
+\def \noopsort #1{}
+
+%% So we are going to temporarily disable the header for this bibliography
+%% by overriding the section command. In order to get it back, we save the
+%% original command as oldsection.
+
+\let\oldsection\section
+\renewcommand{\section}[2]{}
+
+\begin{thebibliography}{10}
+
+\bibitem{AlfonsiRabitiCogliati2015}
+{\sc A.~Alfonsi, C.~Rabiti, J.~Cogliati, D.~Mandelli, S.~Sen, R.~Kinoshita,
+  C.~Wang, P.~Talbot, \textbf{D.~Maljovec}, A.~Slaughter, and C.~Smith}, {\em Dynamic
+  event tree advancements and control logic improvements}, Tech. Rep.
+  INL/EXT-15-36758, Idaho National Laboratory, 2015.
+
+\bibitem{AlfonsiRabitiMaljovec2016}
+{\sc A.~Alfonsi, C.~Rabiti, \textbf{D.~Maljovec}, D.~Mandell, and J.~Cogliati}, {\em
+  Enhancements to the raven code in fy2016}, Tech. Rep. INL/EXT-16-40094, Idaho
+  National Laboratory, 2016.
+
+\bibitem{CogliatiChenPatel2016}
+{\sc J.~Cogliati, J.~Chen, J.~Patel, D.~Mandelli, \textbf{D.~Maljovec}, A.~Alfonsi,
+  P.~Talbot, C.~Wang, and C.~Rabiti}, {\em Time dependent data mining in
+  raven}, Tech. Rep. INL/EXT-16-39860, Idaho National Laboratory, 2016.
+
+\bibitem{MaljovecWangMoeller2014}
+{\sc \textbf{D.~Maljovec}, B.~Wang, J.~Moeller, and V.~Pascucci}, {\em Topology-based
+  active learning}, Tech. Rep. UUSCI-2014-00, SCI Institute, University of
+  Utah, 2014.
+
+\bibitem{MandelliMaljovecAlfonsi2016}
+{\sc D.~Mandelli, \textbf{D.~Maljovec}, A.~Alfonsi, C.~Parisi, P.~Talbot, C.~Picoco,
+  J.~Cogliati, C.~Wang, C.~Smith, and C.~Rabiti}, {\em Data analysis approaches
+  for the risk-informed safety margins characterization toolkit}, Tech. Rep.
+  INL/EXT-16-39851, Idaho National Laboratory, 2016.
+
+\bibitem{SenMaljovecAlfonsi2015}
+{\sc S.~Sen, \textbf{D.~Maljovec}, A.~Alfonsi, and C.~Rabiti}, {\em Developing and
+  implementing data mining algorithms in raven}, Tech. Rep. INL/EXT-15-36632,
+  Idaho National Laboratory, 2015.
+
+\end{thebibliography}
+
+%% Now we reset the section command, and just to be clean we will
+%% undefine the other macro so that the state is pristine
+\let\section\oldsection
+\let\oldsection\undefined

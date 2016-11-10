@@ -16,6 +16,7 @@ core
 *.toc
 *.lof
 *.lot
+.DS_Store
 sample-thesis-0.pdf
 sample-thesis-1.pdf
 sample-thesis-2.pdf

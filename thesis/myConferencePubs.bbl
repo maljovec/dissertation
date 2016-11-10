@@ -1,0 +1,51 @@
+\def \noopsort #1{}
+
+%% So we are going to temporarily disable the header for this bibliography
+%% by overriding the section command. In order to get it back, we save the
+%% original command as oldsection.
+
+\let\oldsection\section
+\renewcommand{\section}[2]{}
+\begin{thebibliography}{10}
+
+\bibitem{LiuMaljovecWang2015}
+{\sc S.~Liu, \textbf{D.~Maljovec}, B.~Wang, P.-T. Bremer, and V.~Pascucci.}, {\em
+  Visualizing high-dimensional data: Advances in the past decade}, Eurographics
+  Conference on Visualization State of The Art Report (STAR),  (2015).
+
+\bibitem{MaljovecSahaLindstrom2013}
+{\sc D.~Maljovec, A.~Saha, P.~Lindstrom, P.-T. Bremer, B.~Wang, C.~Correa, and
+  V.~Pascucci}, {\em A comparative study of morse complex approximation using
+  different neighborhood graphs}, in Workshop on Topology-Based Methods in Data
+  Analysis and Visualizatuion (TopoInVis), 2013.
+
+\bibitem{MaljovecWangMandelli2013b}
+{\sc \textbf{D.~Maljovec}, B.~Wang, D.~Mandelli, P.-T. Bremer, and V.~Pascucci}, {\em
+  Adaptive sampling algorithms for probabilistic risk assessment of nuclear
+  simulations}, International Topical Meeting on Probabilistic Safety
+  Assessment and Analysis (PSA),  (2013).
+
+\bibitem{MaljovecWangMandelli2013a}
+\leavevmode\vrule height 2pt depth -1.6pt width 23pt, {\em Analyzing dynamic
+  probabilistic risk assessment data through clustering}, International Topical
+  Meeting on Probabilistic Safety Assessment and Analysis (PSA),  (2013).
+
+\bibitem{MaljovecWangPascucci2013b}
+{\sc \textbf{D.~Maljovec}, B.~Wang, V.~Pascucci, P.-T. Bremer, M.~Pernice, D.~Mandelli,
+  and R.~Nourgaliev}, {\em Exploration of high-dimensional scalar function for
+  nuclear reactor safety analysis and visualization}, in Proceedings of
+  International Conference on Mathematics and Computational Methods Applied to
+  Nuclear Science \& Engineering, 2013, pp.~712--723.
+
+\bibitem{MaljovecWangRosen2016}
+{\sc \textbf{D.~Maljovec}, B.~Wang, P.~Rosen, A.~Alfonsi, G.~Pastore, C.~Rabiti, and
+  V.~Pascucci}, {\em Rethinking sensitivity analysis of nuclear simulations
+  with topology}, in 2016 IEEE Pacific Visualization Symposium (PacificVis),
+  IEEE, 2016, pp.~64--71.
+
+\end{thebibliography}
+
+%% Now we reset the section command, and just to be clean we will
+%% undefine the other macro so that the state is pristine
+\let\section\oldsection
+\let\oldsection\undefined
