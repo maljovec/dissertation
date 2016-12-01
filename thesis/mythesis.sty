@@ -9,7 +9,6 @@
 %%% with their large-volume production practices.
 
 \newcommand {\mainindex}   [1] {\index{#1|mainpage}}
-\newcommand {\mainpage}    [1] {\textbf{#1}}
 
 \newcommand {\gobblearg}   [1] {}
 
@@ -36,6 +35,18 @@
     Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah.
     Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah.
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Added by Dan
+\newtheorem{thrm}{Theorem}
+\newtheorem{defn}[thrm]{Definition}
+
+
+\usetikzlibrary{tikzmark, positioning, fit, shapes.misc}
+\usetikzlibrary{decorations.pathreplacing, calc}
+\tikzset{brace/.style={decorate, decoration={brace}},
+  brace mirrored/.style={decorate, decoration={brace,mirror}},}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% We want \verb and \begin{verbatim} ... \end{verbatim} environments to be
 %%% set in color to make them stand out.

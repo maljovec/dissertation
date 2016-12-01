@@ -2,9 +2,274 @@
 
 \chapter{Definitions}
 \label{ch:definitions}
+
+In order to facilitate discussion through this dissertation, we will first establish a common language by defining terms from different areas of mathematics.
+%
+You may already be familiar with many of these terms, however the goal here is to provide a formal structure and allow us to use certain terms with more precision in order to facilitate later discussion.
+%
+In some cases, I will be using terms in a context that may differ from other academic works, and so it is important at the outset to be clear what is meant by the terms you will see throughout this document.
+%
+For example, let me begin with a term that we qualified in Chapter~\ref{ch:introduction}: \emph{data}.
+
+Colloquially, we know data to be some collection of information.
+%
+However, data can come in many forms, sizes, and structures, so if we are to spend any amount of time talking about techniques that generate, manipulate, and/or analyze data, we also need to be clear what kinds of data.
+%
+For example, data may be numeric or nominal as in the case of text-based data.
+%
+With numeric data, a common task is to compute statistical information which cannot be done directly on nominal data.
+%
+Instead, we may look into building relationships between items in a nominal dataset.
+%
+Furthermore, data may be time-dependent (temporal) or static in nature.
+%
+Treating time as a standalone entity rather than as another dimension in the data affords us the opportunity to look at the data in a different light that is not always a sensible paradigm with static data, and so specific methods have been discovered for dealing directly with this type of data.
+%
+Recall, that for this work, we are focusing on \emph{point cloud} data of \emph{arbitrary dimension} that is defined or can approximated by a \emph{scalar function}.
+%
+By the end of this chapter, we should have the necessary vocabulary to precisely define what kinds of data this includes.
+
 \section{Set Theory}
+
+As we will be discussing collections of data objects and decomposing them into groups or sets, we begin by defining concepts from set theory.
+%
+\begin{defn}
+  \textbf{Set} ($x \in A$) - an unordered collection of finite or infinite objects, $x$.
+  %
+  A constituent object, $x$, of $A$ is known as a \textbf{member}/\textbf{element}, the relationship being denoted as $x \in A$.
+\end{defn}
+
+Numeric sets can be \emph{uncountable} such as the set of all real numbers, $\{x| x \in \mathbb{R}\}$, or \emph{countable} such as the set of all integers, $\{x| x \in \mathbb{Z}\}$ where each item is discrete and isolated.
+%
+In addition, a set may be \emph{unbounded} as in the above two examples or either \emph{open} or \emph{closed bounded} such as the set $\{x \in \mathbb{R} | x \in [0,1)\}$ which exhibits both characteristics.
+%
+That is, $0 \le x < 1$, where the lower boundary is closed as it includes the lower bounding value and the upper bound is open.
+
+\begin{defn}
+  \textbf{Cardinality} ($|A|$) - The number of elements in a set.
+\end{defn}
+
+\begin{defn}
+  \textbf{Empty set}/\textbf{null set} ($\emptyset$) - a set containing no members.
+\end{defn}
+
+\begin{defn}
+  \textbf{subset} ($C \subseteq A$) - If every element of $C$ exists in $A$, then $C$ is a subset of $A$.
+  %
+  Furthermore, $C$ is a \textbf{proper subset} ($C \subset A$) when $C \neq A$.
+  %
+  In other words, when $A$ contains at least one member that is not in $C$.
+\end{defn}
+
+The following operators apply to example sets $A$ and $B$:
+
+\begin{defn}
+  \textbf{Union} ($A \cup B$) - The set of all elements in $A$ or $B$: $A \cup B = \{x| x \in A$ or $x \in B\}$.
+\end{defn}
+
+\begin{defn}
+  \textbf{Intersection} ($A \cap B$) - The set of all elements in $A$ and $B$: $A \cap B = \{x| x \in A$ and $x \in B\}$.
+\end{defn}
+
+\begin{defn}
+  \textbf{Difference} ($A$ $\backslash$ $B$) - The set of all elements in $A$ and not in $B$: $A$ $\backslash$ $B = \{x| x \in A$ and $x \notin B\}$.
+  %
+  Note that this operation is not commutative as $A$ $\backslash$ $B = B$ $\backslash$ $A \Rightarrow A = B$.
+\end{defn}
+
+\begin{defn}
+  \textbf{Partition} - A collection of subsets of $A$ such that every element of $A$ exists in one and only one of the subsets.
+  %
+  That is, the intersection of any subsets making up a partition will be empty: $C \cap D = \emptyset$, if $C$ and $D$ are part of the same partition.
+\end{defn}
+
 \section{Calculus}
+
+Under certain contexts throughout this document, it will be useful to separate a
+dataset into independent and dependent dimensions, also referred to as inputs
+and outputs, or variables and responses, respectively.
+%
+In these cases, the same notations apply except that the letter $x$ will be
+used to denote input(s) and $y$ will denote output(s).
+%
+Such datasets exist when $\mathbf{y}$ (either a scalar or vector) can be
+represented as a function of a tuple of inputs $\mathbf{x}$,
+$\mathbf{y}=f(\mathbf{x})$.
+%
+A function, $f$, fulfills the requirement that any input $\mathbf{x}$ be
+associated to at most one output, or set of outputs in the case where
+$\mathbf{y}$ is defined by multiple dimensions.
+%
+Below is the formal definition of a function as it relates to the earlier
+described set theory:
+
+\begin{defn}
+  \textbf{Function}/\textbf{map} ($f : X \rightarrow Y$) - Assigns each
+  element in $X$ ($x \in X$) to exactly one element in $Y$ ($y \in Y$).
+  In terms of sets, the notation $f : X \rightarrow Y$ is read as $f$
+  maps $X$ into $Y$, and in terms of elements $f(x)=y$ is read as $f$ maps $x$
+  to $y$.
+  In this example, $X$ is the \textbf{domain} of $f$ and $Y$ is the
+  \textbf{codomain}, or \textbf{range}, of $f$. Also, $y$ is the \textbf{image},
+  of $x$ under $f$.
+\end{defn}
+
+Relevant functional properties are described below:
+
+\begin{defn}
+  \textbf{Injection}/\textbf{One-to-one function} - Every point in the domain
+  maps to a distinct element in the codomain. Symbolically, the function
+  $f:X\rightarrow Y$ is injective if $\forall a,b\in X,f(a)=f(b)\Rightarrow a=b$
+\end{defn}
+
+\begin{defn}
+  \textbf{Surjection}/\textbf{Onto function} - Every point in the codomain is
+  associated to some point in the domain. Symbolically, the function
+  $f:X \rightarrow Y$ is surjective if $\forall y \in Y,\exists x \in X,f(x)=y$
+\end{defn}
+
+\begin{defn}
+  \textbf{Bijection} - A function that is both injective and surjective. As a
+  result, a bijective function $f: X \rightarrow Y$ also has an inverse mapping
+  $f^{-1} : Y \rightarrow X$.
+\end{defn}
+
+\begin{defn}
+\textbf{Derivative}$\mathbf{(\frac{df}{dx})}$ - Given a function $f(x)$ defined
+ as $f : \mathbb{R} \rightarrow \mathbb{R}$,
+ $\frac{df}{dx} = \lim_{h\rightarrow 0}\frac{f(x+h)-f(x)}{h}$.
+ The generalization to an $n$-dimensional domain adds the notion of a
+ \textbf{partial derivative} ($\frac{\partial f}{\partial x_0}$), where all but
+ one parameter are held constant, thus: $\frac{df}{dx_i} =
+ \lim_{h\rightarrow 0}\frac{f(x_1,...,x_i+h,...x_n)-f(x_1,...,x_i,...,x_n)}{h}$.
+ The derivative is itself a function, and thus the n-derivative is
+ achieved by successively applying the derivative operation and is deonted
+ as $\frac{d^nf}{dx^n}$. For the multidimensional case, partials of partials can
+ be applied along arbitrary dimensions to achieve mixed partials.
+\end{defn}
+
+\begin{defn}
+  \textbf{Gradient}$\mathbf{(\nabla f(\mathbf{x}))}$ - Given $f : \mathbb{R}^n \rightarrow \mathbb{R}$, then $\nabla f = \left(\frac{\partial f}{\partial
+  x_1},...,\frac{\partial f}{\partial x_{n}}\right)$
+  The gradient of a function where the domain is scalar is equivalent to the
+  derivative.
+\end{defn}
+
+\begin{defn}
+  $\mathbf{C^n}$\textbf{Continuity} - $f : A \rightarrow \mathbb{R}^d$ is
+  continuous of order $n$ if all orders of differentiation up to $n$ exist and
+  are continuously defined on the domain $A$.
+\end{defn}
+
+\begin{defn}
+  \textbf{Smooth} - A $\mathbf{C^\infty}$ function. Thus, all orders of
+  differentiation of a function exist and are continuous on the domain $A$.
+\end{defn}
+
+\begin{defn}
+  \textbf{Critical point} - Any domain location $\mathbf{x}$ where $\nabla
+  f(\mathbf{x}) = \mathbf{0}$. All other locations are considered
+  \textbf{regular}.
+\end{defn}
+
+\begin{defn}
+  \textbf{Hessian} ($H_f(p)$) - A square $d\times d$ matrix achieved by evaluating
+  all of the second order partials of $f : \mathbb{R}^d \rightarrow \mathbb{R}$ at
+  the domain location $\mathbf{p}$:
+
+  $H_f(p) =
+  \begin{bmatrix}
+    \frac{\partial^2f}{\partial x_1^2}(\mathbf{p}) & & \ldots & & \frac{\partial^2f}{\partial x_1\partial x_d}(\mathbf{p}) \\
+     & \ddots &  &  & \\
+    \vdots &  & \frac{\partial^2f}{\partial x_i\partial x_j}(\mathbf{p}) &  & \vdots \\
+     & &  & \ddots & \\
+    \frac{\partial^2f}{\partial x_d\partial x_1}(\mathbf{p}) & & \ldots & & \frac{\partial^2f}{\partial x_d^2}(\mathbf{p}) \\
+  \end{bmatrix}$
+\end{defn}
+
+\begin{defn}
+  \textbf{Degenerate critical point} - A critical point, $\mathbf{p}$, with a
+  singular Hessian matrix: $det(H_f(\mathbf{p})) = 0$.
+\end{defn}
+
+\begin{defn}
+ \textbf{Level set}/\textbf{contour}/\textbf{iso-contour}/\textbf{iso-surface} -
+ The collection of domain locations who under a given function ($f : A
+ \rightarrow \mathbb{R}$) map to the same constant $c$: $\{\mathbf{x} \in A |
+ f(\mathbf{x}) = c\}$.
+\end{defn}
+
 \section{Topology}
+
+\begin{defn}
+  \textbf{Tuple}/\textbf{vector}/\textbf{point} ($\mathbf{x}$) - an ordered collection of real-valued, numeric elements and represented as a lowercase bold-faced letter.
+\end{defn}
+
+\begin{defn}
+  \textbf{Dataset} ($\mathbf{X}$) - a finite sequence of tuples, each of the
+  same length, and represented by a bold-faced capital letter.
+\end{defn}
+
+\begin{defn}
+  \textbf{Dimension} - either a single element of a tuple or the
+  union of all of corresponding elements in all tuples of a dataset.
+  The \textbf{dimensionality} of a dataset is the length of any constituent
+  tuple.
+\end{defn}
+
+An optional subscript may be used when referencing a point to denote its
+position in $\mathbf{X}$, for example $\mathbf{x_i}$ represents the $i$th entry
+in the dataset $\mathbf{X}$.
+%
+When referencing a single element of a point, we will use the convention of an
+italicized lowercase letter, with either one or two subscripts.
+%
+For example, $x_{i,j}$ references the $j$th dimension of the $i$th point.
+%
+In the case, where a point does not define its index, such as $\mathbf{x}$, then
+$x_j$ represents the $j$th element of the point.
+
+Another way of thinking about this form of data is in a tabular or matrix
+format.
+%
+Thus, we can interchangeably use the terms ``row,'' ``entry,'' ``tuple,'' or
+``point,'' to describe a horizontal row in the table. The terms ``column,''
+``parameter,'' ``factor,'' and ``dimension'' all describe a vertical column of
+the data.
+
+%\vspace{10mm}
+%\begin{table}[h]
+%\centering
+%%\captionsetup{justification=centering}
+%\begin{tabular}{|l|ccc|r|}
+%  \hline
+%  $\mathbf{d_0}$ & $\mathbf{d_1}$ & $\ldots$ & $\mathbf{d_{n-1}}$ & $\mathbf{d_n}$\tikzmark{col} \\
+%  \hline
+%  \hline
+%  \tikzmark{row}$x_{0,0}$ & $x_{0,1}$ & $\ldots$ & $x_{0,n-1}$ & $x_{0,n}$ \\
+%  \hline
+%  $x_{1,0}$ & $x_{1,1}$ & $\ldots$ & $x_{1,n-1}$ & $x_{1,n}$ \\
+%  $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ & $\vdots$ \\
+%  $x_{m-1,0}$ & $x_{m-1,1}$ & $\ldots$ & $x_{m-1,n-1}$ & $x_{m-1,n}$ \\
+%  \hline
+%  $x_{m,0}$ & $x_{m,1}$ & $\ldots$ & $x_{m,n-1}$ & $x_{m,n}$ \\
+%  \hline
+%\end{tabular}
+%\caption[Data viewed as a table]{High-dimensional data can be viewed as a table of
+%information organized into rows and columns corresponding to points and dimensions
+%of a high-dimensional space, respectively.}
+%\label{table:dataTable}
+%\end{table}
+%\begin{tikzpicture}[remember picture,overlay]
+%  \node [above right = 10mm and -41mm] at ({pic cs:col}) (myCol) {\textbf{column/parameter/factor/dimension}};
+%  \draw [<-, ultra thick] ([xshift=-10pt, yshift=12pt]{pic cs:col}) to (myCol);
+%\end{tikzpicture}
+%\begin{tikzpicture}[remember picture,overlay]
+%  \node [above left=-3mm and 5mm] at ({pic cs:row}) (myRow) {\textbf{row/entry/tuple/point}};
+%  \draw [<-, ultra thick] ([xshift=-8pt, yshift=2pt]{pic cs:row}) to (myRow);
+%\end{tikzpicture}
+%\vspace{-10mm}
+
 \subsection{Manifolds}
 \subsection{Graphs and Complexes}
 \section{Information Theory}
