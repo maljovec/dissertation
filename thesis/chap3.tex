@@ -3,27 +3,706 @@
 \chapter{Survey of Related Works}
 \label{ch:related}
 \section{Sampling Designs}
+\label{sec:sampling}
+
+Before analyzing any data, it must be collected either by instrumentation, experimentation, simulation, etc.
+%
+Under certain conditions, the input parameters may be observed rather than selected which is outside of the scope of this section.
+%
+Here, we formalize the different methods by which data samples can be selected for measurement/experimentation/simulation.
+%
+There exists two major branches on how this can be done.
+%
+In the first case, all of the samples are selected and run in bulk.
+%
+We classify this type of sampling as space-filling sampling.
+%
+Space-filling sampling is useful in parallel environments and when one wants to determine the global behavior of the system under study due to the fact that the entire sample set can be specified a priori.
+%
+This constrasts with the second mode of sampling called adaptive sampling.
+%
+Adaptive sampling selects the ``best'' candidate based on current information about the system.
+%
+The criteria for what constitutes ``best'' is investigated further in the Section~\ref{sec:adaptiveSampling}.
+%
+Adaptive sampling excels when only a limited region of the input domain is considered interesting and when a surrogate model can be used for extracting additional information about the data already collected.
+%
+Adaptive sampling works in a feedback loop where new information is continuously added to a constructed model of the data which is used to select new samples.
+
 \subsection{Space-Filling Designs}
 \label{sec:forwardSampling}
+
+It is important to note that the methods discussed herein can be performed in the actual input space, which we will refer to as the value space, or in probability space.
+%
+That is, we can apply a probability distribution function (PDF) over each input, or combined inputs, and sample from the PDF rather than the input range itself.
+
+The two simplest forms of forward sampling are grid-based and random sampling.
+%
+They also represent archetypes of the two features sought after in a ``good'' space-filling sampling strategy.
+%
+The samples in a grid-based strategy each represent equally-sized spaces of the input domain.
+%
+On the other hand, they can suffer from sampling artifacts due to the uniformity of sampling.
+%
+As an example, if a feature is aligned with the sampling grid, but occurs at a frequency greater than the grid resolution, the sampling will fail to capture the feature.
+%
+This type of sampling artifact is demonstrated in the left image of Figure~\ref{fig:samplingArtifacts}.
+%
+A uniform grid sampling strategy also suffers from the curse of dimensionality requiring $k^d$ sammples to resolve a grid of $k$ points per dimension in $d$ dimensions.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.45\textwidth]{figs/chap3/sampledSine}\qquad
+  \includegraphics[width=.45\textwidth]{figs/chap3/sampledGaussian}
+  \caption[1D Sampling Artifacts]{Two examples of the type of artifacts that can
+  arise when performing grid sampling (left), and random sampling (right).}
+  \label{fig:samplingArtifacts}
+\end{figure}
+
+On the other hand, pure random sampling counteracts this type of sampling artifacts, but also holds no guarantees on the sampling density, thus potentially leaving large areas unsampled which could result in the sampling seen in the right image of Figure~\ref{fig:samplingArtifacts} where the variability is entirely missed.
+%
+Though, this may seem like a contrived example, even missing any one of these features could be belying crucial information to the system under study.
+%
+Applying a probability distribution over the input space and randomly sampling the distribution function results in the very popular Monte Carlo sampling method and, as with all other probability-weighted sampling strategies, can place emphasis on a particular area of interest in the domain.
+%
+In this way, we minimize the likliehood that features in the area of interest will not be sampled.
+
+The Latin hypercube sampling (LHS) strategy~\cite{McKayBeckmanConover1979, Tang1993,VanDam2008} attempts to bridge the gap by providing a controlled random sampling.
+%
+LHS divides each dimension into slabs with the condition that each slab contains only one sample.
+%
+Thus, in a two-dimensional setting, one can visualize this as dividing the input space into $n$ rows and $n$ columns where $n$ is the number of required samples.
+%
+Figure~\ref{fig:lhsExample} demonstrates an example where $n=4$.
+%
+Though it does impose some structure, LHS can still suffer from the highly irregular sampling density exhibited by random sampling.
+%
+Again, by applying probability information we can ensure that we have higher fidelity sampling in the regions of most interest with a minimal sampling cost.
+%
+In this setting, the input space is divided into equally probable slabs rather than equal area.
+%
+Thus, if an input is sampled using a normal distribution, more cuts will be made near the mean and as we proceed away from the mean, the cuts will get farther apart and fewer samples will be required to fill these regions.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.45\textwidth]{figs/chap3/lhs}\qquad
+  \includegraphics[width=.45\textwidth]{figs/chap3/lhs2}
+  \caption[2D Latin Hypercube Sampling Example]{An example of LHS sampling in
+  2D: Left: After selecting one point, we color its constituent row and column
+  and prevent any more samples from being drawn from the colored cells.
+  Right: The end result shows a distinct color representing each of the four
+  rows and four columns.}
+  \label{fig:lhsExample}
+\end{figure}
+
+Centroidal Voronoi tessellation (CVT)~\cite{DuFaberGunzburger1999}, which is related to $k$-means clustering~\cite{HastieTibshiraniFriedman2008}, can be employed to provide a sampling strategy that provides uniform sampling density without being aligned to a particular grid.
+%
+The idea is based on the closest point Voronoi diagram~\cite{deBergCheongKreveld2008}.
+%
+Given a set of \emph{sites} existing in $\mathbb{R}^d$, the closest point Voronoi diagram decomposes the space such that any location is associated to its closest representative \emph{sites} under some distance metric, typically Euclidean.
+%
+CVT works by aligning the center of mass, or centroid, of each Voronoi cell with its \emph{site} which then become the sample points.
+
+Common in graphics applications is Poisson disk sampling~\cite{Cook1986}.
+%
+Poisson disk sampling creates samples that are guaranteed a minimum distance from all other samples creating what is known as a blue-noise distribution in signal processing.
+%
+Though most graphics problems deal in relatively low dimensional spaces, an implementation for arbitrary dimensions exists~\cite{Bridson2007}.
+
 \subsection{Adaptive Designs}
 \label{sec:adaptiveSampling}
+
+In contrast to the techniques described above, adaptive sampling selects new candidate samples by utilizing all of the previously collected information, and therefore, the full set of samples cannot be generated a priori.
+%
+Another term commonly used in the data mining community is active learning and spans a broader class of algorithms aimed more broadly at the problems of classification and regression~\cite{Settles2009}.
+%
+Other names appear in the literature as well such as sequential sampling and optimal experimental design.
+%
+We focus our attention specifically on the problem of regression over real-valued domains, and follow the general adaptive sampling pipeline laid out in Figure~\ref{fig:asCycle} which is repeated until a convergence criterion is met, typically the residual between consecutive iterations falls below a predetermined threshold.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.75\textwidth]{figs/chap3/pipeline}
+  \caption[Adaptive Sampling Cycle]{A broad picture of the adaptive sampling
+  cycle.}
+  \label{fig:asCycle}
+\end{figure}
+
+The cycle begins by querying the oracle or ground truth model using an initial sampling of the input space, such as a sparse version of one of the space-filling designs presented in Section~\ref{sec:forwardSampling}.
+%
+With the queried information, we then build a predictive model of the system.
+%
+% Various types of predictive models are reviewed in Section~\ref{sec:regression}.
+%
+The predictive model allows us to score or rank the input space or a sample set derived from it.
+%
+From the scored candidates, one or more points is/are selected to be sent to the oracle for querying.
+%
+The new information is added to the predictive model and the cycle repeats until the specified convergence criterion is met.
+
+Variations of this theme have been explored at every stage in the cycle.
+%
+As discussed in Section~\ref{sec:forwardSampling}, various initial sampling designs can be employed for building an initial model.
+%
+In Section~\ref{sec:regression}, we will look at various types of predictive models.
+%
+In this section, we focus on the selection and scoring of candidate points under different settings.
+%
+We pay specific attention to adaptive sampling in the context of global surface fitting, limit surface refinement, and batch selection where more than one point is selected before retraining the predictive model.
+%
+Afterwards, we review the related works within the visualization community in an area known as design steering where the adaptive process includes human involvement rather than being completely automated.
+
 \subsubsection{Global Fitting Problems}
+
+Adaptive sampling has been used to train neural networks, Gaussian mixture models, and locally weighted regression models among others~\cite{CohnGhahramaniJordan1996}.
+%
+Most of the methods described herein can be accomplished by employing a scoring function upon which all of the candidates can be evaluated and ranked.
+%
+The basic process of global adaptive sampling tries to converge to an acceptable fitting of a surrogate model using fewer data points than the more standard space-filling designs described in Section~\ref{sec:forwardSampling}.
+%
+Techniques for achieving this include reducing global uncertainty~\cite{CohnGhahramaniJordan1996,TongKoller2001}, exploiting areas of high gradient~\cite{MaljovecWangKupresanin2013}, and focusing on otherwise ``interesting'' regions.
+%
+Interesting in this context can mean several different things such as unexplored regions~\cite{Whitehead1991}, regions of low confidence~\cite{ThrunMoller1992}, poorly fit regions~\cite{LindenWeber1993}, areas of expected change~\cite{CohnAtlasLadner1990, CohnAtlasLadner1994}, and/or areas where information gain is optimal~\cite{Lam2008}.
+
+A slightly modified version is aimed at global optimization rather than global accuracy of the model~\cite{MooreSchneider1996,JonesSchonlauWelch1998}.
+%
+Another setting in adaptive sampling is to identify a global optimal parameter setting typically one that maximizes or minimizes some figure of merit, but may also be a Pareto optimum that trades off amongst several figures of merit.
+%
+The active search method takes a slightly different approach by looking at the problem as attempting to sample points contained in a single class~\cite{GarnettKrishnamurthyXiong2012}.
+%
+This last case is related to the problem of limit surface recovery discussed below in Section~\ref{sec:limitSurface} where we are interested in defining the boundary between two classes.
+
+Most of these methods exploit geometric or statistical properties of the data, but none have explored the topological impact of the data as proposed in this body of work (See Chapter~\ref{ch:adaptiveSampling} for more details).
+
 \subsubsection{Limit Surface Problems}
-\subsubsection{Optimization Problems}
+\label{sec:limitSurface}
+
+On the border between regression and classification is the notion of thresholding.
+%
+That is, when learning a regression model, the user is less interested in the value of the response surface, but more in its ability to detect when the response lies above or below a particular threshold value.
+%
+This is a common problem in risk assessment where the isocontour specified by the threshold value is called the limit surface and it separates the success region from the failure region.
+%
+Engineers are often concerned with identifying such limit surfaces and characterizing them in order to perform trade-off analysis and to set adequate safety margins.
+%
+The problem is different from global fitting in that the overall fidelity is less of a concern as long as the behavior is adequately modeled around the limit surface.
+%
+The problem also differs from classification since knowing the gradient direction and magnitude along and near the limit surface can also be useful information.
+
+In reliability engineering, this problem is known as determining the limit state function and can be thought of as the point where a system's load exceeds its capacity where load and capacity are functions of the input parameters.
+%
+The literature in this field attempts to either converge to a single most probable point (MPP) through nonlinear optimization methods~\cite{EldredBichon2006,EldredAgarwalPerez2007} or through adaptive sampling~\cite{Wu1994,DeyMahadevan1998,ZouMahadevanMourelatos2002,
+BichonEldredSwiler2008}.
+
+In the statistics literature, Ranjan et al.~\cite{RanjanBinghamMichailidis2008} have attempted to solve this problem by defining an expected improvement candidate scoring function that harnesses both a prediction's proximity to the threshold value and also the uncertainty associated with the prediction.
+%
+In similar spirit, the machine learning community has designed similar yet simpler scoring functions that take advantage of similar information.
+%
+Bryan et al.~\cite{BryanSchneiderNichol2005} define a scoring function called the straddle function, and Gotovis et al.~\cite{GotovosCasatiHitz2013} introduce the ambiguity scoring function which can be thought of as a generalized version of the straddle function.
+%
+All three methods utilize a Gaussian process surrogate model, however the latter two are performed in what Settles~\cite{Settles2009} refers to as the pool-based active learning setting, whereas the first uses a global optimization to select the optimal point at each iteration.
+
+% \nb{Why is this different? The latter is slower right?}
+
+% \subsubsection{Optimization Problems}
 \subsubsection{Design Steering}
 
+The aforementioned methods are assumed to be completely automatic except in the instance where the human is required to act as the oracle, though such settings are more rare in the regression context than in the classification context which is beyond the scope of this work.
+%
+Within the visualization community, several works have explored the notion of design steering where the results require a qualitative examination, or are used to inform decisions.
+
+HyperMoVal~\cite{PiringerBergerKrasser2010} is a software system used for validating regression models against actual data.
+%
+It uses support vector regression (SVR)~\cite{SmolaScholkopf2004} to fit a model to high-dimensional data, highlights discrepancies between the data and the model, and computes sensitivity information on the model.
+%
+The software allows for adding more model parameters to refine their regression to an acceptable level of accuracy.
+%
+Berger et al.~\cite{BergerPiringerFilzmoser2011} utilize two different types of regression models (SVR and nearest neighbor regression) to analyze a trade-off study in performance car engine design.
+%
+Utilizing the predictive power of the regression, they are able to provide a guided navigation of the high-dimensional space centered around a user-selected focal point.
+%
+The user adjusts the focal point through multiple linked views, and sensitivity and uncertainty information are encoded around the focal point.
+
+Tuner~\cite{Torsney-WeirSaadMoller2011} begins as an automated adaptive sampling algorithm where a sparse sampling of the parameter space is refined by building a Gaussian Process Model (GPM)~\cite{RasmussenWilliams2006} and using adaptive sampling to focus additional samples in areas where either the response is near an optimal setting or the model has high uncertainty.
+%
+The software then relies heavily on user interaction to study the sensitivities with respect to each input parameter and steers the computation toward the user-defined optimal solution.
+%
+Demir et al.~\cite{DemirWestermann2013} improve the effectiveness of GPMs by utilizing a block-wise matrix inversion scheme that can be implemented on the GPU, greatly increasing efficiency.
+%
+In addition, their method involves progressive refinement of the GPM and can be halted at any point, if the improvement becomes insignificant.
+
+Most of these methods convey sensitivity information through user exploration of the input space.
+%
+We discuss sensitivity in more detail in Section~\ref{sec:sensitivity} and in Section~\ref{sec:SA_visualization}, explicit visual encodings for understanding sensitivity information are also discussed.
+
 \section{Sensitivity Analysis}
+\label{sec:sensitivity}
+Sensitivity analysis (SA) studies how changes in the model inputs affect the outputs and can take many different mathematical forms.
+%
+Broadly speaking, SA methods can be categorized as being local, relative to point estimates of the parameter space, or global which considers the entire parameter distribution~\cite{Hamby1995}.
+%
+Local SA or differential SA studies the change of model response around specific locations in the input space.
+%
+Differential SA computes the location-dependent partial derivatives of the output(s) with respect to each input parameter as can be seen in methods such as brute force finite differencing using a surrogate model when neighboring data is not readily available.
+%
+That is, take a small step along one axis and evaluating the slope between the perturbed point and the reference point and repeating for each dimension.
+%
+Improvements to the finite differencing scheme exist that are less computationally expensive such as the decoupled direct method~\cite{Dunker1981, Dunker1984} which solves the problem as a sytem of ordinary differential equations and the Green function method~\cite{KramerCaloRabitz1981} which can be faster when the ratio of inputs to outputs is very high, but is more complicated and thus prone to higher numerical errors~\cite{SaltelliChanScott2000}.
+%
+In contrast, global SA seeks to find correlations that span the entire input domain.
+%
+Global methods include regression analysis, correlation analysis, variance-based techniques, and screening methods among others.
+%
+Regression analysis~\cite{Galton1886} is one of the oldest methods used today.
+%
+The process works by fitting the data with a linear model and reporting the solved linear coefficients as the standard regression coefficients (SRCs).
+
+Correlation analysis represents another class of methods that are fairly simple to implement and understand.
+%
+Such methods include the Pearson correlation coefficients~\cite{Pearson1895} which measure the linearity between two parameters, typically one input and one output.
+%
+Spearman rank correlation coefficients~\cite{Spearman1904} and Kendall rank coefficients~\cite{KendallGibbons1990} measure the monotonicity between parameters.
+
+Screening methods measure the amount of information gained/lost when one or more inputs are removed from a parametric model or allowed to vary.
+%
+Such methods include the simple Morris one-at-a-time (MOAT)~\cite{Morris1991} which repeatedly computes the local SA and collects the information into a statistical average and standard deviation for each input.
+%
+More complicated versions, employ complex surrogate models and determine sensitivities from the hyperparameter settings.
+%
+These include multivariate adaptive regression spline (MARS) screening~\cite{Friedman1991} and Gaussian Process screening~\cite{RasmussenWilliams2006}.
+
+The more powerful variance-based methods include such techniques as Sobol sensitivity indices~\cite{Sobol1993} and Fourier amplitude sensitivity testing (FAST)~\cite{CukierFortuinShuler1973} which are able to capture higher order sensitivities.
+
 \subsection{Visualizing Sensitivity}
+\label{sec:SA_visualization}
+Within the sensitivity literature visual representations conveying sensitivity information include a variant of the bar chart known as a tornado plot, parallel coordinate plots and their circular variant, the radar chart, scatterplot matrices,  and generalized reachable sets (GRS)~\cite{SaltelliChanScott2000,BushenkovChernykhKamenev1995}.
+
+More recently, the visualization community has explored the use of glyphs to provide statistical and sensitivity information in order to present trends in the data.
+%
+By utilizing local linear regression to compute partial derivatives around sampled data points and representing the information in terms of glyph shape, sensitivity information can be visually encoded into scatterplots~\cite{CorreaChanMa2009, ChanCorreaMa2010, GuoWardRundensteiner2011, ChanCorreaMa2013}.
+
+Correa et al.~\cite{CorreaChanMa2009} aimed at incorporating uncertainty information into PCA projections and k-means clustering and accomplished this goal by augmenting scatterplots with tornado plots.
+%
+Together these glyphs encode uncertainty and partial derivative information.
+%
+The idea of mapping sensitivity information to a line segment through each data point has been extended in their later work~\cite{ChanCorreaMa2010} with the introduction of the flow-based scatterplot (FBS) that highlights functional relationships between inputs and outputs.
+%
+The works by Guo et al.~\cite{GuoWardRundensteiner2011} and Chan et al.~\cite{ChanCorreaMa2013} attempt to provide more than a single partial derivative information into their scatterplots by experimenting with different glyph shapes such as star plots, among others.
+%
+Guo et al. also utilize a bar chart similar to the tornado plot used by Correa et al., whereas Chan et al. provide two other interpretations.
+%
+The first is a generalization of the FBS called the generalized sensitivity scatterplot (GSS).
+%
+By using orthogonal regression, GSSs can represent the partial derivative of any variable with respect to any other variable.
+%
+The other is a fan glyph that works similarly to the star glyph, allowing for viewing multiple partial derivatives, but rather than displaying magnitude as in the star glyph, the fan glyph highlights the direction of each partial derivative, since all line segments are normalized in length.
+
+Several other visualization systems designed for SA also exist in the literature, some of which have been previously discussed in Section~\ref{sec:designSteering} and are repeated here for clarity.
+%
+Most of these systems enable visual exploration of local sensitivity information.
+
+HDViz~\cite{GerberBremerPascucci2010} characterizes the behavior of system outputs with respect to input parameters geometrically.
+%
+HyperMoVal~\cite{PiringerBergerKrasser2010} highlights discrepancies occuring between the data and the model, and computes sensitivity information on the model.
+%
+The software proposed in Section~\ref{paper:pacificVis2016} provides similar capabilities by reporting on the fitness of each local regression model fit to a partition of the data.
+%
+Berger et al.~\cite{BergerPiringerFilzmoser2011} provide a focus+context display that provides local sensitivity information on and near a user-selected focal point.
+%
+Tuner~\cite{Torsney-WeirSaadMoller2011} allows users to explore sensitivity information through interaction and visual inspection, that is, by noticing which plots change the most when the user adjusts a parameter.
+%
+Demir et al.~\cite{DemirWestermann2013} utilize the HyperSlice~\cite{VanWijkVanLiere1993} technique to enhance the understanding of the sensitivity information provided by a Gaussian Process fit.
+%
+Vismon~\cite{BooshehrianMullrPeterman2012} provides SA to the visualization of the uncertainty of a simulation for fisheries scientists.
+
+Canonical correlation analysis (CCA) has been used in a plot known as the heliograph~\cite{DeganiShaftoOlson2006} and a system called Slycat~\cite{CrossnoSheadSielicki2015} to determine correlations between multiple inputs and multiple outputs in a global setting for ensemble data.
+
+The proposed method given in Section~\ref{paper:pacificVis2016} is, in spirit, similar to systems provided in May et al.~\cite{MayBannachDavey2011} and Muhlbacher et al.~\cite{MuhlbacherPiringer2013}, by providing the capability to interactively refine the partitioning during the SA to give a multi-scale view of the sensitivity information.
+%
+However, data is partitioned along one or two dimensions (i.e. input parameters) in both cases while our partitioning spans all dimensions.
+
 \section{Data Modeling}
 \label{sec:regression}
 \subsection{Linear and Polynomial Regression}
+The most straightforward types of data modeling occur when the data can be well approximated in closed form by a linear or polynomial model.
+%
+For example, consider a problem with several independent variables, $x_i, i=1,...,d$, and one dependent variable, $y$.
+%
+We seek to capture the relationship between each $x_i$ and $y$ through linear relationships: $y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + ... + \beta_d x_d + \epsilon$, where $\epsilon$ represents random error.
+%
+This equation is given in intercept form where $\beta_0$ represents the y-intercept.
+%
+When the data is appropriately centered to have a mean of zero ($\mu_x,\mu_y = 0$), $\beta_0$ can be omitted.
+%
+For the remainder of this section, we will adopt the more flexible matrix notation where in intercept form, $\textbf{X} = \begin{bmatrix}\textbf{1} & \textbf{x}_1 & \ldots & \textbf{x}_d \end{bmatrix}$ such that the first column is a series of ones which will be multiplied by the y-intercept term, $\beta_0$, and the remaining columns are the input dimensions.
+%
+In the centered case, this notation is consistent, as we can drop the initial column in $\textbf{X}$ such that $\textbf{X} = \begin{bmatrix}\textbf{x}_1 & \ldots & \textbf{x}_d\end{bmatrix}$ and remove $\beta_0$ from the linear coefficient vector, $\boldsymbol\beta$.
+
+Given a set of observations $(\textbf{X},\textbf{y})$, the problem in matrix form is given below:
+%
+\begin{equation*}
+\textbf{y} = \textbf{X}\boldsymbol\beta + \boldsymbol\epsilon
+\end{equation*}
+%
+In this equation, we seek to find a $\boldsymbol\beta$ that minimizes the error captured in $\boldsymbol\epsilon$.
+%
+Consider the proposed solution, $\tilde{y} = \textbf{X}\textbf{b}$.
+%
+We define the difference between our model evaluated at an input row $\textbf{x} j$ and the corresponding true response $y_j$ as the residual: $r_j = y_j - \textbf{x}_j\textbf{b}$.
+%
+This leads us to the least squares method which minimizes the sum of squared residuals over the entire observed data:
+\begin{equation*}
+\arg\min_{\textbf{b}} \sum_{j=0}^n(y_j - \textbf{x}_j\textbf{b})^2
+\end{equation*}
+
+In order to minimize the sum of squared residuals, we can differentiate the sum of squared residuals equation with respect to each variable in \textbf{b} and set each derivative equal to zero.
+%
+Rearranging the terms leads to a series of \emph{normal equations}:
+\begin{equation*}
+(\textbf{X}^T\textbf{y}= \textbf{X}^T\textbf{X}\textbf{b})
+\end{equation*}
+
+Thus, the solution to the least squares problem is:
+\begin{equation*}
+b = (\textbf{X}^T \textbf{X})^{-1} \textbf{X}^T \textbf{y}
+\end{equation*}
+
+The case with a single input variable is called simple linear regression and the case where $d\geq 2$ is called multiple linear regression.
+%
+This method can also be extended to polynomials by treating each degree of a variable as separate column in \textbf{X}, and solving for additional coefficients for each term.
+
+Such regression models are easily interpretable, although their application is somewhat limited.
+%
+Linear regression models are unable to capture non-monotonic behaviors, and unless the underlying degree of the function is known a priori, polynomial regression can overfit the data.
+%
+Of course, these effects can be mitigated if the data is partitioned appropriately.
+%
+This has led to the development of regression trees which are discussed in the next section.
+
 \subsection{Partition-Based Models}
+Partition-based regression techniques typically employ a systematic domain partitioning based on various criteria, coupled with regression models fitted to each partition, to identify and understand local structures of the model.
+%
+They can be classified based on their partitioning criteria: those seeking to minimize numerical errors~\cite{Friedman1991, AlexanderGrimshaw1996, BreimanFriedmanOlshen1984a, ChaudhuriHuangLoh1994, ChipmanMcCulloch2010}, and those based on geometric analysis~\cite{GerberPotter2012,GerberRubelBremer2011, LiLueChen2000}.
+%
+In particular, regression trees are constructed by recursively partitioning the domain into multiple partitions at \emph{optimal} locations in the domain (where the optimal criteria can vary), and each partition is fitted with constant~\cite{BreimanFriedmanOlshen1984a}, linear~\cite{AlexanderGrimshaw1996,LiLueChen2000}, low-order spline~\cite{Friedman1991} or polynomial~\cite{ChaudhuriHuangLoh1994} models.
+
+A popular class of regression tree is Friedman's multivariate adaptive regression splines~\cite{Friedman1991} which is utilized in Section~\ref{paper:topoScoring} (see also Hastie et al.~\cite{HastieTibshiraniFriedman2008} for a gentle introduction).
+
+MARS is a non-parametric regression method that uses a collection of simple basis functions to build a complex and flexible response function.
+%
+At the core of MARS are piecewise linear basis functions, given by $\max(0, x - k)$ and $\max(0, k - x)$, where $k$ is the knot (the break point).
+%
+These simple functions are used to build a collection of basis functions, $\{\max(0, x_j-k), \max(0,k-x_j)\}$, where $k \in \{x_{1j}, \dots, x_{nj})$ for $j = 1, \dots, d$.
+%
+If all of the input values are different in the training data this will yield $2nd$ basis functions. The MARS predictor is then given by $\hat{y}(\mathbf{x}) = \beta_0 + \sum_{m=1}^M \beta_m h_m(\mathbf{x})$, where the $\beta_m$'s are coefficients and the $h_m$'s are basis functions, which are either given by a single function from the collection of simple basis functions or a product of
+two or more of such functions.
+
+For a given set of basis functions, $h_1, \dots, h_m$, the $\beta$ coefficients are estimated using least squares.
+%
+The main novelty of the MARS is how the basis functions are selected using a forward selection process, followed by a backward elimination process.
+%
+The forward pass starts with a model that only includes the constant term $\beta_0$ and then adds simple basis functions in pairs in a greedy fashion.
+%
+This yields a model that over fits the training data (i.e.\ has too many terms).
+%
+The backward elimination process drops terms using the generalized cross-validation (GCV) criterion, which compromises between the fidelity of the model and its complexity (size).
+
+As with most non-parametric regression methods, there is no direct method to assess their prediction error.
+%
+However, the prediction error can be estimated by bootstrap methods~\cite{DavisonHinkley1997}.
+%
+In short, an ensemble of MARS models is created by repeatedly resampling, with replacement, the original training data $\{ (\mathbf{x}_i, y_i) \}$ and a MARS model is fit to each batch of resampled data.
+%
+An estimate of the prediction error is then given by the standard deviation of the predictions provided by the bootstrap ensemble.
+
+In terms of more geometrically motivated splitting criteria, the principal Hessian direction regression tree (PHDRT)~\cite{LiLueChen2000} splits the domain near areas of high curvature by projecting the data along its estimated principal Hessian direction and locating the area of highest curvature.
+%
+In Section~\ref{paper:pacificVis2016}, we employ the established Morse-Smale regression (MSR)~\cite{GerberRubelBremer2011}, which, being geometrically motivated, is similar to the PHDRT approach, however it is not restricted to splitting along a hyperplane and is also more robust to multiple undulations in the data.
+%
+In the PHDRT approach, a mean principal Hessian direction is computed implying that positive and negative curvatures can have a canceling effect that prevents such a direction from being discovered.
+%
+MSR utilizes a domain partitioning induced by the Morse-Smale complex (MSC) of the regression surface.
+%
+The MSC partitions the domain into monotonic regions, and MSR takes advantage of the monotonicity implied by this partitioning and builds linear models to fit each partition to capture local interactions between input and output parameters.
+%
+The MSC is at the core of the highly successful HDViz visualization system as seen in~\cite{GerberBremerPascucci2010}.
+%
+HDViz has been a foundation for a good portion of the work developed for this proposal, and extensions have been added to it in order to apply it to the analysis of data in nuclear engineering~\cite{MaljovecLiuWang2015, MaljovecWangMandelli2013a, MaljovecWangPascucci2013}.
+%
+However, the insights made by nuclear scientists were limited by the complexity and the lack of intuition provided in the original visualization.
+%
+In the proposed research of Section~\ref{paper:pacificVis2016}, we follow an iterative process of designing and refining a new visualization system, using HDViz as a basis, that specifically targets nuclear scientists as end users and sensitivity analysis as the end task.
+%
+% Section~\ref{paper:vis2016} discusses in more detail the drawbacks of both PHDRT and MSR and proposes the construction of a hybrid method that uses the benefits of both in order to better characterize complicated datasets.
+
 \subsection{Neural Networks}
+Regression modeling using neural networks goes back at least $20$ years, with notable examples coming from Specht~\cite{Specht1991}, Sarle~\cite{Sarle1994}, and Bishop and Nasrabadi~\cite{BishopNasrabadi2006}.
+
+Here we explain a simple feed-forward neural network with a single hidden layer (see e.g.\ Ripley~\cite{Ripley1996} and Hastie et al.~\cite{HastieTibshiraniFriedman2008} for further details).
+
+The single layer neural network is simply a non-linear statistical model, where the response of interest is modeled as a linear combination of $M$ derived features (the hidden units of the neural network);
+%
+$\hat{y}(\mathbf{x}) = \beta_0 + \mathbf{\beta}^T \mathbf{z}$, $\mathbf{z} = (z_1, \dots, z_M)^T$, where $z_m = \sigma(\alpha_{0m} + \mathbf{\alpha}_m^T \mathbf{x})$.
+%
+The activation function, $\sigma(v)$ is usually taken as the sigmoid function, $\sigma(v) = 1/(1+e^{-v})$.
+
+The unknown parameters of the neural network, which we denote by $\mathbf{\theta}$ and are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
+%
+The weights are estimated by minimizing the sum-of-squares, $R(\mathbf{\theta}) = \sum_{i=1}^n (y_i - \hat{y}(\mathbf{x}_i))^2$.
+%
+However, for a large neural network, the resulting neural network over-fits the data (i.e., the neural network fits the training data well, but performs poorly on independent validation data).
+%
+A common solution is to add a regularization term that shrinks the weights to zero, such as $J(\mathbf{\theta}) = \sum_{m=0}^M \beta_{m}^2 + \sum_{m=0,j=1}^{M,d} \alpha_{mj}^2$, and then minimize $R(\mathbf{\theta}) + \lambda J(\mathbf{\theta})$.
+%
+The minimization can be carried out in an efficient manner using gradient-based methods, as the gradient of the neural network can be computed easily using the chain rule for differentiation.
+%
+As in the case of MARS, the prediction error of the neural network can be estimated using bootstrap methods.
+
 \subsection{Support Vector Machines}
+\emph{Support vector machines} (SVMs) for regression have proven longevity and an extensive body of research into their use and optimization.
+%
+In theory, support vector classification and support vector regression differ only in how the learned function is used.
+%
+Whereas a classifier thresholds the value of the function, in regression the actual function value is retained.
+%
+The measure of loss is typically least squares, whereas in classification different loss functions are used.
+%
+See \cite{SmolaScholkopf2004,SuykensVandewalle1999,SuykensDeBrabanterLukas2002, DruckerBurgesKaufman1997} to name a few.
+
+Regression SVMs are an obvious choice in problems such as levelset detection in the surrogate modeling problem, because they approximate the function under query.
+%
+Classification SVMs can also be utilized, however, by labeling sampled points according to whether they exhibit values above or below the threshold value.
+%
+Then, after the model is trained, the levelset is assumed to be the decision boundary of the model.
+
 \subsection{Bayesian Methods}
 
+Not surprisingly, there are a set of Bayesian techniques that tackle the same set of problems, but focus on \emph{inference}.
+%
+In these methods, a prior distribution is employed before sampling to express the belief about the shape of the data.
+%
+There is a rich body of work that discusses these techniques, but for an overview discussion, see~\cite{MacKay1992b}.
+%
+Of particular interest is the Gaussian process (GP) model~\cite{RasmussenWilliams2005}.
+
+GP regression, or Kriging~\cite{Stein1999}, is a response surface method that assumes a field of random variables where any finite collection of variables can be considered to follow a joint Gaussian distribution.
+%
+Thus, any finite collection of data (read training data) can be modeled as a multivariate normal distribution over functions.
+%
+As such a GP can be characterized on a dataset through the use of a mean and covariance function.
+%
+Kriging provides a \emph{best unbiased linear prediction} for unobserved locations by averaging a neighborhood of points around the query location weighted by a mean and covariance function.
+
+The response variable, $y=f(x)$ at any arbitrary location $z$ has a normal probability distribution given in Equation~\ref{eq:gp} where $X$ is a given $n$-by-$d$ design matrix of inputs, $m(X) = \mu_y$ is the expected value of an associated given output vector of size $n$.
+
+\begin{equation}
+p(f(z)|X,y) = \mathcal{N}(m(X),k(X,z))
+\label{eq:gp}
+\end{equation}
+
+Often the mean function is assumed to be zero which can simplify the computation and can be done without loss of generality~\cite{Seeger2004}.
+
+\begin{equation}
+p(f(z)|X,y) = \mathcal{N}(0,k(X,z))
+\label{eq:gpSimple}
+\end{equation}
+
+Of general importance are the mean and variance prediction at an arbitrary location and the equations for computing these are shown below.
+
+\begin{eqnarray}
+\mu(z|X,y) & = & k(X,z)k(X,X)^{-1}y\\
+\sigma(z|X,y) & = & k(z,z) - k(X,z)k(X,X)^{-1}k(X,z)^T
+\end{eqnarray}
+
+Note, $k(X,X)$ denotes a matrix of all possible covariances of the input samples, $k(X,z)$ represents a vector of the covariances of each input sample with the query location $z$.
+
+From Equation~\ref{eq:gpSimple}, the user needs only to select a covariance function to use and then set the value of its hyperparameters, in order to query a GP at an arbitrary location.
+%
+As the covariance function works to weight the contribution of a neighboring points influence on the prediction of a query location, it makes sense to have a function that is maximal at the query location and tends to zero as the distance from the query location grows.
+%
+Thus, it is common to see kernel functions used such as the squared exponential (most common), linear, piecewise polynomial, Mat\'{e}rn, and the Ornstein-Uhlenbeck functions, although any positive semidefinite function can be used in theory~\cite{RasmussenWilliams2005}.
+
+From a supervised learning perspective, where the model should be ``fit'' to the training data, we fit hyperparameters to a prior covariance function defined for the data which allows us to make predictions on the data.
+%
+Various methods for fitting these hyperparameters exist such as cross validation and maximization of the marginal likelihood (see Chapter 5 of~\cite{RasmussenWilliams2005}).
+
+The training process involves optimizing hyperparameters which are parameters to the selected covariance function.
+
 \section{Topological Data Analysis}
+A crucial step in gaining insights from large, complex, high-dimensional data involves feature abstraction, extraction, and evaluation in the spatiotemporal domain for effective exploration and visualization.
+%
+Topological data analysis (TDA), a relatively new field of study (see~\cite{EdsbrunnerHarer2010,Zomorodian2005,BiasottisDeFlorianiFalcidieno2008,Carlsson2009,EdelsbrunnerHarer2008, Ghrist2009} for seminal works and surveys), has provided efficient and reliable feature-driven analysis and visualization capabilities.
+%
+In all of the proposed work, we apply topological analysis methods to different tasks in the design and analysis of computer experiments framework.
+%
+As such, we review the applications of TDA specifically for multidimensional data analysis and visualization.
+
+Many TDA techniques construct topological structures~\cite{Reeb1946, Smale1961} from scalar functions on point clouds (e.g., Morse-Smale complexes, contour trees, and Reeb graphs) as ``summaries'' over data.
+%
+Among the commonly used TDA approaches, Reeb graphs/contour trees capture very different structural information of a real-valued function compared to the Morse-Smale complexes as the former is contour-based and the latter is gradient-based (Fig.~\ref{fig:topo-structure}).
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figs/chap3/topostructure}
+  \caption[Contour and Gradient-based Structures]{Contour- and gradient-based
+  topological structure of a 2D scalar function.}
+  \label{fig:topo-structure}
+\end{figure}
+
+They both provide meaningful abstractions of high-dimensional data, which reduces the amount of data needed to be processed or stored; and they utilize sophisticated hierarchical representations that capture features at multiple scales, which enables progressive simplifications of features differentiating small- and large-scale structures in the data.
+
 \subsection{Gradient-Based Partitioning}
+The Morse-Smale complex (MSC)~\cite{EdelsbrunnerHarerNatarajan2003, EdelsbrunnerHarerZomorodian2003} describes the topology of a function by clustering the points in the domain into regions of monotonic gradient flow, where each region is associated with a sink-source pair defined by local minima and maxima of the function.
+%
+The MSC can be represented using a graph where the vertices are critical points, and the edges are the boundaries of areas of similar gradient behavior.
+%
+The simplification of the MSC is obtained by removing pairs of vertices in the graph and updating connectivities among their neighboring vertices, thus merging nearby clusters by redirecting the gradient flow.
+%
+MSCs have been shown to be effective in identifying, ordering, and selectively removing features of large-scale data in scientific visualizations (e.g.,~\cite{BremerEdelsbrunnerHamann2004,GyulassyBremerPascucci2008, GyulassyNatarajanPascucci2005}).
+
+HDViz~\cite{GerberBremerPascucci2010}, mentioned previously, employs an approximation of the MSC (in high dimensions) to analyze scalar functions on point cloud data.
+%
+It creates a hierarchical segmentation of the data by clustering points based on their monotonic flow behavior, and designs new visual metaphors based on such a segmentation.
+%
+Correa and Lindstrom~\cite{CorreaLindstrom2011} suggest that by considering a different type of neighborhood structure, we can improve the accuracy in the extracted topology compared to those obtained within HDViz which relies on a $k$-nearest neighborhood which can tend to bias specific directions when the sampling density is variable across the domain.
+%
+Namely, they leverage a family of graphs known as empty region graphs which are discussed in greater detail in Section~\ref{sec:approximationMSC} and Section~\ref{paper:TopoInVis2013}.
+%
+
+The topological spine~\cite{CorreaLindstromBremer2011} uses the Morse-Smale complex to build an extremum graph that can more faithfully represent complex structures such as cycles and fractals occurring in the topology.
+%
+Narayanan et al.~\cite{NarayananThomasNatarajan2015} design a metric for comparing extremum graphs of related data that was used in time-varying data to identify significant events and periodicity in data.
+
 \subsection{Levelset topology}
+
+One use of Morse theory is to study the evolution of levelsets, that is the birth and death of connected components.
+%
+In order to conceptualize this idea, consider the manifold under study as a terrain and the Morse function value as the elevation of the terrain.
+%
+As we begin flooding the terrain, features will disappear, split, or develop holes.
+%
+Incidentally, each of these topology changing events can be modeled by studying the critical points of the manifold.
+%
+This concept was studied and formalized into such concepts as the Reeb graph and Contour tree described below.
+
+% \subsection{Reeb Graph}
+The formal definition of the Reeb graph is given here:
+
+\begin{defn}
+\textbf{Reeb Graph} - The quotient space of the graph of $f$ in
+$\mathbb{M} \times \mathbb{R}$ defined by the equivalence relation
+$(\mathbf{x_i},f(\mathbf{x_i})) \sim (\mathbf{x_j},f(\mathbf{x_j}))$ iff
+$f(\mathbf{x_i}) = f(\mathbf{x_j})$ and $\mathbf{x_i}$,$\mathbf{x_j}$ are part
+of the same connected component of $f^{-1}(f(x_i))$, where $f : \mathbb{M} \rightarrow \mathbb{R}$ is a scalar function defined on a compact manifold, $\mathbb{M}$.
+\end{defn}
+
+Informally, the Reeb graph is the result of contracting each connected component of a levelset to a point and connecting corresponding points between levelsets via edges.
+%
+As stated above, it is only necessary to represent the levelsets of the critical points as nodes in the graph, and thus allow the edges of the graph to represent the infinite number of levelsets existing between critical points.
+
+Georges Reeb, a French mathematician, first formalized the toplogical construct now known as the Reeb Graph in 1946~\cite{Reeb1946}.
+%
+The Reeb graph remained an abstract mathematical construct until 1991 when Shinagawa et. al.~\cite{ShinagawaKuniiKergosien1991} formalized and extended the necessary concepts from Morse theory to construct Reeb graph visualizations for reconstructing 3D surfaces from 2D cross sections.
+%
+Edelsbrunner et al.~\cite{EdelsbrunnerHarerMascarenhas2008} presented an improved algorithm for constructing a time-varying Reeb graph for the triangulated piecewise linear case of the Reeb graph and employed it for analysis of a function defined on a 3-sphere with no boundary.
+%
+Pascucci et al.~\cite{PascucciScorzelliBremer2007} later developed an online algorithm for efficiently constructing the Reeb graph on streaming data and prove its correctness on data of arbitrary dimensionality.
+%
+The survey of Biasotti et. al. gives a more thorough history of the Reeb graph, its theoretical considerations, and various applications~\cite{BiasottiGiorgiSpagnuolo2008}.
+
+% \nb{Insert reeb graph example}
+
+The Reeb graph of a real-valued function describes the connectivity of its level sets and has several related structures that are worth noting.
+%
+A contour tree is a special case of the Reeb graph that arises in simply connected domains.
+%
+A merge tree, also known as a barrier tree, is similar to Reeb graphs and contour trees except that it describes the connectivity of sublevel sets rather than level sets.
+%
+Efficient algorithms for computing the contour tree~\cite{CarrSnoeyinkAxen2003, ChiangLenzLu2005} and merge tree~\cite{OesterlingHeineWeber2015} in arbitrary dimensional spaces exist.
+
+Mapper~\cite{SinghMemoliCarlsson2007} is a software tool that decomposes data into a simplicial complex resembling a generalized Reeb graph and visualizes the data using a graph structure with varying node sizes.
+%
+The software has been shown to extract salient features in a study of medical data by correctly classifying normal patients and patients with two different causes of diabetes~\cite{SarikondaPettusPhatak2014}.
+%and various other applications~\cite{SchwartzFriedbergIvanov2012, KnightDavidsonHerman2014}.
+
+% \subsection{Contour Tree}
+
+For the special case, where the Reeb graph is defined over a simply connected Euclidean space $\mathbb{E}^n$, we acheive the \textbf{Contour tree}, that is a Reeb graph with no cycles and consisting of one connected component.
+%
+Carr et al.~\cite{CarrSnoeyinkAxen2003} introduced the first algorithm for computing the contour tree in any dimension.
+%
+Chiang et al.~\cite{ChiangLenzLu2005} sought to improve on Carr's method by avoiding the need to sort the entire dataset thus creating an output sensitive algorithm that only sorts subsets of the data.
+%
+
+Various visual metaphors have been designed for contour trees~\cite{PascucciCole-McLaughlinScorzelli2009, WeberBremerPascucci2012}.
+%
+In particular, variations of topological landscapes have been used extensively~\cite{BeketayevMorozovWeber2012, DemirBeketayevWeber2012, HarveyWang2010, OesterlingHeineJanicke2010, OesterlingHeineJanicke2011, WeberBremerPascucci2007}.
+%
+These visual metaphors have, or potentially have, capabilities for the visualization of high-dimensional datasets.
+%
+In particular, Weber et al.~\cite{WeberBremerPascucci2007} have presented such a metaphor for visually mapping the contour tree of high-dimensional functions to a 2D terrain where the relative size, volume, and nesting of the topological features are preserved.
+%
+Harvey and Wang~\cite{HarveyWang2010} have extended this work by computing all possible planar landscapes, and are able to preserve exactly the volumes of the high-dimensional features in the areas of the terrain.
+%
+In addition, the works of Oesterling et al.~\cite{OesterlingHeineJanicke2010, OesterlingHeineJanicke2011} have used this same metaphor to visualize a related structure, the join tree.
+%
+This collection of work uses a novel high-dimensional interpolation scheme in order to estimate the density from the raw data points and visually map the density as points on top of their generated terrains.
+
+Oesterling et al.~\cite{OesterlingHeineGunther2013} continued this line of work by creating a linked view software system including user interactions into the analysis by allowing users to brush and link with parallel coordinate plots and PCA projections of the data.
+%
+In addition, they have presented a new method of sorting the features based on either persistence, cluster size, or cluster stability, thus adjusting the placement of features in the topological landscape.
+
+% \begin{itemize}
+% \item \cite{TiernyGyulassySimon2009}
+% \item \cite{ChenObermaierHagen2012,ChenObermaierHagen2013}
+% \item Go through TopoInVis, SOCG, SODA
+% \end{itemize}
+
+The Reeb graph and its relatives all store information regarding the number of components at any function value as well as how these components split and merge as the function value changes.
+%
+Such an abstraction offers a global summary of the topology of the level sets and enables the development of compact and effective methods for modeling and visualizing scientific data, especially in high dimensions (i.e.,~\cite{SinghMemoliCarlsson2007, NicolauLevineCarlsson2011}).
+
 \subsection{Multifield Analysis}
+
+The methods mentioned above deal primarily with scalar field data, but more recently techniques have been developed to also deal with multifield data.
+%
+Jacobi sets~\cite{EdelsbrunnerHarer2002} have been used to locate the critical points of one scalar field restricted to the level sets of another scalar field, allowing for the simultaneous comparison of two variables of interest.
+%
+However, most applications of Jacobi sets have been to low-dimensional examples and are restricted to comparing only two outputs of interest.
+
+A more recent and general technique is the development of the Joint Contour Net (JCN), a generalization of the Reeb graph introduced by Carr et al.~\cite{CarrDuke2014,DukeCarrKnoll2012} that allows for the analysis of multifield data.
+%
+Duke and Hosseini~\cite{DukeHosseini2015} have subsequently improved the performance with a parallel implementation of the JCN, and Geng et al.~\cite{GengDukeCarr2015} have improved the interactivity by enabling brushing and linking and demonstrated its effectiveness in finding periodic patterns in oceanic data.
+
+The notion of Pareto optimality has also been explored.
+%
+Pareto optimality is the trade-off analysis dealt with in multitarget optimization where a Pareto maximum implies increasing one target function value cannot be done without reducing another, and vice versa for a Pareto minimum.
+%
+The simplicial Pareto set~\cite{HuettenbergerHeineCarr2013} builds off the technique proposed by Stadler and Flamm~\cite{StadlerFlamm2003} to the piecewise linear setting in order to visualize the so-called Pareto sets of a sampled multivariate dataset.
+%
+This work has been extended to deal with noisy data by using a reachability graph to perform topological simplification~\cite{HuettenbergerHeineGarth2014}.
+%
+Huettenberger et al.~\cite{HuettenbergerHeineGarth2015} compare the JCN with the Pareto set and conclude that the JCN can be seen as a good and fast approximation of the Pareto set under specific conditions.
+
 \subsection{Non-functional Topology-based Methods}
+TDA also applies to nonfunctional data, for which the connected components, circles, and voids in the data are studied.
+%
+Wang et al.~\cite{WangSummaPascucci2011} utilize TDA techniques developed by Silva et al.~\cite{SilvaMorozovVejdemo-Johansson2009} to recover important structures in high-dimensional data containing nontrivial topology.
+%
+Specifically, they are interested in high-dimensional branching and circular structures.
+%
+Circle-valued coordinate functions are constructed to represent such features.
+%
+Subsequently, they perform dimension reduction on the data while ensuring such structures are visually preserved.
+%
+Carlsson~\cite{Carlsson2009} and Ghrist~\cite{Ghrist2009} both offer several applications of TDA and in particular highlight the topological theory used in a study of statistics of natural images~\cite{LeePedersenMumford2003}.
+%
+Rieck and Liette have utilized persistent homology to structurally compare high-dimensional datasets~\cite{RieckLeitte2014} and to compare dimensionality reduction algorithms~\cite{RieckLeitte2015}.
+%
+In the first work, they have introduced the simplicial chain graph, which can be used to characterize the ``holes'' of a high-dimensional dataset and compare datasets.
+%
+The simplicial chain graph combines structural properties of topological analysis with the distance coherency of geometric information.
+%
+In the latter work, they create density estimator functions from the resulting embeddings of popular dimensionality reduction methods.
+%
+The persistence diagrams of the resulting functions applied to the original Rips graph can then be compared to the persistence diagram of the original high-dimensional data in order to determine which methods best preserve the topology of the data.
