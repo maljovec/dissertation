@@ -483,7 +483,7 @@ In these methods, a prior distribution is employed before sampling to express th
 %
 There is a rich body of work that discusses these techniques, but for an overview discussion, see~\cite{MacKay1992b}.
 %
-Of particular interest is the Gaussian process (GP) model~\cite{RasmussenWilliams2005}.
+Of particular interest is the Gaussian process (GP) model~\cite{RasmussenWilliams2006}.
 
 GP regression, or Kriging~\cite{Stein1999}, is a response surface method that assumes a field of random variables where any finite collection of variables can be considered to follow a joint Gaussian distribution.
 %
@@ -520,11 +520,11 @@ From Equation~\ref{eq:gpSimple}, the user needs only to select a covariance func
 %
 As the covariance function works to weight the contribution of a neighboring points influence on the prediction of a query location, it makes sense to have a function that is maximal at the query location and tends to zero as the distance from the query location grows.
 %
-Thus, it is common to see kernel functions used such as the squared exponential (most common), linear, piecewise polynomial, Mat\'{e}rn, and the Ornstein-Uhlenbeck functions, although any positive semidefinite function can be used in theory~\cite{RasmussenWilliams2005}.
+Thus, it is common to see kernel functions used such as the squared exponential (most common), linear, piecewise polynomial, Mat\'{e}rn, and the Ornstein-Uhlenbeck functions, although any positive semidefinite function can be used in theory~\cite{RasmussenWilliams2006}.
 
 From a supervised learning perspective, where the model should be ``fit'' to the training data, we fit hyperparameters to a prior covariance function defined for the data which allows us to make predictions on the data.
 %
-Various methods for fitting these hyperparameters exist such as cross validation and maximization of the marginal likelihood (see Chapter 5 of~\cite{RasmussenWilliams2005}).
+Various methods for fitting these hyperparameters exist such as cross validation and maximization of the marginal likelihood (see Chapter 5 of~\cite{RasmussenWilliams2006}).
 
 The training process involves optimizing hyperparameters which are parameters to the selected covariance function.
 
@@ -706,3 +706,5 @@ The simplicial chain graph combines structural properties of topological analysi
 In the latter work, they create density estimator functions from the resulting embeddings of popular dimensionality reduction methods.
 %
 The persistence diagrams of the resulting functions applied to the original Rips graph can then be compared to the persistence diagram of the original high-dimensional data in order to determine which methods best preserve the topology of the data.
+
+\bibliography{\jobname}
