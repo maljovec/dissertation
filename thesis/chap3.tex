@@ -9,7 +9,7 @@ Before analyzing any data, it must be collected either by instrumentation, exper
 %
 Under certain conditions, the input parameters may be observed rather than selected which is outside of the scope of this section.
 %
-Here, we formalize the different methods by which data samples can be selected for measurement/experimentation/simulation.
+Here, we formalize the different methods by which data samples can be selected for measurement/experimentation.
 %
 There exists two major branches on how this can be done.
 %
@@ -17,9 +17,9 @@ In the first case, all of the samples are selected and run in bulk.
 %
 We classify this type of sampling as space-filling sampling.
 %
-Space-filling sampling is useful in parallel environments and when one wants to determine the global behavior of the system under study due to the fact that the entire sample set can be specified a priori.
+Space-filling sampling is amenable to parallelization due to the fact that the entire sample set can be specified a priori.
 %
-This constrasts with the second mode of sampling called adaptive sampling.
+Such designs attempt to capture the global behavior of the system under study as they tend to focus more on uniformly sampling the entire domain of interest evenly as compared to the second mode, adaptive sampling.
 %
 Adaptive sampling selects the ``best'' candidate based on current information about the system.
 %
@@ -35,6 +35,8 @@ Adaptive sampling works in a feedback loop where new information is continuously
 It is important to note that the methods discussed herein can be performed in the actual input space, which we will refer to as the value space, or in probability space.
 %
 That is, we can apply a probability distribution function (PDF) over each input, or combined inputs, and sample from the PDF rather than the input range itself.
+%
+In this way, we can manipulate the sampling density to favor specific regions where more fidelity may be desired or necessary, but often this requires some expert knowledge of the domain space prior to experimentation.
 
 The two simplest forms of forward sampling are grid-based and random sampling.
 %
@@ -46,9 +48,9 @@ On the other hand, they can suffer from sampling artifacts due to the uniformity
 %
 As an example, if a feature is aligned with the sampling grid, but occurs at a frequency greater than the grid resolution, the sampling will fail to capture the feature.
 %
-This type of sampling artifact is demonstrated in the left image of Figure~\ref{fig:samplingArtifacts}.
+This type of sampling artifact is demonstrated in the left image of Figure~\ref{fig:samplingArtifacts} and leads to the problem of aliasing in signal processing~\cite{Crow1977}.
 %
-A uniform grid sampling strategy also suffers from the curse of dimensionality requiring $k^d$ sammples to resolve a grid of $k$ points per dimension in $d$ dimensions.
+% A uniform grid sampling strategy also suffers from the curse of dimensionality requiring $k^d$ sammples to resolve a grid of $k$ points per dimension in $d$ dimensions.
 
 \begin{figure}[t]
   \centering
@@ -59,13 +61,23 @@ A uniform grid sampling strategy also suffers from the curse of dimensionality r
   \label{fig:samplingArtifacts}
 \end{figure}
 
-On the other hand, pure random sampling counteracts this type of sampling artifacts, but also holds no guarantees on the sampling density, thus potentially leaving large areas unsampled which could result in the sampling seen in the right image of Figure~\ref{fig:samplingArtifacts} where the variability is entirely missed.
+On the other hand, pure random sampling counteracts this type of sampling artifact by avoiding regular patterns, but also holds no guarantees on the sampling density, thus potentially leaving large areas unsampled which could result in the sampling seen in the right image of Figure~\ref{fig:samplingArtifacts} where the variability is entirely missed.
 %
-Though, this may seem like a contrived example, even missing any one of these features could be belying crucial information to the system under study.
+Though, this may seem like a contrived example and adding more samples could alleviate this problem, even missing any one of these features could be belying crucial information to the system under study.
 %
-Applying a probability distribution over the input space and randomly sampling the distribution function results in the very popular Monte Carlo sampling method and, as with all other probability-weighted sampling strategies, can place emphasis on a particular area of interest in the domain.
+Furthermore, when moving from low to high dimensional cases both forms of sampling suffer from the well-known \emph{curse of dimensionality}~\cite{KeoghMueen2010}.
 %
-In this way, we minimize the likliehood that features in the area of interest will not be sampled.
+In this case, as we increase the dimensionality, the volume of the space increases exponentially, thus if each sample is associated with an empty volume surrounding it (i.e., a closest point Voronoi diagram~\cite{deBergCheongKreveld2008}, see description below ) then the number of samples needed to maintain the same volume per sample will increase exponentially as well.
+%
+This means that it is intractable to cover high-dimensional spaces with ``enough'' samples if the underlying model is of a sufficiently high-frequency.
+%
+Thus, it is important to understand the complexity of the system under study to first determine if a global fit is feasible or desired.
+
+Applying a probability distribution over the input space and randomly sampling the distribution function results in the very popular Monte Carlo sampling method~\cite{MetropolisUlam1949}.
+%
+Typically, this method has been used to estimate integrals, however it, as with all other probability-weighted sampling strategies, has the side effect of placing emphasis on a particular area of interest in the domain.
+%
+In this way, we minimize the likliehood that features in the particular area of interest will not be undersampled.
 
 The Latin hypercube sampling (LHS) strategy~\cite{McKayBeckmanConover1979, Tang1993,VanDam2008} attempts to bridge the gap by providing a controlled random sampling.
 %
@@ -95,19 +107,49 @@ Thus, if an input is sampled using a normal distribution, more cuts will be made
   \label{fig:lhsExample}
 \end{figure}
 
-Centroidal Voronoi tessellation (CVT)~\cite{DuFaberGunzburger1999}, which is related to $k$-means clustering~\cite{HastieTibshiraniFriedman2008}, can be employed to provide a sampling strategy that provides uniform sampling density without being aligned to a particular grid.
+In computer graphics, scientists often use blue-noise distributions of samples which have been found to match the arrangement of photoreceptors in our eyes~\cite{Yellott1982}.
+%
+The term blue-noise comes from signal processing and relates to the power spectrum of the noise signal~\cite{Tuzlukov2002}, but also equally applies with respect to density in the spatial domain.
+%
+Blue noise exhibits no concentrated spikes (i.e., small area with many samples, respective to the rest of the domain) and minimal low frequency components (i.e., large area with few samples, respective to the rest of the domain)~\cite{YanGuoWang2015}.
+%
+In a geometric sense, the sample points will exhibit no regularity, but will still be uniformly distributed in the domain space.
+%
+The main techniques for achieving a blue-noise sampling include Poisson disk sampling, relaxation methods, and tile-based methods~\cite{YanGuoWang2015}.
+
+The first method, Poisson disk sampling creates samples that are guaranteed a minimum distance from all other samples and is used widely in computer graphics.
+%
+The classic algorithm applies to the two dimensional case and is achieved through rejection sampling, that is points are iteratively added to the overall sample set if they do not lie inside a disk of specified radius~\cite{Cook1986}.
+%
+Accelerations off of this baseline algorithm focus on methods for efficiently tracking the empty regions left to be sampled in order to reduce the likliehood of rejecting future samples~\cite{EbeidaDavidsonPatney2011,EbeidaMitchellPatney2012,GamitoMaddock2009,Jones2006,JonesKarger2011,WhiteClineEgbert2007}.
+%
+Though most graphics problems deal in relatively low dimensional spaces, there has been some work for computing Poisson disk sampling in arbitrary dimensions~\cite{Bridson2007,EbeidaMitchellPatney2012,EbeidaMitchellPatney2015,GamitoMaddock2009} and at best these algorithms are still exponential with respect to dimensionality in terms of memory and time.
+
+Of the relaxation techniques, Centroidal Voronoi tessellation (CVT)~\cite{DuFaberGunzburger1999} has been the most widely studied.
+%
+CVT is related to $k$-means clustering~\cite{HastieTibshiraniFriedman2008} in terms of computation and can be employed to provide a sampling strategy that provides uniform sampling density without being aligned to a particular grid.
 %
 The idea is based on the closest point Voronoi diagram~\cite{deBergCheongKreveld2008}.
 %
 Given a set of \emph{sites} existing in $\mathbb{R}^d$, the closest point Voronoi diagram decomposes the space such that any location is associated to its closest representative \emph{sites} under some distance metric, typically Euclidean.
 %
 CVT works by aligning the center of mass, or centroid, of each Voronoi cell with its \emph{site} which then become the sample points.
+%
+By aligning the centroid to the Voronoi cells, we create a solution whereby each Voronoi cell is of equal size, or in other words, the samples are equidistant or nearly equidistant from one another.
+%
+Naive CVT can suffer from regularity as patterns can exist in the resulting sample set.
+%
+To this end, several optimizations have been performed to improve the blue noise characteristic~\cite{BalzerScholmerDeussen2009, ChenYuanChoi2012,deGoesBreedenOstromoukhov2012, XuLiuGotsman2011}.
+%
+As with Poisson disk sampling, most research has been focused on the low-dimensional setting since the combinatorics of increasing dimensionality incur a large storage overhead when processing the Voronoi diagram in arbitrary dimension~\cite{BoissonnatChazalYvinec2017}.
 
-Common in graphics applications is Poisson disk sampling~\cite{Cook1986}.
+Lastly, tile-based methods create small, repeatable templates which can be repeated over the domain of interest~\cite{HillerDeussenKeller2001,KopfCohenOrDeussen2006,LagaeDutre2005,Ostromoukhov2007,OstromoukhovDonohueJodoin2004,WachtelPilleboueCoeurjolly2014}.
 %
-Poisson disk sampling creates samples that are guaranteed a minimum distance from all other samples creating what is known as a blue-noise distribution in signal processing.
+In this setting, a small patch or tile of the domain is pre-computed with desired blue-noise characteristic.
 %
-Though most graphics problems deal in relatively low dimensional spaces, an implementation for arbitrary dimensions exists~\cite{Bridson2007}.
+If the boundaries are carefully constructed to be periodic, then the tiles can be aligned to create a larger domain that maintains the blue-noise property.
+%
+One can see that as the dimensionality increases, so do the boundaries that need to be matched and so most of these methods are applied to two-dimensional domains.
 
 \subsection{Adaptive Designs}
 \label{sec:adaptiveSampling}
