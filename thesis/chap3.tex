@@ -79,7 +79,7 @@ Typically, this method has been used to estimate integrals, however it, as with 
 %
 In this way, we minimize the likliehood that features in the particular area of interest will not be undersampled.
 
-The Latin hypercube sampling (LHS) strategy~\cite{McKayBeckmanConover1979, Tang1993,VanDam2008} attempts to bridge the gap by providing a controlled random sampling.
+The Latin hypercube sampling (LHS) strategy~\cite{McKayBeckmanConover1979,Tang1993,VanDam2008} attempts to bridge the gap by providing a controlled random sampling.
 %
 LHS divides each dimension into slabs with the condition that each slab contains only one sample.
 %
@@ -139,7 +139,7 @@ By aligning the centroid to the Voronoi cells, we create a solution whereby each
 %
 Naive CVT can suffer from regularity as patterns can exist in the resulting sample set.
 %
-To this end, several optimizations have been performed to improve the blue noise characteristic~\cite{BalzerScholmerDeussen2009, ChenYuanChoi2012,deGoesBreedenOstromoukhov2012, XuLiuGotsman2011}.
+To this end, several optimizations have been performed to improve the blue noise characteristic~\cite{BalzerSchlomerDeussen2009,ChenYuanChoi2012,deGoesBreedenOstromoukhov2012,XuLiuGotsman2011}.
 %
 As with Poisson disk sampling, most research has been focused on the low-dimensional setting since the combinatorics of increasing dimensionality incur a large storage overhead when processing the Voronoi diagram in arbitrary dimension~\cite{BoissonnatChazalYvinec2017}.
 
@@ -204,7 +204,7 @@ The basic process of global adaptive sampling tries to converge to an acceptable
 %
 Techniques for achieving this include reducing global uncertainty~\cite{CohnGhahramaniJordan1996,TongKoller2001}, exploiting areas of high gradient~\cite{MaljovecWangKupresanin2013}, and focusing on otherwise ``interesting'' regions.
 %
-Interesting in this context can mean several different things such as unexplored regions~\cite{Whitehead1991}, regions of low confidence~\cite{ThrunMoller1992}, poorly fit regions~\cite{LindenWeber1993}, areas of expected change~\cite{CohnAtlasLadner1990, CohnAtlasLadner1994}, and/or areas where information gain is optimal~\cite{Lam2008}.
+Interesting in this context can mean several different things such as unexplored regions~\cite{Whitehead1991}, regions of low confidence~\cite{ThrunMoller1992}, poorly fit regions~\cite{LindenWeber1993}, areas of expected change~\cite{CohnAtlasLadner1990,CohnAtlasLadner1994}, and/or areas where information gain is optimal~\cite{Lam2008}.
 
 A slightly modified version is aimed at global optimization rather than global accuracy of the model~\cite{MooreSchneider1996,JonesSchonlauWelch1998}.
 %
@@ -233,8 +233,7 @@ The problem also differs from classification since knowing the gradient directio
 
 In reliability engineering, this problem is known as determining the limit state function and can be thought of as the point where a system's load exceeds its capacity where load and capacity are functions of the input parameters.
 %
-The literature in this field attempts to either converge to a single most probable point (MPP) through nonlinear optimization methods~\cite{EldredBichon2006,EldredAgarwalPerez2007} or through adaptive sampling~\cite{Wu1994,DeyMahadevan1998,ZouMahadevanMourelatos2002,
-BichonEldredSwiler2008}.
+The literature in this field attempts to either converge to a single most probable point (MPP) through nonlinear optimization methods~\cite{EldredBichon2006,EldredAgarwalPerez2007} or through adaptive sampling~\cite{Wu1994,DeyMahadevan1998,ZouMahadevanMourelatos2002,BichonEldredSwiler2008}.
 
 In the statistics literature, Ranjan et al.~\cite{RanjanBinghamMichailidis2008} have attempted to solve this problem by defining an expected improvement candidate scoring function that harnesses both a prediction's proximity to the threshold value and also the uncertainty associated with the prediction.
 %
@@ -289,7 +288,7 @@ Differential SA computes the location-dependent partial derivatives of the outpu
 %
 That is, take a small step along one axis and evaluating the slope between the perturbed point and the reference point and repeating for each dimension.
 %
-Improvements to the finite differencing scheme exist that are less computationally expensive such as the decoupled direct method~\cite{Dunker1981, Dunker1984} which solves the problem as a sytem of ordinary differential equations and the Green function method~\cite{KramerCaloRabitz1981} which can be faster when the ratio of inputs to outputs is very high, but is more complicated and thus prone to higher numerical errors~\cite{SaltelliChanScott2000}.
+Improvements to the finite differencing scheme exist that are less computationally expensive such as the decoupled direct method~\cite{Dunker1981,Dunker1984} which solves the problem as a sytem of ordinary differential equations and the Green function method~\cite{KramerCaloRabitz1981} which can be faster when the ratio of inputs to outputs is very high, but is more complicated and thus prone to higher numerical errors~\cite{SaltelliChanScott2000}.
 %
 In contrast, global SA seeks to find correlations that span the entire input domain.
 %
@@ -321,7 +320,7 @@ Within the sensitivity literature visual representations conveying sensitivity i
 
 More recently, the visualization community has explored the use of glyphs to provide statistical and sensitivity information in order to present trends in the data.
 %
-By utilizing local linear regression to compute partial derivatives around sampled data points and representing the information in terms of glyph shape, sensitivity information can be visually encoded into scatterplots~\cite{CorreaChanMa2009, ChanCorreaMa2010, GuoWardRundensteiner2011, ChanCorreaMa2013}.
+By utilizing local linear regression to compute partial derivatives around sampled data points and representing the information in terms of glyph shape, sensitivity information can be visually encoded into scatterplots~\cite{CorreaChanMa2009,ChanCorreaMa2010,GuoWardRundensteiner2011,ChanCorreaMa2013}.
 
 Correa et al.~\cite{CorreaChanMa2009} aimed at incorporating uncertainty information into PCA projections and k-means clustering and accomplished this goal by augmenting scatterplots with tornado plots.
 %
@@ -424,7 +423,7 @@ This has led to the development of regression trees which are discussed in the n
 \subsection{Partition-Based Models}
 Partition-based regression techniques typically employ a systematic domain partitioning based on various criteria, coupled with regression models fitted to each partition, to identify and understand local structures of the model.
 %
-They can be classified based on their partitioning criteria: those seeking to minimize numerical errors~\cite{Friedman1991, AlexanderGrimshaw1996, BreimanFriedmanOlshen1984a, ChaudhuriHuangLoh1994, ChipmanMcCulloch2010}, and those based on geometric analysis~\cite{GerberPotter2012,GerberRubelBremer2011, LiLueChen2000}.
+They can be classified based on their partitioning criteria: those seeking to minimize numerical errors~\cite{Friedman1991,AlexanderGrimshaw1996,BreimanFriedmanOlshen1984a,ChaudhuriHuangLoh1994,ChipmanMcCulloch2010}, and those based on geometric analysis~\cite{GerberPotter2012,GerberRubelBremer2011,LiLueChen2000}.
 %
 In particular, regression trees are constructed by recursively partitioning the domain into multiple partitions at \emph{optimal} locations in the domain (where the optimal criteria can vary), and each partition is fitted with constant~\cite{BreimanFriedmanOlshen1984a}, linear~\cite{AlexanderGrimshaw1996,LiLueChen2000}, low-order spline~\cite{Friedman1991} or polynomial~\cite{ChaudhuriHuangLoh1994} models.
 
@@ -469,7 +468,7 @@ The MSC partitions the domain into monotonic regions, and MSR takes advantage of
 %
 The MSC is at the core of the highly successful HDViz visualization system as seen in~\cite{GerberBremerPascucci2010}.
 %
-HDViz has been a foundation for a good portion of the work developed for this proposal, and extensions have been added to it in order to apply it to the analysis of data in nuclear engineering~\cite{MaljovecLiuWang2015, MaljovecWangMandelli2013a, MaljovecWangPascucci2013}.
+HDViz has been a foundation for a good portion of the work developed for this proposal, and extensions have been added to it in order to apply it to the analysis of data in nuclear engineering~\cite{MaljovecLiuWang2015,MaljovecWangMandelli2013a,MaljovecWangPascucci2013}.
 %
 However, the insights made by nuclear scientists were limited by the complexity and the lack of intuition provided in the original visualization.
 %
@@ -509,7 +508,7 @@ Whereas a classifier thresholds the value of the function, in regression the act
 %
 The measure of loss is typically least squares, whereas in classification different loss functions are used.
 %
-See \cite{SmolaScholkopf2004,SuykensVandewalle1999,SuykensDeBrabanterLukas2002, DruckerBurgesKaufman1997} to name a few.
+See \cite{SmolaScholkopf2004,SuykensVandewalle1999,SuykensDeBrabanterLukas2002,DruckerBurgesKaufman1997} to name a few.
 
 Regression SVMs are an obvious choice in problems such as levelset detection in the surrogate modeling problem, because they approximate the function under query.
 %
@@ -573,13 +572,13 @@ The training process involves optimizing hyperparameters which are parameters to
 \section{Topological Data Analysis}
 A crucial step in gaining insights from large, complex, high-dimensional data involves feature abstraction, extraction, and evaluation in the spatiotemporal domain for effective exploration and visualization.
 %
-Topological data analysis (TDA), a relatively new field of study (see~\cite{EdsbrunnerHarer2010,Zomorodian2005,BiasottisDeFlorianiFalcidieno2008,Carlsson2009,EdelsbrunnerHarer2008, Ghrist2009} for seminal works and surveys), has provided efficient and reliable feature-driven analysis and visualization capabilities.
+Topological data analysis (TDA), a relatively new field of study (see~\cite{EdsbrunnerHarer2010,Zomorodian2005,BiasottisDeFlorianiFalcidieno2008,Carlsson2009,EdelsbrunnerHarer2008,Ghrist2009} for seminal works and surveys), has provided efficient and reliable feature-driven analysis and visualization capabilities.
 %
 In all of the proposed work, we apply topological analysis methods to different tasks in the design and analysis of computer experiments framework.
 %
 As such, we review the applications of TDA specifically for multidimensional data analysis and visualization.
 
-Many TDA techniques construct topological structures~\cite{Reeb1946, Smale1961} from scalar functions on point clouds (e.g., Morse-Smale complexes, contour trees, and Reeb graphs) as ``summaries'' over data.
+Many TDA techniques construct topological structures~\cite{Reeb1946,Smale1961} from scalar functions on point clouds (e.g., Morse-Smale complexes, contour trees, and Reeb graphs) as ``summaries'' over data.
 %
 Among the commonly used TDA approaches, Reeb graphs/contour trees capture very different structural information of a real-valued function compared to the Morse-Smale complexes as the former is contour-based and the latter is gradient-based (Fig.~\ref{fig:topo-structure}).
 
@@ -594,13 +593,13 @@ Among the commonly used TDA approaches, Reeb graphs/contour trees capture very d
 They both provide meaningful abstractions of high-dimensional data, which reduces the amount of data needed to be processed or stored; and they utilize sophisticated hierarchical representations that capture features at multiple scales, which enables progressive simplifications of features differentiating small- and large-scale structures in the data.
 
 \subsection{Gradient-Based Partitioning}
-The Morse-Smale complex (MSC)~\cite{EdelsbrunnerHarerNatarajan2003, EdelsbrunnerHarerZomorodian2003} describes the topology of a function by clustering the points in the domain into regions of monotonic gradient flow, where each region is associated with a sink-source pair defined by local minima and maxima of the function.
+The Morse-Smale complex (MSC)~\cite{EdelsbrunnerHarerNatarajan2003,EdelsbrunnerHarerZomorodian2003} describes the topology of a function by clustering the points in the domain into regions of monotonic gradient flow, where each region is associated with a sink-source pair defined by local minima and maxima of the function.
 %
 The MSC can be represented using a graph where the vertices are critical points, and the edges are the boundaries of areas of similar gradient behavior.
 %
 The simplification of the MSC is obtained by removing pairs of vertices in the graph and updating connectivities among their neighboring vertices, thus merging nearby clusters by redirecting the gradient flow.
 %
-MSCs have been shown to be effective in identifying, ordering, and selectively removing features of large-scale data in scientific visualizations (e.g.,~\cite{BremerEdelsbrunnerHamann2004,GyulassyBremerPascucci2008, GyulassyNatarajanPascucci2005}).
+MSCs have been shown to be effective in identifying, ordering, and selectively removing features of large-scale data in scientific visualizations (e.g.,~\cite{BremerEdelsbrunnerHamann2004,GyulassyBremerPascucci2008,GyulassyNatarajanPascucci2005}).
 
 HDViz~\cite{GerberBremerPascucci2010}, mentioned previously, employs an approximation of the MSC (in high dimensions) to analyze scalar functions on point cloud data.
 %
@@ -660,12 +659,12 @@ A contour tree is a special case of the Reeb graph that arises in simply connect
 %
 A merge tree, also known as a barrier tree, is similar to Reeb graphs and contour trees except that it describes the connectivity of sublevel sets rather than level sets.
 %
-Efficient algorithms for computing the contour tree~\cite{CarrSnoeyinkAxen2003, ChiangLenzLu2005} and merge tree~\cite{OesterlingHeineWeber2015} in arbitrary dimensional spaces exist.
+Efficient algorithms for computing the contour tree~\cite{CarrSnoeyinkAxen2003,ChiangLenzLu2005} and merge tree~\cite{OesterlingHeineWeber2015} in arbitrary dimensional spaces exist.
 
 Mapper~\cite{SinghMemoliCarlsson2007} is a software tool that decomposes data into a simplicial complex resembling a generalized Reeb graph and visualizes the data using a graph structure with varying node sizes.
 %
 The software has been shown to extract salient features in a study of medical data by correctly classifying normal patients and patients with two different causes of diabetes~\cite{SarikondaPettusPhatak2014}.
-%and various other applications~\cite{SchwartzFriedbergIvanov2012, KnightDavidsonHerman2014}.
+%and various other applications~\cite{SchwartzFriedbergIvanov2012,KnightDavidsonHerman2014}.
 
 % \subsection{Contour Tree}
 
@@ -676,9 +675,9 @@ Carr et al.~\cite{CarrSnoeyinkAxen2003} introduced the first algorithm for compu
 Chiang et al.~\cite{ChiangLenzLu2005} sought to improve on Carr's method by avoiding the need to sort the entire dataset thus creating an output sensitive algorithm that only sorts subsets of the data.
 %
 
-Various visual metaphors have been designed for contour trees~\cite{PascucciCole-McLaughlinScorzelli2009, WeberBremerPascucci2012}.
+Various visual metaphors have been designed for contour trees~\cite{PascucciCole-McLaughlinScorzelli2009,WeberBremerPascucci2012}.
 %
-In particular, variations of topological landscapes have been used extensively~\cite{BeketayevMorozovWeber2012, DemirBeketayevWeber2012, HarveyWang2010, OesterlingHeineJanicke2010, OesterlingHeineJanicke2011, WeberBremerPascucci2007}.
+In particular, variations of topological landscapes have been used extensively~\cite{BeketayevMorozovWeber2012,DemirBeketayevWeber2012,HarveyWang2010,OesterlingHeineJanicke2010,OesterlingHeineJanicke2011,WeberBremerPascucci2007}.
 %
 These visual metaphors have, or potentially have, capabilities for the visualization of high-dimensional datasets.
 %
@@ -686,7 +685,7 @@ In particular, Weber et al.~\cite{WeberBremerPascucci2007} have presented such a
 %
 Harvey and Wang~\cite{HarveyWang2010} have extended this work by computing all possible planar landscapes, and are able to preserve exactly the volumes of the high-dimensional features in the areas of the terrain.
 %
-In addition, the works of Oesterling et al.~\cite{OesterlingHeineJanicke2010, OesterlingHeineJanicke2011} have used this same metaphor to visualize a related structure, the join tree.
+In addition, the works of Oesterling et al.~\cite{OesterlingHeineJanicke2010,OesterlingHeineJanicke2011} have used this same metaphor to visualize a related structure, the join tree.
 %
 This collection of work uses a novel high-dimensional interpolation scheme in order to estimate the density from the raw data points and visually map the density as points on top of their generated terrains.
 
@@ -702,7 +701,7 @@ In addition, they have presented a new method of sorting the features based on e
 
 The Reeb graph and its relatives all store information regarding the number of components at any function value as well as how these components split and merge as the function value changes.
 %
-Such an abstraction offers a global summary of the topology of the level sets and enables the development of compact and effective methods for modeling and visualizing scientific data, especially in high dimensions (i.e.,~\cite{SinghMemoliCarlsson2007, NicolauLevineCarlsson2011}).
+Such an abstraction offers a global summary of the topology of the level sets and enables the development of compact and effective methods for modeling and visualizing scientific data, especially in high dimensions (i.e.,~\cite{SinghMemoliCarlsson2007,NicolauLevineCarlsson2011}).
 
 \subsection{Multifield Analysis}
 
@@ -749,4 +748,4 @@ In the latter work, they create density estimator functions from the resulting e
 %
 The persistence diagrams of the resulting functions applied to the original Rips graph can then be compared to the persistence diagram of the original high-dimensional data in order to determine which methods best preserve the topology of the data.
 
-\bibliography{\jobname}
+% \bibliography{\jobname}
