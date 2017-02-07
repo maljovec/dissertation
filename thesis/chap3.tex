@@ -277,7 +277,9 @@ Utilizing the predictive power of the regression, they are able to provide a gui
 %
 The user adjusts the focal point through multiple linked views, and sensitivity and uncertainty information is encoded around the focal point.
 
-Tuner~\cite{Torsney-WeirSaadMoller2011} begins as an automated adaptive sampling algorithm where a sparse sampling of the parameter space is refined by building a Gaussian Process Model (GPM)~\cite{RasmussenWilliams2006} and using adaptive sampling to focus additional samples in areas where either the response is near an optimal setting or the model has high uncertainty.
+Tuner~\cite{Torsney-WeirSaadMoller2011} employs an automated adaptive sampling algorithm where a sparse sampling of the parameter space is refined by building a Gaussian Process Model (GPM)~\cite{RasmussenWilliams2006}.
+%
+The adaptive sampling focuses additional samples in areas where either the response is near an optimal setting or the model has high uncertainty.
 %
 The software then relies heavily on user interaction to study the sensitivities with respect to each input parameter and steers the computation toward the user-defined optimal solution.
 %
@@ -587,9 +589,13 @@ The training process involves optimizing hyperparameters which are parameters to
 \section{Topological Data Analysis}
 A crucial step in gaining insights from large, complex, high-dimensional data involves feature abstraction, extraction, and evaluation in the spatiotemporal domain for effective exploration and visualization.
 %
-Topological data analysis (TDA), a relatively new field of study (see~\cite{EdsbrunnerHarer2010,Zomorodian2005,BiasottisDeFlorianiFalcidieno2008,Carlsson2009,EdelsbrunnerHarer2008,Ghrist2009} for seminal works and surveys), has provided efficient and reliable feature-driven analysis and visualization capabilities.
+Topological data analysis (TDA, see~\cite{EdsbrunnerHarer2010,Zomorodian2005,BiasottisDeFlorianiFalcidieno2008,Carlsson2009,EdelsbrunnerHarer2008,Ghrist2009} for seminal works and surveys), has provided efficient and reliable feature-driven analysis and visualization capabilities.
 %
-In all of the proposed work, we apply topological analysis methods to different tasks in the design and analysis of computer experiments framework.
+Previous work in pure mathematics has focused on the study of topological spaces under smooth and continuous settings without computational considerations of noisy and discrete datasets.
+%
+TDA typically operates under the discrete setting where combinatorial structures such as graphs or simplicial complexes are imposed on the point cloud data to approximate their underlying structure.
+%
+In all of the proposed work, we apply TDA-based methods to different tasks in the design and analysis of computer experiments framework.
 %
 As such, we review the applications of TDA specifically for multidimensional data analysis and visualization.
 
@@ -610,9 +616,9 @@ They both provide meaningful abstractions of high-dimensional data, which reduce
 \subsection{Gradient-Based Partitioning}
 The Morse-Smale complex (MSC)~\cite{EdelsbrunnerHarerNatarajan2003,EdelsbrunnerHarerZomorodian2003} describes the topology of a function by clustering the points in the domain into regions of monotonic gradient flow, where each region is associated with a sink-source pair defined by local minima and maxima of the function.
 %
-The MSC can be represented using a graph where the vertices are critical points, and the edges are the boundaries of areas of similar gradient behavior.
+The MSC can be represented using a graph where the vertices are critical points, and the edges are the boundaries of areas with similar gradient behavior.
 %
-The simplification of the MSC is obtained by removing pairs of vertices in the graph and updating connectivities among their neighboring vertices, thus merging nearby clusters by redirecting the gradient flow.
+The simplification of the MSC is obtained by removing pairs of vertices in the graph and updating connectivities among their neighboring vertices, thus merging nearby clusters by redirecting the gradient flow~\cite{ComicDeFloriani2011, GuntherReininghausSeidel2013, IuricichFugacciDeFloriani2015}.
 %
 MSCs have been shown to be effective in identifying, ordering, and selectively removing features of large-scale data in scientific visualizations (e.g.,~\cite{BremerEdelsbrunnerHamann2004,GyulassyBremerPascucci2008,GyulassyNatarajanPascucci2005}).
 
@@ -620,14 +626,14 @@ HDViz~\cite{GerberBremerPascucci2010}, mentioned previously, employs an approxim
 %
 It creates a hierarchical segmentation of the data by clustering points based on their monotonic flow behavior, and designs new visual metaphors based on such a segmentation.
 %
-Correa and Lindstrom~\cite{CorreaLindstrom2011} suggest that by considering a different type of neighborhood structure, we can improve the accuracy in the extracted topology compared to those obtained within HDViz which relies on a $k$-nearest neighborhood which can tend to bias specific directions when the sampling density is variable across the domain.
+Correa and Lindstrom~\cite{CorreaLindstrom2011} suggest that by considering a different type of neighborhood structure, the accuracy in the extracted topology can be improved compared to those obtained within HDViz which relies on a $k$-nearest neighborhood which can tend to bias specific directions when the sampling density is variable across the domain.
 %
 Namely, they leverage a family of graphs known as empty region graphs which are discussed in greater detail in Section~\ref{sec:approximationMSC} and Section~\ref{paper:TopoInVis2013}.
 %
 
 The topological spine~\cite{CorreaLindstromBremer2011} uses the Morse-Smale complex to build an extremum graph that can more faithfully represent complex structures such as cycles and fractals occurring in the topology.
 %
-Narayanan et al.~\cite{NarayananThomasNatarajan2015} design a metric for comparing extremum graphs of related data that was used in time-varying data to identify significant events and periodicity in data.
+Narayanan et al.~\cite{NarayananThomasNatarajan2015} design a metric for comparing such extremum graphs of related data that was used in time-varying data to identify significant events and periodicity in data.
 
 \subsection{Levelset topology}
 
@@ -680,6 +686,14 @@ Mapper~\cite{SinghMemoliCarlsson2007} is a software tool that decomposes data in
 %
 The software has been shown to extract salient features in a study of medical data by correctly classifying normal patients and patients with two different causes of diabetes~\cite{SarikondaPettusPhatak2014}.
 %and various other applications~\cite{SchwartzFriedbergIvanov2012,KnightDavidsonHerman2014}.
+%
+It is shown, in a restrictive sense, that Mapper converges to the Reeb space (a higher-dimensional generalization of Reeb graph) in the limit~\cite{MunchWang2016}.
+%
+To this end, there have been some very recent efforts in understanding Reeb spaces and fiber surfaces via visualization, although those works have largely focused on bivariate functions on tetrahedral meshes~\cite{CarrGengTierny2015,KlacanskyTiernyCarr2016,TiernyCarr2016}.
+%
+Extensions of these works to general dimensionality are an open and interesting avenue of future research.
+
+In terms of comparing the topologies of related data, the bottleneck distance between persistence diagrams is a well-established technique~\cite{Cohen-SteinerEdelsbrunnerHarer2007}, but Beketayev et al.~\cite{BeketayevYeliussizovMorozov2014} have recently devised a more robust metric for comparing merge trees that accounts for the nesting structure of the tree.
 
 % \subsection{Contour Tree}
 
@@ -720,7 +734,7 @@ Such an abstraction offers a global summary of the topology of the level sets an
 
 \subsection{Multifield Analysis}
 
-The methods mentioned above deal primarily with scalar field data, but more recently techniques have been developed to also deal with multifield data.
+The methods mentioned above deal primarily with scalar field data (except for those regarding Reeb spaces~\cite{MunchWang2016, CarrGengTierny2015, KlacanskyTiernyCarr2016, TiernyCarr2016}), but more recently techniques have been developed to also deal with multi-field data.
 %
 Jacobi sets~\cite{EdelsbrunnerHarer2002} have been used to locate the critical points of one scalar field restricted to the level sets of another scalar field, allowing for the simultaneous comparison of two variables of interest.
 %
@@ -729,8 +743,11 @@ However, most applications of Jacobi sets have been to low-dimensional examples 
 A more recent and general technique is the development of the Joint Contour Net (JCN), a generalization of the Reeb graph introduced by Carr et al.~\cite{CarrDuke2014,DukeCarrKnoll2012} that allows for the analysis of multifield data.
 %
 Duke and Hosseini~\cite{DukeHosseini2015} have subsequently improved the performance with a parallel implementation of the JCN, and Geng et al.~\cite{GengDukeCarr2015} have improved the interactivity by enabling brushing and linking and demonstrated its effectiveness in finding periodic patterns in oceanic data.
+%
+Chattopadhyay et al.~\cite{ChattopadhyayCarrDuke2014,ChattopadhyayCarrDuke2016} have focused on bridging the gap between approximation and theory and produced an algorithm for performing simplification on the JCN among several other theoretical advancements.
 
-The notion of Pareto optimality has also been explored.
+
+The notion of Pareto optimality has also been explored using TDA.
 %
 Pareto optimality is the trade-off analysis dealt with in multitarget optimization where a Pareto maximum implies increasing one target function value cannot be done without reducing another, and vice versa for a Pareto minimum.
 %
@@ -753,7 +770,7 @@ Subsequently, they perform dimension reduction on the data while ensuring such s
 %
 Carlsson~\cite{Carlsson2009} and Ghrist~\cite{Ghrist2009} both offer several applications of TDA and in particular highlight the topological theory used in a study of statistics of natural images~\cite{LeePedersenMumford2003}.
 %
-Rieck and Liette have utilized persistent homology to structurally compare high-dimensional datasets~\cite{RieckLeitte2014} and to compare dimensionality reduction algorithms~\cite{RieckLeitte2015}.
+Rieck et al. have utilized persistent homology to structurally compare high-dimensional datasets~\cite{RieckMaraLeitte2012,RieckLeitte2014} and to compare dimensionality reduction algorithms~\cite{RieckLeitte2015}.
 %
 In the first work, they have introduced the simplicial chain graph, which can be used to characterize the ``holes'' of a high-dimensional dataset and compare datasets.
 %
@@ -762,5 +779,7 @@ The simplicial chain graph combines structural properties of topological analysi
 In the latter work, they create density estimator functions from the resulting embeddings of popular dimensionality reduction methods.
 %
 The persistence diagrams of the resulting functions applied to the original Rips graph can then be compared to the persistence diagram of the original high-dimensional data in order to determine which methods best preserve the topology of the data.
+%
+Lastly, Bubenik~\cite{Bubenik2015} introduces a visualization called the persistence landscape as an alternative to the persistence diagrams and barcodes used by both Carlsson and Ghrist.
 
 % \bibliography{\jobname}
