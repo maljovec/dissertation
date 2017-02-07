@@ -184,10 +184,128 @@ Figure~\ref{fig:mscAlgorithm} shows the three step process of the discretized Mo
   \label{fig:mscAlgorithm}
 \end{figure}
 
-\section{Persistence Simplification}
-
-
 %%TODO: I think this last part will include the contour tree, so I should mention how it is used in high-dimension, right?
 % \section{Contour Tree}
+
+\subsection{Persistence Simplification}
+At this point, we are able to identify topological features as critical points in the function space.
+%
+When considering even low-dimensional examples such as a 2D terrain, it is clear that not all of the topological features are of equal significance.
+%
+Thus, we seek some way by which we can sort the topological features in both the Reeb graph and  Morse-Smale complex setting in some way so as to capture this ``significance.''
+%
+Doing so affords us the opportunity to deconstruct the topology into a hierarchical representation whereby we can look at the topology at different scales of resolution allowing us to de-noise the results.
+
+The notion of significance that we use is taken from the field of persistent homology.
+%
+Persistent homology can be applied to non-functional point cloud data as in the simplicial complex case considered by Carlsson and Ghrist~\cite{Carlsson2009,Ghrist2009}.
+%
+In such a case, a filtration of a simplicial complex is analyzed in order to track the birth and death of connected components.
+%
+We are concerned with the persistence of features occuring in scalar function data as presented in the survey of Edelsbrunner and Harer~\cite{EdelsbrunnerHarer2008}.
+
+In order to describe persistence, we begin with the simple 1D case.
+%
+Let $f: \mathbb{R} \rightarrow \mathbb{R}$ be a smooth function with non-degenerate critical points meaning each critical point is either a local minimum or a local maximum (i.e., there are no inflection points).
+%
+One may note that the sublevel sets of $f$ change connectivity only when we pass critical values.
+%
+That is, when we pass a local minimum value, a new connected component is created or ``born,'' and when we pass a local maximum value, two connected components merge together.
+%
+In this way, we can pair critical points.
+%
+When a new component is born, the local minimum that created it is its representative.
+%
+Upon passing a local maximum and merging two components, the maximum is paired with the higher valued local minimum representing the formerly separate connected components.
+%
+The pair is assigned a persistence value equal to the function value difference of the local maximum and local minimum.
+%
+The merged connected component retains the lower valued local minimum as its representative.
+%
+Note, that once a local minimum is paired, it will not be paired again as there is no longer a connected component represented by it.
+%
+A 2D example is given in Figure~\ref{fig:persistenceFill}.
+
+\begin{figure}[!ht]
+  \centering
+  \raisebox{-.5\height}{\includegraphics[width=0.2\textwidth]{figs/chap4/persistence1}}
+  \raisebox{-.5\height}{\includegraphics[width=0.04\textwidth]{figs/chap4/arrow}}
+  \raisebox{-.5\height}{\includegraphics[width=0.2\textwidth]{figs/chap4/persistence2}}
+  \raisebox{-.5\height}{\includegraphics[width=0.04\textwidth]{figs/chap4/arrow}}
+  \raisebox{-.5\height}{\includegraphics[width=0.2\textwidth]{figs/chap4/persistence3}}
+  \raisebox{-.5\height}{\includegraphics[width=0.04\textwidth]{figs/chap4/arrow}}
+  \raisebox{-.5\height}{\includegraphics[width=0.2\textwidth]{figs/chap4/persistence4}}
+  \caption[Illustration of Persistence Pairing]{One way of understanding
+  persistence simplification is to consider the flooding of a terrain.
+  %
+  As we progress from left to right, we see additional components being born and then the merging of separate components into single components.
+  %
+  These merge events occur at the levelsets of the saddle points and the attached local minima become a persistence pairing with the persistence value being the difference between the saddle's function value and the maximum function value of the two minima associated.
+  %
+  In the case of the third image, this value would be $-1.13-(-1.27)=0.14$ whereas the merge in the fourth image yields a persistence value of $-0.955-(-1.26)=0.305$.}
+  \label{fig:persistenceFill}
+\end{figure}
+
+A common tool for visualizing these persistence pairings is the persistence diagram (see Figure~\ref{fig:persistenceDiagram}) which maps the function value of the local minimum (the `birth' point) on the horizontal axis and the function value of the local maximum (the `death' point) on the vertical axis.
+%
+Note, that no point will lie below the identity $y=x$ as a pair must be born before it dies.
+%
+The persistence of a pair is given by the vertical distance to the identity line.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.65\textwidth]{figs/chap4/persistence-diagram}
+  \caption[A 1D Function and its Persistence Diagram]{A 1D Morse function with three local minima and three local maxima.
+  %
+  The critical points are paired, and each pair is encoded as a point in the persistence diagram on the right.}
+  \label{fig:persistenceDiagram}
+\end{figure}
+
+As we increase in dimension, the pairing occurs only between critical points of conecutive indices.
+%
+That is, minima are paired with 1-saddles, 1-saddles are paired with 2-saddles, and $(d-1)$-saddles are paired with local maxima.
+%
+Returning to our approximation, we have not yet described how to identify saddles.
+%
+As we are computing ascending and descending manifolds separately, we only concern ourselves with identifying 1-saddles and $(d-1)$-saddles needed to cancel local minima and local maxima, respectively.
+%
+Saddle-saddle cancellations are omitted in this implementation.
+
+We will describe briefly the process for finding $(d-1)$ saddles and performing merges for the descending manifolds case, and state that the ascending manifold case is performed the same way on $-f$.
+%
+We must first identify all points that lie on the boundary of two descending manifolds.
+%
+A point lies on the boundary of a descending manifold if its associated maximum is different than the associated maximum of one of its neighbors.
+%
+For each pair of adjacent descending manifolds, we identify the lowest valued point occuring on the shared boundary as the saddle point separating the two maxima.
+%
+With this information, the lower-valued maximum is paired with the saddle and given a persistence equal to the function value difference between the two, and the higher-valued maximum is named as the successor.
+%
+We then sort all of these potential cancellations by increasing persistence value, and process them one at a time.
+%
+Each time we process a cancellation, we need to update the remaining potential cancellations in the list by replacing the merged maximum with its successor and update the persistence of the potential new cancellation accordingly.
+%
+If the successor is of larger value than the shared maximum on the new
+cancellation, we only need to update the partition label, but if the successor is of lower value, we must update the persistence of the new cancellation to be the function value of the saddle subtracted from the function value of the successor.
+%
+This is performed recursively until a single partition exists for each connected component of the dataset.
+
+% %
+% In persistent homology, the connected components of complexes such as the \v{C}ech or Vietoris-Rips are tracked over an ever-increasing scale of values.
+% %
+% In order to understand this concept more thoroughly, we must describe how these complexes are constructed.
+% %
+% The \v{C}ech complex begins with a point set and a radius, $\epsilon$.
+% %
+% Each point is surrounded by a a ball of radius $\epsilon$.
+% %
+% A simplex is formed anytime there is an intersection of 2 or more balls.
+% %
+% Thus, we can track the birth and death of connected components in the complex as $\epsilon$ increases in size.
+% %
+% The Vietoris-Rips complex is similarly defined but relaxes the intersection property to include simplexes as long as there is a pairwise intersection among all of the balls.
+% %
+% In this way, we can attribute a persistence value to each connected component by subtracting the radius when the connected component is first discovered from the radius when the connected component disappears.
+
 
 % \bibliography{\jobname}
