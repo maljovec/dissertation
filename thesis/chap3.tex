@@ -9,7 +9,7 @@ Before analyzing any data, it must be collected either by instrumentation, exper
 %
 Under certain conditions, the input parameters may be observed rather than selected which is outside of the scope of this section.
 %
-Here, we formalize the different methods by which data samples can be selected for measurement/experimentation/simulation.
+Here, we formalize the different methods by which data samples can be selected for measurement/experimentation.
 %
 There exists two major branches on how this can be done.
 %
@@ -17,9 +17,9 @@ In the first case, all of the samples are selected and run in bulk.
 %
 We classify this type of sampling as space-filling sampling.
 %
-Space-filling sampling is useful in parallel environments and when one wants to determine the global behavior of the system under study due to the fact that the entire sample set can be specified a priori.
+Space-filling sampling is amenable to parallelization due to the fact that the entire sample set can be specified a priori.
 %
-This constrasts with the second mode of sampling called adaptive sampling.
+Such designs attempt to capture the global behavior of the system under study as they tend to focus more on uniformly sampling the entire domain of interest evenly as compared to the second mode, adaptive sampling.
 %
 Adaptive sampling selects the ``best'' candidate based on current information about the system.
 %
@@ -35,6 +35,8 @@ Adaptive sampling works in a feedback loop where new information is continuously
 It is important to note that the methods discussed herein can be performed in the actual input space, which we will refer to as the value space, or in probability space.
 %
 That is, we can apply a probability distribution function (PDF) over each input, or combined inputs, and sample from the PDF rather than the input range itself.
+%
+In this way, we can manipulate the sampling density to favor specific regions where more fidelity may be desired or necessary, but often this requires some expert knowledge of the domain space prior to experimentation.
 
 The two simplest forms of forward sampling are grid-based and random sampling.
 %
@@ -46,9 +48,9 @@ On the other hand, they can suffer from sampling artifacts due to the uniformity
 %
 As an example, if a feature is aligned with the sampling grid, but occurs at a frequency greater than the grid resolution, the sampling will fail to capture the feature.
 %
-This type of sampling artifact is demonstrated in the left image of Figure~\ref{fig:samplingArtifacts}.
+This type of sampling artifact is demonstrated in the left image of Figure~\ref{fig:samplingArtifacts} and leads to the problem of aliasing in signal processing~\cite{Crow1977}.
 %
-A uniform grid sampling strategy also suffers from the curse of dimensionality requiring $k^d$ sammples to resolve a grid of $k$ points per dimension in $d$ dimensions.
+% A uniform grid sampling strategy also suffers from the curse of dimensionality requiring $k^d$ sammples to resolve a grid of $k$ points per dimension in $d$ dimensions.
 
 \begin{figure}[t]
   \centering
@@ -59,15 +61,25 @@ A uniform grid sampling strategy also suffers from the curse of dimensionality r
   \label{fig:samplingArtifacts}
 \end{figure}
 
-On the other hand, pure random sampling counteracts this type of sampling artifacts, but also holds no guarantees on the sampling density, thus potentially leaving large areas unsampled which could result in the sampling seen in the right image of Figure~\ref{fig:samplingArtifacts} where the variability is entirely missed.
+On the other hand, pure random sampling counteracts this type of sampling artifact by avoiding regular patterns, but also holds no guarantees on the sampling density, thus potentially leaving large areas unsampled which could result in the sampling seen in the right image of Figure~\ref{fig:samplingArtifacts} where the variability is entirely missed.
 %
-Though, this may seem like a contrived example, even missing any one of these features could be belying crucial information to the system under study.
+Though, this may seem like a contrived example and adding more samples could alleviate this problem, even missing any one of these features could be belying crucial information to the system under study.
 %
-Applying a probability distribution over the input space and randomly sampling the distribution function results in the very popular Monte Carlo sampling method and, as with all other probability-weighted sampling strategies, can place emphasis on a particular area of interest in the domain.
+Furthermore, when moving from low to high dimensional cases both forms of sampling suffer from the well-known \emph{curse of dimensionality}~\cite{KeoghMueen2010}.
 %
-In this way, we minimize the likliehood that features in the area of interest will not be sampled.
+In this case, as we increase the dimensionality, the volume of the space increases exponentially, thus if each sample is associated with an empty volume surrounding it (i.e., a closest point Voronoi diagram~\cite{deBergCheongKreveld2008}, see description below ) then the number of samples needed to maintain the same volume per sample will increase exponentially as well.
+%
+This means that it is intractable to cover high-dimensional spaces with ``enough'' samples if the underlying model is of a sufficiently high-frequency.
+%
+Thus, it is important to understand the complexity of the system under study to first determine if a global fit is feasible or desired.
 
-The Latin hypercube sampling (LHS) strategy~\cite{McKayBeckmanConover1979, Tang1993,VanDam2008} attempts to bridge the gap by providing a controlled random sampling.
+Applying a probability distribution over the input space and randomly sampling the distribution function results in the very popular Monte Carlo sampling method~\cite{MetropolisUlam1949}.
+%
+Typically, this method has been used to estimate integrals, however it, as with all other probability-weighted sampling strategies, has the side effect of placing emphasis on a particular area of interest in the domain.
+%
+In this way, we minimize the likliehood that features in the particular area of interest will not be undersampled.
+
+The Latin hypercube sampling (LHS) strategy~\cite{McKayBeckmanConover1979,Tang1993,VanDam2008} attempts to bridge the gap by providing a controlled random sampling.
 %
 LHS divides each dimension into slabs with the condition that each slab contains only one sample.
 %
@@ -95,30 +107,60 @@ Thus, if an input is sampled using a normal distribution, more cuts will be made
   \label{fig:lhsExample}
 \end{figure}
 
-Centroidal Voronoi tessellation (CVT)~\cite{DuFaberGunzburger1999}, which is related to $k$-means clustering~\cite{HastieTibshiraniFriedman2008}, can be employed to provide a sampling strategy that provides uniform sampling density without being aligned to a particular grid.
+In computer graphics, scientists often use blue-noise distributions of samples which have been found to match the arrangement of photoreceptors in our eyes~\cite{Yellott1982}.
+%
+The term blue-noise comes from signal processing and relates to the power spectrum of the noise signal~\cite{Tuzlukov2002}, but also equally applies with respect to density in the spatial domain.
+%
+Blue noise exhibits no concentrated spikes (i.e., small area with many samples, respective to the rest of the domain) and minimal low frequency components (i.e., large area with few samples, respective to the rest of the domain)~\cite{YanGuoWang2015}.
+%
+In a geometric sense, the sample points will exhibit no regularity, but will still be uniformly distributed in the domain space.
+%
+The main techniques for achieving a blue-noise sampling include Poisson disk sampling, relaxation methods, and tile-based methods~\cite{YanGuoWang2015}.
+
+The first method, Poisson disk sampling creates samples that are guaranteed a minimum distance from all other samples and is used widely in computer graphics.
+%
+The classic algorithm applies to the two dimensional case and is achieved through rejection sampling, that is points are iteratively added to the overall sample set if they do not lie inside a disk of specified radius~\cite{Cook1986}.
+%
+Accelerations off of this baseline algorithm focus on methods for efficiently tracking the empty regions left to be sampled in order to reduce the likliehood of rejecting future samples~\cite{EbeidaDavidsonPatney2011,EbeidaMitchellPatney2012,GamitoMaddock2009,Jones2006,JonesKarger2011,WhiteClineEgbert2007}.
+%
+Though most graphics problems deal in relatively low dimensional spaces, there has been some work for computing Poisson disk sampling in arbitrary dimensions~\cite{Bridson2007,EbeidaMitchellPatney2012,EbeidaMitchellPatney2015,GamitoMaddock2009} and at best these algorithms are still exponential with respect to dimensionality in terms of memory and time.
+
+Of the relaxation techniques, Centroidal Voronoi tessellation (CVT)~\cite{DuFaberGunzburger1999} has been the most widely studied.
+%
+CVT is related to $k$-means clustering~\cite{HastieTibshiraniFriedman2008} in terms of computation and can be employed to provide a sampling strategy that provides uniform sampling density without being aligned to a particular grid.
 %
 The idea is based on the closest point Voronoi diagram~\cite{deBergCheongKreveld2008}.
 %
 Given a set of \emph{sites} existing in $\mathbb{R}^d$, the closest point Voronoi diagram decomposes the space such that any location is associated to its closest representative \emph{sites} under some distance metric, typically Euclidean.
 %
 CVT works by aligning the center of mass, or centroid, of each Voronoi cell with its \emph{site} which then become the sample points.
+%
+By aligning the centroid to the Voronoi cells, we create a solution whereby each Voronoi cell is of equal size, or in other words, the samples are equidistant or nearly equidistant from one another.
+%
+Naive CVT can suffer from regularity as patterns can exist in the resulting sample set.
+%
+To this end, several optimizations have been performed to improve the blue noise characteristic~\cite{BalzerSchlomerDeussen2009,ChenYuanChoi2012,deGoesBreedenOstromoukhov2012,XuLiuGotsman2011}.
+%
+As with Poisson disk sampling, most research has been focused on the low-dimensional setting since the combinatorics of increasing dimensionality incur a large storage overhead when processing the Voronoi diagram in arbitrary dimension~\cite{BoissonnatChazalYvinec2017}.
 
-Common in graphics applications is Poisson disk sampling~\cite{Cook1986}.
+Lastly, tile-based methods create small, repeatable templates which can be repeated over the domain of interest~\cite{HillerDeussenKeller2001,KopfCohenOrDeussen2006,LagaeDutre2005,Ostromoukhov2007,OstromoukhovDonohueJodoin2004,WachtelPilleboueCoeurjolly2014}.
 %
-Poisson disk sampling creates samples that are guaranteed a minimum distance from all other samples creating what is known as a blue-noise distribution in signal processing.
+In this setting, a small patch or tile of the domain is pre-computed with desired blue-noise characteristic.
 %
-Though most graphics problems deal in relatively low dimensional spaces, an implementation for arbitrary dimensions exists~\cite{Bridson2007}.
+If the boundaries are carefully constructed to be periodic or otherwise aligned in some fashion, then the tiles can be combined to create a larger domain that maintains the blue-noise property.
+%
+One can see that as the dimensionality increases, so do the boundaries that need to be matched and so most of these methods are applied to two-dimensional domains.
 
 \subsection{Adaptive Designs}
 \label{sec:adaptiveSampling}
 
 In contrast to the techniques described above, adaptive sampling selects new candidate samples by utilizing all of the previously collected information, and therefore, the full set of samples cannot be generated a priori.
 %
-Another term commonly used in the data mining community is active learning and spans a broader class of algorithms aimed more broadly at the problems of classification and regression~\cite{Settles2009}.
+Another term commonly used in the data mining community is active learning and spans a wider class of algorithms aimed more broadly at the problems of classification and regression~\cite{Settles2009}.
 %
 Other names appear in the literature as well such as sequential sampling and optimal experimental design.
 %
-We focus our attention specifically on the problem of regression over real-valued domains, and follow the general adaptive sampling pipeline laid out in Figure~\ref{fig:asCycle} which is repeated until a convergence criterion is met, typically the residual between consecutive iterations falls below a predetermined threshold.
+We focus our attention specifically on the problem of regression over real-valued domains, and follow the general adaptive sampling pipeline laid out in Figure~\ref{fig:asCycle} which is repeated until a convergence criterion is met, typically the residual between consecutive iterations falls below a preset threshold.
 
 \begin{figure}[t]
   \centering
@@ -162,11 +204,11 @@ The basic process of global adaptive sampling tries to converge to an acceptable
 %
 Techniques for achieving this include reducing global uncertainty~\cite{CohnGhahramaniJordan1996,TongKoller2001}, exploiting areas of high gradient~\cite{MaljovecWangKupresanin2013}, and focusing on otherwise ``interesting'' regions.
 %
-Interesting in this context can mean several different things such as unexplored regions~\cite{Whitehead1991}, regions of low confidence~\cite{ThrunMoller1992}, poorly fit regions~\cite{LindenWeber1993}, areas of expected change~\cite{CohnAtlasLadner1990, CohnAtlasLadner1994}, and/or areas where information gain is optimal~\cite{Lam2008}.
+Interesting in this context can mean several different things such as unexplored regions~\cite{Whitehead1991}, regions of low confidence~\cite{ThrunMoller1992}, poorly fit regions~\cite{LindenWeber1993}, areas of expected change~\cite{CohnAtlasLadner1990,CohnAtlasLadner1994}, and/or areas where information gain is optimal~\cite{Lam2008}.
 
 A slightly modified version is aimed at global optimization rather than global accuracy of the model~\cite{MooreSchneider1996,JonesSchonlauWelch1998}.
 %
-Another setting in adaptive sampling is to identify a global optimal parameter setting typically one that maximizes or minimizes some figure of merit, but may also be a Pareto optimum that trades off amongst several figures of merit.
+In this context, the goal is to identify a global optimal parameter setting where either a single figure of merit is maximized or minimized or a Pareto optimum that trades off amongst several figures of merit is optimized.
 %
 The active search method takes a slightly different approach by looking at the problem as attempting to sample points contained in a single class~\cite{GarnettKrishnamurthyXiong2012}.
 %
@@ -191,8 +233,7 @@ The problem also differs from classification since knowing the gradient directio
 
 In reliability engineering, this problem is known as determining the limit state function and can be thought of as the point where a system's load exceeds its capacity where load and capacity are functions of the input parameters.
 %
-The literature in this field attempts to either converge to a single most probable point (MPP) through nonlinear optimization methods~\cite{EldredBichon2006,EldredAgarwalPerez2007} or through adaptive sampling~\cite{Wu1994,DeyMahadevan1998,ZouMahadevanMourelatos2002,
-BichonEldredSwiler2008}.
+The literature in this field attempts to either converge to a single most probable point (MPP) through nonlinear optimization methods~\cite{EldredBichon2006,EldredAgarwalPerez2007} or through adaptive sampling~\cite{Wu1994,DeyMahadevan1998,ZouMahadevanMourelatos2002,BichonEldredSwiler2008}.
 
 In the statistics literature, Ranjan et al.~\cite{RanjanBinghamMichailidis2008} have attempted to solve this problem by defining an expected improvement candidate scoring function that harnesses both a prediction's proximity to the threshold value and also the uncertainty associated with the prediction.
 %
@@ -202,6 +243,8 @@ Bryan et al.~\cite{BryanSchneiderNichol2005} define a scoring function called th
 %
 All three methods utilize a Gaussian process surrogate model, however the latter two are performed in what Settles~\cite{Settles2009} refers to as the pool-based active learning setting, whereas the first uses a global optimization to select the optimal point at each iteration.
 
+
+%%% TODO: Expand this text
 % \nb{Why is this different? The latter is slower right?}
 
 % \subsubsection{Optimization Problems}
@@ -247,7 +290,7 @@ Differential SA computes the location-dependent partial derivatives of the outpu
 %
 That is, take a small step along one axis and evaluating the slope between the perturbed point and the reference point and repeating for each dimension.
 %
-Improvements to the finite differencing scheme exist that are less computationally expensive such as the decoupled direct method~\cite{Dunker1981, Dunker1984} which solves the problem as a sytem of ordinary differential equations and the Green function method~\cite{KramerCaloRabitz1981} which can be faster when the ratio of inputs to outputs is very high, but is more complicated and thus prone to higher numerical errors~\cite{SaltelliChanScott2000}.
+Improvements to the finite differencing scheme exist that are less computationally expensive such as the decoupled direct method~\cite{Dunker1981,Dunker1984} which solves the problem as a sytem of ordinary differential equations and the Green function method~\cite{KramerCaloRabitz1981} which can be faster when the ratio of inputs to outputs is very high, but is more complicated and thus prone to higher numerical errors~\cite{SaltelliChanScott2000}.
 %
 In contrast, global SA seeks to find correlations that span the entire input domain.
 %
@@ -279,7 +322,7 @@ Within the sensitivity literature visual representations conveying sensitivity i
 
 More recently, the visualization community has explored the use of glyphs to provide statistical and sensitivity information in order to present trends in the data.
 %
-By utilizing local linear regression to compute partial derivatives around sampled data points and representing the information in terms of glyph shape, sensitivity information can be visually encoded into scatterplots~\cite{CorreaChanMa2009, ChanCorreaMa2010, GuoWardRundensteiner2011, ChanCorreaMa2013}.
+By utilizing local linear regression to compute partial derivatives around sampled data points and representing the information in terms of glyph shape, sensitivity information can be visually encoded into scatterplots~\cite{CorreaChanMa2009,ChanCorreaMa2010,GuoWardRundensteiner2011,ChanCorreaMa2013}.
 
 Correa et al.~\cite{CorreaChanMa2009} aimed at incorporating uncertainty information into PCA projections and k-means clustering and accomplished this goal by augmenting scatterplots with tornado plots.
 %
@@ -319,7 +362,7 @@ Canonical correlation analysis (CCA) has been used in a plot known as the heliog
 
 The proposed method given in Section~\ref{paper:pacificVis2016} is, in spirit, similar to systems provided in May et al.~\cite{MayBannachDavey2011} and Muhlbacher et al.~\cite{MuhlbacherPiringer2013}, by providing the capability to interactively refine the partitioning during the SA to give a multi-scale view of the sensitivity information.
 %
-However, data is partitioned along one or two dimensions (i.e. input parameters) in both cases while our partitioning spans all dimensions.
+However in both previous works, data is partitioned along one or two dimensions (i.e. input parameters) while the method presented in this dissertation spans all dimensions.
 
 \section{Data Modeling}
 \label{sec:regression}
@@ -382,7 +425,7 @@ This has led to the development of regression trees which are discussed in the n
 \subsection{Partition-Based Models}
 Partition-based regression techniques typically employ a systematic domain partitioning based on various criteria, coupled with regression models fitted to each partition, to identify and understand local structures of the model.
 %
-They can be classified based on their partitioning criteria: those seeking to minimize numerical errors~\cite{Friedman1991, AlexanderGrimshaw1996, BreimanFriedmanOlshen1984a, ChaudhuriHuangLoh1994, ChipmanMcCulloch2010}, and those based on geometric analysis~\cite{GerberPotter2012,GerberRubelBremer2011, LiLueChen2000}.
+They can be classified based on their partitioning criteria: those seeking to minimize numerical errors~\cite{Friedman1991,AlexanderGrimshaw1996,BreimanFriedmanOlshen1984a,ChaudhuriHuangLoh1994,ChipmanMcCulloch2010}, and those based on geometric analysis~\cite{GerberPotter2012,GerberRubelBremer2011,LiLueChen2000}.
 %
 In particular, regression trees are constructed by recursively partitioning the domain into multiple partitions at \emph{optimal} locations in the domain (where the optimal criteria can vary), and each partition is fitted with constant~\cite{BreimanFriedmanOlshen1984a}, linear~\cite{AlexanderGrimshaw1996,LiLueChen2000}, low-order spline~\cite{Friedman1991} or polynomial~\cite{ChaudhuriHuangLoh1994} models.
 
@@ -425,9 +468,9 @@ MSR utilizes a domain partitioning induced by the Morse-Smale complex (MSC) of t
 %
 The MSC partitions the domain into monotonic regions, and MSR takes advantage of the monotonicity implied by this partitioning and builds linear models to fit each partition to capture local interactions between input and output parameters.
 %
-The MSC is at the core of the highly successful HDViz visualization system as seen in~\cite{GerberBremerPascucci2010}.
+The MSC is at the core of the HDViz visualization system~\cite{GerberBremerPascucci2010}.
 %
-HDViz has been a foundation for a good portion of the work developed for this proposal, and extensions have been added to it in order to apply it to the analysis of data in nuclear engineering~\cite{MaljovecLiuWang2015, MaljovecWangMandelli2013a, MaljovecWangPascucci2013}.
+HDViz has been extended in order to apply it to the analysis of data in nuclear engineering~\cite{MaljovecLiuWang2015,MaljovecWangMandelli2013a,MaljovecWangPascucci2013}.
 %
 However, the insights made by nuclear scientists were limited by the complexity and the lack of intuition provided in the original visualization.
 %
@@ -446,7 +489,7 @@ $\hat{y}(\mathbf{x}) = \beta_0 + \mathbf{\beta}^T \mathbf{z}$, $\mathbf{z} = (z_
 %
 The activation function, $\sigma(v)$ is usually taken as the sigmoid function, $\sigma(v) = 1/(1+e^{-v})$.
 
-The unknown parameters of the neural network, which we denote by $\mathbf{\theta}$ and are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
+The unknown parameters of the neural network, which we denote by $\mathbf{\theta}$ are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
 %
 The weights are estimated by minimizing the sum-of-squares, $R(\mathbf{\theta}) = \sum_{i=1}^n (y_i - \hat{y}(\mathbf{x}_i))^2$.
 %
@@ -467,7 +510,7 @@ Whereas a classifier thresholds the value of the function, in regression the act
 %
 The measure of loss is typically least squares, whereas in classification different loss functions are used.
 %
-See \cite{SmolaScholkopf2004,SuykensVandewalle1999,SuykensDeBrabanterLukas2002, DruckerBurgesKaufman1997} to name a few.
+See \cite{SmolaScholkopf2004,SuykensVandewalle1999,SuykensDeBrabanterLukas2002,DruckerBurgesKaufman1997} to name a few.
 
 Regression SVMs are an obvious choice in problems such as levelset detection in the surrogate modeling problem, because they approximate the function under query.
 %
@@ -475,13 +518,15 @@ Classification SVMs can also be utilized, however, by labeling sampled points ac
 %
 Then, after the model is trained, the levelset is assumed to be the decision boundary of the model.
 
+%%% TODO: Expand this text
+
 \subsection{Bayesian Methods}
 
-Not surprisingly, there are a set of Bayesian techniques that tackle the same set of problems, but focus on \emph{inference}.
+Bayesian techniques can also be used to model the problems described herein, but focus on \emph{inference}.
 %
 In these methods, a prior distribution is employed before sampling to express the belief about the shape of the data.
 %
-There is a rich body of work that discusses these techniques, but for an overview discussion, see~\cite{MacKay1992b}.
+There is a rich body of work that discusses these techniques, but for an overview discussion, see MacKay~\cite{MacKay1992b}.
 %
 Of particular interest is the Gaussian process (GP) model~\cite{RasmussenWilliams2006}.
 
@@ -518,26 +563,26 @@ Note, $k(X,X)$ denotes a matrix of all possible covariances of the input samples
 
 From Equation~\ref{eq:gpSimple}, the user needs only to select a covariance function to use and then set the value of its hyperparameters, in order to query a GP at an arbitrary location.
 %
-As the covariance function works to weight the contribution of a neighboring points influence on the prediction of a query location, it makes sense to have a function that is maximal at the query location and tends to zero as the distance from the query location grows.
+As the covariance function works to weight the contribution of a neighboring point's influence on the prediction of a query location, it makes sense to have a function that is maximal at the query location and tends to zero as the distance from the query location grows.
 %
 Thus, it is common to see kernel functions used such as the squared exponential (most common), linear, piecewise polynomial, Mat\'{e}rn, and the Ornstein-Uhlenbeck functions, although any positive semidefinite function can be used in theory~\cite{RasmussenWilliams2006}.
 
 From a supervised learning perspective, where the model should be ``fit'' to the training data, we fit hyperparameters to a prior covariance function defined for the data which allows us to make predictions on the data.
 %
-Various methods for fitting these hyperparameters exist such as cross validation and maximization of the marginal likelihood (see Chapter 5 of~\cite{RasmussenWilliams2006}).
+Various methods for fitting these hyperparameters exist such as cross validation and maximization of the marginal likelihood (see Chapter 5 of Rasmussen and Williams~\cite{RasmussenWilliams2006}).
 
 The training process involves optimizing hyperparameters which are parameters to the selected covariance function.
 
 \section{Topological Data Analysis}
 A crucial step in gaining insights from large, complex, high-dimensional data involves feature abstraction, extraction, and evaluation in the spatiotemporal domain for effective exploration and visualization.
 %
-Topological data analysis (TDA), a relatively new field of study (see~\cite{EdsbrunnerHarer2010,Zomorodian2005,BiasottisDeFlorianiFalcidieno2008,Carlsson2009,EdelsbrunnerHarer2008, Ghrist2009} for seminal works and surveys), has provided efficient and reliable feature-driven analysis and visualization capabilities.
+Topological data analysis (TDA), a relatively new field of study (see~\cite{EdsbrunnerHarer2010,Zomorodian2005,BiasottisDeFlorianiFalcidieno2008,Carlsson2009,EdelsbrunnerHarer2008,Ghrist2009} for seminal works and surveys), has provided efficient and reliable feature-driven analysis and visualization capabilities.
 %
 In all of the proposed work, we apply topological analysis methods to different tasks in the design and analysis of computer experiments framework.
 %
 As such, we review the applications of TDA specifically for multidimensional data analysis and visualization.
 
-Many TDA techniques construct topological structures~\cite{Reeb1946, Smale1961} from scalar functions on point clouds (e.g., Morse-Smale complexes, contour trees, and Reeb graphs) as ``summaries'' over data.
+Many TDA techniques construct topological structures~\cite{Reeb1946,Smale1961} from scalar functions on point clouds (e.g., Morse-Smale complexes, contour trees, and Reeb graphs) as ``summaries'' over data.
 %
 Among the commonly used TDA approaches, Reeb graphs/contour trees capture very different structural information of a real-valued function compared to the Morse-Smale complexes as the former is contour-based and the latter is gradient-based (Fig.~\ref{fig:topo-structure}).
 
@@ -552,13 +597,13 @@ Among the commonly used TDA approaches, Reeb graphs/contour trees capture very d
 They both provide meaningful abstractions of high-dimensional data, which reduces the amount of data needed to be processed or stored; and they utilize sophisticated hierarchical representations that capture features at multiple scales, which enables progressive simplifications of features differentiating small- and large-scale structures in the data.
 
 \subsection{Gradient-Based Partitioning}
-The Morse-Smale complex (MSC)~\cite{EdelsbrunnerHarerNatarajan2003, EdelsbrunnerHarerZomorodian2003} describes the topology of a function by clustering the points in the domain into regions of monotonic gradient flow, where each region is associated with a sink-source pair defined by local minima and maxima of the function.
+The Morse-Smale complex (MSC)~\cite{EdelsbrunnerHarerNatarajan2003,EdelsbrunnerHarerZomorodian2003} describes the topology of a function by clustering the points in the domain into regions of monotonic gradient flow, where each region is associated with a sink-source pair defined by local minima and maxima of the function.
 %
 The MSC can be represented using a graph where the vertices are critical points, and the edges are the boundaries of areas of similar gradient behavior.
 %
 The simplification of the MSC is obtained by removing pairs of vertices in the graph and updating connectivities among their neighboring vertices, thus merging nearby clusters by redirecting the gradient flow.
 %
-MSCs have been shown to be effective in identifying, ordering, and selectively removing features of large-scale data in scientific visualizations (e.g.,~\cite{BremerEdelsbrunnerHamann2004,GyulassyBremerPascucci2008, GyulassyNatarajanPascucci2005}).
+MSCs have been shown to be effective in identifying, ordering, and selectively removing features of large-scale data in scientific visualizations (e.g.,~\cite{BremerEdelsbrunnerHamann2004,GyulassyBremerPascucci2008,GyulassyNatarajanPascucci2005}).
 
 HDViz~\cite{GerberBremerPascucci2010}, mentioned previously, employs an approximation of the MSC (in high dimensions) to analyze scalar functions on point cloud data.
 %
@@ -618,12 +663,12 @@ A contour tree is a special case of the Reeb graph that arises in simply connect
 %
 A merge tree, also known as a barrier tree, is similar to Reeb graphs and contour trees except that it describes the connectivity of sublevel sets rather than level sets.
 %
-Efficient algorithms for computing the contour tree~\cite{CarrSnoeyinkAxen2003, ChiangLenzLu2005} and merge tree~\cite{OesterlingHeineWeber2015} in arbitrary dimensional spaces exist.
+Efficient algorithms for computing the contour tree~\cite{CarrSnoeyinkAxen2003,ChiangLenzLu2005} and merge tree~\cite{OesterlingHeineWeber2015} in arbitrary dimensional spaces exist.
 
 Mapper~\cite{SinghMemoliCarlsson2007} is a software tool that decomposes data into a simplicial complex resembling a generalized Reeb graph and visualizes the data using a graph structure with varying node sizes.
 %
 The software has been shown to extract salient features in a study of medical data by correctly classifying normal patients and patients with two different causes of diabetes~\cite{SarikondaPettusPhatak2014}.
-%and various other applications~\cite{SchwartzFriedbergIvanov2012, KnightDavidsonHerman2014}.
+%and various other applications~\cite{SchwartzFriedbergIvanov2012,KnightDavidsonHerman2014}.
 
 % \subsection{Contour Tree}
 
@@ -634,9 +679,9 @@ Carr et al.~\cite{CarrSnoeyinkAxen2003} introduced the first algorithm for compu
 Chiang et al.~\cite{ChiangLenzLu2005} sought to improve on Carr's method by avoiding the need to sort the entire dataset thus creating an output sensitive algorithm that only sorts subsets of the data.
 %
 
-Various visual metaphors have been designed for contour trees~\cite{PascucciCole-McLaughlinScorzelli2009, WeberBremerPascucci2012}.
+Various visual metaphors have been designed for contour trees~\cite{PascucciCole-McLaughlinScorzelli2009,WeberBremerPascucci2012}.
 %
-In particular, variations of topological landscapes have been used extensively~\cite{BeketayevMorozovWeber2012, DemirBeketayevWeber2012, HarveyWang2010, OesterlingHeineJanicke2010, OesterlingHeineJanicke2011, WeberBremerPascucci2007}.
+In particular, variations of topological landscapes have been used extensively~\cite{BeketayevMorozovWeber2012,DemirBeketayevWeber2012,HarveyWang2010,OesterlingHeineJanicke2010,OesterlingHeineJanicke2011,WeberBremerPascucci2007}.
 %
 These visual metaphors have, or potentially have, capabilities for the visualization of high-dimensional datasets.
 %
@@ -644,7 +689,7 @@ In particular, Weber et al.~\cite{WeberBremerPascucci2007} have presented such a
 %
 Harvey and Wang~\cite{HarveyWang2010} have extended this work by computing all possible planar landscapes, and are able to preserve exactly the volumes of the high-dimensional features in the areas of the terrain.
 %
-In addition, the works of Oesterling et al.~\cite{OesterlingHeineJanicke2010, OesterlingHeineJanicke2011} have used this same metaphor to visualize a related structure, the join tree.
+In addition, the works of Oesterling et al.~\cite{OesterlingHeineJanicke2010,OesterlingHeineJanicke2011} have used this same metaphor to visualize a related structure, the join tree.
 %
 This collection of work uses a novel high-dimensional interpolation scheme in order to estimate the density from the raw data points and visually map the density as points on top of their generated terrains.
 
@@ -660,7 +705,7 @@ In addition, they have presented a new method of sorting the features based on e
 
 The Reeb graph and its relatives all store information regarding the number of components at any function value as well as how these components split and merge as the function value changes.
 %
-Such an abstraction offers a global summary of the topology of the level sets and enables the development of compact and effective methods for modeling and visualizing scientific data, especially in high dimensions (i.e.,~\cite{SinghMemoliCarlsson2007, NicolauLevineCarlsson2011}).
+Such an abstraction offers a global summary of the topology of the level sets and enables the development of compact and effective methods for modeling and visualizing scientific data, especially in high dimensions (i.e.,~\cite{SinghMemoliCarlsson2007,NicolauLevineCarlsson2011}).
 
 \subsection{Multifield Analysis}
 
@@ -707,4 +752,4 @@ In the latter work, they create density estimator functions from the resulting e
 %
 The persistence diagrams of the resulting functions applied to the original Rips graph can then be compared to the persistence diagram of the original high-dimensional data in order to determine which methods best preserve the topology of the data.
 
-\bibliography{\jobname}
+% \bibliography{\jobname}
