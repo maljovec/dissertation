@@ -105,7 +105,7 @@ A scalar function simply means that for a set of input parameters we associate a
 %
 Multidimensional, in this setting, is taken to mean that the collection of inputs associated to the target value consists of two or more numeric values.
 %
-We will now take a moment to take a closer look at the specific problems to be addressed in each of the stages of the loop in Figure~\ref{fig:dataCycle}.
+We will now direct our attention at the specific problems to be addressed in each of the stages of the loop in Figure~\ref{fig:dataCycle}.
 
 \subsection{Data Generation}
 
@@ -134,10 +134,12 @@ As such, s/he may formulate a broad hypothesis and begin by collecting large qua
 Under such settings, we begin with a potentially sparse, sporadic, and noisy sampling of an input space with the hope of analyzing it with respect to some target value inherent in the data.
 %
 To effectively analze such data, s/he would first need to identify correlations and/or the lack thereof and eliminate extraneous dimensions or summarize collections of inputs into a reduced subspace of the problem.
+%, we will broadly categorize these techniques under the umbrella term of parameter screening.
 
 To address these types of problems, researchers have developed a myriad of techniques ranging from the fully automated, such as dimensionality reduction and regression analysis, to highly user-driven exploratory analysis, like in the many visualization systems encoding sensitivity information.
 %
 These techniques are reviewed in Chapter~\ref{ch:related}.
+% Should I include dimensionality reduction from the survey paper? Probably.
 %
 In Section~\ref{paper:pacificVis2016}, I highlight novel, published work that explores the use of topological techniques for performing structured sensitivity analysis within a visualization system designed by the author for nuclear engineers.
 %

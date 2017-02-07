@@ -44,7 +44,7 @@ They also represent archetypes of the two features sought after in a ``good'' sp
 %
 The samples in a grid-based strategy each represent equally-sized spaces of the input domain.
 %
-On the other hand, they can suffer from sampling artifacts due to the uniformity of sampling.
+On the other hand, they can suffer from sampling artifacts due to the regularity of sampling.
 %
 As an example, if a feature is aligned with the sampling grid, but occurs at a frequency greater than the grid resolution, the sampling will fail to capture the feature.
 %
@@ -67,7 +67,7 @@ Though, this may seem like a contrived example and adding more samples could all
 %
 Furthermore, when moving from low to high dimensional cases both forms of sampling suffer from the well-known \emph{curse of dimensionality}~\cite{KeoghMueen2010}.
 %
-In this case, as we increase the dimensionality, the volume of the space increases exponentially, thus if each sample is associated with an empty volume surrounding it (i.e., a closest point Voronoi diagram~\cite{deBergCheongKreveld2008}, see description below ) then the number of samples needed to maintain the same volume per sample will increase exponentially as well.
+In this case, as we increase the dimensionality, the volume of the space increases exponentially, thus if each sample is associated with an empty volume surrounding it (i.e., a closest point Voronoi cell~\cite{deBergCheongKreveld2008}, see description below) then the number of samples needed to maintain the same volume per sample will increase exponentially as well.
 %
 This means that it is intractable to cover high-dimensional spaces with ``enough'' samples if the underlying model is of a sufficiently high-frequency.
 %
@@ -85,7 +85,7 @@ LHS divides each dimension into slabs with the condition that each slab contains
 %
 Thus, in a two-dimensional setting, one can visualize this as dividing the input space into $n$ rows and $n$ columns where $n$ is the number of required samples.
 %
-Figure~\ref{fig:lhsExample} demonstrates an example where $n=4$.
+The left two images of Figure~\ref{fig:lhsExample} demonstrate an example where $n=4$.
 %
 Though it does impose some structure, LHS can still suffer from the highly irregular sampling density exhibited by random sampling.
 %
@@ -97,15 +97,22 @@ Thus, if an input is sampled using a normal distribution, more cuts will be made
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=.45\textwidth]{figs/chap3/lhs}\qquad
-  \includegraphics[width=.45\textwidth]{figs/chap3/lhs2}
+  \includegraphics[width=.27\textwidth]{figs/chap3/lhs}\qquad
+  \includegraphics[width=.27\textwidth]{figs/chap3/lhs2}\qquad
+  \includegraphics[width=.27\textwidth]{figs/chap3/lhs3}
   \caption[2D Latin Hypercube Sampling Example]{An example of LHS sampling in
   2D: Left: After selecting one point, we color its constituent row and column
   and prevent any more samples from being drawn from the colored cells.
-  Right: The end result shows a distinct color representing each of the four
-  rows and four columns.}
+  Center: The end result shows a distinct color representing each of the four
+  rows and four columns. Right: An example of an undesired correlation effect appearing in an LHS design. Such an correlation can be mitigated with the use of appropriate techniques.}
   \label{fig:lhsExample}
 \end{figure}
+
+LHS designs can also produce random correlations in the sampling, as can be seen in the right image of Figure~\ref{fig:lhsExample}.
+%
+To this end, the permutation matrix used to construct the LHS sample can be manipulated to reduce such correlation effects when the number of samples is greater than the dimensionality~\cite{ImanConover1982,Owen1994}.
+%
+These correlation reducing strategies however may introduce bias~\cite{OlssonSandbergDahlblom2003}.
 
 In computer graphics, scientists often use blue-noise distributions of samples which have been found to match the arrangement of photoreceptors in our eyes~\cite{Yellott1982}.
 %
