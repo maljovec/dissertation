@@ -212,6 +212,7 @@ The basic process of global adaptive sampling tries to converge to an acceptable
 Techniques for achieving this include reducing global uncertainty~\cite{CohnGhahramaniJordan1996,TongKoller2001}, exploiting areas of high gradient~\cite{MaljovecWangKupresanin2013}, and focusing on otherwise ``interesting'' regions.
 %
 Interesting in this context can mean several different things such as unexplored regions~\cite{Whitehead1991}, regions of low confidence~\cite{ThrunMoller1992}, poorly fit regions~\cite{LindenWeber1993}, areas of expected change~\cite{CohnAtlasLadner1990,CohnAtlasLadner1994}, and/or areas where information gain is optimal~\cite{Lam2008}.
+%Maybe we should dig into each of these a bit more thoroughly? Like what are the drawbacks of each, or why is directly extracting the topology well-aligned with what some of these are already attempting to accomplish.
 
 A slightly modified version is aimed at global optimization rather than global accuracy of the model~\cite{MooreSchneider1996,JonesSchonlauWelch1998}.
 %
@@ -236,7 +237,7 @@ Engineers are often concerned with identifying such limit surfaces and character
 %
 The problem is different from global fitting in that the overall fidelity is less of a concern as long as the behavior is adequately modeled around the limit surface.
 %
-The problem also differs from classification since knowing the gradient direction and magnitude along and near the limit surface can also be useful information.
+The problem also differs from classification (i.e., discrete labeling which typically results in a binary decision of inside or outside a particular class) since knowing the gradient direction and magnitude along and near the limit surface can also be useful information.
 
 In reliability engineering, this problem is known as determining the limit state function and can be thought of as the point where a system's load exceeds its capacity where load and capacity are functions of the input parameters.
 %
@@ -248,8 +249,7 @@ In similar spirit, the machine learning community has designed similar yet simpl
 %
 Bryan et al.~\cite{BryanSchneiderNichol2005} define a scoring function called the straddle function, and Gotovis et al.~\cite{GotovosCasatiHitz2013} introduce the ambiguity scoring function which can be thought of as a generalized version of the straddle function.
 %
-All three methods utilize a Gaussian process surrogate model, however the latter two are performed in what Settles~\cite{Settles2009} refers to as the pool-based active learning setting, whereas the first uses a global optimization to select the optimal point at each iteration.
-
+All three methods utilize a Gaussian process surrogate model, however the latter two are performed in what Settles~\cite{Settles2009} refers to as the pool-based active learning setting, whereas the first uses a global optimization to select the optimal point at each iteration which incurs drastically increases the overhead per iteration.
 
 %%% TODO: Expand this text
 % \nb{Why is this different? The latter is slower right?}
@@ -257,7 +257,11 @@ All three methods utilize a Gaussian process surrogate model, however the latter
 % \subsubsection{Optimization Problems}
 \subsubsection{Design Steering}
 
-The aforementioned methods are assumed to be completely automatic except in the instance where the human is required to act as the oracle, though such settings are more rare in the regression context than in the classification context which is beyond the scope of this work.
+The aforementioned methods are assumed to be completely automatic except in the instance where the human is required to act as the oracle, though such settings are more rare in the regression (i.e., continuous) context than in the classification (i.e., discrete) context.
+%
+The latter context of classification is beyond the scope of this work.
+%
+% For example, a common human-dependent task more often involves annotating data with text labels rather than assigning often subjective numeric ranks or values to items in a dataset.
 %
 Within the visualization community, several works have explored the notion of design steering where the results require a qualitative examination, or are used to inform decisions.
 
@@ -265,13 +269,13 @@ HyperMoVal~\cite{PiringerBergerKrasser2010} is a software system used for valida
 %
 It uses support vector regression (SVR)~\cite{SmolaScholkopf2004} to fit a model to high-dimensional data, highlights discrepancies between the data and the model, and computes sensitivity information on the model.
 %
-The software allows for adding more model parameters to refine their regression to an acceptable level of accuracy.
+The software allows for adding more model parameters to refine the regression to an acceptable level of accuracy.
 %
 Berger et al.~\cite{BergerPiringerFilzmoser2011} utilize two different types of regression models (SVR and nearest neighbor regression) to analyze a trade-off study in performance car engine design.
 %
 Utilizing the predictive power of the regression, they are able to provide a guided navigation of the high-dimensional space centered around a user-selected focal point.
 %
-The user adjusts the focal point through multiple linked views, and sensitivity and uncertainty information are encoded around the focal point.
+The user adjusts the focal point through multiple linked views, and sensitivity and uncertainty information is encoded around the focal point.
 
 Tuner~\cite{Torsney-WeirSaadMoller2011} begins as an automated adaptive sampling algorithm where a sparse sampling of the parameter space is refined by building a Gaussian Process Model (GPM)~\cite{RasmussenWilliams2006} and using adaptive sampling to focus additional samples in areas where either the response is near an optimal setting or the model has high uncertainty.
 %
