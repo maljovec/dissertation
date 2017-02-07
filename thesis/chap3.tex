@@ -147,7 +147,7 @@ Lastly, tile-based methods create small, repeatable templates which can be repea
 %
 In this setting, a small patch or tile of the domain is pre-computed with desired blue-noise characteristic.
 %
-If the boundaries are carefully constructed to be periodic, then the tiles can be aligned to create a larger domain that maintains the blue-noise property.
+If the boundaries are carefully constructed to be periodic or otherwise aligned in some fashion, then the tiles can be combined to create a larger domain that maintains the blue-noise property.
 %
 One can see that as the dimensionality increases, so do the boundaries that need to be matched and so most of these methods are applied to two-dimensional domains.
 
@@ -156,11 +156,11 @@ One can see that as the dimensionality increases, so do the boundaries that need
 
 In contrast to the techniques described above, adaptive sampling selects new candidate samples by utilizing all of the previously collected information, and therefore, the full set of samples cannot be generated a priori.
 %
-Another term commonly used in the data mining community is active learning and spans a broader class of algorithms aimed more broadly at the problems of classification and regression~\cite{Settles2009}.
+Another term commonly used in the data mining community is active learning and spans a wider class of algorithms aimed more broadly at the problems of classification and regression~\cite{Settles2009}.
 %
 Other names appear in the literature as well such as sequential sampling and optimal experimental design.
 %
-We focus our attention specifically on the problem of regression over real-valued domains, and follow the general adaptive sampling pipeline laid out in Figure~\ref{fig:asCycle} which is repeated until a convergence criterion is met, typically the residual between consecutive iterations falls below a predetermined threshold.
+We focus our attention specifically on the problem of regression over real-valued domains, and follow the general adaptive sampling pipeline laid out in Figure~\ref{fig:asCycle} which is repeated until a convergence criterion is met, typically the residual between consecutive iterations falls below a preset threshold.
 
 \begin{figure}[t]
   \centering
@@ -208,7 +208,7 @@ Interesting in this context can mean several different things such as unexplored
 
 A slightly modified version is aimed at global optimization rather than global accuracy of the model~\cite{MooreSchneider1996,JonesSchonlauWelch1998}.
 %
-Another setting in adaptive sampling is to identify a global optimal parameter setting typically one that maximizes or minimizes some figure of merit, but may also be a Pareto optimum that trades off amongst several figures of merit.
+In this context, the goal is to identify a global optimal parameter setting where either a single figure of merit is maximized or minimized or a Pareto optimum that trades off amongst several figures of merit is optimized.
 %
 The active search method takes a slightly different approach by looking at the problem as attempting to sample points contained in a single class~\cite{GarnettKrishnamurthyXiong2012}.
 %
@@ -243,6 +243,8 @@ Bryan et al.~\cite{BryanSchneiderNichol2005} define a scoring function called th
 %
 All three methods utilize a Gaussian process surrogate model, however the latter two are performed in what Settles~\cite{Settles2009} refers to as the pool-based active learning setting, whereas the first uses a global optimization to select the optimal point at each iteration.
 
+
+%%% TODO: Expand this text
 % \nb{Why is this different? The latter is slower right?}
 
 % \subsubsection{Optimization Problems}
@@ -360,7 +362,7 @@ Canonical correlation analysis (CCA) has been used in a plot known as the heliog
 
 The proposed method given in Section~\ref{paper:pacificVis2016} is, in spirit, similar to systems provided in May et al.~\cite{MayBannachDavey2011} and Muhlbacher et al.~\cite{MuhlbacherPiringer2013}, by providing the capability to interactively refine the partitioning during the SA to give a multi-scale view of the sensitivity information.
 %
-However, data is partitioned along one or two dimensions (i.e. input parameters) in both cases while our partitioning spans all dimensions.
+However in both previous works, data is partitioned along one or two dimensions (i.e. input parameters) while the method presented in this dissertation spans all dimensions.
 
 \section{Data Modeling}
 \label{sec:regression}
@@ -466,9 +468,9 @@ MSR utilizes a domain partitioning induced by the Morse-Smale complex (MSC) of t
 %
 The MSC partitions the domain into monotonic regions, and MSR takes advantage of the monotonicity implied by this partitioning and builds linear models to fit each partition to capture local interactions between input and output parameters.
 %
-The MSC is at the core of the highly successful HDViz visualization system as seen in~\cite{GerberBremerPascucci2010}.
+The MSC is at the core of the HDViz visualization system~\cite{GerberBremerPascucci2010}.
 %
-HDViz has been a foundation for a good portion of the work developed for this proposal, and extensions have been added to it in order to apply it to the analysis of data in nuclear engineering~\cite{MaljovecLiuWang2015,MaljovecWangMandelli2013a,MaljovecWangPascucci2013}.
+HDViz has been extended in order to apply it to the analysis of data in nuclear engineering~\cite{MaljovecLiuWang2015,MaljovecWangMandelli2013a,MaljovecWangPascucci2013}.
 %
 However, the insights made by nuclear scientists were limited by the complexity and the lack of intuition provided in the original visualization.
 %
@@ -487,7 +489,7 @@ $\hat{y}(\mathbf{x}) = \beta_0 + \mathbf{\beta}^T \mathbf{z}$, $\mathbf{z} = (z_
 %
 The activation function, $\sigma(v)$ is usually taken as the sigmoid function, $\sigma(v) = 1/(1+e^{-v})$.
 
-The unknown parameters of the neural network, which we denote by $\mathbf{\theta}$ and are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
+The unknown parameters of the neural network, which we denote by $\mathbf{\theta}$ are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
 %
 The weights are estimated by minimizing the sum-of-squares, $R(\mathbf{\theta}) = \sum_{i=1}^n (y_i - \hat{y}(\mathbf{x}_i))^2$.
 %
@@ -516,13 +518,15 @@ Classification SVMs can also be utilized, however, by labeling sampled points ac
 %
 Then, after the model is trained, the levelset is assumed to be the decision boundary of the model.
 
+%%% TODO: Expand this text
+
 \subsection{Bayesian Methods}
 
-Not surprisingly, there are a set of Bayesian techniques that tackle the same set of problems, but focus on \emph{inference}.
+Bayesian techniques can also be used to model the problems described herein, but focus on \emph{inference}.
 %
 In these methods, a prior distribution is employed before sampling to express the belief about the shape of the data.
 %
-There is a rich body of work that discusses these techniques, but for an overview discussion, see~\cite{MacKay1992b}.
+There is a rich body of work that discusses these techniques, but for an overview discussion, see MacKay~\cite{MacKay1992b}.
 %
 Of particular interest is the Gaussian process (GP) model~\cite{RasmussenWilliams2006}.
 
@@ -559,13 +563,13 @@ Note, $k(X,X)$ denotes a matrix of all possible covariances of the input samples
 
 From Equation~\ref{eq:gpSimple}, the user needs only to select a covariance function to use and then set the value of its hyperparameters, in order to query a GP at an arbitrary location.
 %
-As the covariance function works to weight the contribution of a neighboring points influence on the prediction of a query location, it makes sense to have a function that is maximal at the query location and tends to zero as the distance from the query location grows.
+As the covariance function works to weight the contribution of a neighboring point's influence on the prediction of a query location, it makes sense to have a function that is maximal at the query location and tends to zero as the distance from the query location grows.
 %
 Thus, it is common to see kernel functions used such as the squared exponential (most common), linear, piecewise polynomial, Mat\'{e}rn, and the Ornstein-Uhlenbeck functions, although any positive semidefinite function can be used in theory~\cite{RasmussenWilliams2006}.
 
 From a supervised learning perspective, where the model should be ``fit'' to the training data, we fit hyperparameters to a prior covariance function defined for the data which allows us to make predictions on the data.
 %
-Various methods for fitting these hyperparameters exist such as cross validation and maximization of the marginal likelihood (see Chapter 5 of~\cite{RasmussenWilliams2006}).
+Various methods for fitting these hyperparameters exist such as cross validation and maximization of the marginal likelihood (see Chapter 5 of Rasmussen and Williams~\cite{RasmussenWilliams2006}).
 
 The training process involves optimizing hyperparameters which are parameters to the selected covariance function.
 
