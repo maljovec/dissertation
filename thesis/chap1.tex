@@ -2,7 +2,7 @@
 
 \chapter{Introduction}
 \label{ch:introduction}
-From the cosmic scale of astronomy to the atomic scale of chemistry, and from speculative economics to precision engineering, experts in a variety of fields are interested in gathering data in order to better understand the functional relationships between target quantities of interest and their presumed drivers.
+From the cosmic scale of astronomy to the atomic scale of chemistry, and from speculative economics to precision engineering, experts in a variety of fields are interested in gathering data in order to better understand the functional relationships between target quantities of interest and their presumed driving forces.
 %
 For instance, what chemical or structural characteristics of a nuclear fuel optimize its safety and efficiency and to what degree and under what conditions?
 %
@@ -89,7 +89,7 @@ In order to perform an experiment, we typically perform the procedure under diff
 %
 Let us illustrate with an example.
 
-In the scenario introduced above regarding nuclear fuel design, the first task for the scientist is quantify what denotes a ``safe'' fuel.
+In the scenario introduced above regarding nuclear fuel design, the first task for the scientist is to quantify what denotes a ``safe'' fuel.
 %
 Next, the scientist will design one or more canonical scenarios by which to evaluate the safety of the fuel.
 %
@@ -97,7 +97,7 @@ In designing these scenarios, the scientist is building a hypothesis about the f
 %
 In the case where the factors can be quantified, the scientist will likely utilize some variation of the loop from Figure~\ref{fig:dataCycle}.
 %
-The scientist will thus generate and analyze data with the end goal of being able to further the mathematical understanding of nuclear fuel safety or to construct a reasonable approximation which can then be subjected to more extensive testing.
+The scientist will thus generate and analyze data with the end goal of being able to further the mathematical understanding of nuclear fuel safety or to construct a reasonable approximation which can then be subjected to more extensive testing at a reduced cost.
 
 We specifically target multidimensional, numeric data which can be modeled as a scalar function.
 %
@@ -149,14 +149,14 @@ This work is incorporated into the RAVEN software~\cite{RabitiAlfonsiCogliati201
 
 In the absence of developing a theoretical formula relating the inputs and outputs, we rely on approximations to represent the relationship between the target value and the inputs after analyzing the collected data.
 %
-We focus our attention on the construction of reduced order models (ROMs) through regression analysis and related techniques.
+We focus our attention on the construction of surrogate models through regression analysis and related techniques.
 %
-ROMs can be useful as an efficient and/or interpretable proxy for prediction or querying statistical or structural information about the acquired data.
+Surrogate models can be useful as an efficient and/or interpretable proxy for prediction or querying statistical or structural information about the acquired data.
 %
-ROMs range in their capacity to accurately fit data and also their interpretability creating a trade-off.
+Surrogate models range in their capacity to accurately fit data and also their interpretability creating a trade-off.
 %
-When selecting an appropriate ROM, there is no silver bullet, and one must consider the end goal before selecting an appropriate ROM.
+When selecting an appropriate surrogate model, there is no silver bullet, and one must consider the end goal before selecting an appropriate surrogate.
 %
-I summarize the related efforts on regression analysis in Section~\ref{sec:regression}.
+I summarize several common classes of data modeling in Section~\ref{sec:regression}. These data modeling methods are used heavily in the novel works of Chapters~\ref{ch:adaptiveSampling} and~\ref{ch:visualization} where I also provide experimental results and commentary on their effective use in practice.
 
 % \bibliography{\jobname}
