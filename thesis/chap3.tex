@@ -396,9 +396,9 @@ In the centered case, this notation is consistent, as we can drop the initial co
 
 Given a set of observations $(\textbf{X},\textbf{y})$, the problem in matrix form is given below:
 %
-\begin{equation*}
+\begin{equation}
 \textbf{y} = \textbf{X}\boldsymbol\beta + \boldsymbol\epsilon
-\end{equation*}
+\end{equation}
 %
 In this equation, we seek to find a $\boldsymbol\beta$ that minimizes the error captured in $\boldsymbol\epsilon$.
 %
@@ -407,21 +407,22 @@ Consider the proposed solution, $\tilde{y} = \textbf{X}\textbf{b}$.
 We define the difference between our model evaluated at an input row $\textbf{x}_j$ and the corresponding true response $y_j$ as the residual: $r_j = y_j - \textbf{x}_j\textbf{b}$.
 %
 This leads us to the least squares method which minimizes the sum of squared residuals over the entire observed data:
-\begin{equation*}
+\begin{equation}
 \arg\min_{\textbf{b}} \sum_{j=0}^n(y_j - \textbf{x}_j\textbf{b})^2
-\end{equation*}
+\end{equation}
 
 In order to minimize the sum of squared residuals, we can differentiate the sum of squared residuals equation with respect to each variable in \textbf{b} and set each derivative equal to zero.
 %
 Rearranging the terms leads to a series of \emph{normal equations}:
-\begin{equation*}
+\begin{equation}
 (\textbf{X}^T\textbf{y}= \textbf{X}^T\textbf{X}\textbf{b})
-\end{equation*}
+\end{equation}
 
 Thus, the solution to the least squares problem is:
-\begin{equation*}
+\begin{equation}
 b = (\textbf{X}^T \textbf{X})^{-1} \textbf{X}^T \textbf{y}
-\end{equation*}
+\label{eq:ols}
+\end{equation}
 
 The case with a single input variable is called simple linear regression and the case where $d\geq 2$ is called multiple linear regression.
 %
@@ -430,29 +431,66 @@ This method can also be extended to polynomials by treating each degree of a var
 This can also be extended to mixtures of different variables of varying orders.
 %
 It is important to note, that this is the simplest version of linear and polynomial regression and more advanced methods can be performed.
+
+The ordinary least squares method described above can fail if the problem exhibits collinearity.
 %
-\DPM{
+Collinearity, or multicollinearity, occurs when two or more input variables are highly or perfectly correlated.
+%
+If perfectly correlated, the matrix in Equation~\ref{eq:ols} is less than full rank and cannot be inverted.
+%
+Similarly, if the variables are highly correlated, then the problem will be ill-conditioned.
+%
+In addition, overfitting can result if too many terms are included in the least squares problem.
+%
+To this end, processes such as regularization and variable selection can be employed to prevent these issues to some extent.
+%
+Before moving on to describe other data modeling
+
+\subsection{Regularization and Feature Selection}
+
+Regularization is a generic concept that can be applied to any problem with a loss function that is to be minimized.
+%
+Though regularization is not restricted to the linear regression problem, it expedites exposition to describe it in this context.
+%
+Regularization, in the regression setting posed, augments a minimization problem with a penalty function, $R$, that favors less complex models and a penalty term $\alpha$ that controls its influence on the solution. In the context of our linear regression problem, we would have a new minimization problem resembling the one given below:
+
+\begin{equation}
+\arg\min_{\textbf{b}} \sum_{j=0}^n(y_j - \textbf{x}_j\textbf{b})^2 + \alpha R(\textbf{b})
+\label{eq:genericRegularization}
+\end{equation}
+
+Common penalization functions include the $L_1$ and $L_2$ norms of $\textbf{b}$ which result in the least absolute shrinkage and selection operator (LASSO)~\cite{Tibshirani1996} and ridge regression~\cite{Hoerl1959,Hoerl1962}, respectively.
+%
+The ridge regression methodology tends to include all of the original terms whereas the LASSO method tends to favor models with fewer parameters, i.e. one or more parameters of $\textbf{b}$ are set to zero.
+%
+Zou and Hastie pointed out several disadvantages of the LASSO method, as well.
+%
+For example, the LASSO method tends to be over aggressive in its parameter selection in cases where the dimensionality is larger than the sample size or if two or more variables exhibit collinearity.
+%
+For this reason, they proposed the elastic net method which combines the $L_1$ and $L_2$ norms to create a regularizer that counteracts the weaknesses of both ridge and LASSO regression~\cite{ZouHastie2005}.
+
+
+Depending on the specific penalty function, regularization can also effectively remove parameters by forcing their coefficients in $\textbf{b}$ to zero.
+%
+This is a form of feature or variable selection.
+%
+Variable selection is the process of eliminating redundant or irrelevant variables in order to construct a model that uses only a subset of the original input variables and this is only one way in which it can be performed.
+
+Algorithms that include feature selection:
 \begin{itemize}
-\item The problem of multicolinearity.
-\item The problem of regularization.
-\item The ridge $\alpha$ parameter to control complexity.
-\item How LASSO helps in the face of sparse coefficients.
-\item Elastic net
-\item Least-Angle Regression (LARS)
-\item Orthogonal matching pursuit (OMP)
-\item others talked about here on scikit-learn %http://scikit-learn.org/stable/modules/linear_model.html
-\item How to find literature on others?
+\item Least-Angle Regression (LARS)~\cite{EfronHastieJohnstone2004}
+\item Orthogonal matching pursuit (OMP)~\cite{DavisMallatZhang1994,PatiRezaiifarKrishnaprasad1993}
 \end{itemize}
-}
+
+\subsection{Partition-Based Models}
+Thus far, we have discussed fitting a global model to a point cloud sampling of our domain of interest.
+%
 Such regression models are easily interpretable, although their application is somewhat limited.
 %
 Linear regression models are unable to capture non-monotonic behaviors, and unless the underlying degree of the function is known a priori, polynomial regression can overfit the data.
 %
 Of course, these effects can be mitigated if the data is partitioned appropriately.
-%
-This has led to the development of regression trees which are discussed in the next section.
 
-\subsection{Partition-Based Models}
 Partition-based regression techniques typically employ a systematic domain partitioning based on various criteria, coupled with regression models fitted to each partition, to identify and understand local structures of the model.
 %
 They can be classified based on their partitioning criteria: those seeking to minimize numerical errors~\cite{Friedman1991,AlexanderGrimshaw1996,BreimanFriedmanOlshen1984a,ChaudhuriHuangLoh1994,ChipmanMcCulloch2010}, and those based on geometric analysis~\cite{GerberPotter2012,GerberRubelBremer2011,LiLueChen2000}.
