@@ -404,7 +404,7 @@ In this equation, we seek to find a $\boldsymbol\beta$ that minimizes the error 
 %
 Consider the proposed solution, $\tilde{y} = \textbf{X}\textbf{b}$.
 %
-We define the difference between our model evaluated at an input row $\textbf{x} j$ and the corresponding true response $y_j$ as the residual: $r_j = y_j - \textbf{x}_j\textbf{b}$.
+We define the difference between our model evaluated at an input row $\textbf{x}_j$ and the corresponding true response $y_j$ as the residual: $r_j = y_j - \textbf{x}_j\textbf{b}$.
 %
 This leads us to the least squares method which minimizes the sum of squared residuals over the entire observed data:
 \begin{equation*}
@@ -426,7 +426,24 @@ b = (\textbf{X}^T \textbf{X})^{-1} \textbf{X}^T \textbf{y}
 The case with a single input variable is called simple linear regression and the case where $d\geq 2$ is called multiple linear regression.
 %
 This method can also be extended to polynomials by treating each degree of a variable as separate column in \textbf{X}, and solving for additional coefficients for each term.
-
+%
+This can also be extended to mixtures of different variables of varying orders.
+%
+It is important to note, that this is the simplest version of linear and polynomial regression and more advanced methods can be performed.
+%
+\DPM{
+\begin{itemize}
+\item The problem of multicolinearity.
+\item The problem of regularization.
+\item The ridge $\alpha$ parameter to control complexity.
+\item How LASSO helps in the face of sparse coefficients.
+\item Elastic net
+\item Least-Angle Regression (LARS)
+\item Orthogonal matching pursuit (OMP)
+\item others talked about here on scikit-learn %http://scikit-learn.org/stable/modules/linear_model.html
+\item How to find literature on others?
+\end{itemize}
+}
 Such regression models are easily interpretable, although their application is somewhat limited.
 %
 Linear regression models are unable to capture non-monotonic behaviors, and unless the underlying degree of the function is known a priori, polynomial regression can overfit the data.
@@ -618,7 +635,7 @@ The Morse-Smale complex (MSC)~\cite{EdelsbrunnerHarerNatarajan2003,EdelsbrunnerH
 %
 The MSC can be represented using a graph where the vertices are critical points, and the edges are the boundaries of areas with similar gradient behavior.
 %
-The simplification of the MSC is obtained by removing pairs of vertices in the graph and updating connectivities among their neighboring vertices, thus merging nearby clusters by redirecting the gradient flow~\cite{ComicDeFloriani2011, GuntherReininghausSeidel2013, IuricichFugacciDeFloriani2015}.
+The simplification of the MSC is obtained by removing pairs of vertices in the graph and updating connectivities among their neighboring vertices, thus merging nearby clusters by redirecting the gradient flow~\cite{ComicDeFloriani2011,GuntherReininghausSeidel2013,IuricichFugacciDeFloriani2015}.
 %
 MSCs have been shown to be effective in identifying, ordering, and selectively removing features of large-scale data in scientific visualizations (e.g.,~\cite{BremerEdelsbrunnerHamann2004,GyulassyBremerPascucci2008,GyulassyNatarajanPascucci2005}).
 
@@ -734,7 +751,7 @@ Such an abstraction offers a global summary of the topology of the level sets an
 
 \subsection{Multifield Analysis}
 
-The methods mentioned above deal primarily with scalar field data (except for those regarding Reeb spaces~\cite{MunchWang2016, CarrGengTierny2015, KlacanskyTiernyCarr2016, TiernyCarr2016}), but more recently techniques have been developed to also deal with multi-field data.
+The methods mentioned above deal primarily with scalar field data (except for those regarding Reeb spaces~\cite{MunchWang2016,CarrGengTierny2015,KlacanskyTiernyCarr2016,TiernyCarr2016}), but more recently techniques have been developed to also deal with multi-field data.
 %
 Jacobi sets~\cite{EdelsbrunnerHarer2002} have been used to locate the critical points of one scalar field restricted to the level sets of another scalar field, allowing for the simultaneous comparison of two variables of interest.
 %
