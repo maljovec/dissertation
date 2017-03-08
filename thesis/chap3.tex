@@ -379,7 +379,8 @@ However in both previous works, data is partitioned along one or two dimensions 
 
 \section{Data Modeling}
 \label{sec:regression}
-\subsection{Linear and Polynomial Regression}
+\subsection{Parametric Regression}
+\subsubsection{Linear Regression}
 The most straightforward types of data modeling occur when the data can be well approximated in closed form by a linear or polynomial model.
 %
 For example, consider a problem with several independent variables, $x_i, i=1,...,d$, and one dependent variable, $y$.
@@ -476,10 +477,11 @@ This is a form of feature or variable selection.
 %
 Variable selection is the process of eliminating redundant or irrelevant variables in order to construct a model that uses only a subset of the original input variables and this is only one way in which it can be performed.
 
-Algorithms that include feature selection:
+\DPM{Algorithms that include feature selection:}
 \begin{itemize}
 \item Least-Angle Regression (LARS)~\cite{EfronHastieJohnstone2004}
 \item Orthogonal matching pursuit (OMP)~\cite{DavisMallatZhang1994,PatiRezaiifarKrishnaprasad1993}
+\item Stepwise regression
 \end{itemize}
 
 \subsection{Partition-Based Models}
@@ -497,15 +499,15 @@ They can be classified based on their partitioning criteria: those seeking to mi
 %
 In particular, regression trees are constructed by recursively partitioning the domain into multiple partitions at \emph{optimal} locations in the domain (where the optimal criteria can vary), and each partition is fitted with constant~\cite{BreimanFriedmanOlshen1984a}, linear~\cite{AlexanderGrimshaw1996,LiLueChen2000}, low-order spline~\cite{Friedman1991} or polynomial~\cite{ChaudhuriHuangLoh1994} models.
 
-A popular class of regression tree is Friedman's multivariate adaptive regression splines~\cite{Friedman1991} which is utilized in Section~\ref{paper:topoScoring} (see also Hastie et al.~\cite{HastieTibshiraniFriedman2008} for a gentle introduction).
-
+A popular class of regression tree is Friedman's multivariate adaptive regression splines~\cite{Friedman1991} which is utilized in Section~\ref{paper:ijuq2013} (see also Hastie et al.~\cite{HastieTibshiraniFriedman2008} for a gentle introduction).
+%
 MARS is a non-parametric regression method that uses a collection of simple basis functions to build a complex and flexible response function.
 %
 At the core of MARS are piecewise linear basis functions, given by $\max(0, x - k)$ and $\max(0, k - x)$, where $k$ is the knot (the break point).
 %
 These simple functions are used to build a collection of basis functions, $\{\max(0, x_j-k), \max(0,k-x_j)\}$, where $k \in \{x_{1j}, \dots, x_{nj})$ for $j = 1, \dots, d$.
 %
-If all of the input values are different in the training data this will yield $2nd$ basis functions. The MARS predictor is then given by $\hat{y}(\mathbf{x}) = \beta_0 + \sum_{m=1}^M \beta_m h_m(\mathbf{x})$, where the $\beta_m$'s are coefficients and the $h_m$'s are basis functions, which are either given by a single function from the collection of simple basis functions or a product of
+If all of the input values are different in the training data this will yield $2dn$ basis functions. The MARS predictor is then given by $\hat{y}(\mathbf{x}) = \beta_0 + \sum_{m=1}^M \beta_m h_m(\mathbf{x})$, where the $\beta_m$'s are coefficients and the $h_m$'s are basis functions, which are either given by a single function from the collection of simple basis functions or a product of
 two or more of such functions.
 
 For a given set of basis functions, $h_1, \dots, h_m$, the $\beta$ coefficients are estimated using least squares.
@@ -525,13 +527,15 @@ However, the prediction error can be estimated by bootstrap methods~\cite{Daviso
 In short, an ensemble of MARS models is created by repeatedly resampling, with replacement, the original training data $\{ (\mathbf{x}_i, y_i) \}$ and a MARS model is fit to each batch of resampled data.
 %
 An estimate of the prediction error is then given by the standard deviation of the predictions provided by the bootstrap ensemble.
+%
+This method is employed in Section~\ref{sec:ijuq2013} in order to define several of the scoring functions.
 
 In terms of more geometrically motivated splitting criteria, the principal Hessian direction regression tree (PHDRT)~\cite{LiLueChen2000} splits the domain near areas of high curvature by projecting the data along its estimated principal Hessian direction and locating the area of highest curvature.
 %
 In Section~\ref{paper:pacificVis2016}, we employ the established Morse-Smale regression (MSR)~\cite{GerberRubelBremer2011}, which, being geometrically motivated, is similar to the PHDRT approach, however it is not restricted to splitting along a hyperplane and is also more robust to multiple undulations in the data.
 %
 In the PHDRT approach, a mean principal Hessian direction is computed implying that positive and negative curvatures can have a canceling effect that prevents such a direction from being discovered.
-%
+
 MSR utilizes a domain partitioning induced by the Morse-Smale complex (MSC) of the regression surface.
 %
 The MSC partitions the domain into monotonic regions, and MSR takes advantage of the monotonicity implied by this partitioning and builds linear models to fit each partition to capture local interactions between input and output parameters.
@@ -548,22 +552,38 @@ In the proposed research of Section~\ref{paper:pacificVis2016}, we follow an ite
 
 \subsection{Neural Networks}
 Regression modeling using neural networks goes back at least $20$ years, with notable examples coming from Specht~\cite{Specht1991}, Sarle~\cite{Sarle1994}, and Bishop and Nasrabadi~\cite{BishopNasrabadi2006}.
-
-Here we explain a simple feed-forward neural network with a single hidden layer (see e.g.\ Ripley~\cite{Ripley1996} and Hastie et al.~\cite{HastieTibshiraniFriedman2008} for further details).
-
-The single layer neural network is simply a non-linear statistical model, where the response of interest is modeled as a linear combination of $M$ derived features (the hidden units of the neural network);
 %
-$\hat{y}(\mathbf{x}) = \beta_0 + \mathbf{\beta}^T \mathbf{z}$, $\mathbf{z} = (z_1, \dots, z_M)^T$, where $z_m = \sigma(\alpha_{0m} + \mathbf{\alpha}_m^T \mathbf{x})$.
+I will explain a simple feed-forward neural network with a single hidden layer.
+%
+For further details, I defer to Ripley~\cite{Ripley1996} and Hastie et al.~\cite{HastieTibshiraniFriedman2008}.
+
+An artificial neural network is modeled after neural networks seen in biology such as our own nervous system.
+%
+The idea is to view the data as being layered, where the model inputs and outputs comprise the two outermost layers which are connected by a pathway of one or more ``hidden'' layers that models how input signals are transmitted through a pathway of neurons in order to solve a problem or make a decision.
+%
+In the simplest model, a single hidden layer is comprised of artificial neurons which each perform a different operation on the data and pass that information to the output layer.
+%
+The artificial neurons are trained and their connections from the input layer and to the output layer are inhibited or enforced depending on the training data.
+%
+Below, I will describe more mathematically how this can occur in order to produce a usable result.
+
+The single layer neural network is a non-linear statistical model, where the response of interest is modeled as a linear combination of $M$ derived features (the hidden units of the neural network):
+
+\begin{equation}
+\hat{y}(\mathbf{x}) = \beta_0 + \boldsymbol{\beta}^T \mathbf{z}
+\end{equation}
+
+where $\mathbf{z} = (z_1, \dots, z_M)^T$ and $z_m = \sigma(\alpha_{0m} + \boldsymbol{\alpha}_m^T \mathbf{x})$.
 %
 The activation function, $\sigma(v)$ is usually taken as the sigmoid function, $\sigma(v) = 1/(1+e^{-v})$.
-
-The unknown parameters of the neural network, which we denote by $\mathbf{\theta}$ are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
 %
-The weights are estimated by minimizing the sum-of-squares, $R(\mathbf{\theta}) = \sum_{i=1}^n (y_i - \hat{y}(\mathbf{x}_i))^2$.
+The unknown parameters of the neural network, which we denote by $\boldsymbol{\theta}$ are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
+%
+The weights are estimated by minimizing the sum-of-squares, $R(\boldsymbol{\theta}) = \sum_{i=1}^n (y_i - \hat{y}(\mathbf{x}_i))^2$.
 %
 However, for a large neural network, the resulting neural network over-fits the data (i.e., the neural network fits the training data well, but performs poorly on independent validation data).
 %
-A common solution is to add a regularization term that shrinks the weights to zero, such as $J(\mathbf{\theta}) = \sum_{m=0}^M \beta_{m}^2 + \sum_{m=0,j=1}^{M,d} \alpha_{mj}^2$, and then minimize $R(\mathbf{\theta}) + \lambda J(\mathbf{\theta})$.
+A common solution is to add a regularization term that shrinks the weights to zero, such as $J(\boldsymbol{\theta}) = \sum_{m=0}^M \beta_{m}^2 + \sum_{m=0,j=1}^{M,d} \alpha_{mj}^2$, and then minimize $R(\boldsymbol{\theta}) + \lambda J(\boldsymbol{\theta})$.
 %
 The minimization can be carried out in an efficient manner using gradient-based methods, as the gradient of the neural network can be computed easily using the chain rule for differentiation.
 %

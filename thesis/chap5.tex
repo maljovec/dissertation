@@ -2,13 +2,1435 @@
 
 \chapter{Adaptive Sampling with Topology}
 \label{ch:adaptiveSampling}
+
+In Section~\ref{sec:adaptiveSampling}, we reviewed the major advances in adaptive sampling.
+%
+In this chapter, I will build upon the concepts presented previously and offer a new perspective by which to select candidates in the adaptive sampling process.
+%
+Namely, I present methods that seek to exploit areas of high topological significance under different settings.
+%
+First, we explore new candidate scoring functions in the context of global response accuracy~\cite{MaljovecWangKupresanin2013}.
+%
+\DPM{More text needed here...}
+
 \section{Adaptive Sampling with Topological Scores}
-  journal paper~\cite{MaljovecWangKupresanin2013}
+\label{paper:ijuq2013}
+  % journal paper~\cite{MaljovecWangKupresanin2013}
+
+\subsection{Introduction}
+
+In this first work, we look at the problem of desiging experiments in order to globally fit a surrogate model to data that is assumed to be represented by a smooth function.
+%
+The specific emphasis here is on adaptively sampling the input space based on the response of the surrogate model used.
+%
+To this end, we explored various combinations of surrogate models, candidate selection criteria, and test functions of varying dimensionality.
+
+\subsection{Methodology}
+
+Two main families of prediction models can be used in uncertainty quantification (UQ): regression models such as MARS and stochastic models such as Gaussian processes.
+%
+Our general pipeline as illustrated in Figure~\ref{fig:asCycle} is applicable to both families.
+
+We begin by selecting some initial training data, running the simulation and obtaining a collection of true responses at these data points.
+%
+Second, we fit a prediction model, e.g. a Gaussian Process Model, from the initial set of training data.
+%
+Third, a large set of candidate points is chosen in the parameter space using Latin Hypercube Sampling (LHS), and the prediciton model is evaluated at these points.
+%
+The prediction model is used to approximate values at these candidate points and is considered to be a much less expensive surrogate of the ground truth phenomenon under study.
+%
+Therefore, we can evaluate a large pool of candidate points relatively quickly and cheaply.
+%
+Fourth, each candidate point is assigned a score denoting our need to sample it.
+%
+Finally, the candidate with the highest score is selected and added to the set of training data.
+%
+This new training data point will be evaluated using the ground truth and the information discovered will be used to update the prediction model, and the cycle may repeat until an appropriate convergence criteria is met.
+
+Traditional scoring functions are either based on point density, where candidate points which are further away from the existing training data receive higher scores; or are based on prediction accuracy, where candidates with higher prediction uncertainty receive higher scores.
+%
+In the setting where the underlying data is smooth with little to no noise, the density-based and uncertainty-based strategies will both similarly favor low-density regions as the prediction uncertainty of most prediction models tends to be smallest around the training data.
+%
+However, such ground truth models with smooth, uniform behavior are better tackled with space-filling sampling designs that seek to more uniformly cover the input space.
+%
+Adaptive sampling is better suited for understanding phenomenon where the frequency of \emph{toplogical features} is variable, and thus we can focus more samples on higher frequency areas, and reduce sampling where things are flat or smoothly changing.
+%
+Under these settings, the uncertainty of the predicting model can be quite high near training points if nearby training points are of dramatically different value.
+%
+For this reason, we propose a third class of scoring functions that more directly targets this topological
+information, where candidate points in the area of larger topological changes are assigned higher scores.
+
+\subsubsection{Traditional Scoring Functions}
+\label{sec:classic}
+
+We first review several traditional scoring functions which are used as a baseline comparison for our own topological scoring functions.
+%
+There are three main scoring functions, namely, Delta, ALM and EI, as detailed below.
+%
+Each of them is further augmented with a distance penalization factor, creating three additional scoring functions.
+
+Let $\Tcal = \{\z\}_{i=1}^{n}$ be the set of $n$ training points in dimension $d$.
+%
+The true response at a point $\z \in \Tcal$ is denoted as $y(\z)$.
+%
+Let $\Scal = \{\x\}_{i=1}^{m}$ be the set of $m$ candidate points in dimension $d$.
+%
+The predicted response at a point $\x \in \Scal$ is denoted as $\hat{y}(\x)$.
+
+\para{Delta} This criterion can be seen as a way to evenly sample the range space of the function.
+%
+It is defined as the absolute value of the difference between the predicted response at a candidate point and the response at the nearest training point.
+%
+Points are chosen wherever the response model predicts a large gap in function value.
+%
+Note that while the delta criterion is very intuitive it does not consider either gradient magnitudes nor ``predictability.''
+%
+For example, a point in the middle of a steep but linear ramp is easily predicted even though it may have a large difference in function value.
+%
+Similarly, a point with a large difference in function value far away from the nearest sample may not be as interesting as a slightly smaller difference in a highly sampled region.
+%
+Formally, for a point $\x \in \Scal$, $Delta(\x)$ is the absolute difference, to the $q$-th power, between the predicted response and the response observed at the closest point in the training sample, as measured by the $L_p$ distance metric, that is, $d(\x,\x') = (\sum_{i=1}^{d}|x_i-x'_i|^p)^{1/p}$.
+%
+That is, for some fixed parameters $p$ and $q$, let $\x^* = \argmin_{\z \in \Tcal} d(\x,\z)$, then $Delta(\x) = |\hat{y}(\x) - y(\x^*)|^q$.
+%
+In the default setting, $p = 2$ and $q = 2$.
+
+\para{ALM} This is the Active Learning MacKay criterion described in~\cite{MacKay1992} which attempts to optimize the predictive variance.
+%
+The idea is that the variance represents a notion of uncertainty in the prediction and new samples should be evaluated in the least well understand regions of the parameter space.
+%
+For the GPM the variance can be computed directly from the model which appears to be a significant advantage (see Section~\ref{sec:exp}).
+%
+For the other prediction models we use bootstrapping (as described in Section~\ref{sec:regression} and~\ref{sec:package}) to estimate the variance.
+
+\para{EI} This is the expected improvement criterion.
+%
+As discussed in Section~\ref{sec:sampling}, this can be seen as a combination of the expected prediction error used in the ALM method and the Delta criterion.
+%
+Points are chosen that either show a large uncertainty in their current prediction or have a large discrepancy with the closest existing sample.
+%
+Our predication model uses $EI(\x) = (|\hat{y}(\x) - y(\x^*)|^2+ ALM(\x))^{1/2}$.
+
+\para{Distance Penalization} Each of the above three scoring functions can be augmented with a distance penalization factor, therefore creating three additional scoring functions, namely, \emph{DeltaDP}, \emph{ALMDP} and \emph{EIDP}.
+%
+For DeltaDP, the Delta criterion with an additional penalty term, we can prevent samples from lying too close to the training set.
+%
+The scaling attempts to balance the goal of sampling in areas of large function variance with the ability to detect yet unknown features by preferring under-sampled areas.
+%
+For a point $\x \in \Scal$, $DeltaDP(\x) = Delta(\x) * \rho_\x$, where $\rho_\x$ is the distance scaling factor.
+%
+Recall $d_\x = d(\x,\x^*)$ is the distance from $\x$ to the closest point in the training data, and $D$ is a distance vector of $d_\x$ for all $\x \in \Scal$.
+%
+$\rho_\x = \rho_\x (d_\x, d_0)$, where $d_0$ is the range and $q_0$ is the quantile (by default, $d_0$ is the $q_0$ quantile of $D$).
+%
+If $d_\x>d_0$, set $\rho_\x = 1$, otherwise $\rho_\x = 1.5d_\x-0.5d_\x^3$, where the coefficients are taken from spherical semivariogram.
+%
+Similarly we define $ALMDP(\x) = ALM(\x) * \rho_\x$, where we approach a more space-filling point selection; and $EIDP(\x) = EI(\x) * \rho_\x$.  By default we use $q_0 = 0.5$.
+
+
+\subsubsection{Topological Scoring Functions}
+\label{sec:toposcoring}
+All of the scoring functions discussed above pick sample points more or less directly based on the idea of globally improving the prediction accuracy.
+%
+However, these points are not necessarily the optimal candidates.
+%
+Imagine, for example, a steep mountain that (by random chance) has already been sampled both close to its peak as well as somewhere near the base.
+%
+For points on the slope of the mountain, the prediction will show a large difference in function value thus
+making it attractive for most standard techniques.
+%
+However, evaluating the prediction in more detail would also show that even taking a sizable prediction error into account the global structure of the mountain would not change by adding a point on its slope.
+%
+More specifically, the single mountain would remain a single mountain for a wide range of potential new values even considering errors and uncertainty.
+%
+This rationale leads to topology based scoring functions aimed at discovering the global structure -- the topology -- of a function rather than its detailed geometry.
+%
+In particular, we propose three different topology based scoring functions, named, \emph{TopoHP}, \emph{TopoP} and \emph{TopoB} as detailed below, illustrated in Figure~\ref{fig:topo-all}.
+
+
+\para{TopoHP} The first strategy is aimed at sampling at or near predicted critical points with significant influence on the topology.
+%
+It is defined as the persistence of a candidate point within an (approximated) Morse-Smale complex constructed from oversampling the current response model.
+%
+Given the current response model, we evaluate its prediction at all candidate points and compute the Morse-Smale complex of the resulting point set by combining both training points and candidate points.
+%
+We then assign all critical points of the complex that are part of the candidate sets their persistence as score and assign a zero score to all regular points within the candidate sets.
+%
+Referring to Figure~\ref{fig:topo-all}(a), the silver points illustrate the training points $\Tcal$ and the purple points correspond to the candidate points $\Scal$.
+%
+We construct a Morse-Smale complex over $\Tcal \cup \Scal$, and return the persistence of the critical points within the candidates.
+%
+Here, point $\x$ is selected with the highest persistence, therefore, the highest $TopoHP(\x)$.
+
+\begin{figure}[!ht]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{figs/chap5/topo-all}
+\caption{(a) TopoHP: Construct a Morse-Smale complex from training data (silver) as well as all candidates with predicted responses (purple), return the persistence of the critical points within the candidates.
+%
+Point $\x$ is selected with the highest $TopoHP(\x)$.
+%
+(b) TopoP: average change in persistence for all extrema before (left) and after (right) inserting a candidate $\x$ into the Morse-Smale complex.
+%
+(c) Morse-Smale complexes before (left) and after (middle) inserting a candidate point $\x$;
+%
+TopoB (right): bottleneck distance between the corresponding persistence diagrams before (circles) and after (squares) insertion.}
+\label{fig:topo-all}
+\end{center}
+\end{figure}
+
+\para{TopoP} Similar to a bootstrapping approach, this strategy aims to evaluate how much the topology (as represented by the persistences) would change if a new candidate point is added.
+%
+It is defined as the average change of persistence for all current extrema when a given candidate point with its predicted response is inserted into the Morse-Smale complex.
+%
+As shown in Figure~\ref{fig:topo-all}(b), we first construct the Morse-Smale complex of all training data $\Tcal$ (silver points).
+%
+Then for each candidate point $\x \in \Scal$, we construct a new Morse-Smale complex consisting of $\Tcal \cup \x$ (Figure~\ref{fig:topo-all}(b) right).
+%
+To score the candidate $\x$, we compute the change in persistence for each training point $\x \in \Tcal$ that remains as an extrema point between the original and enhanced Morse-Smale complex, and average these changes to obtain a single, nonnegative value.
+
+\para{TopoB} For each point $\x \in \Scal$, $TopoB(\x)$ is defined as the bottleneck distance between the persistence diagram of the Morse-Smale complex over $\Tcal$ versus the Morse-Smale complex consisting of $\Tcal \cup \x$.
+%
+This strategy is similar to the TopoP scoring except that the bottleneck distance not only takes the persistence values into account but also the order  and nesting of the corresponding simplification.
+%
+This is shown in Figure~\ref{fig:topo-all}(c), where left and middle illustrate the (approximated) Morse-Smale complexes before and after inserting a candidate point $\x$, and right displays the corresponding persistence diagrams of these complexes.
+%
+$TopoB(\x)$ is defined as the bottleneck distance between them.
+
+\subsection{Experiments}
+\label{sec:exp}
+
+This section summarizes the different experiments and highlights apparent trends and interesting behaviors.
+
+\para{Example Data Sets} To evaluate the different scoring functions and understand the behavior in different scenarios we have conducted a series of experiments with well-known analytic functions, which can be generalized to high-dimensions.
+%
+For example, a widely used multimodal test function from the optimization literature \emph{Ackley} \cite{Ackley1987}, as well as easily controlled test functions such as \emph{Gaussian Mixtures}, and the \emph{Diagonal} function.
+%
+The Diagonal function consists of a sine curve aligned with the main diagonal of the unit (hyper-)cube convolved with a Gaussian kernel in the hyperplane orthogonal to the diagonal (see~\cite{GerberBremerPascucci2010}).
+%
+The Diagonal function is attractive for testing as it is not axis aligned, its topological structure is well understood and can be computed analytically, and its complexity is easily controlled.
+%
+Section~\ref{sec:test} details the closed forms of each function and illustrates their behavior by using 2D contour plots.
+
+\para{Plot and Specifications}
+All graphs show the root mean squared error (RMSE) of a given regression model versus the number of samples used for training.
+%
+The RMSE is computed using points evaluated on a grid.
+%
+For the 2D case, the total number of points is 2601 evenly spaced at an interval of 0.02.
+%
+The 3D case uses a total of 9261 points with a grid spacing of 0.05.
+%
+The 4D case uses a total of 14641 points with a spacing of 0.1, and the 5D case uses a total of 7776 validation points with a spacing of 0.2.
+%
+All plots show the median RMSE of 10 trial runs.
+%
+We use the median value since, as discussed below, several regression techniques seem to fail for particular sets of samples and the median is more robust against the resulting outliers in the RMSE.
+%
+For a fixed prediction model, all trials start from the same LHS initial training sample $\Tcal$.
+%
+$|\Tcal| = 20, 30, 100,$ and $200$ in 2D, 3D, 4D, and 5D respectively.
+%
+Curves are colored by scoring function with the thicker black line indicating an LHS sample of the given size.
+%
+During each step of the adaptive sampling, a point is chosen among all $|\Scal| =
+200*d$ candidate points selected using LHS with the highest score.
+%
+We have opted to not show variances or percentiles alongside the medians as the resulting plots become too cluttered.
+%
+Nevertheless, as discussed below even without an explicit representation several of the plots suggest drastic differences in the stability of the regression.
+
+
+\begin{figure}[!ht]
+\begin{center}
+%\subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Ackley/gpm_Ackley_td=20}\label{fig:ackley2D_gpm}}
+%\subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Ackley/earth_Ackley_td=20}\label{fig:ackley2D_earth}}
+%\subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Ackley/mda_Ackley_td=20}\label{fig:ackley2D_mda}}
+%\subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Ackley/nnet_Ackley_td=20}\label{fig:ackley2D_nnet}}
+\includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Ackley_td=20}
+\includegraphics[width=0.2425\linewidth]{figs/chap5/earth_Ackley_td=20}
+\includegraphics[width=0.2425\linewidth]{figs/chap5/mda_Ackley_td=20}
+\includegraphics[width=0.2425\linewidth]{figs/chap5/nnet_Ackley_td=20}
+\caption{Adaptive sampling of the 2D Ackley function using different regression techniques and different scoring functions.
+%
+(1) GPM; (2) EARTH; (3) MDA; and (4) NNET.}
+\label{fig:ackley2D_results}
+\end{center}
+\end{figure}
+
+\para{Discussions on Results} Unsurprisingly, the most significant factor in the success of any scoring function is the quality of the regression model.
+%
+Unfortunately, many experiments even in lower dimensions failed in the sense that the regression based on the space filling design did not converge within the number of samples tried.
+%
+In fact, for some functions some techniques did not show signs of improvement with an increasing number of samples.
+%
+While it is possible that these results could be improved through manual parameter tuning, this would likely not be feasible in a real world application where no ground truth is known and the number of samples is typically severely limited.
+%
+Furthermore, any manual or semi-automatic parameter tuning would make comparing models even more challenging and potentially bias the results.
+%
+Therefore, we have selected to run all experiments with the default values provide with the various regression packages listed in Section~\ref{sec:package}.
+%
+Subsequently, we only consider experiments in which the space filling design indicated a valid surrogate model.
+
+\begin{figure}[htbp]
+\begin{center}
+% \subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Diag2Max/gpm_Diag2Max_td=20}\label{fig:2diag2D_gpm}}
+% \subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Diag4Max/gpm_Diag4Max_td=20}\label{fig:4diag2D_gpm}}
+% \subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/GMM5/gpm_GMM5_2D_td=20}\label{fig:gmm52D_gpm}}
+% \subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/MGR/gpm_MGR_td=20}\label{fig:mgr2D_gpm}}
+% \subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Salomon/gpm_Salomon_td=20}\label{fig:salomon2D_gpm}}
+%\subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Whitley/gpm_Whitley_td=20}\label{fig:whitley2D_gpm}}
+ \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Diag2Max_td=20}
+ \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Diag4Max_td=20}
+ \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_GMM5_2D_td=20}
+ \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_MGR_td=20}
+ \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Salomon_td=20}
+ \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Whitley_td=20}
+\caption{Adaptive sampling various 2D test functions using the GPM.
+(1) Two maxima Diagonal; (2) Four maxima Diagonal; (3) Mixture of five Gaussians; (4) MGR; (5) Salomon; (6) Whitley.}
+\label{fig:2D_gpm_results}
+\end{center}
+\end{figure}
+
+In general, the GPM based regression produces the smoothest and most distinctive plots showing clear differences between scoring functions.
+%
+Consider the 2D Ackley function shown in Figure~\ref{fig:ackley2D_results}: The ALM criterion significantly outperforms all other scoring functions with the TopoHP the only other criterion that beats the space filling design.
+%
+Compare this to the EARTH model shown in the same figure: Most scoring functions except TopoHP perform qualitatively similar and barely achieve the same quality as the LHS sampling.
+%
+Furthermore, all curves are less smooth suggesting a high variance among the different trials.
+%
+The other MARS implementation, MDA, performs slightly worse but qualitatively similar with very rough curves without clear trends that fail to achieve the same performance as the space filling sample.
+%
+Finally, the NNET implementation barely shows any improvement in RMSE with increasing samples, and all sampling strategies including the LHS sample seem to perform similar with large fluctuations.
+%
+Overall, NNET achieves by far the worst fit at an RMSE almost an order of magnitude larger than that of the Gaussian process model.
+\begin{figure}[htbp]
+\begin{center}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Ackley/gpm_Ackley_td=30}\label{fig:ackley3D_gpm}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Diag2Max/gpm_Diag2Max_3D_td=30}\label{fig:2diag3D_gpm}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/GMM2/gpm_GMM2_3D_td=30}\label{fig:gmm23D_gpm}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/GMM5/gpm_GMM5_3D_td=30}\label{fig:gmm53D_gpm}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/MGR/gpm_MGR_td=30}\label{fig:mgr3D_gpm}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./4D/Ackley/gpm_Ackley_td=100}\label{fig:ackley4D_gpm}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./5D/Salomon/gpm_Salomon_td=200}\label{fig:salomon5D_gpm}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./5D/Diag2Max/gpm_Diag2Max_5D_td=200}\label{fig:2diag5D_gpm}}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Ackley_td=30}\label{fig:ackley3D_gpm}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Diag2Max_3D_td=30}\label{fig:2diag3D_gpm}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_GMM2_3D_td=30}\label{fig:gmm23D_gpm}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_GMM5_3D_td=30}\label{fig:gmm53D_gpm}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_MGR_td=30}\label{fig:mgr3D_gpm}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Ackley_td=100}\label{fig:ackley4D_gpm}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Salomon_td=200}\label{fig:salomon5D_gpm}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Diag2Max_5D_td=200}\label{fig:2diag5D_gpm}
+\caption{Adaptive sampling of various test functions using the GPM.
+%
+(1)  3D Ackley;
+(2) 3D two maxima Diagonal;
+(3) 3D mixture of two Gaussians;
+(4) 3D mixture of five Gaussians;
+(5) 3D MGR;
+(6) 4D Ackley;
+(7) 5D Salomon;
+(8) 5D two maxima Diagonal function.}
+\label{fig:345D_gpm}
+\end{center}
+\end{figure}
+
+The general differences between regression models seen in the Ackley functions are present for all test functions.
+%
+Where the GPM models tend to converge for some reasonable number of samples and even in higher dimensions, both MARS implementations have difficulties with non-axis aligned structures such as the Diagonal and the Salomon function.
+%
+The NNET with the standard parameters consistently performs worse than all other models, and among all techniques only the GPM shows the smoothly converging curves one would traditionally expect.
+%
+Furthermore, only the GPM model shows significant differences between scoring functions.
+%
+For the GPM based adaptive sampling the one trend observed in most 2D test functions is that the ALM criterion seems to outperform all others.
+%
+A possible explanation for this behavior is that the predicted variance on which the ALM criterion is based is an integral part of the GPM model itself.
+%
+This makes the ALM criterion especially well-suited for a GPM model and could explain the consistently better performance.
+
+Nevertheless, the performance of the scoring functions even for the well behaved GPM regression is far from consistent across test functions as seen in Figure~~\ref{fig:2D_gpm_results}.
+%
+For example, in the Diagonal function with two maxima the ALM and EI criteria perform best closely followed by TopoHP.
+%
+The Delta function is on par with the LHS sampling while the other two topological criteria do not perform well.
+%
+The four maxima Diagonal version shows a similar behavior even though now small differences appear between the ALM and EI criteria and the Delta function now fails to achieve the RMSE of the space-filling sample.
+%
+The mixture of five Gaussians again shows a clear preference for the error driven criteria even though now the Delta function performs worse than the topological scoring functions.
+
+The remaining functions show a very similar pattern with the noticeable exception that now the EI criteria no longer perform as well as the the ALM.
+%
+For the MGR function, TopoHP performs second best with EI and Delta mirroring the LHS line.
+%
+For the Salomon function, EI performs better than Delta again but both fail to beat the space-filling sample.
+%
+Finally, the Whitley function shows overall a better performance with EI and Delta both outperforming the topological scoring functions.
+
+The 3D experiments using the GPM show largely similar results as shown in
+Figure~\ref{fig:345D_gpm}.
+%
+The ALM function generally performs best with the remaining scoring functions in different combinations behind.
+%
+However, a notable and interesting exception are the mixtures of two and five Gaussians.
+%
+For both functions the Delta criterion performs significantly better than the rest.
+%
+One explanation is that these functions are characterized by a few large mountains
+which, once found, almost entirely determine the function.
+%
+In such cases the Delta functional may perform well as it picks values purely based on the observed range.
+%
+It is unclear, however, why such a behavior is not present in the 2D versions.
+
+A similar behavior can be seen in higher dimensions (refer to Figure~\ref{fig:345D_gpm}): The 4D Ackley and the 5D Salomon function show the expected advantage of the ALM criterion while the 5D two maxima Diagonal
+function again prefers the Delta criterion.
+%
+However, in this case all three topological functions outperform the remaining score functions even though they only perform on par with the LHS samples.
+
+As mentioned above the performance of the other regression techniques is rather spotty and the results of the adaptive scoring experiments are correspondingly inconsistent.
+%
+The EARTH model produces results similar to the ones shown in Figure~\ref{fig:ackley2D_results} in case the model itself converges, for example for the two maxima Diagonal function and the mixture of five Gaussians (Figure~\ref{fig:earth_results}).
+%
+However, considering other experiments listed in the same figure, other experiments show rather large fluctuations in either some adaptive sampling curves, e.g. the TopoHP curve within the MGR function or the LHS curve, e.g. the Whitley function.
+%
+Overall, the 2D Whitley function shows a good performance with nearly all adaptive criteria outperforming the LHS curve.
+%
+Interestingly, in its 3D incarnation the adaptive sampling does not nearly work as well and furthermore shows excessive variations in several curves.
+
+Still looking at (Figure~\ref{fig:earth_results}), in general, there appears to be no significant advantage of one scoring function over another even though for the EARTH model in many cases the TopoHP seems to perform especially bad, for example, for the 3D Whitley and 3D MGR function.
+%
+This is rather surprising since for the GPM model TopoHP performed rather well and typically better than the other topological scoring functions.
+%
+The fact that there exist virtually no difference among the other scoring functions is likely due to the error computation.
+%
+For non-GPM models like MARS the expected prediction error that forms the bases for both the ALM and the EI criterion is constructed through bootstrapping and thus is probably less reliable.
+%
+This may negate the differences between error based criteria and the others, and result in across-the-board worse performance.
+%
+Unfortunately, we have not been able to get acceptable results for dimensions beyond three as even for simple models like the mixture of two Gaussians the non-GPM models did not converge.
+%
+A failed but nevertheless interesting result comes from the mixture of two Gaussians where the model in general shows no real improvements for higher number of points but both the Delta and the EI criteria first decrease the quality of the fit.
+
+\begin{figure}[htbp]
+\begin{center}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Diag2Max/earth_Diag2Max_td=20}\label{fig:2diag2D_earth}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/GMM5/earth_GMM5_2D_td=20}\label{fig:gmm52D_earth}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/MGR/earth_MGR_td=20}\label{fig:mgr2D_earth}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Whitley/earth_Whitley_td=20}\label{fig:whitley2D_earth}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Ackley/earth_Ackley_td=30}\label{fig:ackley3D_earth}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Whitley/earth_Whitley_td=30}\label{fig:whitley3D_earth}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/MGR/earth_MGR_td=30}\label{fig:mgr3D_earth}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/GMM2/earth_GMM2_3D_td=30}\label{fig:gmm23D_earth}}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/earth_Diag2Max_td=20}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/earth_GMM5_2D_td=20}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/earth_MGR_td=20}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/earth_Whitley_td=20}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/earth_Ackley_td=30}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/earth_Whitley_td=30}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/earth_MGR_td=30}
+ \includegraphics[width=0.24\linewidth]{figs/chap5/earth_GMM2_3D_td=30}
+ \caption{Adaptive sampling of various test functions using the EARTH regression model.
+(1) 2D two maxima Diagonal function;
+(2)2D mixture of five Gaussians;
+(3)2D MGR function;
+(4) 2D Whitley functions;
+(5) 3D Ackley function;
+(6) 3D Whitley function;
+(7) 3D MGR function;
+(8) 3D mixture of two Gaussians.}
+\label{fig:earth_results}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[htbp]
+\begin{center}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Diag2Max/mda_Diag2Max_td=20}\label{fig:2diag2D_mda}}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/GMM5/mda_GMM5_2D_td=20}\label{fig:gmm52D_mda}}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/MGR/mda_MGR_td=20}\label{fig:mgr2D_mda}}
+% \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Whitley/mda_Whitley_td=20}\label{fig:whitley2D_mda}}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Ackley/mda_Ackley_td=30}\label{fig:ackley3D_mda}}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Whitley/mda_Whitley_td=30}\label{fig:whitley3D_mda}}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/MGR/mda_MGR_td=30}\label{fig:mgr3D_mda}}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/GMM2/mda_GMM2_3D_td=30}\label{fig:gmm23D_mda}}
+  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_Diag2Max_td=20}
+  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_GMM5_2D_td=20}
+  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_MGR_td=20}
+  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_Whitley_td=20}
+  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_Ackley_td=30}
+  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_Whitley_td=30}
+  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_MGR_td=30}
+  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_GMM2_3D_td=30}
+\caption{Adaptive sampling of various test functions using the MDA model.
+(1) 2D two maxima Diagonal;
+(2) 2D mixture of five Gaussians;
+(3) 2D MGR function;
+(4) 2D Whitley function;
+(5) 3D Ackley function;
+(6) 3D Whitley function;
+(7) 3D MGR function;
+(8) 3D mixture of two Gaussians.}
+\label{fig:mda}
+\end{center}
+\end{figure}
+
+The other MARS implementation MDA, unsurprisingly, shows largely the same behavior as EARTH.
+%
+Figure~\ref{fig:mda} shows four examples each in two and three dimensions.
+%
+Comparing with the Earth model, we could see typically comparable RMSE, and higher variability (e.g. the 2-diagonal and GMM functions in 2D) with the exception of 3D Whitley function.
+%
+Again the 3D mixture of two Gaussians shows the initial decrease in RMSE for several scoring functions.
+
+\begin{figure}[htbp]
+\begin{center}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Diag2Max/nnet_Diag2Max_td=20}\label{fig:2diag2D_nnet}}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/GMM5/nnet_GMM5_2D_td=20}\label{fig:gmm52D_nnet}}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/MGR/nnet_MGR_td=20}\label{fig:mgr2D_nnet}}
+%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Salomon/nnet_Salomon_td=20}\label{fig:salomon2D_nnet}}
+  \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Diag2Max_td=20}\label{fig:2diag2D_nnet}
+  \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_GMM5_2D_td=20}\label{fig:gmm52D_nnet}
+  \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_MGR_td=20}\label{fig:mgr2D_nnet}
+  \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Salomon_td=20}\label{fig:salomon2D_nnet}
+\caption{Adaptive sampling of various 2D test functions using the NNET model.
+(1) Two maxima Diagonal function;
+(2) Mixture of five Gaussians; (3) MGR function;
+(4) Salomon function.}
+\label{fig:nnet_2D}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+%\includegraphics[width=0.24\linewidth]{./3D/Ackley/nnet_Ackley_td=30}\label{fig:ackley3D_nnet}
+%\includegraphics[width=0.24\linewidth]{./3D/MGR/nnet_MGR_td=30}\label{fig:mgr3D_nnet}
+%\includegraphics[width=0.24\linewidth]{./3D/Salomon/nnet_Salomon_td=30}\label{fig:salomon3D_nnet}
+%\includegraphics[width=0.24\linewidth]{./3D/GMM2/nnet_GMM2_3D_td=30}\label{fig:gmm23D_nnet}
+\includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Ackley_td=30}\label{fig:ackley3D_nnet}
+\includegraphics[width=0.48\linewidth]{figs/chap5/nnet_MGR_td=30}\label{fig:mgr3D_nnet}
+\includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Salomon_td=30}\label{fig:salomon3D_nnet}
+\includegraphics[width=0.48\linewidth]{figs/chap5/nnet_GMM2_3D_td=30}\label{fig:gmm23D_nnet}
+\caption{Adaptive sampling of various 3D test functions using the
+  NNET model. (1) Ackley function; (2) MGR function; (3) Salomon function;
+  (4) Mixture of two Gaussians.}
+  \label{fig:nnet_3D}
+\end{center}
+\end{figure}
+
+Finally, the NNET implementation in its default setting, whose results are summarized in Figures~\ref{fig:nnet_2D} and~\ref{fig:nnet_3D}, performs clearly worse with excessive variability in all plots which makes interpretation of any possible trends questionable.
+%
+Apart from the Ackley function, some models that performed reasonably in two dimensions are the two maxima Diagonal function, mixture of five Gaussians, and the Salomon function.
+%
+The MGR function shows a competitive RMSE as baseline but excessive variations for virtually all adaptive scoring functions as well as the LHS line.
+%
+The 3D MGR function shows a similar behavior except that the LHS line now appears to be stable.
+
+The 3D Ackley and Salomon function both show the high variability and high RMSE with no adaptive scoring functions able to outperform the space-filling sampling.
+%
+Just as with the two MARS implementations the 3D mixture of two Gaussians does not improve with increasing number of samples and shows the initial increase in RMSE for some scoring functions.
+
+\subsection{Discussion}
+
+After running an extensive set of experiments in two to five dimensions with nine different scoring functions some general trends appear even though the fundamental question of which particular scoring function to use remains largely inconclusive.
+%
+The results listed above are only a small first step in this direction.
+%
+The first, not necessarily surprisingly result is that the quality of the underlying regression model plays a key role in the performance of any adaptive sampling technique.
+%
+In this study the GPM model performs the best and is the only one showing significant differences between scoring functions.
+%
+Overall, it seems that the combination of ALM and GPM is the preferred choice even though some functions perform well with the Delta criteria.
+
+The remaining regression models all show problems fitting many of the test functions and the large variability suggest that they are sensitive to specific sample locations.
+%
+In the cases where reasonable fits have been achieved all scoring functions perform equally well (or poorly).
+
+The new topological scoring functions are largely competitive in terms of RMSE and often perform among the top scoring functions.
+%
+Some results suggest that detailed fits with a high number of samples are less well suited for topological scoring functions as they are designed to recover larger scale features.
+%
+Nevertheless, topological scoring functions are expected to better recover the global structure of a function, and finding quantitative metrics to test this hypothesis as well as expanding the class of such functions will be the focus of future research.
+
+\subsection{Example Test Functions Closed Forms and Plots}
+\label{sec:test}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.24\linewidth]{figs/chap5/Ackley.png}
+\includegraphics[width=0.24\linewidth]{figs/chap5/Diag2Max.png}
+\includegraphics[width=0.24\linewidth]{figs/chap5/Diag4Max.png}
+\includegraphics[width=0.24\linewidth]{figs/chap5/GMM2_2D.png}
+\includegraphics[width=0.24\linewidth]{figs/chap5/GMM5_2D.png}
+\includegraphics[width=0.24\linewidth]{figs/chap5/MGR.png}
+\includegraphics[width=0.24\linewidth]{figs/chap5/Salomon.png}
+\includegraphics[width=0.24\linewidth]{figs/chap5/Whitley.png}
+\caption{Pseudo-colored contour plots of the 2D versions of the test functions.
+%
+From left to right: Ackley, Diagonal function with $2$ maxima (Diag2Max), Diagonal function with $4$ maxima (Diag4Max), Gaussian Mixture Model with $2$ (GMM2) and $5$ Gaussians (GMM5), Mis-scaled Generalized Rastrigin (MGR), Salomon and Whitley, respectively.}
+\label{fig:original}
+\end{center}
+\end{figure}
+
+We use several testing functions with closed forms described below.
+%
+All functions can be generalized to higher dimensions and their two dimensional contour plots are shown in Fig~\ref{fig:original}.
+%
+Let $D$ be the dimension of the input vector $\vec{\theta}$.
+
+
+% \begin{table}[h!]
+%   \begin{center}
+%     \begin{tabular}{ | c | c | l | }
+%       \hline \\
+%       Name & Contour Plot & Equation \\
+%       \hline \\
+%       Ackley
+%       &
+%      \raisebox{-\totalheight}{\includegraphics[width=0.15\textwidth]{figs/Ackley.png}}
+%       &
+%       \(\displaystyle f(\vec{\theta}) = \sum_{i=1}^{D-1}\left(e^{-0.2}\sqrt{\theta_i^2+\theta_{i+1}^2} + 3(\cos(2\theta_i) + \sin(2\theta_{i+1}))\right), \) where $\{\vec{\theta}|\theta_i\in [-3,3]\}$. \\
+%       \hline \\
+%       Gaussian Mixture Model
+%       &
+%       \raisebox{-\totalheight}{\includegraphics[width=0.15\textwidth]{figs/GMM5_2D.png}}
+%       &
+%       Let $m$ be the number of extrema in the domain.
+%       Let $a_i$ be the amplitude of the $i^{th}$ extrema.
+%       Let $c_{i,j}$ be the $j^{th}$ coordinate of the $i^{th}$ extrema.
+%       Let $\sigma_{i,j}$ be the standard deviation of the $i^{th}$ extrema with respect to the  $j^{th}$ coordinate.
+%       \(
+%       f(\vec{\theta}) = \sum_{i=1}^{m}\left(a_i e^{-\left(\sum_{j=1}^{D}\frac{\left(\theta_{i,j}-c_{i,j}\right)^2}{2\sigma_{i,j}^2}\right)}\right)\)
+%       where $\{\vec{\theta}|\theta_i\in [0,1]\}$.
+%       \hline
+%       \end{tabular}
+%       \caption{Test functions used}
+%       \label{tbl:myLboro}
+%   \end{center}
+% \end{table}
+
+\para{Ackley}
+$$
+f(\vec{\theta}) = \sum_{i=1}^{D-1}\left(e^{-0.2}\sqrt{\theta_i^2+\theta_{i+1}^2} + 3(\cos(2\theta_i) + \sin(2\theta_{i+1}))\right),
+$$
+where $\{\vec{\theta}|\theta_i\in [-3,3]\}$.
+
+\para{Diagonal}
+Let $m$ be the number of maxima along the main diagonal,
+\begin{eqnarray*}
+f(\vec{\theta}) = & \frac{1}{2}\sin\left(\pi\left(\frac{1}{2} + \left((m+1) \bmod{2}\right) + \frac{m\left(\sum_{i=1}^{D}\theta_i\right)}{D}\right)\right)
+ \times e^{\left(\left(\sum_{i=1}^{D}\theta_i^2 -\frac{\left(\sum_{i=1}^{D}\theta_i\right)^2}{D}\right)\left(\frac{\log(0.001)}{\sqrt{D}}\right)\right)},
+\end{eqnarray*}
+where
+$\{\vec{\theta}|\theta_i\in [-1,1]\}$.
+
+\para{Random Gaussian Mixture Model}
+
+Let $m$ be the number of extrema in the domain.
+Let $a_i$ be the amplitude of the $i^{th}$ extrema.
+Let $c_{i,j}$ be the $j^{th}$ coordinate of the $i^{th}$ extrema.
+Let $\sigma_{i,j}$ be the standard deviation of the $i^{th}$ extrema with respect to the  $j^{th}$ coordinate.
+$$
+f(\vec{\theta}) = \sum_{i=1}^{m}\left(a_i e^{-\left(\sum_{j=1}^{D}\frac{\left(\theta_{i,j}-c_{i,j}\right)^2}{2\sigma_{i,j}^2}\right)}\right)
+$$
+where $\{\vec{\theta}|\theta_i\in [0,1]\}$.
+
+
+\para{Mis-scaled Generalized Rastrigin}
+$$
+f(\vec{\theta}) = 10D + \sum_{i=1}^{D}\left((10^{\frac{i-1}{D-1}}\theta_i)^2 - 10\cos(2\pi(10^{\frac{i-1}{D-1}}\theta_i))\right)
+$$
+where
+$\{\vec{\theta}|\theta_i\in [-2,2]\}$.
+
+
+\para{Salomon}
+$$
+f(\vec{\theta}) = -\cos\left(2\pi\sum_{i=1}^D\theta_i^2\right) + 0.1\sqrt{\sum_{i=1}^D\theta_i^2} + 1
+$$
+where $\{\vec{\theta}|\theta_i\in [-1,1]\}$.
+
+\para{Whitley}
+$$
+f(\vec{\theta}) = \sum_{i=1}^{D}\sum_{j=1}^{D}\left(\frac{k_{ij}^2}{4000} - cos(k_{ij}) + 1\right)
+$$
+where $\{\vec{\theta}|\theta_i\in [-1,2]\}$, and
+$k_{ij} = (100(\theta_i^2-\theta_j)^2 + (1-\theta_j)^2)$.
+
+\subsection{Software Packages and Parameter Settings}
+\label{sec:package}
+
+Now we give details on packages and parameter settings used in our experiments.
+
+The GPM model we use is the \texttt{Sparse Online Gaussian Process} (SOGP) C++ library \cite{gpm}, which is based on work in \cite{Csato2002,CsatoOpper2002}.
+%
+The default parameters are employed, see~\cite{CsatoOpper2002} for details, i.e. we use the Radial Basis Kernel with a spherical covariance set to $\sigma_0^2 = 0.1$, the widths are uniformly set to 0.1, and the amplitude $A=1$.
+
+For EARTH, MDA and NNET, we use non-parametric bootstrapping using $250$ samples without cross-validation.
+
+For EARTH, we use the \texttt{earth} library in \texttt{R} \cite{earth}.
+%
+We use the following parameter settings, see \cite{earth} for details.
+%
+If a parameter is not listed, the default value given by the package is used.
+%
+\begin{code}
+degree=3 // Maximum degree of interaction (Friedman's mi)
+nk=63  //Maximum number of model terms before pruning
+minspan=1 //Min. dist. between knots, 1 for non-noisy data
+thresh=1e-8  //Forward stepping threshold
+penalty=3 //Generalized Cross Validation Penalty per knot
+\end{code}
+
+For MDA, we use \texttt{mda} library in \texttt{R}, with the following parameters (see \cite{mda} for details, non-listed parameters use package defaults),
+\begin{code}
+degree=3 // Maximum degree of interaction (Friedman's mi)
+nk=63  //Maximum number of model terms
+thresh=1e-8 // Forward stepping threshold
+penalty=3 // The cost per degree of freedom charge
+\end{code}
+
+For NNET, we use \texttt{nnet} library in \texttt{R}, with the following parameters (see \cite{nnet} for details, non-listed parameters use package defaults),
+\begin{code}
+size=1+ceiling(sqrt(D)) // Number of units in the hidden layer
+                        // D is the dimensionality of the input
+decay=1e-3 // Parameter for weight decay
+skip=TRUE // Add skip-layer connections from input to output
+linout=TRUE // Linear output units, as opposed to logistic
+\end{code}
+
+To create the space filling samplings, the \texttt{lhs} library in \texttt{R} \cite{lhs} is used.
+%
+More specifically, we use the \texttt{randomLHS} function, which chooses uniform, random samples without any attempts to optimize the design, to construct the training data, candidate data, and LHS samples in the plots shown.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Topology-based Batch Sampling}
-  technical report~\cite{MaljovecWangMoeller2014}
+\label{paper:batch}
+  % technical report~\cite{MaljovecWangMoeller2014}
+
+\subsection{Introduction}
+
+In this next section, we investigate a slightly different form of adaptive sampling.
+%
+We again  consider the problem of obtaining an accurate global fit, but in addition, we consider the problem of learning a limit surface.
+%
+In this second context, we are less concerned with fit of our surrogate over the whole domain, but instead want to define the shape of a levelset for a single isovalue of the function under consideration.
+%
+Opposed to the work above that focused on applying different scoring functions, we now consider the problem of selecting multiple candidates at a time using various batch selection criteria for a fixed scoring function on each of the two problems: global and limit surface fitting.
+
+\subsection{Methodology}
+\label{method}
+
+\subsubsection{Batch Selection for Active Learning: General Pipeline}
+The general pipeline of batch selection begins with a given set of training data with true response values.
+%
+First, a response surface surrogate model is fit to the training data.
+%
+Second, a pool of candidate points is chosen in the domain based on some sampling technique, typically a space-filling design that will not bias any particular area of the input domain, and the surrogate model is evaluated at these locations, obtaining a set of approximated values.
+%
+Third, each candidate point is assigned a score, same as before.
+%
+Finally, a number of candidates (i.e. up to the batch size) with the highest scores are selected, evaluated (to obtain true response values), and added to the training data to begin a new round of fitting.
+%
+This pipeline is given in Algorithm~\ref{algo:al}, where we replace \textbf{SELECT} with various selection strategies.
+%
+We use the sparse online Gaussian process~\cite{CsatoOpper2002} as the surrogate model.
+%
+For a given candidate, such a Gaussian process model gives a (mean) prediction value and a variance associated with the prediction.
+%
+The set of candidate points and the initial training data are selected using a Centroidal Voronoi Tessellations (CVT) sampling strategy~\cite{DuFaberGunzburger1999}.
+%
+A CVT sampling strategy gives high-quality samples without the biases introduced by a uniform grid sampling, although it is cost prohibitive in high dimensions.
+%
+A Latin hypercube sampling (LHS)~\cite{ImanDavenportZeigler1980} strategy can be used for high-dimensional examples.
+%
+For each dataset, we measure the accuracy of our global or local fitting by comparing to the ground truth at each iteration, under different metrics (e.g. root-mean-square error,  Hausdorff distance, F1-score).
+
+As stated before, we consider two problems in this experiment, global fitting and limit surface extraction.
+%
+For the global surface recovery problem, we utilize the \emph{active learning McKay} (ALM) scoring function~\cite{MacKay1992} that uses the predicted variance from the surrogate model as the score for a candidate point.
+%
+In this way, we reduce the overall uncertainty of the surrogate model by placing samples in the areas of the highest variance.
+
+For the limit surface recovery problem, we utilize the \emph{straddle} scoring function \cite{BryanSchneiderNichol2005}.
+%
+For a given candidate point, its score is formulated as a linear combination of the distance between its predicted value and the limit surface threshold value, and the variance.
+%
+In other words, a candidate will have a high score if its predicted value is near the limit surface threshold and/or it exhibits a large prediction variance.
+
+{\fontsize{10}{10}\selectfont
+\begin{algorithm}
+\scriptsize
+\caption{Batch selection for active learning}
+\label{algo:al}
+% \begin{spacing}{0.8}
+\begin{algorithmic}
+\INPUT {a set of training points, $T$}
+\Statex{a set of candidate points, $C$}
+\Statex{real-valued scoring function, $S(M,x)$, where $M$ is a surrogate model,
+        $x$ is a point}
+\Statex{real-valued true response function, $f(x)$, where $x$ is a point}
+\Statex{batch size, $b$}
+\OUTPUT{A surrogate model, $M(x)$, that evaluates at any point $x$}
+\\
+\While{$C \neq \emptyset$ and not converged}
+  \State{$M \gets [T,f(T)]$}\Comment{Build a surrogate $M$ with the training
+                                     data}
+  \State{$ R \gets$ \textbf{SELECT}($C$, $S$, $M$, $b$) }\Comment{This is the
+                                                                  step we will
+                                                                  be augmenting}
+  \State{$C \gets C \setminus R$}\Comment{Remove selected candidates}
+  \State{$T \gets T \cup R$}\Comment{Add candidates to the training data}
+\EndWhile
+\end{algorithmic}
+% \end{spacing}
+\end{algorithm}
+}
+
+\subsubsection{Batch Selection Strategies}
+\label{batch_description}
+
+We now introduce the different methodologies for selecting a batch of candidates once the candidates have all been scored.
+
+\paragraph{Naive Batch Selection.}
+Batch selection is simple and straightforward when the batch size $b = 1$, where the point with the highest score is selected.
+%
+When $b>1$, it is not clear whether selecting the top $b$ highest scoring candidates is desirable.
+%
+For example, if the scoring function is based on predicted variance (e.g. Active Learning McKay, a.k.a., ALM), the selected candidates may be clustered in a single area of high variance.
+%
+However, evaluating the function value at a single location in that area would suffice to reduce the uncertainty for the whole area.
+%
+Nonetheless, we use this naive strategy as a baseline and its corresponding algorithm is given in Algorithm \ref{algo:naive}.
+
+{\fontsize{10}{10}\selectfont
+\begin{algorithm}
+\scriptsize
+\caption{Naive batch selection}
+\label{algo:naive}
+% \begin{spacing}{0.8}
+\begin{algorithmic}
+\Procedure{\textbf{Naive-Select}}{$C, S, M, b$}
+  \State $R \gets \emptyset$
+  \While{$|R| \neq b$}
+  \State{$\widetilde{C} = C \setminus R$}
+  %\State{find $p \in \widetilde{C}$ s.t. $S(M,p) = \max(S(M,\widetilde{C})$)}
+  \State $p^* = \argmax{p \in \widetilde{C}} S(M, p)$
+  \State{$R \gets R \cup p^*$}
+  \EndWhile
+  \State return $R$
+\EndProcedure
+\end{algorithmic}
+% \end{spacing}
+\end{algorithm}
+}
+
+\paragraph{Surrogate Believer Batch Selection.}
+This strategy is inspired by the Kriging Believer strategy~\cite{GotovosCasatiHitz2013,GinsbourgerLeRicheCarraro2009}.
+%
+It takes advantage of the scoring function's reliance on the uncertainty of the surrogate model.
+%
+The main idea is that temporarily adding a point and its model-predicted response value to refit (update) the surrogate model will not drastically alter the response surface, but it will reduce the variance in the area surrounding this point.
+%
+As both scoring functions used are variance-based, re-scoring the candidates based on the updated surrogate model would likely cause the new highest scoring candidate to be farther away from the last selected point.
+%
+Formally, this process is described in Algorithm \ref{algo:believe}, where $M(x)$ returns the predicted response value using the surrogate model at point(s) $x$.
+
+{\fontsize{10}{10}\selectfont
+\begin{algorithm}
+\scriptsize
+\caption{Believer batch selection}
+\label{algo:believe}
+% \begin{spacing}{0.8}
+\begin{algorithmic}
+\Procedure{\textbf{Believer-Select}}{$C, S, M, b$}
+\State{$R \gets \emptyset$}
+\While{$|R| \neq b$}
+  \State{$\widetilde{C} = C \setminus R$}
+  \State{$\widetilde{M} \gets M + [R,M(R)]$}
+  \LineComment{Build a temporary surrogate model that treats $R$ and $M(R)$ as
+               part of the training set}
+  %\State{find $p \in \widetilde{C}$ s.t. $S(\widetilde{M},p) = \max(S(\widetilde{M},\widetilde{C})$)}
+  \State $p^* = \argmax{p \in \widetilde{C}} S(\widetilde{M}, p)$
+  \State{$R \gets R \cup p^*$}
+\EndWhile
+\State return $R$
+\EndProcedure
+\end{algorithmic}
+% \end{spacing}
+\end{algorithm}
+}
+
+\paragraph{Topology-Based Batch Selection: Points with Maximum Persistence.}
+\label{subsection:topology-maxp}
+
+We now utilize the topological method described earlier to study the topology of the scoring function.
+%
+Scoring function $S$ is a real-valued function that takes as input a surrogate model $M$ and a point $x$, and returns a real number based on properties of $M$, the predicted value $M(x)$, the variance of the prediction, etc.
+%
+When $b = 1$, the naive strategy always select the highest scoring candidate, which topologically, corresponds to the global maximum of the scoring function.
+%
+When $b > 1$, the naive strategy selects $b$ points with the highest scores, and does not guarantee well-spacing among the selected candidates since these points may cluster around the global maxima.
+%
+If we would like to guarantee some level of spatial separation among the chosen candidates, then perhaps a simple topology-based strategy would select the top $b$ \emph{local maxima} of the scoring function.
+%
+However, as the example illustrated in Figure \ref{fig:persistence},  a 1D scoring function could contain two local maxima that are close to each another in the domain but have very different \emph{persistence}.
+%
+Such an observation has inspired our first topology-based batch selection strategy,  based on the persistence of the candidate points.
+%
+Since regular points have zero persistence, such a strategy selects points among the local maxima.
+%
+That is, we select the top $b$ candidates with the highest persistence.
+%
+This strategy is detailed in Algorithm \ref{algo:maxp}.
+
+{\fontsize{10}{10}\selectfont
+\begin{algorithm}
+\scriptsize
+\caption{Maximum persistence batch selection}
+\label{algo:maxp}
+% \begin{spacing}{0.8}
+\begin{algorithmic}
+\Procedure{\textbf{MaxP-Select}}{$C, S, M, b$}
+\State{$R \gets \emptyset$}
+\State{$X \gets$ \textbf{EXTRACT-LOCAL-MAXIMA}($C,S,M$)}
+\LineComment{Extract all local maxima from the scoring function of the surrogate
+             model}
+%\Comment{See section \ref{topology} for details}
+\While{$|X| < b$}
+\LineComment{While loop is only used if we do not have $b$ unselected local
+             maxima}
+  \State{$\widetilde{C} = C \setminus X$}
+  %\State{find $p \in \widetilde{C}$ s.t. $S(\widetilde{M},p) = \max(S(\widetilde{M},\widetilde{C})$)}
+  \State $p^* = \argmax{p \in \widetilde{C}} S(M, p)$
+  \State{$X \gets X \cup p^*$}
+\EndWhile
+\State{$R \gets R \cup \textbf{TOP}(X,b)$}\Comment{Get only the top $b$ maxima
+                                                   (according to persistence)}
+\State return $R$
+\EndProcedure
+\end{algorithmic}
+% \end{spacing}
+\end{algorithm}
+}
+
+Since we would like to generalize our batch selection process to any arbitrary dimension, we compute an approximated Morse complex of the scoring function to estimate the location of its local maxima and their corresponding persistence.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.32\textwidth]{figs/chap5/persistence}
+\includegraphics[width=0.32\textwidth]{figs/chap5/persistence2}
+\caption{A simple 1D function with 4 maxima showing a selection strategy that
+chooses the $2$ highest-valued maxima (left) and the strategy we employ in MaxP
+which selects the $2$ highest persistence maxima.}
+\label{fig:persistence}
+\end{figure}
+
+\paragraph{Topology-Based Batch Selection: Maximum Persistence and Believer Hybrid.}
+Our final strategy creates a hybrid between the maximum persistence strategy and the Surrogate Believer strategy.
+%
+That is, we proceed with the believer strategy by temporarily adding points with the highest persistence.
+%
+We introduce one extra parameter $m$ that indicates how many points we add temporarily at the same time.
+%
+Equivalently, $m$ means the number of maxima to chose before refitting the surrogate.
+%
+When $m=1$, this corresponds to the original believer strategy.
+%
+When $m = b$, this corresponds to the maximum persistence strategy.
+%
+When $1 < m < b$, we have our hybrid strategy.
+%
+The process is detailed in Algorithm \ref{algo:maxp-believe}.
+%\State{}\Comment{The parameter $m$ sets the number of maxima to chose before
+%refitting the surrogate, thus $m=b$ means the MaxP strategy in our experimental
+% results section.}
+
+{\fontsize{10}{10}\selectfont
+\begin{algorithm}
+\scriptsize
+\caption{Maximum persistence and Believer hybrid selection}
+\label{algo:maxp-believe}
+% \begin{spacing}{0.8}
+\begin{algorithmic}
+\Procedure{\textbf{MaxP+Believe-Select}}{$C, S, M, b$, (optional) $m$}
+\State{$R \gets \emptyset$}
+\While{$|R| \neq b$}
+  \State{$\widetilde{C} = C \setminus R$}
+  \State{$\widetilde{M} \gets M \cup [R,M(R)]$}
+  \State{$X \gets$ \textbf{EXTRACT-LOCAL-MAXIMA}($\widetilde{C},S,\widetilde{M}$)}
+  \LineComment{Extract all local maxima from the scoring function of the
+               temporary surrogate model}
+  %\Comment{See section \ref{topology} for details}
+  \State{$X \gets X \setminus R$}
+  \LineComment{Remove any local maxima that have already been selected}
+  \While{$|X| < m$}
+  \LineComment{While loop is only used if we do not have $m$ unselected local
+               maxima}
+    \State{$\widetilde{C} = \widetilde{C} \setminus X$}
+    %\State{find $p \in \widetilde{C}$ s.t. $S(\widetilde{M},p) = \max(S(\widetilde{M},\widetilde{C})$)}
+    \State $p^* = \argmax{p \in \widetilde{C}} S(\widetilde{M}, p)$
+    \State{$X \gets X \cup p^*$}
+  \EndWhile
+  \State{$R \gets R \cup \textbf{TOP}(X,m)$}\Comment{Get only the top $m$ maxima
+                                                     (according to persistence)}
+\EndWhile
+\State return $R$
+\EndProcedure
+\end{algorithmic}
+% \end{spacing}
+\end{algorithm}
+}
+
+\subsubsection{Metrics for Evaluation}
+%
+For the global surface recovery problem, we compute the \emph{root-mean-square error} (RMSE) over a validation set $V$ of the domain between the surrogate model response surface and the true response surface.
+%
+The validation set $V$ for our $2$D test functions is a uniform grid of resolution $100\times100$.
+
+For the limit surface recovery problem, we use two different metrics to try to quantify the quality of the approximations.
+%
+The \emph{Hausdorff distance} between the true limit surface and the approximated limit surface based on the surrogate model is computed to measure curve similarity.
+%
+This metric represents the maximum separation of the two limit surfaces represented as point set samples $X$ and $Y$. It is defined as:
+
+\begin{equation}
+d_H(X,Y) = \max \left( \sup_{x \in X} \inf_{y \in Y}
+d(x,y),\sup_{y \in Y} \inf_{x \in X} d(x,y)\right).
+\end{equation}
+
+In addition, we treat our model as a binary classifier with the limit surface being the boundary and compute the \emph{$F_1$-score}.
+%
+Given a ground truth validation grid, we can evaluate the \emph{precision}, $p$, and \emph{recall}, $r$, of the classification and compute the harmonic mean of these two values to get the $F_1$-score.
+%
+The relevant equations are listed below where $t_+$ means the count of `true positives' or correctly identified labels above the limit surface, while $f_+$ means the count of `false positives' or incorrectly identified labels above the limit surface, and $f_-$ means the count of `false negatives' or incorrectly identified labels below the limit surface.
+
+\begin{equation}
+p = \frac{t_+}{t_+ + f_+}
+\end{equation}
+
+\begin{equation}
+r = \frac{t_+}{t_+ + f_-}
+\end{equation}
+
+\begin{equation}
+F_1 = \frac{2pr}{p+r}
+\end{equation}
+
+
+The \emph{$F_1$-score} demonstrates the surrogate model's ability to correctly classify points as being either above or below the threshold value.
+%
+It is evaluated on a validation grid of resolution $100\times100$.
+%
+The Hausdorff distance focuses on the approximation quality of the limit surface itself.
+%
+Consider a small component of the limit surface that is yet to be recovered, the F1-score may still report a high-value (corresponding to good approximation quality) since the missing component encloses only a small area of the domain space, but the Hausdorff distance may be very large (corresponding to a low approximation quality) as not all components in the limit surface have been recovered.
+
+In other words, the Hausdorff distance metric complements the F1-score metric, as the former is a shape-matching criteria and the latter focuses on classification accuracy. Thus, yielding one shape-based metric and another volume-based metric.
+
+\subsubsection{Test Functions}
+We first use a collection of $2$D synthetic functions (with closed-form expressions) as test functions.
+%
+As these functions are simple, smooth and continuous, the surrogate models on them converge very quickly during the active learning process.
+%
+We demonstrate that our methods remain competitive on these functions, where intuitively they are not expected to perform as well since the main features will be recovered quickly and will benefit more from exploitation rather than exploration.
+%
+In addition, these functions have well-defined, smooth limit surfaces that can be recovered accurately and efficiently, ensuring good convergence qualities of all methods.
+%
+We include three test functions here, we omit their closed-form expressions but illustrate the smooth functions (true response surfaces) in Figure~\ref{fig:synthetic}(a)-(c).
+%
+Their corresponding limit surfaces (marked by yellow curves) are shown in Figure~\ref{fig:synthetic}(d)-(f).
+%
+The \textbf{GMM} corresponds to the surface of a $2$D Gaussian mixture model.
+%
+The GMM has three limit surface components with one designed to be smaller and less likely to be found immediately.
+%
+The limit surface of the Salomon function contains three concentric rings, where the outermost ring is split into four components due to the selected boundary location.
+%
+The Sinusoidal function has a relatively complex limit surface with multiple components, but spans a large portion of the domain.
+%Thus, one might expect a faster Hausdorff convergence on the Sinusoidal
+%function than the GMM, but the  $F_1$-score ...nevermind
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.98\textwidth]{figs/chap5/synthetic}
+\caption{Synthetic test functions and their designated limit surfaces.
+(a)-(c): True response surfaces for (a) GMM, (b) Salomon and (c) Sinusoidal.
+(d)-(f): True limit surfaces for (d) GMM, (e) Salomon and (f) Sinusoidal.}
+\label{fig:synthetic}
+\end{figure}
+
+To demonstrate that our proposed topology-based active learning methods can potentially be more advantageous with functions that have complex topology, we use a set of greyscale images as our real-world test functions.
+%
+We treat each image as a $2$D function, where its domain is defined by the pixel locations and its range is the luminosity ranging between $0$ (black) to $255$ (white).
+%
+The images we have selected contain irregular shapes, discontinuities, and noisy features, which are more indicative of real-world data.
+%
+They are shown with superimposed limit surfaces in Figure~\ref{fig:images}.
+%
+The limit surfaces are highly irregular with many small components, and their corresponding threshold values are $125$, $30$, $80$, and $100$, respectively.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.98\textwidth]{figs/chap5/images}
+\caption{Test images. True limit surfaces are marked with yellow curves.
+%
+(a) Face.
+%
+(b) Butterfly nebula (image courtesy of NASA, ESA and the Hubble SM4 ERO Team,
+in public domain, via Wikimedia Commons).
+%
+(c) Tiger (image courtesy of Wikimedia Commons).
+%
+(d) Valve (image courtesy of Wikimedia Commons).}
+\label{fig:images}
+\end{figure}
+
+\subsubsection{Results for Global Surface Recovery}
+\label{sec:global_results}
+%
+% \paragraph{RMSE Convergence Results.}
+Table \ref{table:global-synthetic} summarizes the number of points necessary to reduce the global RMSE under a given threshold for each test function.
+%
+The threshold value is chosen by examining the RMSE convergence across all trials, e.g. we stop the active learning process when RMSE falls below $0.07818$ for the GMM dataset.
+%
+We report the mean number of points required as well as the standard deviation for each strategy across $10$ trials.
+%
+The maximum number of points added for the synthetic test functions is capped at $256$ and for the image datasets, at $1024$.
+%
+We experiment with three different batch sizes, $8$, $16$ and $32$.
+%
+We adopt shorthand for each strategy in the following tables, for example, 2-MaxP+Believe means the hybrid strategy where the parameter $m = 2$.
+%
+The strategy with the best performance for each dataset is highlighted in bold font.
+%
+If the best strategy is topology-based, it is colored in red.
+
+\begin{table}[h]
+\scriptsize
+\centering
+\begin{tabular}{l || c | c | c}
+   & GMM  & Salomon  & Sinusoidal \\
+  &  ( $\leq$ 0.07818 )  &  ( $\leq$ 0.07169 )  &  ( $\leq$ 0.04674 ) \\
+\hline\hline
+($b=8$)  &   &   &  \\
+\hline
+Naive            & 120.8 $\pm$ 28.72 (108)        & 152.8 $\pm$ 13.12 (152)        & 132.0 $\pm$ 8.198 (128)\\
+Believe          & 52.8 $\pm$ 9.6 (52)            & \textbf{91.2 $\pm$ 3.919 (88)} & \textbf{68.0 $\pm$ 4.0 (68)} \\
+MaxP             & 56.0 $\pm$ 8.0  (56)           & 93.6 $\pm$ 3.666 (96)          & 75.2 $\pm$ 5.307 (76)\\
+2-MaxP + Believe & \myemph{52.0 $\pm$ 9.633 (48)} & 93.6 $\pm$ 5.122 (96)          & 68.8 $\pm$ 3.919 (72)\\
+4-MaxP + Believe & 56.8 $\pm$ 15.37 (52)          & 94.4 $\pm$ 3.2 (96)            & 70.4 $\pm$ 4.8 (72)\\
+\hline\hline
+ ($b=16$)  &    &    &   \\
+\hline
+Naive            & 169.6 $\pm$ 36.63 (160)        & 203.2 $\pm$ 12.5 (200)     & 190.4 $\pm$ 16.7 (192)\\
+Believe          & 59.2 $\pm$ 14.4 (56)           & \textbf{96.0 $\pm$ 0 (96)} & \textbf{72.0 $\pm$ 8.0 (72)} \\
+MaxP             & 60.8 $\pm$ 9.6 (64)            & 105.6 $\pm$ 7.838 (112)    & 84.8 $\pm$ 7.332 (80)\\
+2-MaxP + Believe & \myemph{57.6 $\pm$ 14.66 (48)} & 97.6 $\pm$ 4.8 (96)        & 73.6 $\pm$ 7.838 (80)\\
+4-MaxP + Believe & 60.8 $\pm$ 15.68 (56)          & \myemph{96.0 $\pm$ 0 (96)} & 75.2 $\pm$ 7.332 (80)\\
+\hline\hline
+ ($b=32$)  &    &    &   \\
+\hline
+Naive            & 192.0 $\pm$ 28.62 (192)      & 243.2 $\pm$ 15.68 (256)    & 249.6 $\pm$ 12.8 (256)\\
+Believe          & \textbf{67.2 $\pm$ 9.6 (64)} & \textbf{96.0 $\pm$ 0 (96)} & \textbf{80.0 $\pm$ 16.0 (80)} \\
+MaxP             & 99.2 $\pm$ 17.23 (96)        & 140.8 $\pm$ 15.68 (128)    & 124.8 $\pm$ 9.6 (128)\\
+2-MaxP + Believe & \myemph{67.2 $\pm$ 9.6 (64)} & 99.2 $\pm$ 9.6 (96)        & 83.2 $\pm$ 15.68 (96)\\
+4-MaxP + Believe & 70.4 $\pm$ 12.8 (64)         & \myemph{96.0 $\pm$ 0 (96)} & 86.4 $\pm$ 14.66 (96)\\
+\end{tabular}
+\caption{RMSE convergence results for synthetic test functions.}
+\label{table:global-synthetic}
+\end{table}
+
+Increasing the batch size $b$ decreases the rate of convergence, since refitting the surrogate more frequently with small batch sizes would likely select more informative samples.
+%
+The naive method typically gives a baseline performance that is much worse than all other methods, but it shows the range of performance values and illustrates that the Believe, MaxP, and their hybrid strategies are competitive with one another.
+%
+On these smooth, relatively simple surfaces, the results shown here slightly favor the Believe strategy, in most cases.
+%
+The MaxP strategy degrades poorly when increasing the batch size from $16$ to $32$, most likely due to the fact that there are likely less than $32$ local maxima extracted from the ALM scoring function.
+%
+When all the local maxima have been selected, the remaining candidates are chosen based on the naive method.
+%
+By coupling the MaxP strategy with the Believe strategy, we see relatively good performances across many scenarios, since such a hybrid strategy takes advantage of exploiting the topology of the scoring functions.
+
+\begin{table}[h]
+\scriptsize
+\centering
+\begin{tabular}{l || c | c | c | c }
+   & Face  & Nebula  & Tiger  & Valve \\
+  &  ( $\leq$ 29.83 )  &  ( $\leq$ 19.8 )  &  ( $\leq$ 51.94 )  &  ( $\leq$ 38.52 ) \\
+\hline\hline
+($b=8$)  &   &   &   &  \\
+\hline
+ Naive            & 776.0 $\pm$ 69.47 (768)          & 770.4 $\pm$ 96.8 (748)           & 766.4 $\pm$ 48.77 (768)          & 683.2 $\pm$ 71.3 (680) \\
+ Believe          & \textbf{755.2 $\pm$ 56.02 (772)} & 626.4 $\pm$ 112.7 (640)          & 732.0 $\pm$ 97.6 (728)           & 619.2 $\pm$ 99.1 (604)\\
+ MaxP             & 796.0 $\pm$ 51.75 (800)          & 624.0 $\pm$ 109.5 (596)          & \myemph{721.6 $\pm$ 125.9 (704)} & 628.8 $\pm$ 72.99 (632) \\
+ 2-MaxP + Believe & 749.6 $\pm$ 54.73 (744)          & 680.0 $\pm$ 49.19 (676)          & 792.8 $\pm$ 113.1 (816)          & \myemph{581.6 $\pm$ 97.33 (588)} \\
+ 4-MaxP + Believe & 756.8 $\pm$ 50.87 (764)          & \myemph{603.2 $\pm$ 106.7 (616)} & 777.6 $\pm$ 90.85 (780)          & 608.8 $\pm$ 94.42 (620) \\
+\hline\hline
+ ($b=16$)  &    &    &    &   \\
+Naive             &  832.0 $\pm$ 91.63 (816)          & 872.0 $\pm$ 98.95 (864)          & 772.8 $\pm$ 121.4 (792)          & 756.8 $\pm$ 58.15 (760) \\
+Believe           &  \textbf{756.8 $\pm$ 58.15 (776)} & 630.4 $\pm$ 111.1 (640)          & \textbf{732.8 $\pm$ 90.45 (712)} & 630.4 $\pm$ 98.16 (632)\\
+MaxP              &  820.8 $\pm$ 20.3 (816)           & 656.0 $\pm$ 115.2 (648)          & 737.6 $\pm$ 149.3 (800)          & 595.2 $\pm$ 87.87 (576)\\
+2-MaxP + Believe  &  779.2 $\pm$ 70.85 (768)          & 688.0 $\pm$ 66.74 (680)          & 788.8 $\pm$ 109.5 (784)          & 600.0 $\pm$ 93.91 (592)\\
+4-MaxP + Believe  &  768.0 $\pm$ 73.67 (776)          & \myemph{617.6 $\pm$ 85.33 (680)} & 737.6 $\pm$ 97.97 (736)          & \myemph{590.4 $\pm$ 98.49 (592)} \\
+\hline\hline
+ ($b=32$)  &    &    &    &   \\
+\hline
+Naive            & 918.4 $\pm$ 84.72 (944)          & 953.6 $\pm$ 69.82 (992)          & 825.6 $\pm$ 112.5 (800)          & 838.4 $\pm$ 86.81 (848)\\
+Believe          & 768.0 $\pm$ 68.63 (784)          & \textbf{608.0 $\pm$ 108.0 (640)} & \textbf{761.6 $\pm$ 99.97 (768)} & 640.0 $\pm$ 90.51 (640)\\
+MaxP             & 828.8 $\pm$ 36.35 (832)          & 742.4 $\pm$ 104.0 (736)          & 832.0 $\pm$ 91.63 (832)          & \myemph{617.6 $\pm$ 111.8 (576)} \\
+2-MaxP + Believe & 787.2 $\pm$ 32.63 (784)          & 739.2 $\pm$ 103.6 (704)          & 806.4 $\pm$ 129.4 (784)          & \myemph{617.6 $\pm$ 116.3 (608)} \\
+4-MaxP + Believe & \myemph{761.6 $\pm$ 49.16 (768)} & 656.0 $\pm$ 90.79 (608)          & 803.2 $\pm$ 84.0 (800)           & 630.4 $\pm$ 79.74 (640)\\
+\end{tabular}
+\caption{RMSE convergence results for image datasets.}
+\label{table:global-images}
+\end{table}
+
+The results for the image datasets are shown in Table \ref{table:global-images}.
+%
+These datasets exhibit more complicated convergence behaviors.
+%
+They require more relaxed RMSE convergence thresholds and a larger number of samples to reach modest levels of approximations.
+%
+In the case of the butterfly nebula image and the tiger image when $b=8$, the MaxP method outperforms the Believe strategy.
+%
+In many other cases, the hybrid strategies have the best performance in terms of mean values.
+%Meanwhile, the reported standard deviations are rather large, putting most
+%scenarios within the same range of one another.
+
+\subsubsection{Results for Limit Surface Recovery}
+\label{sec:limit_results}
+We discuss results for limit surface recovery in this section.
+%
+First, to understand the difference between the believe strategy and the topology-based MaxP strategy, we show some snapshots of the predicted response surfaces, as well as the corresponding scoring landscapes  (i.e. straddle) during the active learning process in Figure \ref{fig:exampleLimits}, when $152$ candidates have already been added to the original $100$ training points.
+%
+The yellow contours denote the predicted limit surface.
+%
+The blue points are the training data (the same for both trials) and the red points are the adaptively selected points.
+%
+The green points represent the next batch of $8$ selected points.
+%
+The most important observation is that the Believe strategy can still select points clustered in a single region, potentially limiting the amount of information gain from a single batch, as illustrated by the points enclosed in the white circles in Figure \ref{fig:exampleLimits}(a)-(b).
+%
+This is due in part to the straddle function encoding both uncertainty (in the form of variance) and closeness between the predicted value and the limiting surface threshold.
+%
+Recall the advantage of an adaptive sampling strategy over a space-filling design is that samples can be sequentially chosen in a proportionately small area of interest.
+%
+However, we emphasize that our purpose of using batch selection is to explore different areas simultaneously.
+%
+We believe our topology-based designs are more advantageous in such a context, as illustrated in Figure \ref{fig:exampleLimits}(c)-(d) where the (green) points selected are well-spaced from one another, capturing structural information from different areas of the domain.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.98\textwidth]{figs/chap5/example-limits}
+\caption{(a)-(b): (a) Predicted response surface based on surrogate model using
+the Believe strategy and (b) its corresponding scoring function.
+%
+(c)-(d): (c) Predicted response surface based on MaxP strategy and (d) its
+corresponding scoring function.}
+\label{fig:exampleLimits}
+\end{figure}
+
+
+%\begin{figure}[!ht]
+%\centering
+%\includegraphics[width=0.24\textwidth]{believe_Model_152}
+%\includegraphics[width=0.24\textwidth]{believe_Score_152}
+%\includegraphics[width=0.24\textwidth]{maxp_Model_152}
+%\includegraphics[width=0.24\textwidth]{maxp_Score_152}\\
+%\includegraphics[width=0.24\textwidth]{grayscale}
+%\includegraphics[width=0.24\textwidth]{score}
+%\includegraphics[width=0.24\textwidth]{grayscale}
+%\includegraphics[width=0.24\textwidth]{score}
+%\caption{These images are snapshots of the predicted response surface and the
+%scoring landscape where 152 points have already been added to the original 100
+%training points.
+%%
+%The grayscale images correspond to the model surface, and the colored images
+%represent the scoring function. The yellow contours denote the predicted limit
+%surface.
+%%
+%The blue points are the training data (the same for both trials) and the red
+%points are the adaptively selected points.
+%%
+%The green points represent the next batch of 8 selected points.
+%%
+%Note, the left two images are the Believe strategy, whereas the right images
+%are the MaxP strategy.
+%%
+%The  Believe strategy can still select points clustered in a single region
+%potentially limiting the amount of information gain from a single batch.}
+%\label{fig:exampleLimits}
+%\end{figure}
+
+\paragraph{F1-Score Convergence Results.}
+Treating the limit surface recovery problem as a binary classification, the F1-score can be used to understand our model's ability to correctly classify points.
+%
+Table \ref{table:f1_synthetics} presents the convergence results.
+%The convergence threshold is chosen by comparing the convergence plots of each
+%strategy on each test function.
+%A maximum of $256$ points are added for the synthetic functions, and $1024$
+%points are added for the image datasets.
+For these synthetic functions, the majority of tests favor the Believe strategy.
+%
+This is most likely due to the fact that on such simple and smooth examples, there is little need to explore the global space after a few rounds of sampling, and exploiting around the identified limit surface areas is more advantageous.
+%
+As the topology-based methods are believed to be more judicious about not placing samples very close to one another, they will not converge as quickly as the pure Believe strategy, which can select clusters of points.
+
+\begin{table}[h]
+\scriptsize
+\centering
+\begin{tabular}{l || c | c | c }
+ & GMM & Salomon & Sinusoidal \\
+ & ( $\leq$ 0.9871 ) & ( $\leq$ 0.988 ) & ( $\leq$ 0.9942 ) \\
+\hline\hline
+ ($b=8$) & & & \\
+\hline
+ Naive            & 114.4 $\pm$ 12.42 (112)        & 158.4 $\pm$ 16.7 (156)           &  148.0 $\pm$ 26.59 (140) \\
+ Believe          & \textbf{60.0 $\pm$ 9.633 (64)} & \textbf{120.8 $\pm$ 14.51 (120)} & \textbf{104.0 $\pm$ 13.86 (96)} \\
+ MaxP             & 69.6 $\pm$ 10.15 (64)          & 142.4 $\pm$ 18.52 (140)          &  116.8 $\pm$ 18.66 (116) \\
+ 2-MaxP + Believe & \myemph{60.0 $\pm$ 8.198 (60)} & 142.4 $\pm$ 14.22 (148)          & 116.0 $\pm$ 19.02 (112) \\
+ 4-MaxP + Believe & 67.2 $\pm$ 5.307 (68)          & 144.0 $\pm$ 14.31 (144)          &  125.6 $\pm$ 19.61 (128) \\
+\hline\hline
+ ($b=16$) & & & \\
+ Naive            & 168.0 $\pm$ 21.76 (168)        & 195.2 $\pm$ 15.68 (192)          &  176.0 $\pm$ 25.8 (176) \\
+ Believe          & 67.2 $\pm$ 6.4 (64)            & \textbf{126.4 $\pm$ 15.09 (128)} & \textbf{107.2 $\pm$ 26.82 (96)} \\
+ MaxP             & 81.6 $\pm$ 11.2 (80)           & 137.6 $\pm$ 10.61 (136)          & 116.8 $\pm$ 17.6  (112)\\
+ 2-MaxP + Believe & \myemph{64.0 $\pm$ 7.155 (64)} & 129.6 $\pm$ 8.616 (128)          & 108.8 $\pm$ 17.23 (112)\\
+ 4-MaxP + Believe & 70.4 $\pm$ 7.838 (64)          & 137.6 $\pm$ 16.32 (128)          & 116.8 $\pm$ 14.4 (112)\\
+\hline\hline
+ ($b=32$) & & & \\
+ Naive            & 224.0 $\pm$ 32.0 (224)        & 243.2 $\pm$ 15.68 (256)         & 208.0 $\pm$ 25.8 (192) \\
+ Believe          & \textbf{80.0 $\pm$ 16.0 (80)} & 140.8 $\pm$ 15.68 (128)         & \textbf{131.2 $\pm$ 33.41 (128)} \\
+ MaxP             & 118.4 $\pm$ 28.8 (112)        & 169.6 $\pm$ 14.66 (160)         & 144.0 $\pm$ 21.47 (128) \\
+ 2-MaxP + Believe & 86.4 $\pm$ 20.49 (96)         & 147.2 $\pm$ 15.68 (160)         & \myemph{131.2 $\pm$ 22.4 (128)} \\
+ 4-MaxP + Believe & 86.4 $\pm$ 14.66 (96)         & \myemph{134.4 $\pm$ 12.8 (128)} & 128.0 $\pm$ 14.31 (128)\\
+\end{tabular}
+\caption{F1-Score convergence results for synthetic datasets.}
+\label{table:f1_synthetics}
+\end{table}
+
+\begin{table}[h]
+\scriptsize
+\centering
+\begin{tabular}{l || c | c | c | c }
+ & Face & Nebula & Tiger & Valve \\
+ & ( $\leq$ 0.9281 ) & ( $\leq$ 0.9387 ) & ( $\leq$ 0.6933 ) & ( $\leq$ 0.8547 ) \\
+\hline\hline
+ ($b=8$) & & & & \\
+\hline
+ Naive            & \textbf{38.4 $\pm$ 14.22 (32)} & 110.4 $\pm$ 39.65 (120)         & 149.6 $\pm$ 103.5 (116)          & 165.6 $\pm$ 81.04 (184)\\
+ Believe          & 41.6 $\pm$ 19.2 (32)           & 107.2 $\pm$ 39.22 (112)         & 144.8 $\pm$ 89.33 (112)          & \textbf{132.0 $\pm$ 58.38 (144)} \\
+ MaxP             & 60.0 $\pm$ 15.7 (60)           & \myemph{95.2 $\pm$ 39.43 (104)} & \myemph{143.2 $\pm$ 100.0 (124)} & 153.6 $\pm$ 82.97 (136*) \\
+ 2-MaxP + Believe & 57.6 $\pm$ 16.7 (56)           & 100.0 $\pm$ 39.56 (112)         & 192.0 $\pm$ 198.7 (124)          & \myemph{132.8 $\pm$ 59.24 (144)} \\
+ 4-MaxP + Believe & 58.4 $\pm$ 16.41 (60)          & 97.6 $\pm$ 40.6 (96*)        & 174.4 $\pm$ 202.2 (84*)       & 169.6 $\pm$ 91.83 (164) \\
+\hline\hline
+ ($b=16$) & & & & \\
+\hline
+ Naive            & \textbf{48.0 $\pm$ 18.93 (48)} & 121.6 $\pm$ 44.22 (128)          & 168.0 $\pm$ 134.1 (104*)          & 139.2 $\pm$ 85.58 (136*)\\
+ Believe          & 49.6 $\pm$ 19.53 (48)          & 128.0 $\pm$ 45.25 (136)          & 163.2 $\pm$ 135.9 (104*)          & \textbf{137.6 $\pm$ 96.32 (152)} \\
+ MaxP             & 52.8 $\pm$ 17.6 (48)           & 112.0 $\pm$ 42.33 (120)          & 160.0 $\pm$ 89.94 (152)          & 180.8 $\pm$ 116.7 (152) \\
+ 2-MaxP + Believe & 54.4 $\pm$ 16.32 (48)          & \myemph{108.8 $\pm$ 39.06 (120)} & \myemph{153.6 $\pm$ 93.35 (144)} & 161.6 $\pm$ 104.3 (160)\\
+ 4-MaxP + Believe & 52.8 $\pm$ 17.6 (48)           & \myemph{108.8 $\pm$ 39.06 (120)} & 155.2 $\pm$ 89.1 (136)           & 155.2 $\pm$ 99.16 (160)\\
+\hline\hline
+ ($b=32$) & & & & \\
+\hline
+ Naive            & 67.2 $\pm$ 17.23 (64)          & 150.4 $\pm$ 47.57 (160)         & 195.2 $\pm$ 111.3 (176)          & 240.0 $\pm$ 150.9 (224)\\
+ Believe          & 67.2 $\pm$ 17.23 (64)          & 140.8 $\pm$ 40.98 (160)         & 208.0 $\pm$ 117.4 (192)          & 233.6 $\pm$ 137.3 (224)\\
+ MaxP             & 64.0 $\pm$ 14.31 (64)          & 121.6 $\pm$ 39.97 (128)         & 169.6 $\pm$ 129.6 (128*)      & \myemph{160.0 $\pm$ 72.97 (160)} \\
+ 2-MaxP + Believe & \myemph{60.8 $\pm$ 17.23 (64)} & \myemph{118.4 $\pm$ 38.0 (128)} & \myemph{166.4 $\pm$ 103.0 (144)} & 198.4 $\pm$ 104.0 (192)\\
+ 4-MaxP + Believe & \myemph{60.8 $\pm$ 17.23 (64)} & \myemph{118.4 $\pm$ 38.0 (128)} & 169.6 $\pm$ 103.2 (160)          & 198.4 $\pm$ 104.0 (192)\\
+\end{tabular}
+\caption{F1-Score convergence results for image datasets. *Denotes where the fastest median convergence differs from the fastest mean convergence.}
+\label{table:f1_images}
+\end{table}
+
+The results for the image datasets (Table \ref{table:f1_images}) indicates that utilizing the topology of the scoring function in the active learning process is advantageous.
+%
+With a more complicated response surface, the corresponding scoring function also has complicated topology, which is believed to favor topology-based techniques.
+%
+For a fixed dataset (e.g. Face, Nebula), the topology-based methods can perform better than the Believe strategy as $b$ increases.
+%
+This is because the topology of the scoring function is complex enough that even after $32$ samples, we can still find additional candidates that are structurally informative.
+
+\paragraph{Hausdorff Distance Convergence Results.}
+Finally, we report the Hausdorff distance metric convergence results in Table~\ref{table:hausdorff_synthetics}, computed between the true limit surfaces and the predicted limit surfaces.
+%
+We omit the image datasets as the Hausdorff distances did not converge on these tests, most likely due to the many small components of the true limit surfaces.
+%
+As stated earlier, the Hasudorff distance is a measure of the largest minimum distance between two datasets, therefore failing to capture even a single small component will cause the reported  distance to be fairly large.
+%
+Thus, this metric is better suited for the synthetic functions that have large, simple limit surface components.
+
+\begin{table}[h]
+\scriptsize
+\centering
+\begin{tabular}{l || c | c | c }
+ & GMM & Salomon & Sinusoidal \\
+ & ( $\leq$ 0.1878 ) & ( $\leq$ 0.03332 ) & ( $\leq$ 0.1213 ) \\
+\hline\hline
+ ($b=8$) & & & \\
+\hline
+ Naive & 84.8 $\pm$ 25.6 (88) & 117.6 $\pm$ 44.26 (108) & 37.6 $\pm$ 9.499 (40) \\
+\hline
+ Believe & \textbf{40.0 $\pm$ 10.12 (36)} & 61.6 $\pm$ 27.02 (56) & 20.0 $\pm$ 4.0 (20)\\
+\hline
+ MaxP & \myemph{40.8 $\pm$ 12.62 (40)} & \myemph{48.0 $\pm$ 17.16 (44)} & 19.2 $\pm$ 6.4 (16) \\
+\hline
+ 2-MaxP + Believe & \myemph{40.0 $\pm$ 7.155 (40)} & 75.2 $\pm$ 33.98 (68) & 18.4 $\pm$ 5.122 (16) \\
+\hline
+ 4-MaxP + Believe & 44.8 $\pm$ 19.98 (36) & 53.6 $\pm$ 16.41 (56) & \myemph{17.6 $\pm$ 5.987 (16)} \\
+\hline\hline
+ ($b=16$) & & & \\
+\hline
+ Naive & 113.6 $\pm$ 30.73 (104) & 132.8 $\pm$ 30.4 (136) & 51.2 $\pm$ 13.95 (56) \\
+\hline
+ Believe & 48.0 $\pm$ 10.12 (48) & 67.2 $\pm$ 26.58 (64) & 19.2 $\pm$ 6.4 (16) \\
+\hline
+ MaxP & \myemph{44.8 $\pm$ 21.23 (40)} & \myemph{52.8 $\pm$ 17.6 (48)} & 22.4 $\pm$ 7.838 (16) \\
+\hline
+ 2-MaxP + Believe & 46.4 $\pm$ 11.2 (48) & 72.0 $\pm$ 27.01 (64) & \myemph{17.6 $\pm$ 4.8 (16)} \\
+\hline
+ 4-MaxP + Believe & 48.0 $\pm$ 16.0 (48) & 56.0 $\pm$ 16.4 (56) & 22.4 $\pm$ 7.838 (16)\\
+\hline\hline
+ ($b=32$) & & & \\
+\hline
+ Naive & 169.6 $\pm$ 43.05 (160) & 169.6 $\pm$ 47.57 (160) & 76.8 $\pm$ 15.68 (64)\\
+\hline
+ Believe & 64.0 $\pm$ 20.24 (64) & 99.2 $\pm$ 26.58 (96) & \textbf{32.0 $\pm$ 0 (32)} \\
+\hline
+ MaxP & 67.2 $\pm$ 30.19 (64) & \myemph{83.2 $\pm$ 21.23 (80)} & 35.2 $\pm$ 9.6 (32) \\
+\hline
+ 2-MaxP + Believe & 60.8 $\pm$ 22.4 (64) & 99.2 $\pm$ 30.19 (96) & \myemph{32.0 $\pm$ 0 (32)} \\
+\hline
+ 4-MaxP + Believe & \myemph{57.6 $\pm$ 19.2 (64)} & 102.4 $\pm$ 34.47 (96) & \myemph{32.0 $\pm$ 0 (32)}\\
+\end{tabular}
+\caption{Hausdorff distance convergence results for synthetic datasets.}
+\label{table:hausdorff_synthetics}
+\end{table}
+
+The Hausdorff distance metric shows even for the more simple test cases that the topology-based methods perform relatively well.
+%
+This is most likely due to the fact that topology-based methods tend to select well-spaced candidates while still focusing on interesting regions.
+%
+By spacing the sample points along the limit surface, they get a ``rough'' shape everywhere rather than a really accurate picture in one place and highly inaccurate at other locations.
+%
+Spreading candidate points along the estimated limit surface is more likely to reduce the Hausdorff distance computation for this reason.
+%
+Selecting points that are bundled in one area may improve the local fit, but are not likely to reduce the maximum distance computed.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Adaptive Sampling Algorithms for Probabilistic Risk Assessment of Nuclear Simulations}
-  conference paper~\cite{MaljovecWangMandelli2013b}
+  % conference paper~\cite{MaljovecWangMandelli2013b}
+\label{paper:psa}
 
 % \bibliography{\jobname}

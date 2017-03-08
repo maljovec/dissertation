@@ -48,6 +48,41 @@
 \usetikzlibrary{decorations.pathreplacing, calc}
 \tikzset{brace/.style={decorate, decoration={brace}},
   brace mirrored/.style={decorate, decoration={brace,mirror}},}
+
+%% Math operators needed for the IJUQ paper
+\newcommand {\mm}[1] {\ifmmode{#1}\else{\mbox{\(#1\)}}\fi}
+\newcommand{\Tcal}{\mm{\mathcal T}}
+\newcommand{\Scal}{\mm{\mathcal S}}
+
+\newcommand{\x}{\mm{\mathbf x}}
+\newcommand{\z}{\mm{\mathbf z}}
+
+%% Declare a paragraph operator to embolden text and keep it inline with following text.
+\newcommand{\para}[1]{{\vspace{4pt}\noindent\bf{#1.}\hspace{4pt}}}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+% For writing C++ code in latex
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
+
+%% Algorithm stuff needed for the SCI Technical Report
+\makeatletter
+\let\OldStatex\Statex
+\renewcommand{\Statex}[1][2]{%
+  \setlength\@tempdima{\algorithmicindent}%
+  \OldStatex\hskip\dimexpr#1\@tempdima\relax}
+\makeatother
+
+\algnewcommand\algorithmicinput{\textbf{INPUT:}}
+\algnewcommand\INPUT{\item[\algorithmicinput]}
+\algnewcommand\algorithmicoutput{\textbf{OUTPUT:}}
+\algnewcommand\OUTPUT{\item[\algorithmicoutput]}
+\algnewcommand{\LineComment}[1]{\State \(\triangleright\) #1}
+
+\newcommand{\argmax}[1]{\underset{#1}{\operatorname{arg}\operatorname{max}}\;}
+\newcommand{\myemph}[1]{\textcolor{red}{\textbf{#1}}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% We want \verb and \begin{verbatim} ... \end{verbatim} environments to be
