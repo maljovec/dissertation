@@ -49,6 +49,7 @@
 \tikzset{brace/.style={decorate, decoration={brace}},
   brace mirrored/.style={decorate, decoration={brace,mirror}},}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Math operators needed for the IJUQ paper
 \newcommand {\mm}[1] {\ifmmode{#1}\else{\mbox{\(#1\)}}\fi}
 \newcommand{\Tcal}{\mm{\mathcal T}}
@@ -66,6 +67,7 @@
 \usepackage{fancyvrb}
 \DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Algorithm stuff needed for the SCI Technical Report
 \makeatletter
 \let\OldStatex\Statex
@@ -82,6 +84,24 @@
 
 \newcommand{\argmax}[1]{\underset{#1}{\operatorname{arg}\operatorname{max}}\;}
 \newcommand{\myemph}[1]{\textcolor{red}{\textbf{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% From PSA
+\newcommand{\Mone}  {\mm{\mathbf{M_1}}}
+\newcommand{\Mtwo}  {\mm{\mathbf{M_2}}}
+\newcommand{\Mthree}{\mm{\mathbf{M_3}}}
+
+\newcommand{\SA}{\mm{\mathbf{Mixture A}}}
+\newcommand{\SB}{\mm{\mathbf{Mixture B}}}
+\newcommand{\SC}{\mm{\mathbf{Mixture C}}}
+\newcommand{\SD}{\mm{\mathbf{Distance D}}}
+\newcommand{\SE}{\mm{\mathbf{Distance E}}}
+\newcommand{\NF}{\mm{\mathbf{Nuclear F}}}
+
+\newcommand{\denselist}{\itemsep 0pt\parsep=1pt\partopsep 0pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% From PacificVis
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
