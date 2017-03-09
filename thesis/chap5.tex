@@ -167,11 +167,11 @@ Here, point $\x$ is selected with the highest persistence, therefore, the highes
 \includegraphics[width=1.0\linewidth]{figs/chap5/topo-all}
 \caption{(a) TopoHP: Construct a Morse-Smale complex from training data (silver) as well as all candidates with predicted responses (purple), return the persistence of the critical points within the candidates.
 %
-Point $\x$ is selected with the highest $TopoHP(\x)$.
+Point $\protect\x$ is selected with the highest $TopoHP(\protect\x)$.
 %
-(b) TopoP: average change in persistence for all extrema before (left) and after (right) inserting a candidate $\x$ into the Morse-Smale complex.
+(b) TopoP: average change in persistence for all extrema before (left) and after (right) inserting a candidate $\protect\x$ into the Morse-Smale complex.
 %
-(c) Morse-Smale complexes before (left) and after (middle) inserting a candidate point $\x$;
+(c) Morse-Smale complexes before (left) and after (middle) inserting a candidate point $\protect\x$;
 %
 TopoB (right): bottleneck distance between the corresponding persistence diagrams before (circles) and after (squares) insertion.}
 \label{fig:topo-all}
@@ -242,17 +242,11 @@ Nevertheless, as discussed below even without an explicit representation several
 
 \begin{figure}[!ht]
 \begin{center}
-%\subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Ackley/gpm_Ackley_td=20}\label{fig:ackley2D_gpm}}
-%\subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Ackley/earth_Ackley_td=20}\label{fig:ackley2D_earth}}
-%\subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Ackley/mda_Ackley_td=20}\label{fig:ackley2D_mda}}
-%\subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Ackley/nnet_Ackley_td=20}\label{fig:ackley2D_nnet}}
 \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Ackley_td=20}
 \includegraphics[width=0.2425\linewidth]{figs/chap5/earth_Ackley_td=20}
 \includegraphics[width=0.2425\linewidth]{figs/chap5/mda_Ackley_td=20}
 \includegraphics[width=0.2425\linewidth]{figs/chap5/nnet_Ackley_td=20}
-\caption{Adaptive sampling of the 2D Ackley function using different regression techniques and different scoring functions.
-%
-(1) GPM; (2) EARTH; (3) MDA; and (4) NNET.}
+\caption{Adaptive sampling of the 2D Ackley function using different regression techniques and different scoring functions. (1) GPM; (2) EARTH; (3) MDA; and (4) NNET.}
 \label{fig:ackley2D_results}
 \end{center}
 \end{figure}
@@ -273,20 +267,13 @@ Subsequently, we only consider experiments in which the space filling design ind
 
 \begin{figure}[htbp]
 \begin{center}
-% \subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Diag2Max/gpm_Diag2Max_td=20}\label{fig:2diag2D_gpm}}
-% \subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Diag4Max/gpm_Diag4Max_td=20}\label{fig:4diag2D_gpm}}
-% \subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/GMM5/gpm_GMM5_2D_td=20}\label{fig:gmm52D_gpm}}
-% \subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/MGR/gpm_MGR_td=20}\label{fig:mgr2D_gpm}}
-% \subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Salomon/gpm_Salomon_td=20}\label{fig:salomon2D_gpm}}
-%\subfigure[]{\includegraphics[width=0.2425\linewidth]{./2D/Whitley/gpm_Whitley_td=20}\label{fig:whitley2D_gpm}}
  \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Diag2Max_td=20}
  \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Diag4Max_td=20}
  \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_GMM5_2D_td=20}
  \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_MGR_td=20}
  \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Salomon_td=20}
  \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Whitley_td=20}
-\caption{Adaptive sampling various 2D test functions using the GPM.
-(1) Two maxima Diagonal; (2) Four maxima Diagonal; (3) Mixture of five Gaussians; (4) MGR; (5) Salomon; (6) Whitley.}
+ \caption{Adaptive sampling various 2D test functions using the GPM. (1) Two maxima Diagonal; (2) Four maxima Diagonal; (3) Mixture of five Gaussians; (4) MGR; (5) Salomon; (6) Whitley.}
 \label{fig:2D_gpm_results}
 \end{center}
 \end{figure}
@@ -306,14 +293,6 @@ Finally, the NNET implementation barely shows any improvement in RMSE with incre
 Overall, NNET achieves by far the worst fit at an RMSE almost an order of magnitude larger than that of the Gaussian process model.
 \begin{figure}[htbp]
 \begin{center}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Ackley/gpm_Ackley_td=30}\label{fig:ackley3D_gpm}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Diag2Max/gpm_Diag2Max_3D_td=30}\label{fig:2diag3D_gpm}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/GMM2/gpm_GMM2_3D_td=30}\label{fig:gmm23D_gpm}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/GMM5/gpm_GMM5_3D_td=30}\label{fig:gmm53D_gpm}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/MGR/gpm_MGR_td=30}\label{fig:mgr3D_gpm}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./4D/Ackley/gpm_Ackley_td=100}\label{fig:ackley4D_gpm}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./5D/Salomon/gpm_Salomon_td=200}\label{fig:salomon5D_gpm}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./5D/Diag2Max/gpm_Diag2Max_5D_td=200}\label{fig:2diag5D_gpm}}
  \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Ackley_td=30}\label{fig:ackley3D_gpm}
  \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Diag2Max_3D_td=30}\label{fig:2diag3D_gpm}
  \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_GMM2_3D_td=30}\label{fig:gmm23D_gpm}
@@ -415,14 +394,6 @@ A failed but nevertheless interesting result comes from the mixture of two Gauss
 
 \begin{figure}[htbp]
 \begin{center}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Diag2Max/earth_Diag2Max_td=20}\label{fig:2diag2D_earth}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/GMM5/earth_GMM5_2D_td=20}\label{fig:gmm52D_earth}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/MGR/earth_MGR_td=20}\label{fig:mgr2D_earth}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Whitley/earth_Whitley_td=20}\label{fig:whitley2D_earth}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Ackley/earth_Ackley_td=30}\label{fig:ackley3D_earth}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Whitley/earth_Whitley_td=30}\label{fig:whitley3D_earth}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/MGR/earth_MGR_td=30}\label{fig:mgr3D_earth}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/GMM2/earth_GMM2_3D_td=30}\label{fig:gmm23D_earth}}
  \includegraphics[width=0.24\linewidth]{figs/chap5/earth_Diag2Max_td=20}
  \includegraphics[width=0.24\linewidth]{figs/chap5/earth_GMM5_2D_td=20}
  \includegraphics[width=0.24\linewidth]{figs/chap5/earth_MGR_td=20}
@@ -447,14 +418,6 @@ A failed but nevertheless interesting result comes from the mixture of two Gauss
 
 \begin{figure}[htbp]
 \begin{center}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Diag2Max/mda_Diag2Max_td=20}\label{fig:2diag2D_mda}}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/GMM5/mda_GMM5_2D_td=20}\label{fig:gmm52D_mda}}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/MGR/mda_MGR_td=20}\label{fig:mgr2D_mda}}
-% \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Whitley/mda_Whitley_td=20}\label{fig:whitley2D_mda}}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Ackley/mda_Ackley_td=30}\label{fig:ackley3D_mda}}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/Whitley/mda_Whitley_td=30}\label{fig:whitley3D_mda}}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/MGR/mda_MGR_td=30}\label{fig:mgr3D_mda}}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./3D/GMM2/mda_GMM2_3D_td=30}\label{fig:gmm23D_mda}}
   \includegraphics[width=0.24\linewidth]{figs/chap5/mda_Diag2Max_td=20}
   \includegraphics[width=0.24\linewidth]{figs/chap5/mda_GMM5_2D_td=20}
   \includegraphics[width=0.24\linewidth]{figs/chap5/mda_MGR_td=20}
@@ -486,17 +449,14 @@ Again the 3D mixture of two Gaussians shows the initial decrease in RMSE for sev
 
 \begin{figure}[htbp]
 \begin{center}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Diag2Max/nnet_Diag2Max_td=20}\label{fig:2diag2D_nnet}}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/GMM5/nnet_GMM5_2D_td=20}\label{fig:gmm52D_nnet}}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/MGR/nnet_MGR_td=20}\label{fig:mgr2D_nnet}}
-%  \subfigure[]{\includegraphics[width=0.24\linewidth]{./2D/Salomon/nnet_Salomon_td=20}\label{fig:salomon2D_nnet}}
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Diag2Max_td=20}\label{fig:2diag2D_nnet}
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_GMM5_2D_td=20}\label{fig:gmm52D_nnet}
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_MGR_td=20}\label{fig:mgr2D_nnet}
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Salomon_td=20}\label{fig:salomon2D_nnet}
 \caption{Adaptive sampling of various 2D test functions using the NNET model.
 (1) Two maxima Diagonal function;
-(2) Mixture of five Gaussians; (3) MGR function;
+(2) Mixture of five Gaussians;
+(3) MGR function;
 (4) Salomon function.}
 \label{fig:nnet_2D}
 \end{center}
@@ -504,17 +464,12 @@ Again the 3D mixture of two Gaussians shows the initial decrease in RMSE for sev
 
 \begin{figure}[htbp]
 \begin{center}
-%\includegraphics[width=0.24\linewidth]{./3D/Ackley/nnet_Ackley_td=30}\label{fig:ackley3D_nnet}
-%\includegraphics[width=0.24\linewidth]{./3D/MGR/nnet_MGR_td=30}\label{fig:mgr3D_nnet}
-%\includegraphics[width=0.24\linewidth]{./3D/Salomon/nnet_Salomon_td=30}\label{fig:salomon3D_nnet}
-%\includegraphics[width=0.24\linewidth]{./3D/GMM2/nnet_GMM2_3D_td=30}\label{fig:gmm23D_nnet}
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Ackley_td=30}\label{fig:ackley3D_nnet}
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_MGR_td=30}\label{fig:mgr3D_nnet}
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Salomon_td=30}\label{fig:salomon3D_nnet}
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_GMM2_3D_td=30}\label{fig:gmm23D_nnet}
 \caption{Adaptive sampling of various 3D test functions using the
-  NNET model. (1) Ackley function; (2) MGR function; (3) Salomon function;
-  (4) Mixture of two Gaussians.}
+  NNET model. (1) Ackley function; (2) MGR function; (3) Salomon function; (4) Mixture of two Gaussians.}
   \label{fig:nnet_3D}
 \end{center}
 \end{figure}
@@ -568,7 +523,7 @@ Nevertheless, topological scoring functions are expected to better recover the g
 \includegraphics[width=0.24\linewidth]{figs/chap5/Whitley.png}
 \caption{Pseudo-colored contour plots of the 2D versions of the test functions.
 %
-From left to right: Ackley, Diagonal function with $2$ maxima (Diag2Max), Diagonal function with $4$ maxima (Diag4Max), Gaussian Mixture Model with $2$ (GMM2) and $5$ Gaussians (GMM5), Mis-scaled Generalized Rastrigin (MGR), Salomon and Whitley, respectively.}
+From left to right: Ackley, Diagonal function with two maxima (Diag2Max), Diagonal function with four maxima (Diag4Max), Gaussian Mixture Model with two (GMM2) and five Gaussians (GMM5), Mis-scaled Generalized Rastrigin (MGR), Salomon and Whitley, respectively.}
 \label{fig:original}
 \end{center}
 \end{figure}
@@ -780,9 +735,7 @@ In other words, a candidate will have a high score if its predicted value is nea
 \While{$C \neq \emptyset$ and not converged}
   \State{$M \gets [T,f(T)]$}\Comment{Build a surrogate $M$ with the training
                                      data}
-  \State{$ R \gets$ \textbf{SELECT}($C$, $S$, $M$, $b$) }\Comment{This is the
-                                                                  step we will
-                                                                  be augmenting}
+  \State{$ R \gets$ \textbf{SELECT}($C$, $S$, $M$, $b$) }\Comment{This is the step we will be augmenting}
   \State{$C \gets C \setminus R$}\Comment{Remove selected candidates}
   \State{$T \gets T \cup R$}\Comment{Add candidates to the training data}
 \EndWhile
@@ -878,7 +831,7 @@ When $b > 1$, the naive strategy selects $b$ points with the highest scores, and
 %
 If we would like to guarantee some level of spatial separation among the chosen candidates, then perhaps a simple topology-based strategy would select the top $b$ \emph{local maxima} of the scoring function.
 %
-However, as the example illustrated in Figure \ref{fig:persistence},  a 1D scoring function could contain two local maxima that are close to each another in the domain but have very different \emph{persistence}.
+However, as the example illustrated in Figure~\ref{fig:persistence},  a 1D scoring function could contain two local maxima that are close to each another in the domain but have very different \emph{persistence}.
 %
 Such an observation has inspired our first topology-based batch selection strategy,  based on the persistence of the candidate points.
 %
@@ -924,9 +877,7 @@ Since we would like to generalize our batch selection process to any arbitrary d
 \centering
 \includegraphics[width=0.32\textwidth]{figs/chap5/persistence}
 \includegraphics[width=0.32\textwidth]{figs/chap5/persistence2}
-\caption{A simple 1D function with 4 maxima showing a selection strategy that
-chooses the $2$ highest-valued maxima (left) and the strategy we employ in MaxP
-which selects the $2$ highest persistence maxima.}
+\caption{A simple one dimensional function with four maxima showing a selection strategy that chooses the two highest-valued maxima (left) and the strategy we employ in MaxP which selects the two highest persistence maxima.}
 \label{fig:persistence}
 \end{figure}
 
@@ -1207,7 +1158,7 @@ In many other cases, the hybrid strategies have the best performance in terms of
 \label{sec:limit_results}
 We discuss results for limit surface recovery in this section.
 %
-First, to understand the difference between the believe strategy and the topology-based MaxP strategy, we show some snapshots of the predicted response surfaces, as well as the corresponding scoring landscapes  (i.e. straddle) during the active learning process in Figure \ref{fig:exampleLimits}, when $152$ candidates have already been added to the original $100$ training points.
+First, to understand the difference between the believe strategy and the topology-based MaxP strategy, we show some snapshots of the predicted response surfaces, as well as the corresponding scoring landscapes  (i.e. straddle) during the active learning process in Figure~\ref{fig:exampleLimits}, when $152$ candidates have already been added to the original $100$ training points.
 %
 The yellow contours denote the predicted limit surface.
 %
@@ -1215,7 +1166,7 @@ The blue points are the training data (the same for both trials) and the red poi
 %
 The green points represent the next batch of $8$ selected points.
 %
-The most important observation is that the Believe strategy can still select points clustered in a single region, potentially limiting the amount of information gain from a single batch, as illustrated by the points enclosed in the white circles in Figure \ref{fig:exampleLimits}(a)-(b).
+The most important observation is that the Believe strategy can still select points clustered in a single region, potentially limiting the amount of information gain from a single batch, as illustrated by the points enclosed in the white circles in Figure~\ref{fig:exampleLimits}(a)-(b).
 %
 This is due in part to the straddle function encoding both uncertainty (in the form of variance) and closeness between the predicted value and the limiting surface threshold.
 %
@@ -1223,7 +1174,7 @@ Recall the advantage of an adaptive sampling strategy over a space-filling desig
 %
 However, we emphasize that our purpose of using batch selection is to explore different areas simultaneously.
 %
-We believe our topology-based designs are more advantageous in such a context, as illustrated in Figure \ref{fig:exampleLimits}(c)-(d) where the (green) points selected are well-spaced from one another, capturing structural information from different areas of the domain.
+We believe our topology-based designs are more advantageous in such a context, as illustrated in Figure~\ref{fig:exampleLimits}(c)-(d) where the (green) points selected are well-spaced from one another, capturing structural information from different areas of the domain.
 
 \begin{figure}[!ht]
 \centering
@@ -1235,38 +1186,6 @@ the Believe strategy and (b) its corresponding scoring function.
 corresponding scoring function.}
 \label{fig:exampleLimits}
 \end{figure}
-
-
-%\begin{figure}[!ht]
-%\centering
-%\includegraphics[width=0.24\textwidth]{believe_Model_152}
-%\includegraphics[width=0.24\textwidth]{believe_Score_152}
-%\includegraphics[width=0.24\textwidth]{maxp_Model_152}
-%\includegraphics[width=0.24\textwidth]{maxp_Score_152}\\
-%\includegraphics[width=0.24\textwidth]{grayscale}
-%\includegraphics[width=0.24\textwidth]{score}
-%\includegraphics[width=0.24\textwidth]{grayscale}
-%\includegraphics[width=0.24\textwidth]{score}
-%\caption{These images are snapshots of the predicted response surface and the
-%scoring landscape where 152 points have already been added to the original 100
-%training points.
-%%
-%The grayscale images correspond to the model surface, and the colored images
-%represent the scoring function. The yellow contours denote the predicted limit
-%surface.
-%%
-%The blue points are the training data (the same for both trials) and the red
-%points are the adaptively selected points.
-%%
-%The green points represent the next batch of 8 selected points.
-%%
-%Note, the left two images are the Believe strategy, whereas the right images
-%are the MaxP strategy.
-%%
-%The  Believe strategy can still select points clustered in a single region
-%potentially limiting the amount of information gain from a single batch.}
-%\label{fig:exampleLimits}
-%\end{figure}
 
 \paragraph{F1-Score Convergence Results.}
 Treating the limit surface recovery problem as a binary classification, the F1-score can be used to understand our model's ability to correctly classify points.
@@ -1489,14 +1408,12 @@ The final model $\Mthree$ computes a candidate set directly from the training da
 
 \begin{figure}[!ht]
 \centering
-\vspace{-3mm}
 \includegraphics[width=1.0\textwidth]{figs/chap5/pipelines}
-\vspace{-5mm}
-\caption{General adaptive sampling pipeline and pipelines for $\Mone$, $\Mtwo$ and $\Mthree$ respectively.}
+\caption{General adaptive sampling pipeline and pipelines for $\protect\Mone$, $\protect\Mtwo$ and $\protect\Mthree$ respectively.}
 \label{fig:pipelines}
 \end{figure}
 
-The general adaptive sampling pipeline will look similar to those discussed in previous studies (Figure \ref{fig:pipelines} top left).
+The general adaptive sampling pipeline will look similar to those discussed in previous studies (Figure~\ref{fig:pipelines} top left).
 %
 The process begins by selecting some initial training data, running the ground truth simulation and obtaining a collection of true responses at these data points.
 %
@@ -1511,7 +1428,7 @@ Finally, the candidate(s) with the highest score(s) are selected and added to th
 % PM
 Before describing each of the three models in detail, we focus on their common ingredients.
 %
-% Two main families of PMs are used in uncertainty quantification: regression models such as Multivariate Adaptive Regression Splines (MARS) and stochastic models such as Gaussian processes.
+% Two main families of prediction models are used in uncertainty quantification: regression models such as Multivariate Adaptive Regression Splines (MARS) and stochastic models such as Gaussian processes.
 %
 Both $\Mone$ and $\Mtwo$ use an (\DPM{easily replaceable}) prediction model, i.e. a Gaussian process model (GPM), as the surrogate model.
 %
@@ -1556,7 +1473,7 @@ This will become more clear subsequently when $\Mtwo$ is described in detail.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \noindent\textbf{$\Mone$: Global Prediction Model Limit Surface Recovery.}
-As illustrated in Figure \ref{fig:pipelines} top right, we begin with a set of training points and build a prediction model using the GPM.
+As illustrated in Figure~\ref{fig:pipelines} top right, we begin with a set of training points and build a prediction model using the GPM.
 %
 Second, we \emph{densely} sample the GPM over the entire domain using a CVT scheme, and construct a relaxed Gabriel graph on the union of these CVT samples with the training points.
 %
@@ -1567,7 +1484,7 @@ Fourth, the set of candidate points are ranked based on the point density criter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \noindent\textbf{$\Mtwo$: Topology-Based Prediction Model Limit Surface Recovery.}
-As illustrated in Figure \ref{fig:pipelines} bottom left, $\Mtwo$ improves the global prediction model query by extracting the topology of the prediction model and focusing samples in specific regions.
+As illustrated in Figure~\ref{fig:pipelines} bottom left, $\Mtwo$ improves the global prediction model query by extracting the topology of the prediction model and focusing samples in specific regions.
 %
 First, we fit a GPM on the initial set of training points.
 %
@@ -1603,7 +1520,7 @@ First, $\Mtwo$ allows us to more densely sample the interesting regions and quic
 %
 Second, $\Mtwo$ introduces a tolerance parameter $\delta$ in defining the relaxed spanning crystals, therefore allowing exploratory analysis of potential failure regions within a controlled level of uncertainty.
 %
-%This is demonstrated through examples in Section \ref{subsec:df}.
+%This is demonstrated through examples in Section~\ref{subsec:df}.
 %Third, we expect when dimension of the response surface is high and/or when the failure regions are small with respect to the entire domain area, $\Mtwo$ query much smaller number of points from the prediction model, which is cost effective.
 Overall, as we demonstrate in Section \ref{sec:experiments}, $\Mtwo$ behaves comparably with $\Mone$ under general settings, and for certain special scenarios it performs drastically better.
 
@@ -1612,7 +1529,7 @@ Overall, as we demonstrate in Section \ref{sec:experiments}, $\Mtwo$ behaves com
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \noindent\textbf{$\Mthree$: Data-Driven Limit  Surface Recovery.}
-As opposed to building a prediction model, $\Mthree$ (Figure \ref{fig:pipelines} bottom right) begins by directly building a neighborhood structure as the surrogate model (e.g. a relaxed Gabriel graph) on the initial training data.
+As opposed to building a prediction model, $\Mthree$ (Figure~\ref{fig:pipelines} bottom right) begins by directly building a neighborhood structure as the surrogate model (e.g. a relaxed Gabriel graph) on the initial training data.
 %
 It then creates a candidate set by first obtaining linearly interpolated points at $t$ along spanning edges of the graph, and introducing a random perturbation $\epsilon$ along all dimensions to these points.
 %
@@ -1676,16 +1593,14 @@ On the other hand, for $\Mtwo$, we only need to sample the GPM sparsely, using j
 
 We start with three functions generated as mixtures of Gaussians.
 %
-As shown in Figure \ref{fig:synthetic-A-B-C-GMM}, in all three cases, each model is able to extract each component of the limit surface to varying degrees of fidelity.
+As shown in Figure~\ref{fig:synthetic-A-B-C-GMM}, in all three cases, each model is able to extract each component of the limit surface to varying degrees of fidelity.
 
 \begin{figure}[!ht]
 \centering
-\vspace{-3mm}
 \includegraphics[width=1.0\textwidth]{figs/chap5/synthetic-A-B-C-GMM}
-\vspace{-5mm}
-\caption{From top to bottom: Synthetic datasets $\SA$, $\SB$ and $\SC$.
-For each dataset: (a) Surface rendering of the true response model and the true limit surface; Adaptively sampled points and training points at the end of the process under (b) $\Mone$, (c) $\Mtwo$ and (d) $\Mthree$;
-Limit surfaces extracted from (e) the true response model, (f) $\Mone$, (g) $\Mtwo$ and (h) $\Mthree$.
+\caption{From top to bottom: Synthetic datasets $\protect\SA$, $\protect\SB$ and $\protect\SC$.
+For each dataset: (a) Surface rendering of the true response model and the true limit surface; Adaptively sampled points and training points at the end of the process under (b) $\protect\Mone$, (c) $\protect\Mtwo$ and (d) $\protect\Mthree$;
+Limit surfaces extracted from (e) the true response model, (f) $\protect\Mone$, (g) $\protect\Mtwo$ and (h) $\protect\Mthree$.
 Initial training (adaptive sampled) points are solid triangles (circles), colored by true (estimated) responses.
 }
 \label{fig:synthetic-A-B-C-GMM}
@@ -1699,14 +1614,14 @@ The limit surface is smooth and circular with uniform curvature.
 %
 Therefore, this examples serves as a trivial validation dataset as most models should recover the limit surface accurately using relatively few adaptively sampled points.
 %
-As shown in Figure \ref{fig:synthetic-A-B-C-GMM} $\SA$, all three models succeed in this regard.
+As shown in Figure~\ref{fig:synthetic-A-B-C-GMM} $\SA$, all three models succeed in this regard.
 
 The second dataset $\SB$ adds complexity by adding a second component and moving the failure regions such that they intersect with the domain boundary.
 %
 The function used for this is just the direct combination of two uniform Gaussian kernels:
 $z = e^{-\frac{x^2+y^2}{0.3}} + e^{-\frac{(x-1)^2+(y-1)^2}{0.3}}$.
 %
-It is interesting to see in Figure \ref{fig:synthetic-A-B-C-GMM} $\SB$ that both $\Mone$ and $\Mtwo$ estimate similar limit surfaces with inaccuracies near the domain boundary, while $\Mthree$ recovers the limit surface with a more accurate geometry.
+It is interesting to see in Figure~\ref{fig:synthetic-A-B-C-GMM} $\SB$ that both $\Mone$ and $\Mtwo$ estimate similar limit surfaces with inaccuracies near the domain boundary, while $\Mthree$ recovers the limit surface with a more accurate geometry.
 
 The third dataset $\SC$ distorts the shape of the Gaussian peaks to be ellipsoidal and places two of the Gaussian centers close together to form a more complicated shape for one  component of the failure region.
 %
@@ -1719,9 +1634,9 @@ $z = 0.5e^{-\frac{(x-0.2)^2}{0.02}+\frac{(y-0.2)^2}{0.02}}
    +    e^{-\frac{(x-0.3)^2}{0.02}+\frac{(y-0.7)^2}{0.03125}}
    + 0.8e^{-\frac{(x-0.7)^2}{0.03125}+\frac{(y-0.7)^2}{0.03125}}
    + 0.8e^{-\frac{(x-0.8)^2}{0.005}+\frac{(y-0.45)^2}{0.02}}$.
-In Figure \ref{fig:synthetic-A-B-C-GMM} $\SC$, both $\Mone$ and $\Mthree$ seem to capture the geometry of the right component of the limit surface better than $\Mtwo$.
+In Figure~\ref{fig:synthetic-A-B-C-GMM} $\SC$, both $\Mone$ and $\Mthree$ seem to capture the geometry of the right component of the limit surface better than $\Mtwo$.
 
-For $\SC$, since the current limit surface tolerance parameter $\delta$ is set to be $10\%$ of the range space, neither the saddle or the lowest peak (see Figure \ref{fig:synthetic-A-B-C-GMM} Mixture C (a)) are deemed interesting (that is, considered as part of the relaxed spanning crystals), therefore no candidate points are placed in their local neighborhood.
+For $\SC$, since the current limit surface tolerance parameter $\delta$ is set to be $10\%$ of the range space, neither the saddle or the lowest peak (see Figure~\ref{fig:synthetic-A-B-C-GMM} Mixture C (a)) are deemed interesting (that is, considered as part of the relaxed spanning crystals), therefore no candidate points are placed in their local neighborhood.
 %
 As we will see in Section \ref{subsec:df}, in certain situations, varying $\delta$ allows exploration of the domain space that may lead to identifications of new failure regions that are otherwise undetected by the global prediction model.
 
@@ -1734,12 +1649,10 @@ As we will see in Section \ref{subsec:df}, in certain situations, varying $\delt
 
 \begin{figure}[!ht]
 \centering
-\vspace{-3mm}
 \includegraphics[width=1.0\textwidth]{figs/chap5/synthetic-D-E-DF.pdf}
-\vspace{-5mm}
-\caption{Synthetic datasets $\SD$ (top) and $\SE$ (bottom).
-For each dataset: (a) Surface rendering of the true response model and the true limit surface; Adaptively sampled points and training points at the end of the process under (b) $\Mone$, (c) $\Mtwo$ and (d) $\Mthree$;
-Limit surfaces extracted from (e) the true response model, (f) $\Mone$, (g) $\Mtwo$ and (h) $\Mthree$.
+\caption{Synthetic datasets $\protect\SD$ (top) and $\protect\SE$ (bottom).
+For each dataset: (a) Surface rendering of the true response model and the true limit surface; Adaptively sampled points and training points at the end of the process under (b) $\protect\Mone$, (c) $\protect\Mtwo$ and (d) $\protect\Mthree$;
+Limit surfaces extracted from (e) the true response model, (f) $\protect\Mone$, (g) $\protect\Mtwo$ and (h) $\protect\Mthree$.
 Initial training (adaptive sampled) points are solid triangles (circles), colored by true (estimated)  responses.
 }
 \label{fig:synthetic-D-E-DF}
@@ -1765,11 +1678,9 @@ We set $p=2$ here.
 
 \begin{figure}[!ht]
 \centering
-\vspace{-3mm}
 \includegraphics[width=0.7\textwidth]{figs/chap5/synthetic-D-20percent.pdf}
-\vspace{-2mm}
 \caption{
-$\Mtwo$ for $\SD$: Increasing limit surface tolerance parameter $\delta$
+$\protect\Mtwo$ for $\protect\SD$: Increasing limit surface tolerance parameter $\protect\delta$
 from $5\%$ to $20\%$ of the range space allows us to accurately capture the third component of the limit surface even though we have no initial training data whose response is above the threshold for this region.
 }
 \label{fig:df-20percent}
@@ -1800,12 +1711,10 @@ This is our second example showcasing that the tolerance parameter $\delta$ allo
 
 \begin{figure}[!ht]
 \centering
-\vspace{-3mm}
 \includegraphics[width=1.0\textwidth]{figs/chap5/nuclear-F.pdf}
-\vspace{-5mm}
-\caption{Nuclear dataset $\NF$.
-(a) Surface rendering of the true response model and the true limit surface; Adaptively sampled points and training points at the end of the process under (b) $\Mone$, (c) $\Mtwo$ and (d) $\Mthree$;
-Limit surfaces extracted from (e) the true response model, (f) $\Mone$, (g) $\Mtwo$ and (h) $\Mthree$.
+\caption{Nuclear dataset $\protect\NF$.
+(a) Surface rendering of the true response model and the true limit surface; Adaptively sampled points and training points at the end of the process under (b) $\protect\Mone$, (c) $\protect\Mtwo$ and (d) $\protect\Mthree$;
+Limit surfaces extracted from (e) the true response model, (f) $\protect\Mone$, (g) $\protect\Mtwo$ and (h) $\protect\Mthree$.
 Initial training (adaptive sampled) points are solid triangles (circles), colored by true (estimated) responses.}
 \label{fig:nuclear-F}
 \end{figure}
@@ -1820,8 +1729,7 @@ In particular, domain scientists aim to analyze uncertainties associated with th
 %
 There are two input variables of interests in the simulation: $T_{PG\_SD}$ and $T_{DG}$, and the output variable is the core temperature.
 %
-A typical scenario is as follows (see Figure \ref{fig:nuclearTransient}):
-\vspace{-5mm}
+A typical scenario is as follows (see Figure~\ref{fig:nuclearTransient}):
 \begin{itemize} \denselist
   \item External events force the reactor trip at time $0$;
   \item Offsite power is no longer available at $T_{PG\_SD}$ (LOOP condition);
@@ -1829,18 +1737,15 @@ A typical scenario is as follows (see Figure \ref{fig:nuclearTransient}):
   \item Temperature of the core starts to rise since heat removal is incapacitated. A failure condition is reached when temperature reach 800C;
   \item Diesel generators become available $T_{DG}$ after LOOP condition and the ECCS is now able to remove decay heat.
 \end{itemize}
-\vspace{-5mm}
 
 \begin{figure}[!ht]
 \centering
-\vspace{-3mm}
 \includegraphics[width=0.6\textwidth]{figs/chap5/scenExample.pdf}
-\vspace{-4mm}
-\caption{$\NF$: Example of a transient for a LOOP scenario.}
+\caption{$\protect\NF$: Example of a transient for a LOOP scenario.}
 \label{fig:nuclearTransient}
 \end{figure}
 
-For the above dataset named $\NF$, the results of the adaptive sampling models are shown in Figure \ref{fig:nuclear-F}.
+For the above dataset named $\NF$, the results of the adaptive sampling models are shown in Figure~\ref{fig:nuclear-F}.
 %
 It is interesting to note that $\Mthree$ manages to recover the most accurate estimate of the limit surface.
 %
@@ -1864,25 +1769,19 @@ On the other hand, since $\Mthree$ is not dependent on the prediction model, it 
 
 \begin{figure}%[!ht]
 \centering
-\vspace{-3mm}
 \includegraphics[width=0.85\textwidth]{figs/chap5/nuclear-F-surface-converge.pdf}
-\vspace{-3mm}
-\caption{Convergence of estimated response surfaces and estimated limit surfaces for $\NF$,  with all three models. Images are obtained after every additional $10$ adaptively sampled points.
-}
+\caption{Convergence of estimated response surfaces and estimated limit surfaces for $\protect\NF$,  with all three models. Images are obtained after every additional ten adaptively sampled points.}
 \label{fig:nuclear-F-surface-converge}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsubsection{RMSE Convergence for $\Mone$ and $\Mtwo$}
+% \subsubsection[Root-Mean-Square Error Convergence]{Root-Mean-Square Error Convergence for $\Mone$ and $\Mtwo$}
+\subsubsection{Root-Mean-Square Error Convergence for $\protect\Mone$ and $\protect\Mtwo$}
 
 \begin{figure}[!ht]
 \centering
-\vspace{-3mm}
 \includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-convergence.pdf}
-\vspace{-5mm}
-\caption{Convergence of RMSE of the estimated limit surfaces based on $\Mone$ and $\Mtwo$ for a single trial.
-}
+\caption{Convergence of RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ for a single trial.}
 \label{fig:RMSE-convergence}
 \end{figure}
 
@@ -1923,21 +1822,15 @@ The lack of exploration in the other models affords them to only recover this co
 
 \begin{figure}[!ht]
 \centering
-\vspace{-3mm}
 \includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-mean.pdf}
-\vspace{-5mm}
-\caption{Convergence of mean RMSE of the estimated limit surfaces based on $\Mone$ and $\Mtwo$ across $10$ trials.
-}
+\caption{Convergence of mean RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ across ten trials.}
 \label{fig:RMSE-mean}
 \end{figure}
 
 \begin{figure}[!ht]
 \centering
-\vspace{-3mm}
 \includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-median.pdf}
-\vspace{-5mm}
-\caption{Convergence of median RMSE of the estimated limit surfaces based on $\Mone$ and $\Mtwo$ across $10$ trials.
-}
+\caption{Convergence of median RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ across ten trials.}
 \label{fig:RMSE-median}
 \end{figure}
 
