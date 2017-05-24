@@ -259,7 +259,7 @@ All three methods utilize a Gaussian process surrogate model, however the latter
 
 The aforementioned methods are assumed to be completely automatic except in the instance where the human is required to act as the oracle, though such settings are more rare in the regression (i.e., continuous) context than in the classification (i.e., discrete) context.
 %
-The latter context of classification is beyond the scope of this work.
+%The latter context of classification is beyond the scope of this work.
 %
 % For example, a common human-dependent task more often involves annotating data with text labels rather than assigning often subjective numeric ranks or values to items in a dataset.
 %
@@ -391,43 +391,43 @@ This equation is given in intercept form where $\beta_0$ represents the y-interc
 %
 When the data is appropriately centered to have a mean of zero ($\mu_x,\mu_y = 0$), $\beta_0$ can be omitted.
 %
-For the remainder of this section, we will adopt the more flexible matrix notation where in intercept form, $\textbf{X} = \begin{bmatrix}\textbf{1} & \textbf{x}_1 & \ldots & \textbf{x}_d \end{bmatrix}$ such that the first column is a series of ones which will be multiplied by the y-intercept term, $\beta_0$, and the remaining columns are the input dimensions.
+For the remainder of this section, we will adopt the more flexible matrix notation where in intercept form, $\mathbf{X} = \begin{bmatrix}\mathbf{1} & \mathbf{x}_1 & \ldots & \mathbf{x}_d \end{bmatrix}$ such that the first column is a series of ones which will be multiplied by the y-intercept term, $\beta_0$, and the remaining columns are the input dimensions.
 %
-In the centered case, this notation is consistent, as we can drop the initial column in $\textbf{X}$ such that $\textbf{X} = \begin{bmatrix}\textbf{x}_1 & \ldots & \textbf{x}_d\end{bmatrix}$ and remove $\beta_0$ from the linear coefficient vector, $\boldsymbol\beta$.
+In the centered case, this notation is consistent, as we can drop the initial column in $\mathbf{X}$ such that $\mathbf{X} = \begin{bmatrix}\mathbf{x}_1 & \ldots & \mathbf{x}_d\end{bmatrix}$ and remove $\beta_0$ from the linear coefficient vector, $\boldsymbol\beta$.
 
-Given a set of observations $(\textbf{X},\textbf{y})$, the problem in matrix form is given below:
+Given a set of observations $(\mathbf{X},\mathbf{y})$, the problem in matrix form is given below:
 %
 \begin{equation}
-\textbf{y} = \textbf{X}\boldsymbol\beta + \boldsymbol\epsilon
+\mathbf{y} = \mathbf{X}\boldsymbol\beta + \boldsymbol\epsilon
 \end{equation}
 %
 In this equation, we seek to find a $\boldsymbol\beta$ that minimizes the error captured in $\boldsymbol\epsilon$.
 %
-Consider the proposed solution, $\tilde{y} = \textbf{X}\textbf{b}$.
+Consider the proposed solution, $\tilde{y} = \mathbf{X}\mathbf{b}$.
 %
-We define the difference between our model evaluated at an input row $\textbf{x}_j$ and the corresponding true response $y_j$ as the residual: $r_j = y_j - \textbf{x}_j\textbf{b}$.
+We define the difference between our model evaluated at an input row $\mathbf{x}_j$ and the corresponding true response $y_j$ as the residual: $r_j = y_j - \mathbf{x}_j\mathbf{b}$.
 %
 This leads us to the least squares method which minimizes the sum of squared residuals over the entire observed data:
 \begin{equation}
-\arg\min_{\textbf{b}} \sum_{j=0}^n(y_j - \textbf{x}_j\textbf{b})^2
+\arg\min_{\mathbf{b}} \sum_{j=0}^n(y_j - \mathbf{x}_j\mathbf{b})^2
 \end{equation}
 
-In order to minimize the sum of squared residuals, we can differentiate the sum of squared residuals equation with respect to each variable in \textbf{b} and set each derivative equal to zero.
+In order to minimize the sum of squared residuals, we can differentiate the sum of squared residuals equation with respect to each variable in $\mathbf{b}$ and set each derivative equal to zero.
 %
 Rearranging the terms leads to a series of \emph{normal equations}:
 \begin{equation}
-(\textbf{X}^T\textbf{y}= \textbf{X}^T\textbf{X}\textbf{b})
+(\mathbf{X}^T\mathbf{y}= \mathbf{X}^T\mathbf{X}\mathbf{b})
 \end{equation}
 
 Thus, the solution to the least squares problem is:
 \begin{equation}
-b = (\textbf{X}^T \textbf{X})^{-1} \textbf{X}^T \textbf{y}
+b = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}
 \label{eq:ols}
 \end{equation}
 
 The case with a single input variable is called simple linear regression and the case where $d\geq 2$ is called multiple linear regression.
 %
-This method can also be extended to polynomials by treating each degree of a variable as separate column in \textbf{X}, and solving for additional coefficients for each term.
+This method can also be extended to polynomials by treating each degree of a variable as separate column in $\mathbf{X}$, and solving for additional coefficients for each term.
 %
 This can also be extended to mixtures of different variables of varying orders.
 %
@@ -449,40 +449,61 @@ Before moving on to describe other data modeling
 
 \subsection{Regularization and Feature Selection}
 
-Regularization is a generic concept that can be applied to any problem with a loss function that is to be minimized.
+Regularization is a generic concept that can be applied to any problem where the goal is to minimize a loss function.
 %
 Though regularization is not restricted to the linear regression problem, it expedites exposition to describe it in this context.
 %
-Regularization, in the regression setting posed, augments a minimization problem with a penalty function, $R$, that favors less complex models and a penalty term $\alpha$ that controls its influence on the solution. In the context of our linear regression problem, we would have a new minimization problem resembling the one given below:
+Regularization, in the regression setting posed, augments a minimization problem with a penalty function, $R$, that favors less complex models and a penalty term $\alpha$ that controls its influence on the solution.
+%
+In the context of our linear regression problem, we would have a new minimization problem resembling the one given below:
 
 \begin{equation}
-\arg\min_{\textbf{b}} \sum_{j=0}^n(y_j - \textbf{x}_j\textbf{b})^2 + \alpha R(\textbf{b})
+\arg\min_{\mathbf{b}} \sum_{j=0}^n(y_j - \mathbf{x}_j\mathbf{b})^2 + \alpha R(\mathbf{b})
 \label{eq:genericRegularization}
 \end{equation}
 
-Common penalization functions include the $L_1$ and $L_2$ norms of $\textbf{b}$ which result in the least absolute shrinkage and selection operator (LASSO)~\cite{Tibshirani1996} and ridge regression~\cite{Hoerl1959,Hoerl1962}, respectively.
+Common penalization functions include the $L_1$ and $L_2$ norms of $\mathbf{b}$ which result in the least absolute shrinkage and selection operator (LASSO)~\cite{Tibshirani1996} and ridge regression~\cite{Hoerl1959,Hoerl1962}, respectively.
 %
-The ridge regression methodology tends to include all of the original terms whereas the LASSO method tends to favor models with fewer parameters, i.e. one or more parameters of $\textbf{b}$ are set to zero.
+The ridge regression methodology tends to include all of the original terms whereas the LASSO method tends to favor models with fewer parameters, i.e. one or more parameters of $\mathbf{b}$ are set to zero.
 %
-Zou and Hastie pointed out several disadvantages of the LASSO method, as well.
+Zou and Hastie point out several disadvantages of the LASSO method, as well.
 %
 For example, the LASSO method tends to be over aggressive in its parameter selection in cases where the dimensionality is larger than the sample size or if two or more variables exhibit collinearity.
 %
-For this reason, they proposed the elastic net method which combines the $L_1$ and $L_2$ norms to create a regularizer that counteracts the weaknesses of both ridge and LASSO regression~\cite{ZouHastie2005}.
+For this reason, they propose the elastic net method which combines the $L_1$ and $L_2$ norms to create a regularizer that counteracts the weaknesses of both ridge and LASSO regression~\cite{ZouHastie2005}.
 
-
-Depending on the specific penalty function, regularization can also effectively remove parameters by forcing their coefficients in $\textbf{b}$ to zero.
+Depending on the specific penalty function, regularization can also effectively remove parameters by forcing their coefficients in $\mathbf{b}$ to zero.
 %
 This is a form of feature or variable selection.
 %
 Variable selection is the process of eliminating redundant or irrelevant variables in order to construct a model that uses only a subset of the original input variables and this is only one way in which it can be performed.
 
-\DPM{Algorithms that include feature selection:}
-\begin{itemize}
-\item Least-Angle Regression (LARS)~\cite{EfronHastieJohnstone2004}
-\item Orthogonal matching pursuit (OMP)~\cite{DavisMallatZhang1994,PatiRezaiifarKrishnaprasad1993}
-\item Stepwise regression
-\end{itemize}
+Several other methods exist for explicitly performing variable selection such as stepwise regression~\cite{DraperSmith2014}, least-angle regression (LARS)~\cite{EfronHastieJohnstone2004}, and orthogonal matching pursuit~\cite{DavisMallatZhang1994,PatiRezaiifarKrishnaprasad1993}.
+%
+We briefly review them here.
+
+Stepwise regression builds a regression model by iteratively adding or removing variables based on statistical testing that dictates how sensitive the model is to each variable.
+%
+In the additive model, the process begins with a single variable and adds additional variables until the gain in accuracy becomes negligible.
+%
+This process is known as forward selection.
+%
+Alternatively, one may begin with a model built on the full set of variables and iteratively remove variables until the model's accuracy degrades beyond an acceptable level.
+%
+This process is known as backward elimination.
+%
+A third class of methods called bidirectional elimination combines the processes of forward selection and backward elimination.
+
+The LARS method is similar to the forward selection method above in that all coefficients of our model begin at zero and we add to the coefficients depending on their influence (correlation) on the response value.
+%
+Iteratively, we evaluate the residuals of the current model and increase the coefficient until another parameter becomes more correlated.
+%
+At this point, the direction of coefficient increase becomes equiangular between the two most correlated features.
+%
+This process continues adding coefficients to features as they become as correlated as the existing features in the model,
+and we maintain a direction of travel that is equiangluar amongst the existing features.
+
+\DPM{Orthogonal matching pursuit}
 
 \subsection{Partition-Based Models}
 Thus far, we have discussed fitting a global model to a point cloud sampling of our domain of interest.
@@ -592,7 +613,47 @@ As in the case of MARS, the prediction error of the neural network can be estima
 \DPM{Expand}
 
 \subsection{Support Vector Machines}
-\emph{Support vector machines} (SVMs) for regression have proven longevity and an extensive body of research into their use and optimization.
+
+\DPM{Under construction}
+
+Support Vector Machines (SVMs) were first introduced as a means of binary classification via a linear separator~\cite{VapnikLerner1963}.
+%
+In the classical case, a hyperplane is used to divide the two classes of points where a subset of the original data is used to determine this hyperplane.
+%
+The specific subset of data used are known as the support vectors and can intuitively be thought of as the points closest to the boundary separating the two classes.
+%
+Using the support vectors, we can construct the equation of the separating hyperplane, $S(\mathbf{x}): 0 = \mathbf{w}\mathbf{x} - b$.
+%
+Figure~\ref{fig:svmExample} shows an annotated example of the support vector machine applied to a binary classification problem.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figs/chap3/svmExample}
+  \caption[Linear Support Vector Machine Example]{A two-dimensional example dataset showing the linear separator, margin, and support vectors of a trivial classification problem.}
+  \label{fig:svmExample}
+\end{figure}
+
+The region bounded by the separating hyperplane and the support vectors is known as the margin.
+%
+This sets up an optimization problem with the goal of creating a hyperplane with a maximal margin to the support vectors and with the fewest number of misclassified points (in the case where the data is not linearly separable).
+%
+The equation of the boundary surface, 
+% $S(\mathbf{x}) \st 0 = \mathbf{w}\mathbf{x} - b$
+, can be used to classify a point as belonging on the positive or negative side of
+
+
+\DPM{Insert equations needed for describing optimization problem.}
+
+% \begin{equation}
+% \left[\frac{1}{n}\sum_{i=1}^{n} \max(0,1-y_i(\mathbf{w}\mathbf{x_i} - \mathbf{b}))\right] + \lambda||\mathbf{w}||^2
+% \end{equation}
+
+
+In the case where the data is not linearly separable in the original space, the data can be projected into a higher dimensional feature space using a kernel function.
+%
+Then, the same optimization process can be applied in the higher dimensional feature space in order to determine the support vectors and the maximum-margin linear separator in the feature space~\cite{BoserGuyonVapnik1992}.
+
+Support vector machines (SVMs) for regression have proven longevity and an extensive body of research into their use and optimization.
 %
 In theory, support vector classification and support vector regression differ only in how the learned function is used.
 %
