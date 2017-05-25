@@ -641,7 +641,7 @@ Therefore, by minimizing $||\mathbf{w}||$ according to the constraint that our d
 
 If we define our class labels to be $y_i: y_i \in \{-1,1\}$, then we can rewrite the constraints in a single equation: $y_i(\mathbf{w} \cdot \mathbf{x_i} - b ) \geq 1$ for $i=1,...,n$ where $n$ is the number of support vectors.
 %
-In the case where the data is not linearly separable in the original space, we can either relax our constraint to include a soft margin that allows points to be misclassified or the data can be projected into a higher dimensional feature space using a kernel function.
+In the case where the data is not linearly separable in the original space, we can either relax our constraint to include a soft margin that allows points to be misclassified or the data can be transformed into a feature space where it is linearly separable.
 
 \subsubsection{Soft Margin SVM}
 
@@ -668,9 +668,32 @@ As $\lambda$ decreases in magnitude, the behavior of the SVM will tend toward th
 
 \subsubsection{Kernel SVM}
 
-For the case where a kernel method is used to increase the dimensionality, the same optimization process can be applied in the higher dimensional feature space in order to determine the support vectors and the maximum-margin linear separator in the feature space~\cite{BoserGuyonVapnik1992}.
+Consider the example shown in Figure~\ref{fig:kernelSvmExample}.
+%
+The image on the left represents the data in the original data space, and it is clear that there does not exist a line that can separate the two classes.
+%
+However, we can note that by applying a transformation operator, $K$ on the original data, we can transform it into a space where the data is linearly separable as shown in the right image.
+%
+In this case, we have kept the dimensionality the same ($d=2$), but we have transformed our cartesian coordinates ($x_1$ and $x_2$) into polar coordinates ($r$ and $theta$).
+%
+This is the main concept behind kernel-based SVMs where often the data is projected into a higher dimensional feature space.
 
-\DPM{TODO: Common kernels used are...}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figs/chap3/kernelSvmExample}
+  \caption[Kernel Support Vector Machine Example]{A two-dimensional example dataset is transformed into a different space where it can be linearly separated and the support vector algorithm acts on the transformed space.}
+  \label{fig:kernelSvmExample}
+\end{figure}
+
+When applying a kernel on the data, the same optimization process can be applied in the higher dimensional feature space in order to determine the maximum-margin linear separator in the feature space~\cite{BoserGuyonVapnik1992}.
+%
+Common kernels include polynomial, radial basis, sigmoid, and hyperbolic tangent functions.
+%
+It should be noted that as opposed to transforming the data into a fixed dimension space these methods instead transform the data into a feature space whose dimensionality is dependent on the number of training samples.
+
+The resulting optimization of all of the described SVM methods is $O(n^2)$ with respect to the training size and the computation time is not affected by the dimensionality of the original space.
+%
+However, it is worth noting that as dimensionality increases, the out-of-sample error can become a problem which requires more training data to counterbalance.
 
 \subsubsection{Support Vector Regression}
 
@@ -682,13 +705,13 @@ Whereas a classifier thresholds the value of the function, in regression the act
 %
 The measure of loss is typically least squares, whereas in classification different loss functions are used~\cite{SmolaScholkopf2004,SuykensVandewalle1999,SuykensDeBrabanterLukas2002,DruckerBurgesKaufman1997}.
 
-Regression SVMs are an obvious choice in problems such as levelset detection in the surrogate modeling problem, because they approximate the function under query.
-%
-Classification SVMs can also be utilized, however, by labeling sampled points according to whether they exhibit values above or below the threshold value.
-%
-Then, after the model is trained, the levelset is assumed to be the decision boundary of the model.
+% Regression SVMs are an obvious choice in problems such as levelset detection in the surrogate modeling problem, because they approximate the function under query.
+% %
+% Classification SVMs can also be utilized, however, by labeling sampled points according to whether they exhibit values above or below the threshold value.
+% %
+% Then, after the model is trained, the levelset is assumed to be the decision boundary of the model.
 
-\DPM{Expand}
+% \DPM{Expand}
 %%% TODO: Expand this text
 
 \subsection{Bayesian Methods}
