@@ -293,6 +293,9 @@ We discuss sensitivity in more detail in Section~\ref{sec:sensitivity} and in Se
 
 \section{Sensitivity Analysis}
 \label{sec:sensitivity}
+
+\DPM{Consider adding subsections here. This is an important aspect and should be given more background.}
+
 Sensitivity analysis (SA) studies how changes in the model inputs affect the outputs and can take many different mathematical forms.
 %
 Broadly speaking, SA methods can be categorized as being local, relative to point estimates of the parameter space, or global which considers the entire parameter distribution~\cite{Hamby1995}.
@@ -328,6 +331,12 @@ More complicated versions, employ complex surrogate models and determine sensiti
 These include multivariate adaptive regression spline (MARS) screening~\cite{Friedman1991} and Gaussian Process screening~\cite{RasmussenWilliams2006}.
 
 The more powerful variance-based methods include such techniques as Sobol sensitivity indices~\cite{Sobol1993} and Fourier amplitude sensitivity testing (FAST)~\cite{CukierFortuinShuler1973} which are able to capture higher order sensitivities.
+
+\DPM{Dimensionality Reduction algorithms that are aware of a functional relationship:}
+\begin{itemize}
+\item\DPM{Fisher Discriminant Analysis}
+\item\DPM{Multifactor Dimensionality Reduction}
+\end{itemize}
 
 \subsection{Visualizing Sensitivity}
 \label{sec:SA_visualization}
