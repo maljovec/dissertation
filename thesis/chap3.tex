@@ -614,17 +614,15 @@ As in the case of MARS, the prediction error of the neural network can be estima
 
 \subsection{Support Vector Machines}
 
-\DPM{Under construction}
-
 Support Vector Machines (SVMs) were first introduced as a means of binary classification via a linear separator~\cite{VapnikLerner1963}.
 %
-In the classical case, a hyperplane is used to divide the two classes of points where a subset of the original data is used to determine this hyperplane.
+In the classical case, a hyperplane is used to divide two classes of points where a subset of the original data is used to determine this hyperplane.
 %
-The specific subset of data used are known as the support vectors and can intuitively be thought of as the points closest to the boundary separating the two classes.
+The specific subset of data used are known as the \emph{support vectors} and can intuitively be thought of as the points closest to the boundary separating the two classes.
 %
-Using the support vectors, we can construct the equation of the separating hyperplane, $S(\mathbf{x}): 0 = \mathbf{w}\mathbf{x} - b$.
+Using the support vectors, we can construct the equation of the separating hyperplane, $S_0: 0 = \mathbf{w} \cdot \mathbf{x} - b$ by constructing an optimality criteria that the hyperplane has a maximal distance to the support vectors and the fewest number of misclassified points (in the case where the data is not linearly separable).
 %
-Figure~\ref{fig:svmExample} shows an annotated example of the support vector machine applied to a binary classification problem.
+Figure~\ref{fig:svmExample} shows an annotated example of the support vector machine applied to a dataset that is linearly separable.
 
 \begin{figure}[!ht]
   \centering
@@ -633,25 +631,48 @@ Figure~\ref{fig:svmExample} shows an annotated example of the support vector mac
   \label{fig:svmExample}
 \end{figure}
 
-The region bounded by the separating hyperplane and the support vectors is known as the margin.
+We can see from Figure~\ref{fig:svmExample} that the support vectors of each class define hyperplanes that are parallel to $S_0$, namely $S_{-}$ and $S_{+}$ which are set to be defined by the equations $-1 = \mathbf{w} \cdot \mathbf{x} - b$ and $1 = \mathbf{w} \cdot \mathbf{x} - b$, respectively.
 %
-This sets up an optimization problem with the goal of creating a hyperplane with a maximal margin to the support vectors and with the fewest number of misclassified points (in the case where the data is not linearly separable).
+The shaded region bounded by the separating hyperplanes, $S_{-}$ and $S_{+}$, is known as the \emph{margin} and represents the area we seek to maximize.
 %
-The equation of the boundary surface, 
-% $S(\mathbf{x}) \st 0 = \mathbf{w}\mathbf{x} - b$
-, can be used to classify a point as belonging on the positive or negative side of
-
-
-\DPM{Insert equations needed for describing optimization problem.}
-
-% \begin{equation}
-% \left[\frac{1}{n}\sum_{i=1}^{n} \max(0,1-y_i(\mathbf{w}\mathbf{x_i} - \mathbf{b}))\right] + \lambda||\mathbf{w}||^2
-% \end{equation}
-
-
-In the case where the data is not linearly separable in the original space, the data can be projected into a higher dimensional feature space using a kernel function.
+The width of the margin is inversely proportional to the norm of the separating hyperplane coefficients, $\mathbf{w}$.
 %
-Then, the same optimization process can be applied in the higher dimensional feature space in order to determine the support vectors and the maximum-margin linear separator in the feature space~\cite{BoserGuyonVapnik1992}.
+Therefore, by minimizing $||\mathbf{w}||$ according to the constraint that our data lies on the correct side of the margin, we obtain the optimal separating hyperplane.
+
+If we define our class labels to be $y_i: y_i \in \{-1,1\}$, then we can rewrite the constraints in a single equation: $y_i(\mathbf{w} \cdot \mathbf{x_i} - b ) \geq 1$ for $i=1,...,n$ where $n$ is the number of support vectors.
+%
+In the case where the data is not linearly separable in the original space, we can either relax our constraint to include a soft margin that allows points to be misclassified or the data can be projected into a higher dimensional feature space using a kernel function.
+
+\subsubsection{Soft Margin SVM}
+
+To instantiate a soft margin, we replace the constraint function with a loss function so that our optimization problem penalizes equations that misclassify points.
+%
+The \emph{hinge loss} function is often used for such purposes, and it is defined in Equation~\ref{eq:hingeLoss}.
+%
+\begin{equation}
+l(\mathbf{x_i},y_i) = \max(0,1-y_i(\mathbf{w} \cdot \mathbf{x_i} - b))
+\label{eq:hingeLoss}
+\end{equation}
+%
+Note that for correctly classified data, the hinge loss function will return zero and the value increases the farther a misclassified point is from $S_-$ (for $y_i=-1$) or $S_+$ (for $y_i=1$).
+%
+We then combine this hinge loss over all of the support vectors with the original minimization criteria on $||\mathbf{w}||$ to give the minimization problem in Equation~\ref{eq:svmSoftMargin}.
+\begin{equation}
+\argmin_{\mathbf{w},b}\frac{1}{n}\sum_{i=1}^n \left(l(\mathbf{x_i},y_i)\right) + \lambda ||\mathbf{w}||^2
+\label{eq:svmSoftMargin}
+\end{equation}
+
+The $\lambda$ in the above optimization represents a postive real number and allows a user to appropriately weight how important the size of the margin should be in comparison to the correctness of classification.
+%
+As $\lambda$ decreases in magnitude, the behavior of the SVM will tend toward the hard-margin case described above.
+
+\subsubsection{Kernel SVM}
+
+For the case where a kernel method is used to increase the dimensionality, the same optimization process can be applied in the higher dimensional feature space in order to determine the support vectors and the maximum-margin linear separator in the feature space~\cite{BoserGuyonVapnik1992}.
+
+\DPM{TODO: Common kernels used are...}
+
+\subsubsection{Support Vector Regression}
 
 Support vector machines (SVMs) for regression have proven longevity and an extensive body of research into their use and optimization.
 %
@@ -659,9 +680,7 @@ In theory, support vector classification and support vector regression differ on
 %
 Whereas a classifier thresholds the value of the function, in regression the actual function value is retained.
 %
-The measure of loss is typically least squares, whereas in classification different loss functions are used.
-%
-See \cite{SmolaScholkopf2004,SuykensVandewalle1999,SuykensDeBrabanterLukas2002,DruckerBurgesKaufman1997} to name a few.
+The measure of loss is typically least squares, whereas in classification different loss functions are used~\cite{SmolaScholkopf2004,SuykensVandewalle1999,SuykensDeBrabanterLukas2002,DruckerBurgesKaufman1997}.
 
 Regression SVMs are an obvious choice in problems such as levelset detection in the surrogate modeling problem, because they approximate the function under query.
 %
