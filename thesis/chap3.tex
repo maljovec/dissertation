@@ -650,7 +650,7 @@ Therefore, by minimizing $||\mathbf{w}||$ according to the constraint that our d
 
 If we define our class labels to be $y_i: y_i \in \{-1,1\}$, then we can rewrite the constraints in a single equation: $y_i(\mathbf{w} \cdot \mathbf{x_i} - b ) \geq 1$ for $i=1,...,n$ where $n$ is the number of support vectors.
 %
-In the case where the data is not linearly separable in the original space, we can either relax our constraint to include a soft margin that allows points to be misclassified or the data can be transformed into a feature space where it is linearly separable.
+In the case where the data is not linearly separable in the original space, we can either relax our constraint to include a soft margin that allows points to be misclassified~\cite{CortesVapnik1995} and/or the data can be transformed into a feature space where it is linearly separable~\cite{BoserGuyonVapnik1992}.
 
 \subsubsection{Soft Margin SVM}
 
@@ -703,6 +703,8 @@ It should be noted that as opposed to transforming the data into a fixed dimensi
 The resulting optimization of all of the described SVM methods is $O(n^2)$ with respect to the training size and the computation time is not affected by the dimensionality of the original space.
 %
 However, it is worth noting that as dimensionality increases, the out-of-sample error can become a problem which requires more training data to counterbalance.
+
+\DPM{This needs extended to cover the state of the art in SVM design including dealing with larger data sets including sequential minimal optimization, etc.}
 
 \subsubsection{Support Vector Regression}
 
