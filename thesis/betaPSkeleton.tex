@@ -1,0 +1,177 @@
+\title{Representing High-Dimensional Limit Surfaces from Support Vector Machines and Neighborhood Graphs}
+\author{Dan Maljovec}
+\date{\today}
+
+\documentclass[12pt]{article}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This is a brief outline detailing work to be done for completion of my
+dissertation.
+%
+For the final section of my dissertation, I have proposed to investigate methods
+for extracting limit surfaces in various dimension spaces. 
+%
+Specifically, I aim at targeting spaces ranging from 2-10 dimensions.
+%
+The format of this document begins with an introduction of the problem posed by
+my collaborators and I at Idaho National Laboratory.
+%
+Next, I will review the literature of techniques addressing this and similar
+problems which include methods employing a support vector machine or a graph
+either inherit or imposed on the data.
+%
+Following this discussion, I will discuss the advantages and drawbacks to each
+of the proposed techniques and follow on with the novel contributions which I
+believe will provide better explicit representations of the boundary surface
+existing between two classes of data.
+%
+I conclude this article with a proposed set of experiments that will exercise
+the various baseline and novel methods on their ability to extract low error,
+well-spaced, and complete limit surfaces in various dimensions.
+\end{abstract}
+
+\section{Introduction}
+
+Idaho National Laboratory has made a concerted effort toward developing what
+they call the Risk-Informed Safety Margins Characterization (RISMC)
+pathway~\cite{YoungbloodMousseauKelly2010}.
+%
+An integral part of this pathway is characterizing a simulation space into areas
+of system failure and system success.
+%
+Consider analysis of a nuclear power plant simulation under duress such as in
+the station blackout scenario~\cite{MaljovecLiuWang2015}.
+%
+Under this pathway, scientists want to understand the threshold, or limit
+surface, existing in the simulation input space that differentiates between
+system recovery and system failure.
+%
+With such information at hand, they can begin to design safety systems that push
+orthogonally against this limit surface in such a way that maximizes the
+safety tolerance while limiting the cost of the system.
+
+Standard classification techniques implicitly encode a limit surface, also
+known as a decision boundary, by allowing users to query unrealized locations in
+the domain space for a label.
+%
+Such methods are, in a sense, black boxes with great predictive power, but a
+user cannot directly understand the shape of the decision boundary or extract
+it from the model.
+%
+A common goal in reliability engineering is to understand when and how a system
+fails and being able to avoid such circumstances.
+%
+Furthermore, when constructing surrogate models for high-dimensional and
+computationally expensive models it is often beneficial to perform sampling in
+an adaptive fashion.
+%
+The decision boundary from the current surrogate represents the area of least
+predictive confidence of the model and so refining near this area is oftentimes
+beneficial.
+%
+For this reason, a better understanding of the global/local shape and gradient
+along the limit surface can inform practitioners of the stability of the system
+under study.
+%
+Therefore, being able to explicitly represent the limit surface occurring
+between system failure and normal operation provides scientists with information
+crucial to subsequent analysis of such systems.
+
+\section{Related work}
+
+\subsection{Decision Boundary Estimation and Extraction}
+
+\begin{itemize}
+	\item \cite{DiamantiniPotena2007} - Overview of various methods for estimating decision boundaries (Good pointer to other relevant works)
+	\item  \cite{Fukunaga1990,ParkParkPardalos2004} - Linear Discriminant Analysis (Canonical Analysis)
+	\begin{itemize}
+		\item Finds a projection that best ``splits'' the two classes
+		\item (Fails if data is not separable in the low-dimensional setting)
+		\item ``minimizes within class scatter and maximizes between class scatter.''
+	\end{itemize}
+	\item \cite{LeeLandgrebe1993} - Decision boundary and normal vectors are estimated numerically from non-parametric classifiers (e.g., Parzen density estimator (used in the paper), kNN, neural networks )
+	\begin{itemize}
+		\item Uses nearest (euclidean distance) neighbor edge to associate a decision boundary sample for each point.
+	\end{itemize}
+	\item \cite{LeeLandgrebe1997} - Artifical neural networks (ANNs) (Multi-layer perceptron (MLP)) to do the same type of extraction as \cite{LeeLandgrebe1993}
+	\item \cite{GoLee2003} improves~\cite{LeeLandgrebe1997} by computing normal analytically
+	\item \cite{ZhangLiu2005} - SVM for optimal decision boundary (Quadratic optimization cost limits the amount of data) [IMPORTANT]
+	\begin{itemize}
+		\item Limitation of DBA -- cannot accurately estimate the boundary in high-dimensions
+		\item Goal is to overcome small sample size situations
+		\item Support vectors are used to analytically find points on the limit surface by looking at their nearest neigbhors
+		on the other side (solve for $\alpha$: $h(s) = h(\alpha z_1 + (1 - \alpha) z_2)$)
+	\end{itemize}
+	\item \cite{DiamantiniPotena2006} - Labeled Vector Quantizier (LVQ) for optimal decision boundary (As good or better results than SVM for cheaper)
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{itemize}
+
+\subsection{Papers on neighborhood graphs}
+
+\begin{itemize}
+	\item \cite{CardinalColletteLangerman2009} - Empty region graphs
+	\item \cite{} - 
+	\item \cite{CorreaLindstrom2011} - Demonstrates effectiveness of Beta skeleton and Diamond graph
+	\item \cite{MaljovecSahaLindstrom2013} - Another study similar to the one above
+	\item \cite{AggarwalHinneburgKeim2001} - Demonstrates why $L_p$-norms where $p<2$ are useful for nearest neighbor queries
+\end{itemize}
+
+\subsection{Papers on visualizing SVMs}
+
+\begin{itemize}
+	\item Most worked in 4D or lower.
+\end{itemize}
+
+\section{Support Vector Machines}
+
+These can fail the coverage requirement. Show contrived 2D example showing this.
+
+\section{Labeled Vector Quantizers}
+
+I need to read more about these.
+
+\section{Empty Region Graphs}
+
+\section{Proposed Extraction Methodology}
+
+\section{Proposed Experimentation}
+
+Three metrics:
+\begin{enumerate}
+	\item \textbf{Error} - How close are the extracted points to the true limit surface? Given we have 
+	\item \textbf{Coverage} - Do we capture the whole domain. Given analytical problems can we verfiy that
+	the span of the limit surface is reached in each example?
+	\item \textbf{Efficieny} - Points should be well-spaced, but may be more concentrated in areas of high curvature.
+	Blue noise like property on manifold? Evaluate dispersion of data. How many points were extracted and at what fidelity?
+	A denser graph will give more points, but they may exhibit clustering around specific areas.
+\end{enumerate}
+
+In order to test each of these properties, we will need functions that scale in dimensionality and exercise each of these properties.
+
+Error\\Efficiency:
+
+\begin{itemize}
+	\item Zero curvature - hyperplane - will span every dimension
+	\item Constant curvature - Circular/ellipsoidal limit surface
+	\item Variable curvature - Sine-like limit surface
+	\item Discontinuous curvature - Sharp corner or box
+\end{itemize}
+
+Coverage:
+
+\begin{itemize}
+	\item Dimension spanning
+	\item Non-dimension spanning and anisotropic
+	\item Multiple connected components
+	\item Void in limit surface
+\end{itemize}
+
+\bibliographystyle{abbrv}
+\bibliography{thesis}
+
+\end{document}
