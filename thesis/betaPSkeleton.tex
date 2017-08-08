@@ -144,6 +144,23 @@ crucial to subsequent analysis of such systems.
 	above
 	\item \cite{AggarwalHinneburgKeim2001} - Demonstrates why $L_p$-norms where
 	$p<2$ are useful for nearest neighbor queries
+	\item \cite{ZhangKing2002b} - Here the $\beta$-skeleton is used to compute
+	the support vectors of a support vector machine, however it reduces the
+	accuracy of the SVM.
+	\begin{itemize}
+		\item We differ here because we want to extract the decision boundary
+		from the identified SVM not use it to restrict our SVM search.
+		\item \cite{ZhangKing2002a} describes how the algorithm works
+	\end{itemize}
+	\item \cite{GotoIshidaUchida2015} - [IMPORTANT] Similar to above only the RNG is used to
+	compute the support vectors.
+	\begin{itemize}
+		\item Uses memoization to speed up RNG computation.
+		\item Calls boundary point os RNG ``bridge'' vectors.
+	\end{itemize}
+	\item \cite{BennettBredensteiner2000} draws connection between convex hulls and svms
+	\item \cite{ZengXuXie2008} - selecting convex hull samples in the feature space for SVM training
+	\item \cite{BhattacharyaPoulsenToussaint1981} - first paper to use graph editing, only for nearest neighbor classification not SVM.
 \end{itemize}
 
 % \subsection{Papers on visualizing SVMs}
