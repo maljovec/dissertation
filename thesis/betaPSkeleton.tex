@@ -135,8 +135,21 @@ crucial to subsequent analysis of such systems.
 \subsection{Papers on neighborhood graphs}
 
 \begin{itemize}
-	\item \cite{CardinalColletteLangerman2009} - Properties of empty region
-	graphs
+	\item $\theta$-graphs, Yao Graphs, and $\gamma$-graphs
+	\item \cite{CardinalColletteLangerman2009} - Properties and proofs of empty region
+	graphs in the plane (2D)
+	\begin{itemize}
+		\item Introduces the ``pacman'' generalization of the $\beta$-skeleton
+		that can represent both the lune and circle-based RNG.
+		\item Also looks at infinite slabs which resemble the $\beta_p$-skeleton
+		where either $\beta=\infty$ or the limit as $\beta$ and $p$ approach
+		$0$.
+	\end{itemize}
+	\item \cite{JaromczykToussaint1992} - Survey of neighborhood graphs
+	\item \cite{JaromczykKowaluk1987} - Discusses computation of RNG using
+	$L_p$-metrics for arbitrary dimension.
+	\item \cite{KowalukMajewska2014} - Investigating $\beta$-skeletons in $L_p$ spaces
+	where $1 < p < \infty$
 	\item \cite{CorreaLindstrom2011} - Demonstrates effectiveness of Beta
 	skeleton and diamond graph
 	\item Is there anywhere that points out diamond graph is $L_1$-norm?
@@ -156,10 +169,10 @@ crucial to subsequent analysis of such systems.
 	compute the support vectors.
 	\begin{itemize}
 		\item Uses memoization to speed up RNG computation.
-		\item Calls boundary point os RNG ``bridge'' vectors.
+		\item Calls boundary point on RNG ``bridge'' vectors.
 	\end{itemize}
 	\item \cite{BennettBredensteiner2000} draws connection between convex hulls and svms
-	\item \cite{ZengXuXie2008} - selecting convex hull samples in the feature space for SVM training
+	\item \cite{ZengXuXie2008} - selecting convex hull samples in the feature space for SVM training (SebSVM - smallest enclosing ball)
 	\item \cite{BhattacharyaPoulsenToussaint1981} - first paper to use graph editing, only for nearest neighbor classification not SVM.
 \end{itemize}
 
