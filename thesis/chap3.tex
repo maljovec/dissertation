@@ -704,7 +704,49 @@ The resulting optimization of all of the described SVM methods is $O(n^2)$ with 
 %
 However, it is worth noting that as dimensionality increases, the out-of-sample error can become a problem which requires more training data to counterbalance.
 
-\DPM{This needs extended to cover the state of the art in SVM design including dealing with larger data sets including sequential minimal optimization, etc.}
+Various improvements have been made to optimize the computation costs of the support vector machines as described herein, many of these are summarized by Shawe-Taylor and Sun~\cite{Shawe-TaylorSun2011}.
+%
+The techniques can be broadly classified into a few categories.
+%
+The first category being decomposing the problem into smaller subproblems either
+by chunking~\cite{BordesErtekinWeston2005,ChangLin2011,Joachims1999,OsunaFreundGirosi1997,Platt1998,Vapnik1982,ZanniSerafiniZanghirati2006} or by employing an active set strategy~\cite{CauwenberghsPoggio2000,HastieRossetTibshirani2004,Scheinberg2006,ShiltonPalaniswamiRalph2005}.
+%
+% Chunking the SVM problem into smaller subproblems where solutions of the subproblems are retained speeds up the computation of the larger problem until all of the training data has been used~\cite{OsunaFreundGirosi1997,Vapnik1982}.
+% %
+% Platt used this methodology in his sequential minimal optimization (SMO) solution that exploits the analytic solution of the case with two training points thus avoiding the need of a numerical solver~\cite{Platt1998}.
+%
+% Bordes et al.~\cite{BordesErtekinWeston2005} provide an online implementation called LASVM that makes a sequential pass through the current training data in
+% order to reorganize the SMO solution and provide even further improvement.
+%
+A second category instead looks at decomposing the problem by focusing on one
+coordinate or parameter at a time~\cite{BordesBottouGallinari2007,FriessCristianiniCampbell1998,HsiehChangLin2008,MangasarianMusicant1999}.
+%
+Whereas the aforementioned methods formulate a dual problem there are some methods which instead focus on solutions to the primal problem with the ultimate goal of better handling approximate solutions~\cite{}.
+
+The remaining techniques
+
+\DPM{Interior point ??} - \cite{RasmussenWilliams2006,ScholkopfSmola2001}
+
+\DPM{Primal}
+\begin{itemize}
+  \item Newton's method
+  \begin{itemize}
+    \item Same time complexity as dual, but better equipped for handling approximate solutions due to the focus on minimizing an objective function
+    \item \cite{Chapelle2007,KeerthiDeCoste2005,LeeMangasarian2001,Mangasarian2002}
+  \end{itemize}
+
+  \item Stochastic sub-gradient with projection
+  \begin{itemize}
+    \item Can handle non-differentiable objective functions
+    \item \cite{KivinenSmolaWilliamson2004,Shalev-Shwartz2011,Zhang2004}
+  \end{itemize}
+
+  \item{Cutting Plane}
+  \begin{itemize}
+    \item ???
+    \item \cite{FrancSonnenburg2008,Joachims2006,TeoSmolaVishwanathan2007}
+  \end{itemize}
+\end{itemize}
 
 \subsubsection{Support Vector Regression}
 
