@@ -436,7 +436,7 @@ b = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}
 
 The case with a single input variable is called simple linear regression and the case where $d\geq 2$ is called multiple linear regression.
 %
-This method can also be extended to polynomials by treating each degree of a variable as separate column in $\mathbf{X}$, and solving for additional coefficients for each term.
+This method can also be extended to polynomials by treating each degree of a variable as separate columns in $\mathbf{X}$, and solving for additional coefficients for each term.
 %
 This can also be extended to mixtures of different variables of varying orders.
 %
@@ -454,7 +454,7 @@ In addition, overfitting can result if too many terms are included in the least 
 %
 To this end, processes such as regularization and variable selection can be employed to prevent these issues to some extent.
 %
-Before moving on to describe other data modeling
+We review the more common techniques in the next section.
 
 \subsection{Regularization and Feature Selection}
 
@@ -475,19 +475,19 @@ Common penalization functions include the $L_1$ and $L_2$ norms of $\mathbf{b}$ 
 %
 The ridge regression methodology tends to include all of the original terms whereas the LASSO method tends to favor models with fewer parameters, i.e. one or more parameters of $\mathbf{b}$ are set to zero.
 %
-Zou and Hastie point out several disadvantages of the LASSO method, as well.
+Zou and Hastie~\cite{ZouHastie2005} point out several disadvantages of the LASSO method, as well.
 %
 For example, the LASSO method tends to be over aggressive in its parameter selection in cases where the dimensionality is larger than the sample size or if two or more variables exhibit collinearity.
 %
-For this reason, they propose the elastic net method which combines the $L_1$ and $L_2$ norms to create a regularizer that counteracts the weaknesses of both ridge and LASSO regression~\cite{ZouHastie2005}.
+For this reason, they propose the elastic net method which combines the $L_1$ and $L_2$ norms to create a regularizer that counteracts the weaknesses of both ridge and LASSO regression.
 
 Depending on the specific penalty function, regularization can also effectively remove parameters by forcing their coefficients in $\mathbf{b}$ to zero.
 %
 This is a form of feature or variable selection.
 %
 Variable selection is the process of eliminating redundant or irrelevant variables in order to construct a model that uses only a subset of the original input variables and this is only one way in which it can be performed.
-
-Several other methods exist for explicitly performing variable selection such as stepwise regression~\cite{DraperSmith2014}, least-angle regression (LARS)~\cite{EfronHastieJohnstone2004}, and orthogonal matching pursuit~\cite{DavisMallatZhang1994,PatiRezaiifarKrishnaprasad1993}.
+%
+Other methods for explicitly performing variable selection include stepwise regression~\cite{DraperSmith2014}, least-angle regression (LARS)~\cite{EfronHastieJohnstone2004}, and matching pursuit~\cite{MallatZhang1993,DavisMallatZhang1994,PatiRezaiifarKrishnaprasad1993}.
 %
 We briefly review them here.
 
@@ -512,7 +512,13 @@ At this point, the direction of coefficient increase becomes equiangular between
 This process continues adding coefficients to features as they become as correlated as the existing features in the model,
 and we maintain a direction of travel that is equiangluar amongst the existing features.
 
-\DPM{Orthogonal matching pursuit}
+Matching pursuit~\cite{MallatZhang1993} and its orthogonalized variant~\cite{DavisMallatZhang1994,PatiRezaiifarKrishnaprasad1993} are forward selection methods that either approximate an optimal minimum number of non-zero coefficients given an error tolerance, or minimize the error given a maximum number of non-zero coefficients.
+%
+The matching pursuit algorithm is a greedy iterative algorithm that was originally developed for compressed sensing.
+%
+At each step, the algorithm selects to include the coefficient associated to the variable that is most highly correlated to the residual of the current fit.
+%
+In the orthogonal version, all of the coefficients used so far are updated by computing the residual using an orthogonal projection on the subset of dimensions used.
 
 \subsection{Partition-Based Models}
 Thus far, we have discussed fitting a global model to a point cloud sampling of our domain of interest.
