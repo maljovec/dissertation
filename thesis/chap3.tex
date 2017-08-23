@@ -652,6 +652,8 @@ If we define our class labels to be $y_i: y_i \in \{-1,1\}$, then we can rewrite
 %
 In the case where the data is not linearly separable in the original space, we can either relax our constraint to include a soft margin that allows points to be misclassified~\cite{CortesVapnik1995} and/or the data can be transformed into a feature space where it is linearly separable~\cite{BoserGuyonVapnik1992}.
 
+The formulation of the SVM can also be augmented to work in a regression setting, however this is beyond the scope of this work, and so the interested reader is referred to the work of Drucker et al.~\cite{DruckerBurgesKaufman1997} for more details regarding that formulation.
+
 \subsubsection{Soft Margin SVM}
 
 To instantiate a soft margin, we replace the constraint function with a loss function so that our optimization problem penalizes equations that misclassify points.
@@ -700,16 +702,23 @@ Common kernels include polynomial, radial basis, sigmoid, and hyperbolic tangent
 %
 It should be noted that as opposed to transforming the data into a fixed dimension space these methods instead transform the data into a feature space whose dimensionality is dependent on the number of training samples.
 
-The resulting optimization of all of the described SVM methods is $O(n^2)$ with respect to the training size and the computation time is not affected by the dimensionality of the original space.
+The resulting optimization problem of all of the described SVM methods is $O(n^2)$ with respect to the training size and the computation time is not affected by the dimensionality of the original space.
 %
 However, it is worth noting that as dimensionality increases, the out-of-sample error can become a problem which requires more training data to counterbalance.
+
+\subsubsection{SVM Approximations and Optimizations}
+
+\DPM{Point out which of these are approximations}
 
 Various improvements have been made to optimize the computation costs of the support vector machines as described herein, many of these are summarized by Shawe-Taylor and Sun~\cite{Shawe-TaylorSun2011}.
 %
 The techniques can be broadly classified into a few categories.
 %
-The first category being decomposing the problem into smaller subproblems either
-by chunking~\cite{BordesErtekinWeston2005,ChangLin2011,Joachims1999,OsunaFreundGirosi1997,Platt1998,Vapnik1982,ZanniSerafiniZanghirati2006} or by employing an active set strategy~\cite{CauwenberghsPoggio2000,HastieRossetTibshirani2004,Scheinberg2006,ShiltonPalaniswamiRalph2005}.
+Ther first of these formulates the SVM as a quadratic programming problem and uses the well-established interior point algorithm~\cite{RasmussenWilliams2006,ScholkopfSmola2001}.
+%
+Such methods are efficient and provide reliable and precise solutions for smaller sized problems.
+%
+The second category of methods decompose the problem into smaller subproblems either by chunking~\cite{BordesErtekinWeston2005,ChangLin2011,Joachims1999,OsunaFreundGirosi1997,Platt1998,Vapnik1982,ZanniSerafiniZanghirati2006} or by employing an active set strategy~\cite{CauwenberghsPoggio2000,HastieRossetTibshirani2004,Scheinberg2006,ShiltonPalaniswamiRalph2005}.
 %
 % Chunking the SVM problem into smaller subproblems where solutions of the subproblems are retained speeds up the computation of the larger problem until all of the training data has been used~\cite{OsunaFreundGirosi1997,Vapnik1982}.
 % %
@@ -718,54 +727,14 @@ by chunking~\cite{BordesErtekinWeston2005,ChangLin2011,Joachims1999,OsunaFreundG
 % Bordes et al.~\cite{BordesErtekinWeston2005} provide an online implementation called LASVM that makes a sequential pass through the current training data in
 % order to reorganize the SMO solution and provide even further improvement.
 %
-A second category instead looks at decomposing the problem by focusing on one
+A third category instead looks at decomposing the problem by focusing on one
 coordinate or parameter at a time~\cite{BordesBottouGallinari2007,FriessCristianiniCampbell1998,HsiehChangLin2008,MangasarianMusicant1999}.
+
+Whereas the aforementioned methods formulate a dual problem there are some methods which instead focus on solutions to the primal problem with the ultimate goal of better handling approximate solutions.
 %
-Whereas the aforementioned methods formulate a dual problem there are some methods which instead focus on solutions to the primal problem with the ultimate goal of better handling approximate solutions~\cite{}.
-
-The remaining techniques
-
-\DPM{Interior point ??} - \cite{RasmussenWilliams2006,ScholkopfSmola2001}
-
-\DPM{Primal}
-\begin{itemize}
-  \item Newton's method
-  \begin{itemize}
-    \item Same time complexity as dual, but better equipped for handling approximate solutions due to the focus on minimizing an objective function
-    \item \cite{Chapelle2007,KeerthiDeCoste2005,LeeMangasarian2001,Mangasarian2002}
-  \end{itemize}
-
-  \item Stochastic sub-gradient with projection
-  \begin{itemize}
-    \item Can handle non-differentiable objective functions
-    \item \cite{KivinenSmolaWilliamson2004,Shalev-Shwartz2011,Zhang2004}
-  \end{itemize}
-
-  \item{Cutting Plane}
-  \begin{itemize}
-    \item ???
-    \item \cite{FrancSonnenburg2008,Joachims2006,TeoSmolaVishwanathan2007}
-  \end{itemize}
-\end{itemize}
-
-\subsubsection{Support Vector Regression}
-
-Support vector machines (SVMs) for regression have proven longevity and an extensive body of research into their use and optimization.
+These optimizations include using Newton's method~\cite{Chapelle2007,KeerthiDeCoste2005,LeeMangasarian2001,Mangasarian2002}, stochastic sub-gradients with projection~\cite{KivinenSmolaWilliamson2004,Shalev-Shwartz2011,Zhang2004}, and cutting plane methods~\cite{FrancSonnenburg2008,Joachims2006,TeoSmolaVishwanathan2007}.
 %
-In theory, support vector classification and support vector regression differ only in how the learned function is used.
-%
-Whereas a classifier thresholds the value of the function, in regression the actual function value is retained.
-%
-The measure of loss is typically least squares, whereas in classification different loss functions are used~\cite{SmolaScholkopf2004,SuykensVandewalle1999,SuykensDeBrabanterLukas2002,DruckerBurgesKaufman1997}.
-
-% Regression SVMs are an obvious choice in problems such as levelset detection in the surrogate modeling problem, because they approximate the function under query.
-% %
-% Classification SVMs can also be utilized, however, by labeling sampled points according to whether they exhibit values above or below the threshold value.
-% %
-% Then, after the model is trained, the levelset is assumed to be the decision boundary of the model.
-
-% \DPM{Expand}
-%%% TODO: Expand this text
+The latter two methods are capable of handling non-differentiable objective functions.
 
 \subsection{Bayesian Methods}
 
