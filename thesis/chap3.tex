@@ -708,13 +708,11 @@ However, it is worth noting that as dimensionality increases, the out-of-sample 
 
 \subsubsection{SVM Approximations and Optimizations}
 
-\DPM{Point out which of these are approximations}
-
-Various improvements have been made to optimize the computation costs of the support vector machines as described herein, many of these are summarized by Shawe-Taylor and Sun~\cite{Shawe-TaylorSun2011}.
+Various improvements have been made to optimize the computation costs of the support vector machines, many of these are summarized by Shawe-Taylor and Sun~\cite{Shawe-TaylorSun2011}.
 %
 The techniques can be broadly classified into a few categories.
 %
-Ther first of these formulates the SVM as a quadratic programming problem and uses the well-established interior point algorithm~\cite{RasmussenWilliams2006,ScholkopfSmola2001}.
+Ther first of these formulates the SVM as a quadratic programming problem and uses the well-established interior point algorithm~\cite{BoydVandenberghe2004,FineScheinberg2002,FerrisMunson2002,ScholkopfSmola2001}.
 %
 Such methods are efficient and provide reliable and precise solutions for smaller sized problems.
 %
@@ -730,9 +728,9 @@ The second category of methods decompose the problem into smaller subproblems ei
 A third category instead looks at decomposing the problem by focusing on one
 coordinate or parameter at a time~\cite{BordesBottouGallinari2007,FriessCristianiniCampbell1998,HsiehChangLin2008,MangasarianMusicant1999}.
 
-Whereas the aforementioned methods formulate a dual problem there are some methods which instead focus on solutions to the primal problem with the ultimate goal of better handling approximate solutions.
+Whereas the aforementioned methods formulate a dual problem there are some methods which instead focus on solutions to the primal problem which can be more easily optimized and in some cases handling approximate solutions~\cite{BottouBousquet2008,Shalev-ShwartzSingerSrebro2011}.
 %
-These optimizations include using Newton's method~\cite{Chapelle2007,KeerthiDeCoste2005,LeeMangasarian2001,Mangasarian2002}, stochastic sub-gradients with projection~\cite{KivinenSmolaWilliamson2004,Shalev-Shwartz2011,Zhang2004}, and cutting plane methods~\cite{FrancSonnenburg2008,Joachims2006,TeoSmolaVishwanathan2007}.
+These optimizations include using Newton's method~\cite{Chapelle2007,KeerthiDeCoste2005,LeeMangasarian2001,Mangasarian2002}, stochastic sub-gradients with projection~\cite{KivinenSmolaWilliamson2004,Shalev-ShwartzSingerSrebro2011,Zhang2004}, and cutting plane methods~\cite{FrancSonnenburg2008,Joachims2006,TeoSmolaVishwanathan2007}.
 %
 The latter two methods are capable of handling non-differentiable objective functions.
 
