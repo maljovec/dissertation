@@ -256,6 +256,7 @@ All three methods utilize a Gaussian process surrogate model, however the latter
 
 % \subsubsection{Optimization Problems}
 \subsubsection{Design Steering}
+\label{sec:designSteering}
 
 The aforementioned methods are assumed to be completely automatic except in the instance where the human is required to act as the oracle, though such settings are more rare in the regression (i.e., continuous) context than in the classification (i.e., discrete) context.
 %
@@ -587,6 +588,9 @@ In the proposed research of Section~\ref{paper:pacificVis2016}, we follow an ite
 % Section~\ref{paper:vis2016} discusses in more detail the drawbacks of both PHDRT and MSR and proposes the construction of a hybrid method that uses the benefits of both in order to better characterize complicated datasets.
 
 \subsection{Neural Networks}
+
+\DPM{Remove this fluff. Mention that this has gained a lot of popularity in certain fields with citations. Define Deep neural network and claim it is outside of the scope of this work then explain the feed-forward version we use. Maybe LVQs are applicable here?}
+
 Regression modeling using neural networks goes back at least $20$ years, with notable examples coming from Specht~\cite{Specht1991}, Sarle~\cite{Sarle1994}, and Bishop and Nasrabadi~\cite{BishopNasrabadi2006}.
 %
 I will explain a simple feed-forward neural network with a single hidden layer.
@@ -612,6 +616,7 @@ The single layer neural network is a non-linear statistical model, where the res
 where $\mathbf{z} = (z_1, \dots, z_M)^T$ and $z_m = \sigma(\alpha_{0m} + \boldsymbol{\alpha}_m^T \mathbf{x})$.
 %
 The activation function, $\sigma(v)$ is usually taken as the sigmoid function, $\sigma(v) = 1/(1+e^{-v})$.
+\DPM{be more specific as to what an activation function is and what others can be used.}
 %
 The unknown parameters of the neural network, which we denote by $\boldsymbol{\theta}$ are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
 %
