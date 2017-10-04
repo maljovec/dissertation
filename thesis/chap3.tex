@@ -295,23 +295,33 @@ We discuss sensitivity in more detail in Section~\ref{sec:sensitivity} and in Se
 \section{Sensitivity Analysis}
 \label{sec:sensitivity}
 
-\DPM{Consider adding subsections here. This is an important aspect and should be given more background.}
-
 Sensitivity analysis (SA) studies how changes in the model inputs affect the outputs and can take many different mathematical forms.
 %
 Broadly speaking, SA methods can be categorized as being local, relative to point estimates of the parameter space, or global which considers the entire parameter distribution~\cite{Hamby1995}.
 %
-Local SA or differential SA studies the change of model response around specific locations in the input space.
+Local SA or differential SA studies the change of model response around specific locations in the input space and is often useful for doing deep analysis on a subset of a larger corpus of data.
 %
+One example may be to understand the behavior around several local optima of a model to determine the most ``stable'' feature of the data.
+%
+Another example might be to understand the behavior around an outlier or anomaly in the data generated from the model.
+%
+Global sensitvity methods, on the other hand, are able to rank the overall importance of each model input and in some cases identify redundant features.
+%
+As such, an application for global sensitivity analysis can be dimensionality reduction where the goal is to reveal important subspaces of the original problem.
+%
+These subspaces can help us avoid the \emph{curse of dimensionality} allowing us to sample the subspace more robustly and compute subsequent analysis more efficiently.
+
+\subsection{Local Sensitivity Analysis}
+
 Differential SA computes the location-dependent partial derivatives of the output(s) with respect to each input parameter as can be seen in methods such as brute force finite differencing using a surrogate model when neighboring data is not readily available.
 %
 That is, take a small step along one axis and evaluating the slope between the perturbed point and the reference point and repeating for each dimension.
 %
 Improvements to the finite differencing scheme exist that are less computationally expensive such as the decoupled direct method~\cite{Dunker1981,Dunker1984} which solves the problem as a sytem of ordinary differential equations and the Green function method~\cite{KramerCaloRabitz1981} which can be faster when the ratio of inputs to outputs is very high, but is more complicated and thus prone to higher numerical errors~\cite{SaltelliChanScott2000}.
-%
-In contrast, global SA seeks to find correlations that span the entire input domain.
-%
-Global methods include regression analysis, correlation analysis, variance-based techniques, and screening methods among others.
+
+\subsection{Global Sensitivity Analysis}
+
+Common global sensitivity methods include regression analysis, correlation analysis, screening methods, and variance-based techniques.
 %
 Regression analysis~\cite{Galton1886} is one of the oldest methods used today.
 %
@@ -319,9 +329,11 @@ The process works by fitting the data with a linear model and reporting the solv
 
 Correlation analysis represents another class of methods that are fairly simple to implement and understand.
 %
-Such methods include the Pearson correlation coefficients~\cite{Pearson1895} which measure the linearity between two parameters, typically one input and one output.
+Correlation analysis uses the covariance of two variables (typically one input and one output) in order to describe the significance of their functional relationship.
 %
-Spearman rank correlation coefficients~\cite{Spearman1904} and Kendall rank coefficients~\cite{KendallGibbons1990} measure the monotonicity between parameters.
+Such methods include the Pearson correlation coefficients~\cite{Pearson1895} which measure the linearity between two parameters.
+%
+The slightly more robust Spearman rank correlation coefficients~\cite{Spearman1904} and Kendall rank coefficients~\cite{KendallGibbons1990} measure the monotonicity between parameters and can thus capture nonlinear, but still monotonic, relationships.
 
 Screening methods measure the amount of information gained/lost when one or more inputs are removed from a parametric model or allowed to vary.
 %
@@ -331,9 +343,17 @@ More complicated versions, employ complex surrogate models and determine sensiti
 %
 These include multivariate adaptive regression spline (MARS) screening~\cite{Friedman1991} and Gaussian Process screening~\cite{RasmussenWilliams2006}.
 
-The more powerful variance-based methods include such techniques as Sobol sensitivity indices~\cite{Sobol1993} and Fourier amplitude sensitivity testing (FAST)~\cite{CukierFortuinShuler1973} which are able to capture higher order sensitivities.
+The more powerful variance-based methods include such techniques as Sobol sensitivity indices~\cite{Sobol1993} and Fourier amplitude sensitivity testing (FAST)~\cite{CukierFortuinShuler1973} which are able to capture higher order sensitivities that the preceding methods do not.
+%
+The tradeoff here is these methods are more complicated to compute.
 
-\DPM{Dimensionality Reduction algorithms that are aware of a functional relationship:}
+The global methods discussed thus far do not directly reduce the dimensionality, but instead associate values that can be considered as ranks or scores to each input parameter.
+%
+From this ranking, the user can either directly select the number of parameters to include in any reduced anaylsis, or the number of parameters can be computed given a specified error threshold.
+%
+The remaining methods instead attempt to reduce the dimensionality by transforming the model input space to be a linear combination of the original model inputs.
+%
+
 \begin{itemize}
 \item\DPM{Fisher Discriminant Analysis}
 \item\DPM{Multifactor Dimensionality Reduction}
