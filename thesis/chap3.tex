@@ -354,9 +354,64 @@ From this ranking, the user can either directly select the number of parameters 
 The remaining methods instead attempt to reduce the dimensionality by transforming the model input space to be a linear combination of the original model inputs.
 %
 
+\subsection{Dimensionality Reduction Methods for Sensitivity Analysis}
+
+Recall that one main goal of understanding sensitivity is to reduce the problem space into a more tractable or human-comprehensible domain without sacrificing much in the way of model fidelity.
+%
+It turns out there are a class of methods directly designed for this purpose, although not all of them respect the functional relationship between input parameters and output responses.
+%
+Broadly speaking, such dimensionality reduction methods can be classified into two categories: linear and non-linear methods.
+%
+I will briefly review them here.
+
+\subsubsection{Linear Dimensionality Reduction Methods}
+
+Linear dimensionality are so-called because they seek to find a single linear projection operator that can be applied to the data that best preserves some quality of the data.
+%
+The methods differ in the quality of the data that they attempt to maintain.
+%
+This linear projection operator can be expressed as a $M \cdot N$ matrix where $N$ is the original dimensionality of the problem and $M$ is the size of the reduced space.
+%
+Within the visualization community, we often set $M$ to two or three so we can directly visualize the results.
+
+From a sensitivity analysis standpoint, the reduced dataset is less interesting to us than the transformation matrix.
+%
+Each column of the transformation matrix tells us how much weight a particular input parameter has in the reduced space.
+%
+For example, a column of small magnitude (relative to the rest of the matrix) or zero values tell us that the corresponding original input parameter represents redundant information that can be captured by other parameters in the data.
+%
+Looking at it another way, the rows of the transformation matrix tell us which original input parameters are combined in order to construct one dimension of the lower dimensional space.
+
+\DPM{Independent Component Analysis}
+
+
+\DPM{Principal Component Analysis (PCA)}
+
+\DPM{Fisher's Linear Discriminant Analysis (LDA)}
+
+\subsubsection{Non-Linear Dimensionality Reduction Methods}
+
+This class of techniques is also often called manifold learning as the goal is to find a lower dimensional manifold embedded in the high dimensional space.
+%
+Because the learned manifold can twist and bend through the high-dimensional space, there is no guarantee that a single linear projection method will work for such datasets.
+%
+For this reason, these methods often employ local projectors.
+%
+For this reason, such methods are less suited for providing global sensitivity information, but may be able to provide more local sensitivity information.
+
+\DPM{Multidimensional scaling}
+
+\DPM{Locally linear embedding}
+
+\DPM{Subspace clustering}
+
+\DPM{Locally linear embedding}
+
+\DPM{Laplacian Eigenmaps}
+
+
 \begin{itemize}
-\item\DPM{Fisher Discriminant Analysis}
-\item\DPM{Multifactor Dimensionality Reduction}
+\item\DPM{Multifactor Dimensionality Reduction ???}
 \end{itemize}
 
 \subsection{Visualizing Sensitivity}
