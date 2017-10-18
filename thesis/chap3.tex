@@ -381,13 +381,35 @@ Each column of the transformation matrix tells us how much weight a particular i
 For example, a column of small magnitude (relative to the rest of the matrix) or zero values tell us that the corresponding original input parameter represents redundant information that can be captured by other parameters in the data.
 %
 Looking at it another way, the rows of the transformation matrix tell us which original input parameters are combined in order to construct one dimension of the lower dimensional space.
+%
+We will now review the most widely adopted methods and their relevant extensions.
+
+Principal Component Analysis (PCA) is a common technique that can be described in two different ways.
+%
+The first formulates the dimensionality reduction problem as minimizing the sum of squared residuals between projected data points and their original counterparts~\cite{Pearson1901}.
+%
+Equivalently, PCA maximizes the variance of the data in the lower dimensional space~\cite{Hotelling1933}.
+
+\DPM{Probabilistic PCA} - 
+
+\DPM{Kernel PCA} - Transform feature space not original data
+
+\DPM{robust PCA} - Outlier insensitivity
+
+\DPM{sparse PCA} - like lasso method described later in section~\ref{sec:regularization}
+
+\DPM{nonlinear PCA} - outside of linear methods ~\cite{HyvarinenKarhunenOja2001}
+
+\DPM{Multidimensional Scaling (MDS) - maximizes pairwise distances among points in the reduced space.
+Classical MDS is equivalent to PCA.
+Uses a stress function typically concerned with pairwise distances such as preserving relative distances.
+Can be generalized to nonlinear mappings giving rise to techniques like Isomap.}
+
+\DPM{Fisher's Linear Discriminant Analysis (LDA)} - Maximize separation of classes
+
+\DPM{Canonical Correlation Analysis (CCA)}
 
 \DPM{Independent Component Analysis}
-
-
-\DPM{Principal Component Analysis (PCA)}
-
-\DPM{Fisher's Linear Discriminant Analysis (LDA)}
 
 \subsubsection{Non-Linear Dimensionality Reduction Methods}
 
@@ -533,7 +555,7 @@ To this end, processes such as regularization and variable selection can be empl
 We review the more common techniques in the next section.
 
 \subsection{Regularization and Feature Selection}
-
+\label{sec:regularization}
 Regularization is a generic concept that can be applied to any problem where the goal is to minimize a loss function.
 %
 Though regularization is not restricted to the linear regression problem, it expedites exposition to describe it in this context.
