@@ -378,27 +378,47 @@ From a sensitivity analysis standpoint, the reduced dataset is less interesting 
 %
 Each column of the transformation matrix tells us how much weight a particular input parameter has in the reduced space.
 %
-For example, a column of small magnitude (relative to the rest of the matrix) or zero values tell us that the corresponding original input parameter represents redundant information that can be captured by other parameters in the data.
+For example, a column of small magnitude (relative to the rest of the matrix) or zero values tell us that the corresponding original input parameter represents redundant information that is less useful in identifying distinct data points when compared to the expressive power of the other input parameters.
 %
 Looking at it another way, the rows of the transformation matrix tell us which original input parameters are combined in order to construct one dimension of the lower dimensional space.
 %
-We will now review the most widely adopted methods and their relevant extensions.
+For a comprehensive survey of linear dimensionality techniques, I defer to the excellent work of Cunningham and Ghahramani~\cite{CunninghamGhahramani2015}.
+%
+I will instead review the most widely adopted methods and their relevant extensions.
+%
+This will give us enough information so as to understand the advantages and disadvantages of linear dimensionality reduction as a tool for understanding sensistivity.
 
 Principal Component Analysis (PCA) is a common technique that can be described in two different ways.
 %
 The first formulates the dimensionality reduction problem as minimizing the sum of squared residuals between projected data points and their original counterparts~\cite{Pearson1901}.
 %
 Equivalently, PCA maximizes the variance of the data in the lower dimensional space~\cite{Hotelling1933}.
+%
+Several extensions have been made to the classical PCA solution framing the problem in unique settings such as a probabilistic model, kernel feature space, robustness to outliers, sparse solutions, and nonlinear solutions.
 
-\DPM{Probabilistic PCA} - 
+Note, that not all of these variants are applicable for sensitivity analysis and some seek to solve different goals.
+%
+For instance, kernel PCA first projects the original data into a feature space using a kernel function and then applies PCA to the feature space.
+%
+The principal components, which we can use to examine the sensitivity of a space, are not explicitly represented in this formulation and instead this technique is used for clustering and novelty detection~\cite{ScholkopfSmolaMuller1997}.
+%
+Furthermore, the principal components are nonlinear with respect to the original input space~\cite{BishopNasrabadi2006} which shares the quality with other nonlinear PCA works~\cite{CollinsDasguptaSchapire2001,MohamedGhahramaniHeller2009,HyvarinenKarhunenOja2001} in that they lose some level of interpretability.
+%
+The remaining settings for PCA however can be more directly used for global sensitivity analysis.
 
-\DPM{Kernel PCA} - Transform feature space not original data
+Robust PCA refers to robustness against a small collection of outliers that can cause drastic changes when PCA is applied in the classical sense.
+%
+The collection of works in this vein of research assume a noise model on the data which accounts for both missing values and the aforementioned outliers~\cite{CandesLiMa2011,Choulakian2006,GalpinHawkins1987}.
+%
+For more on robust PCA refer to the survey by Bouwmans and Zahzah~\cite{BouwmansZahzah2014}.
 
-\DPM{robust PCA} - Outlier insensitivity
+As we will see later in Section~\ref{sec:regularization}, a technique known as regularization can be used in order to reduce the dimensionality of a problem by penalizing model complexity and thus favor models that use fewer dimesions.
+%
+This technique can be applied to PCA to generate a set of sparse methods that generate lower dimensional spaces that utilize only a subset of the original parameters~\cite{dAspremontBachGhaoui2008,dAspremontGhaouiJordan2007,JourneeNesterovRichtarik2010,ZouHastieTibshirani2006}.
+%
+In the sensitivity setting, the weights of the principal components are non-zero only in the positions corresponding to the most sensitive subset of original inputs.
 
-\DPM{sparse PCA} - like lasso method described later in section~\ref{sec:regularization}
-
-\DPM{nonlinear PCA} - outside of linear methods ~\cite{HyvarinenKarhunenOja2001}
+\DPM{Probabilistic PCA} - \cite{TippingBishop1999,Roweis1998,WellingAgakovWilliams2003,WilliamsAgakov2002}. related to \DPM{factor analysis}
 
 \DPM{Multidimensional Scaling (MDS) - maximizes pairwise distances among points in the reduced space.
 Classical MDS is equivalent to PCA.
@@ -411,7 +431,7 @@ Can be generalized to nonlinear mappings giving rise to techniques like Isomap.}
 
 \DPM{Independent Component Analysis}
 
-\subsubsection{Non-Linear Dimensionality Reduction Methods}
+\subsubsection{Nonlinear Dimensionality Reduction Methods}
 
 This class of techniques is also often called manifold learning as the goal is to find a lower dimensional manifold embedded in the high dimensional space.
 %
@@ -421,7 +441,12 @@ For this reason, these methods often employ local projectors.
 %
 For this reason, such methods are less suited for providing global sensitivity information, but may be able to provide more local sensitivity information.
 
-\DPM{Multidimensional scaling}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figs/chap3/interpretableAxis}
+  \caption[Interpretability of Dimensionality Reduction Techniques]{Though more advanced nonlinear methods are able to capture a wider variety of intrinsic structures of the data, they do so at the cost of interpretability. Reproduced from Liu et al.~\cite{LiuMaljovecWang2015}}
+  \label{fig:axisInterpretability}
+\end{figure}
 
 \DPM{Locally linear embedding}
 
@@ -430,11 +455,6 @@ For this reason, such methods are less suited for providing global sensitivity i
 \DPM{Locally linear embedding}
 
 \DPM{Laplacian Eigenmaps}
-
-
-\begin{itemize}
-\item\DPM{Multifactor Dimensionality Reduction ???}
-\end{itemize}
 
 \subsection{Visualizing Sensitivity}
 \label{sec:SA_visualization}
