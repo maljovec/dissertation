@@ -333,7 +333,7 @@ Correlation analysis uses the covariance of two variables (typically one input a
 %
 Such methods include the Pearson correlation coefficients~\cite{Pearson1895} which measure the linearity between two parameters.
 %
-The slightly more robust Spearman rank correlation coefficients~\cite{Spearman1904} and Kendall rank coefficients~\cite{KendallGibbons1990} measure the monotonicity between parameters and can thus capture nonlinear, but still monotonic, relationships.
+The slightly more robust Spearman rank correlation coefficients~\cite{Spearman1904a} and Kendall rank coefficients~\cite{KendallGibbons1990} measure the monotonicity between parameters and can thus capture nonlinear, but still monotonic, relationships.
 
 Screening methods measure the amount of information gained/lost when one or more inputs are removed from a parametric model or allowed to vary.
 %
@@ -418,28 +418,64 @@ This technique can be applied to PCA to generate a set of sparse methods that ge
 %
 In the sensitivity setting, the weights of the principal components are non-zero only in the positions corresponding to the most sensitive subset of original inputs.
 
-\DPM{Probabilistic PCA} - \cite{TippingBishop1999,Roweis1998,WellingAgakovWilliams2003,WilliamsAgakov2002}. related to \DPM{factor analysis}
+Probabilistic PCA (PPCA)~\cite{TippingBishop1999} and related methods~\cite{Roweis1998,WellingAgakovWilliams2003,WilliamsAgakov2002}, affords many of the advantages mentioned above including dealing with missing data and the ability to handle sparse spaces efficiently.
+%
+However, the main advantage of PPCA is that the maximum likliehood estimates can be used for classification and novelty detection~\cite{TippingBishop1999}.
+%
+The PPCA model is closely related to a much earlier developed method known as factor analysis~\cite{Spearman1904b}.
 
-\DPM{Multidimensional Scaling (MDS) - maximizes pairwise distances among points in the reduced space.
-Classical MDS is equivalent to PCA.
-Uses a stress function typically concerned with pairwise distances such as preserving relative distances.
-Can be generalized to nonlinear mappings giving rise to techniques like Isomap.}
+Multidimensional Scaling (MDS)~\cite{BorgGroenen2005,CoxCox2000,Torgerson1952} attempts to construct a linear projection that maximizes the scatter or spread of the data in the lower dimensional space.
+%
+In the classical setting, this is accomplished my maximizing the pairwise Euclidean distance among points in the reduced space.
+%
+The end result of classical MDS is equivalent to the original PCA optimization problem~\cite{BorgGroenen2005,CoxCox2000,MardiaKentBibby1979,Williams2002}.
+%
+However, MDS can be framed in a more generic setting of minimizing a stress function over pairwise distances thus allowing an MDS scaling to be computed without even knowing the locations of the data (as long as their relative locations are encoded in a distance matrix).
+%
+The stress function can be a least squares minimization or a Sammon stress~\cite{Sammon1969}, for example.
+%
+The distance matrix of the original and reduced spaces can be specified using any distance metric and they are not required to be the same for a given solution~\cite{CunninghamGhahramani2015}.
+%
+MDS is not restricted to linear projections, such as the Sammon mapping example stated above, and we will discuss related nonlinear efforts in Section~\ref{sec:nonlinearDR}.
 
-\DPM{Fisher's Linear Discriminant Analysis (LDA)} - Maximize separation of classes
+\DPM{Locality preserving Projections? neighborhood preserving embedding (NPE)?} - related to nonlinear methods below.
 
-\DPM{Canonical Correlation Analysis (CCA)}
+\DPM{Distance metric learning}
 
-\DPM{Independent Component Analysis}
+Thus far, the methods we have described do not inherently support a functional relationship among the data.
+%
+That is, input parameters and output responses are treated the same, so these methods can only be useful for sensitivity analysis if the reduced space contains components where the output(s) are significantly represented.
+%
+Otherwise, we are only able to correlate inputs to other inputs, thus identifying redundant dimensions in our input space.
+%
+Alternatively, one could perform a preliminary analysis that separates the data in a meaningful way, and then applying one of the aforementioned methods.
+%
+For example, extracting an isocontour of interest and applying PCA could reveal strong loadings on the inputs that are insensitive to the output response.
+%
+We constrast this with another set of dimensionality reduction techniques that can be considered label- or response-aware.
+
+Fisher's Linear Discriminant Analysis (LDA)~\cite{Fisher1936} is a linear dimensionality reduction technique for maximizing the separation of class labels in the reduced space.
+%
+This method works by simultaneously maximizing the covariance between classes while minimizing the covariance within classes.
+%
+In more informal terms, we seek a projection that clusters similar labels together while maximizing the distance between cluster labels.
+%
+\DPM{Extract relevant data from Jupyter notebook using LDA. Relate Quadratic Discriminant Analysis (QDA).}
+
+\DPM{Canonical Correlation Analysis (CCA)} - joint dimensionality reduction. Reduce two datasets while maintaining correlations.
+
+\DPM{Sufficient Dimensionality Reduction} - 
 
 \subsubsection{Nonlinear Dimensionality Reduction Methods}
+\label{sec:nonlinearDR}
 
 This class of techniques is also often called manifold learning as the goal is to find a lower dimensional manifold embedded in the high dimensional space.
 %
 Because the learned manifold can twist and bend through the high-dimensional space, there is no guarantee that a single linear projection method will work for such datasets.
 %
-For this reason, these methods often employ local projectors.
-%
-For this reason, such methods are less suited for providing global sensitivity information, but may be able to provide more local sensitivity information.
+% For this reason, these methods often employ local projectors.
+% %
+% Such methods are less suited for providing global sensitivity information, but may be able to provide more local sensitivity information.
 
 \begin{figure}[!ht]
   \centering
