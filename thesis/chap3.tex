@@ -442,7 +442,7 @@ MDS is not restricted to linear projections, such as the Sammon mapping example 
 
 \DPM{Distance metric learning}
 
-Thus far, the methods we have described do not inherently support a functional relationship among the data.
+Thus far, the methods we have described are appropriate for unsupervised learning applications.
 %
 That is, input parameters and output responses are treated the same, so these methods can only be useful for sensitivity analysis if the reduced space contains components where the output(s) are significantly represented.
 %
@@ -452,7 +452,7 @@ Alternatively, one could perform a preliminary analysis that separates the data 
 %
 For example, extracting an isocontour of interest and applying PCA could reveal strong loadings on the inputs that are insensitive to the output response.
 %
-We constrast this with another set of dimensionality reduction techniques that can be considered label- or response-aware.
+We constrast this with another set of dimensionality reduction techniques that can be considered supervised learning applications since they are label- or response-aware.
 
 Fisher's Linear Discriminant Analysis (LDA)~\cite{Fisher1936} is a linear dimensionality reduction technique for maximizing the separation of class labels in the reduced space.
 %
