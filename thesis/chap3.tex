@@ -460,11 +460,34 @@ This method works by simultaneously maximizing the covariance between classes wh
 %
 In more informal terms, we seek a projection that clusters similar labels together while maximizing the distance between cluster labels.
 %
-\DPM{Extract relevant data from Jupyter notebook using LDA. Relate Quadratic Discriminant Analysis (QDA).}
+One limitation of LDA is that for a $k$-class problem, the solution can be rank-deficient allowing us to project onto at most a $k-1$ space~\cite{MaszczykDuch2008}.
+%
+However, Cheng et al. have offered several solutions for allowing construction of higher dimensional spaces~\cite{ChengZhuangYang1992}.
+%
+Similar to PCA, LDA has been augmented to allow for more robust settings such as nonlinear LDA~\cite{MikaRatschWeston1999,McLachlan2004} and local LDA~\cite{Sugiyama2006}.
+%
+This latter method is most similar in spirit to our goal of being able to identify local patterns occurring in classification data.
 
-\DPM{Canonical Correlation Analysis (CCA)} - joint dimensionality reduction. Reduce two datasets while maintaining correlations.
+Canonical Correlation Analysis (CCA)~\cite{Hotelling1935,HardoonSzedmakShawe-Taylor2004} is a method for performing joint dimensionality reduction on two datasets while maintaining correlations among them.
+%
+As such, we can use it to understand functional relationships by splitting our datasets into one group that represents all of the input dimensions, and a second dataset that specifies the target output responses.
+%
+CCA is thus very well-aligned with the goal of extracting strong functional relationships between one or more input parameters and the target values of interest.
+%
+It is important to note that CCA assumes a linear relationship and therefore does not deal well with non-monotonic data.
+%
+Additionally, multicollinearity existing between the input parameters can make the interpretation of CCA less reliable~\cite{HairAndersonTatham1998}.
 
-\DPM{Sufficient Dimensionality Reduction} - 
+Sufficient Dimensionality Reduction (SDR) represents a class of dimensionality reduction techniques for feature extraction of regression problems.
+%
+The idea is to reduce the dimensionality without losing the statistical dependence between the input parameters and a target response.
+%
+The term sufficient is used to represent that the dimensionality reduction retains its predictive accuracy due to the statistical dependence constraint.
+%
+Surveys of these methods can be found in Adragni and Cook~\cite{AdragniCook2009} and Li~\cite{Li1999}.
+%
+More recently, researchers have focused on kernel mappings~\cite{FukumizuBachJordan2004,FukumizuBachJordan2009,NilssonShaJordan2007}.
+\DPM{Unsupervised setting~\cite{WangShaJordan2010}}
 
 \subsubsection{Nonlinear Dimensionality Reduction Methods}
 \label{sec:nonlinearDR}
