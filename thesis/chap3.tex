@@ -466,7 +466,9 @@ However, Cheng et al. have offered several solutions for allowing construction o
 %
 Similar to PCA, LDA has been augmented to allow for more robust settings such as nonlinear LDA~\cite{MikaRatschWeston1999,McLachlan2004} and local LDA~\cite{Sugiyama2006}.
 %
-This latter method is most similar in spirit to our goal of being able to identify local patterns occurring in classification data.
+This latter method is most similar in spirit to our goal of being able to identify local patterns in the form of multimodal clusters occurring in classification data.
+%
+However the method still relies on a single global embedding for the entire dataset which may not be suitable if the separate ``modes'' of the cluster span different subspaces.
 
 Canonical Correlation Analysis (CCA)~\cite{Hotelling1935,HardoonSzedmakShawe-Taylor2004} is a method for performing joint dimensionality reduction on two datasets while maintaining correlations among them.
 %
