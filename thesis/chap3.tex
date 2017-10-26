@@ -436,11 +436,7 @@ The stress function can be a least squares minimization or a Sammon stress~\cite
 %
 The distance matrix of the original and reduced spaces can be specified using any distance metric and they are not required to be the same for a given solution~\cite{CunninghamGhahramani2015}.
 %
-MDS is not restricted to linear projections, such as the Sammon mapping example stated above, and we will discuss related nonlinear efforts in Section~\ref{sec:nonlinearDR}.
-
-\DPM{Locality preserving Projections? neighborhood preserving embedding (NPE)?} - related to nonlinear methods below.
-
-\DPM{Distance metric learning}
+MDS is not restricted to linear projections, for example the Sammon mapping results in a nonlinear dimensionality reduction, and we will discuss related nonlinear efforts in Section~\ref{sec:nonlinearDR}.
 
 Thus far, the methods we have described are appropriate for unsupervised learning applications.
 %
@@ -466,9 +462,11 @@ However, Cheng et al. have offered several solutions for allowing construction o
 %
 Similar to PCA, LDA has been augmented to allow for more robust settings such as nonlinear LDA~\cite{MikaRatschWeston1999,McLachlan2004} and local LDA~\cite{Sugiyama2006}.
 %
-This latter method is most similar in spirit to our goal of being able to identify local patterns in the form of multimodal clusters occurring in classification data.
+This latter method is most similar in spirit to our goal of being able to identify local patterns occurring in classification data.
 %
-However the method still relies on a single global embedding for the entire dataset which may not be suitable if the separate ``modes'' of the cluster span different subspaces.
+In this work, Sugiyama reformulates the problem to optimize between and in scatter for points near to one another in the original space.
+%
+However, the method still relies on a single global embedding for the entire dataset which may not be suitable if the separate ``modes'' of the cluster span different subspaces.
 
 Canonical Correlation Analysis (CCA)~\cite{Hotelling1935,HardoonSzedmakShawe-Taylor2004} is a method for performing joint dimensionality reduction on two datasets while maintaining correlations among them.
 %
@@ -484,12 +482,13 @@ Sufficient Dimensionality Reduction (SDR) represents a class of dimensionality r
 %
 The idea is to reduce the dimensionality without losing the statistical dependence between the input parameters and a target response.
 %
-The term sufficient is used to represent that the dimensionality reduction retains its predictive accuracy due to the statistical dependence constraint.
+The term sufficient is used to represent that the dimensionality reduction retains its predictive accuracy as in the reduced dimensionality is sufficient for representing the statistical dependence between the target and the inputs.
 %
-Surveys of these methods can be found in Adragni and Cook~\cite{AdragniCook2009} and Li~\cite{Li1999}.
+Adragni and Cook~\cite{AdragniCook2009} formally define sufficiency and survey the various techniques for performing this type of dimensionality reduction in the context of a supervised learning setting.
 %
-More recently, researchers have focused on kernel mappings~\cite{FukumizuBachJordan2004,FukumizuBachJordan2009,NilssonShaJordan2007}.
-\DPM{Unsupervised setting~\cite{WangShaJordan2010}}
+As with the other methods described so far, SDR provides a global reduction methodology.
+%
+SDR can be extended to both an unsupervised setting~\cite{WangShaJordan2010} and nonlinear setting~\cite{FukumizuBachJordan2004,FukumizuBachJordan2009,NilssonShaJordan2007} however, these methods fall outside our scope of interest as they do not provide readily interpretable representations of sensitivity.
 
 \subsubsection{Nonlinear Dimensionality Reduction Methods}
 \label{sec:nonlinearDR}
@@ -498,9 +497,17 @@ This class of techniques is also often called manifold learning as the goal is t
 %
 Because the learned manifold can twist and bend through the high-dimensional space, there is no guarantee that a single linear projection method will work for such datasets.
 %
-% For this reason, these methods often employ local projectors.
-% %
-% Such methods are less suited for providing global sensitivity information, but may be able to provide more local sensitivity information.
+As we have seen, many of the linear techniques above can be reformulated to construct a nonlinear dimensionality reduction scheme~\cite{ScholkopfSmolaMuller1997,CollinsDasguptaSchapire2001,MohamedGhahramaniHeller2009,HyvarinenKarhunenOja2001,MikaRatschWeston1999,McLachlan2004,FukumizuBachJordan2004,FukumizuBachJordan2009,NilssonShaJordan2007}.
+%
+In addition, other novel techniques exist such as locally linear embedding~\cite{RoweisSaul2000}, subspace clustering~\cite{}, laplacian eigenmaps~\cite{BelkinNiyogi2003}, Isomap~\cite{TenenbaumSilvaLangford2000}, and t-distributed stochastic neighborhood embedding~\cite{MaatenHinton2008}, to name a few.
+
+From a sensitivity analysis standpoint, the issue with nonlinear reduction methods is illustrated in Figure~\ref{fig:axisInterpretability}.
+%
+A linear projection generates interpretable embeddings, and out-of-sample data can be easily projected to the same space.
+%
+The non-linear projection (manifold learning) approaches, on the other hand, capture more complex structures, but the resulting embedding can be extremely difficult to interpret.
+%
+% Locality preserving Projections? neighborhood preserving embedding (NPE)?} - related to locally linear embedding and laplacian eigenmaps.
 
 \begin{figure}[!ht]
   \centering
@@ -508,14 +515,6 @@ Because the learned manifold can twist and bend through the high-dimensional spa
   \caption[Interpretability of Dimensionality Reduction Techniques]{Though more advanced nonlinear methods are able to capture a wider variety of intrinsic structures of the data, they do so at the cost of interpretability. Reproduced from Liu et al.~\cite{LiuMaljovecWang2015}}
   \label{fig:axisInterpretability}
 \end{figure}
-
-\DPM{Locally linear embedding}
-
-\DPM{Subspace clustering}
-
-\DPM{Locally linear embedding}
-
-\DPM{Laplacian Eigenmaps}
 
 \subsection{Visualizing Sensitivity}
 \label{sec:SA_visualization}
@@ -559,7 +558,7 @@ Demir et al.~\cite{DemirWestermann2013} utilize the HyperSlice~\cite{VanWijkVanL
 %
 Vismon~\cite{BooshehrianMullrPeterman2012} provides SA to the visualization of the uncertainty of a simulation for fisheries scientists.
 
-Canonical correlation analysis (CCA) has been used in a plot known as the heliograph~\cite{DeganiShaftoOlson2006} and a system called Slycat~\cite{CrossnoSheadSielicki2015} to determine correlations between multiple inputs and multiple outputs in a global setting for ensemble data.
+Canonical correlation analysis (CCA) was used in constructing the heliograph~\cite{DeganiShaftoOlson2006} and a system called Slycat~\cite{CrossnoSheadSielicki2015} to determine correlations between multiple inputs and multiple outputs in a global setting for ensemble data.
 
 The proposed method given in Section~\ref{paper:pacificVis2016} is, in spirit, similar to systems provided in May et al.~\cite{MayBannachDavey2011} and Muhlbacher et al.~\cite{MuhlbacherPiringer2013}, by providing the capability to interactively refine the partitioning during the SA to give a multi-scale view of the sensitivity information.
 %
