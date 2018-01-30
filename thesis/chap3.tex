@@ -768,7 +768,23 @@ In the proposed research of Section~\ref{paper:pacificVis2016}, we follow an ite
 
 \DPM{Remove this fluff. Mention that this has gained a lot of popularity in certain fields with citations. Define Deep neural network and claim it is outside of the scope of this work then explain the feed-forward version we use. Maybe LVQs are applicable here?}
 
-Regression modeling using neural networks goes back at least $20$ years, with notable examples coming from Specht~\cite{Specht1991}, Sarle~\cite{Sarle1994}, and Bishop and Nasrabadi~\cite{BishopNasrabadi2006}.
+The combination of accessibility to cloud computing architectures, large-scale data collection/storage, and advancements in GPU processing have made neural networks and deep learning both feasible and widely available.
+%
+As a result, they have gained immensely in popularity due to the universal approximation theorem~\DPM{~\cite{}}.
+%
+Without first introducing the mathematical formulation of a simple neural network, we can summarize the most generic form of the universal approximation theorem as stating that a neural network with a single hidden layer containing a finite set of neurons defined over a compact set in $\mathbb{R}^n$ is capable of approximating a continuous function to within a given $\epsilon$ error under mild assumptions on the formulation of the artificial neurons.
+%
+Several authors have proven this empowering theorem under various circumstances~\DPM{~\cite{}}, however caveats still remain.
+%
+The universal approximation theorem does not state the exact size/complexity required to attain a specific level of approximation, and it does not mention the learnability of such a model given a finite corpus of training data.
+%
+For these reasons and the lack of interpretability of such complicated models, some researchers are still slow to adopt these methods.
+%
+Deep learning algorithms empirically perform well on many datasets in varied domains, but are still largely considered a black-box solution to a problem since it difficult to trace the result of a prediction to a specific collection of neurons/coefficients.
+%
+\DPM{Try to end paragraph on more optimistic note.}
+
+
 %
 I will explain a simple feed-forward neural network with a single hidden layer.
 %
