@@ -766,35 +766,34 @@ In the proposed research of Section~\ref{paper:pacificVis2016}, we follow an ite
 
 \subsection{Neural Networks}
 
-\DPM{Remove this fluff. Mention that this has gained a lot of popularity in certain fields with citations. Define Deep neural network and claim it is outside of the scope of this work then explain the feed-forward version we use. Maybe LVQs are applicable here?}
-
 The combination of accessibility to cloud computing architectures, large-scale data collection/storage, and advancements in GPU processing have made neural networks and deep learning both feasible and widely available.
 %
-As a result, they have gained immensely in popularity due to the universal approximation theorem~\DPM{~\cite{}}.
+As a result, they have gained immensely in popularity due to the universal approximation theorem~\cite{Cybenko1989,Funahashi1989,Hecht-Nielsen1987,HornikStinchcombeWhite1989}.
 %
 Without first introducing the mathematical formulation of a simple neural network, we can summarize the most generic form of the universal approximation theorem as stating that a neural network with a single hidden layer containing a finite set of neurons defined over a compact set in $\mathbb{R}^n$ is capable of approximating a continuous function to within a given $\epsilon$ error under mild assumptions on the formulation of the artificial neurons.
 %
-Several authors have proven this empowering theorem under various circumstances~\DPM{~\cite{}}, however caveats still remain.
-%
-The universal approximation theorem does not state the exact size/complexity required to attain a specific level of approximation, and it does not mention the learnability of such a model given a finite corpus of training data.
+Several authors have proven this empowering theorem under various circumstances~\cite{Hornik1991,Hornik1993,Huang2003,HuangBabri1998,IrieMiyake1988,Kurkova1992,LeshnoLinPinkus1993,ParkSandberg1991} (see the survey by Scarselli and Tsoi for a more complete list~\cite{ScarselliTsoi1998}), however caveats still remain.
+
+The universal approximation theorem does not state the exact size/complexity required to attain a specific level of approximation nor that an algorithm exists that will converge to this theoretical existent model.
 %
 For these reasons and the lack of interpretability of such complicated models, some researchers are still slow to adopt these methods.
 %
-Deep learning algorithms empirically perform well on many datasets in varied domains, but are still largely considered a black-box solution to a problem since it difficult to trace the result of a prediction to a specific collection of neurons/coefficients.
+Deep learning algorithms are still largely considered a black-box solution to a problem since it difficult to trace the result of a prediction to a specific collection of neurons/coefficients especially those with several layers of abstraction.
 %
-\DPM{Try to end paragraph on more optimistic note.}
+Nonetheless, empirically they have proven successful as predictors on many datasets in varied domains and should not be discounted.
+%
+\DPM{Add citations of successful use of Neural Networks in practice.}
 
-
 %
-I will explain a simple feed-forward neural network with a single hidden layer.
+To introduce the topic, I will explain a simple feed-forward neural network with a single hidden layer that we can later generalize to more arbitrarily complex models.
 %
-For further details, I defer to Ripley~\cite{Ripley1996} and Hastie et al.~\cite{HastieTibshiraniFriedman2008}.
+For further details, I defer to Ripley~\cite{Ripley1996} and Hastie et al.~\cite{HastieTibshiraniFriedman2008} for more in-depth analysis.
 
 An artificial neural network is modeled after neural networks seen in biology such as our own nervous system.
 %
 The idea is to view the data as being layered, where the model inputs and outputs comprise the two outermost layers which are connected by a pathway of one or more ``hidden'' layers that models how input signals are transmitted through a pathway of neurons in order to solve a problem or make a decision.
 %
-In the simplest model, a single hidden layer is comprised of artificial neurons which each perform a different operation on the data and pass that information to the output layer.
+In its simplest form, a single hidden layer is comprised of artificial neurons which each perform a different operation on the incoming data and pass that information to the output layer.
 %
 The artificial neurons are trained and their connections from the input layer and to the output layer are inhibited or enforced depending on the training data.
 %
