@@ -292,6 +292,117 @@ Most of these methods convey sensitivity information through user exploration of
 %
 We discuss sensitivity in more detail in Section~\ref{sec:sensitivity} and in Section~\ref{sec:SA_visualization}, explicit visual encodings for understanding sensitivity information are also discussed.
 
+\section{Proximity Graphs}
+\label{sec:graphs}
+
+Many scientific datasets are presented as point sampled data of low to moderate ($<$100) dimensionality.
+%
+Many common analysis techniques on such data require the imposition of some structure to relate the disjoint set of point samples.
+%
+Such a structure could be used to interpolate, cluster, filter, or project/warp the data.
+%
+Depending on the questions being asked, the dimensionality of the data, and the distribution of the point samples, the desired characteristics of the data needs to be presented by different data structures.
+%
+For example, in low dimensional settings, it is often common to polygonize or triangulate point-sampled data, but the combinatorics of representing the high-dimensional equivalents of surfaces and volumes of even a simplicial complex quickly become infeasible to store and operate on.
+%
+What is more often found in higher dimensional settings is the use of 1-skeleton structures, so called proximity graphs.
+
+The proximity graphs we consider fall into one of three families: distance-based, empty region, and cone-based.
+%
+The distance-based graphs include the $k$-nearest neighbor graph and $\epsilon$-ball graph.
+%
+The empty region graphs include the Delaunay graph, the diamond graph, the Gabriel graph, the relative neighbor graph, and the remaining family of $\beta$-skeletons.
+%
+Cone-based graphs include Yao graphs and the semi-Yao or $\Theta$-graphs.
+%
+Such 1-skeleton graphs can be prone to over- and/or under-connect the point cloud data for variations of data distribitions.
+%
+Both over- and under-connected graphs can result in misleading data representations.
+%
+Though efforts have been made to improve the neighborhood quality in high dimension, these issues can still not be wholly avoided.
+%
+In other words, there is no silver bullet.
+%
+Since properties of these various graphs vary drastically, it is important to understand the implications of using a particular graph or the alternatives that may exist.
+
+\subsection{Distance-Based Graphs}
+Distance-based graphs are by far the most widely used and well-studied of the three families of graphs named in the introduction.
+%
+In fact, the methodology we propose begins with an efficient approximate $k$-nearest neighbor graph in order to prune other graphs from it.
+%
+Distance-based graphs include the $k$-nearest neighbor ($k$-nn) graph, the $\epsilon$-nearest neighbor ($\epsilon$-nn) graph.
+%
+The sphere of influence graph~\cite{Toussaint1988} can also be considered in this family of graphs, though is much less commonly used and also belongs to a family of graphs known as intersection graphs which we do not consider for this study.
+%
+A $k$-nearest neighbor graph, in our setting, is an undirected graph where an edge exists between two points, $p$ and $q$, if $q$ is one of the $k$ closest points to $p$ or vice versa in some defined metric space.
+%
+The related $\epsilon$-nearest neighbor, also known as the $\epsilon$-ball graph or fixed radius graph, instead is an undirected graph where an edge exists between $p$ and $q$ if the distance metric is less than a specified $\epsilon$.
+%
+Both of these settings give a somewhat incomplete, but complementary view of the data.
+%
+On one-hand, $\epsilon$-nn graphs will use more edges to connect points in a more densely-packed regions of space.
+%
+On the other hand, $k$-nn graphs will guarantee every point is connected to at least $k$ other points which is useful for connecting outliers or sparsely sampled regions to the rest of the data.
+%
+We choose to focus our study on the $k$-nearest neighbor graph due to our ability to more sensibly tune the $k$ parameter and its prevalence in the literature.
+
+There exist several state of the art competing libraries for computing both exact and approximate $k$-nearest neighbor graphs.
+%
+The methodologies use data structures such as space-partitioning trees~\cite{Bentley1975, LiuMooreGray2004, Omohundro1989, Uhlmann1991, Yianilos1993}, product quantization~\cite{BabenkoLempitsky2012, JegouDouzeSchmid2011} locality-aware hashing~\cite{BawaCondieGanesan2005, LvJosephsonWang2007, AndoniIndyk2008, TsaiYang2014, ZhaoLuMei2014}, pemutation indices~\cite{Esuli2012, TellezChavezNavarro2013}, and graphs~\cite{AryaMount1993, DongMosesLi2011, HouleSakuma2005, IwasakiMiyazaki2018, MalkovYashunin2018, SebastianKimia2002, WangLi2012} in order to perform fast proximity queries.
+%
+These methodologies vary in their ability to represent the exact versus approximate solutions, however we consider the approximation quality of all methods ``good enough,'' since we will be extracting many more neighbors than required for our pruning stage, and when comparing our methods to $k$-nn, we select an exact $k$-nn.
+%
+Recently, Johnson et al. have demonstrated how to effectively perform exact $k$-nn search on the GPU, thus offering the fastest known exact $k$-nn implementation to date with the FAISS library which also supports GPU computation of approximate $k$-nn searches~\cite{JohnsonDouzeJegou2017}.
+%
+For evaluating efficiency of the various approximation algorithms, consider the benchmarks developed by Aumuller et al.~\cite{AumullerBernhardssonFaithfull2017} and Chisholm et al.~\cite{ChisholmRichmondMaddock2016}.
+
+\subsection{Empty Region Graphs}
+Consider two points $a$ and $b$ are elements of a $d$-dimensional point set, $a,b \in P \subseteq \mathbb{R}^d$.
+%
+In the empty region graph setting, an edge exists between $a$ and $b$ if and only if there exists a region, $R(a,b) \subseteq \mathbb{R}^d$, that does not contain any other point in $P$, $R(a,b) \cap P = \null$.
+%
+Depending on the definition of $R$, different graphs can arise.
+%
+Noteworthy, examples include the relative neighbor graph~\cite{Toussaint1980}, its approximation the Urquhart graph~\cite{Urquhart1980}, and the Gabriel graph~\cite{GabrielSokal1969} which are examples of a class of graphs known as the $\beta$-skeleton~\cite{KirkpatrickRadke1985,JaromczykToussaint1992}.
+%
+It is worth noting, that two definitions of the $\beta$-skeleton exist, namely the \emph{circle-based} and the \emph{lune-based} approaches.
+%
+We will be referencing the \emph{lune-based} definition given in Section~\ref{sec:bpskeleton} unless otherwise noted.
+
+The $\gamma$-neighborhood is an attempt to unify the 2D circle-based $\beta$-skeletons, Delaunay triangulation, and convex hull of a point set into a two-parameter family of techniques~\cite{Veltkamp1991}.
+%
+Other examples of graphs in this family include the diamond graph~\cite{CorreaLindstrom2011}, the Delaunay graph (where the empty region is defined over $d-1$ points)~\cite{Delaunay1934}, the $\sigma$-local graph (where the empty region is two disjoint components centered at each of the endpoints)~\cite{BoseColletteLangerman2010}, and infinite strip graphs~\cite{Veltkamp1991, CardinalColletteLangerman2009}.
+%
+Similar to the generalization of the Gabriel graph and relative neighbor graph into the $\beta$-skeleton~\cite{KirkpatrickRadke1985} or Veltkamp's approach with the $\gamma$-neighborhoods, in Chapter~\ref{ch:graphs}, we develop the $\beta_p$-skeleton which unifies the entire family of lune-based $\beta$-skeletons with the canonical diamond graph used by Correa and Lindstrom and the infinite strip graphs into a two-parameter $(\beta,p)$ family of graphs that also includes a spectrum of graphs occuring between these examples.
+
+Kowaluk et al.~\cite{JaromczykKowaluk1987,KowalukMajewska2014} have studied relative neighbor graphs and $\beta$-skeletons under various $L^p$-spaces which is different than our regime of using $p$-norms as generators for shapes to be evaluated in $L^2$-space.
+%
+Note, that the shapes we for empty regions will always be both radially symmetric about the edge and also symmetric about the perpendicular bisector of the edge.
+%
+Furthermore, under discretization (see Section~\ref{sec:discrete}), we are able to utilize any 1D function as a generator for a symmetric, high-dimensional shape to use as the empty region.
+
+Lastly, $\gamma$-visibility graphs~\cite{KatzTalBasri2007,KatzTal2015,KatzTal2017} are another means of generalizing $\beta$ skeletons to include not only non-uniform shapes, but non-symmetric shapes.
+%
+In some ways this technique allows for more generic shapes than our own which is restricted to radially symmetric shapes, but as noted by the authors, the work is largely theoretical and we instead focus on an intuitive shape parameterization that generalizes well to higher dimensions.
+
+\subsection{Cone-Based Graphs}
+
+Cone-based graphs are so-called because they carve the space around a specific point $a$ into equal-sized cones and draw a fixed sample size from each conic section to connect to $a$.
+%
+These graphs are of interest to us because they are similar in spirit to the notion of the space-pruning umbras defined by Correa and Lindstrom~\cite{CorreaLindstrom2011}.
+%
+However, splitting high-dimensional spaces into equal-sized hypercones is a challenge that we attempt to approximate using clever sampling.
+
+The methods within this class differ in how points are selected from each conic section.
+%
+The Yao graph selects the closest point in each conic section to be a neighbor of $a$~\cite{Yao1982}.
+%
+The $\Theta$-graph, or semi-Yao graph, selects the point whose projected distance from the point onto the cone's axis is closest as a neighbor of $a$~\cite{Clarkson1987,Keil1988}.
+%
+Rahmati et. al generalized this graph to connect $a$ to $k$ neighbors in each section and called it the $k$-semi-Yao graph~\cite{RahmatiKingWhitesides2013}.
+%
+We consider this generalization for both Yao and $\Theta$-graphs and call them $k$-Yao and $k$-$\Theta$ graphs for simplicity.
+
 \section{Sensitivity Analysis}
 \label{sec:sensitivity}
 
@@ -825,6 +936,7 @@ As in the case of MARS, the prediction error of the neural network can be estima
 \DPM{Expand}
 
 \subsection{Support Vector Machines}
+\label{sec:svm}
 
 Support Vector Machines (SVMs) were first introduced as a means of binary classification via a linear separator~\cite{VapnikLerner1963}.
 %
