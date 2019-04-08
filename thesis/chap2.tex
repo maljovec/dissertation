@@ -9,9 +9,9 @@ You may already be familiar with many of these terms, however the goal here is t
 %
 In some cases, I will be using terms in a context that may differ from other academic works, and so it is important at the outset to be clear what is meant by the terms you will see throughout this document.
 %
-For example, let me begin with a term that we qualified in Chapter~\ref{ch:introduction}: \emph{data}.
+For example, let me begin with a term that has already been used heavily in Chapter~\ref{ch:introduction}: \emph{data}.
 
-Colloquially, we know data to be some collection of information.
+Colloquially, we know data to be a collection of information.
 %
 However, data can come in many forms, sizes, and structures, so if we are to spend any amount of time talking about techniques that generate, manipulate, and/or analyze data, we also need to be clear what kinds of data.
 %
@@ -206,8 +206,7 @@ Relevant functional properties are described below:
 \begin{defn}
   \textbf{Gradient}$\mathbf{(\nabla f(\mathbf{x}))}$ - Given $f : \mathbb{R}^n \rightarrow \mathbb{R}$, then $\nabla f = \left(\frac{\partial f}{\partial
   x_1},...,\frac{\partial f}{\partial x_{n}}\right)$
-  The gradient of a function where the domain is scalar is equivalent to the
-  derivative.
+  The gradient of a function where the domain is scalar (not multidimensional) is equivalent to the derivative.
 \end{defn}
 
 \begin{defn}
@@ -264,7 +263,7 @@ Though the name of a field of study, there is also a technical definition attach
 
   \begin{enumerate}
   \item $A \in \mathcal{T}$ and $\emptyset \in \mathcal{T}$
-  \item If $A_1,A_2 \in T$, then $A_1 \cap A_2 \in \mathcal{T}$
+  \item If $A_1,A_2 \in \mathcal{T}$, then $A_1 \cap A_2 \in \mathcal{T}$
   \item If $\{A_j|j\in J\} \subseteq \mathcal{T}$, then $\cup_{j\in J} A_j \in \mathcal{T}$
   \end{enumerate}
 \end{defn}
@@ -279,7 +278,7 @@ Though the name of a field of study, there is also a technical definition attach
   given above, any set $U$ such that $U = A$ $\backslash$ $S$.
 \end{defn}
 
-In the abstract sense, this definition is precise, however somewhat unsatisfying.
+In the abstract sense, this definition is precise, however potentially somewhat unintuitive.
 %
 When we restrict our topology to metric spaces, the intuition is that open/closed sets are $n$-dimensional generalizations of an open and closed interval in a 1-dimensional space, respectively.
 
@@ -354,12 +353,12 @@ For instance, open balls become the realization of the notion of open set, and t
 %
 A neighborhood of an element can then be thought of as an open ball.
 %
-A few examples of such are given in Euclidean space below, but first we define the Euclidean space formally:
+A few examples of the definitions above are given for Euclidean space in Figure~\ref{fig:sets}, but first we define the Euclidean space formally:
 
 \begin{defn}
   \textbf{$n$-dimensional Euclidean space} ($\mathbb{E}^n$) - The combination of
   the set defined by the n-dimensional real space, $\mathbb{R}^n$ and the
-  \textbf{Euclidean metric}: d(x,y) = $\sqrt{\sum_i=0^n(x_i-y_i)^2}$.
+  \textbf{Euclidean metric}: d(x,y) = $\sqrt{\sum_{i=0}^n(x_i-y_i)^2}$.
 \end{defn}
 
 \begin{figure}[t]
@@ -369,7 +368,7 @@ A few examples of such are given in Euclidean space below, but first we define t
   ball as an example of an open set around point
   $\mathbf{p}$ in $\mathbb{E}^2$, the interior of the open set, the boundary of
   the open set, and the closure of the open set.}
-  \label{fig:graphs}
+  \label{fig:sets}
 \end{figure}
 
 % \nb{Insert example of an open set, interior, closure, and boundary of a circle,
@@ -379,14 +378,6 @@ A few examples of such are given in Euclidean space below, but first we define t
   \textbf{$n$-dimensional Euclidean half-space} - A subset of $\mathbb{E}^n$
   partitioned by an $(n-1)$-dimensional hyperplane and is denoted
   as $\mathbb{H}^n$.
-\end{defn}
-
-\begin{defn}
-  \textbf{Homeomorphism} - A continuous, bijective function, from one
-  topological space $\mathbb{A}$ to another $\mathbb{B}$ ($f :\mathbb{A}
-  \rightarrow \mathbb{B}$) whose inverse ($f^{-1}: \mathbb{B}
-  \rightarrow \mathbb{A}$), is also continuous.
-  $\mathbb{A}$ is said to be homeomorphic to $\mathbb{B}$.
 \end{defn}
 
 % \begin{defn}
@@ -407,6 +398,14 @@ A few examples of such are given in Euclidean space below, but first we define t
 %   \textbf{equivalence class}.
 % \end{defn}
 \subsection{Manifolds}
+
+\begin{defn}
+  \textbf{Homeomorphism} - A continuous, bijective function, from one
+  topological space $\mathbb{A}$ to another $\mathbb{B}$ ($f :\mathbb{A}
+  \rightarrow \mathbb{B}$) whose inverse ($f^{-1}: \mathbb{B}
+  \rightarrow \mathbb{A}$), is also continuous.
+  $\mathbb{A}$ is said to be homeomorphic to $\mathbb{B}$.
+\end{defn}
 
 As we discuss topological spaces, it is also important to define a topological manifold.
 %
@@ -500,8 +499,8 @@ As we move from the abstract concepts of topology to the concrete, it will be us
 \end{defn}
 
 \begin{defn}
-  \textbf{Graph neighbors} - $\{v_1,v_2 \in V(G) | \exists e \psi_G(e) =
-  (v_1,v_2) or \psi_G(e) = (v_2,v_1) \}$. Two graph vertices $v_1$ and $v_2$ are
+  \textbf{Graph neighbors} - $\{v_1,v_2 \in V(G) | \exists e\; \psi_G(e) =
+  (v_1,v_2) \;\text{or}\; \psi_G(e) = (v_2,v_1) \}$. Two graph vertices $v_1$ and $v_2$ are
   neighbors if there exists an edge $e$ associating them.
 \end{defn}
 
@@ -512,8 +511,8 @@ As we move from the abstract concepts of topology to the concrete, it will be us
 \end{defn}
 
 \begin{defn}
-  \textbf{Parallel edge} - $\{e_1,e_2 \in E(G) | if \psi_G(e_1) = (v_1,v_2),
-  v_1,v_2 \in V(G), then \psi_G(e_2) = (v_1,v_2) or \psi_G(e_2) = (v_2,v_1) \}$
+  \textbf{Parallel edge} - $\{e_1,e_2 \in E(G) | \;\text{if}\; \psi_G(e_1) = (v_1,v_2),
+  v_1,v_2 \in V(G), \;\text{then}\; \psi_G(e_2) = (v_1,v_2) \;\text{or}\; \psi_G(e_2) = (v_2,v_1) \}$
 \end{defn}
 
 \begin{defn}
@@ -526,7 +525,7 @@ As we move from the abstract concepts of topology to the concrete, it will be us
 
 \begin{defn}
   \textbf{Complete graph} - $\{G | \forall v_1,v_2 \in V(G), \exists e\in E(G)
-  s.t. \psi_G(e) = (v_1,v_2) or \psi_G(e) = (v_2,v_1)\}$
+  s.t. \psi_G(e) = (v_1,v_2) \;\text{or}\; \psi_G(e) = (v_2,v_1)\}$
 \end{defn}
 
 \begin{defn}
@@ -586,6 +585,27 @@ As we move from the abstract concepts of topology to the concrete, it will be us
   \textbf{Triangulation} - A simplicial complex, $K$ defined on a topological
   space, $\mathbb{A}$, such that $K \sim \mathbb{A}$
 \end{defn}
+
+\begin{defn}
+  \textbf{n-Skeleton} - A simplicial complex that includes only up to dimension
+  $n$ simplices.
+\end{defn}
+
+We will make use of 1-skeletons heavily for approximating topology in high
+dimensions.
+%
+An important caveat to note is that the families of graphs we use do not always
+result in a true 1-skeleton as we cannot guarantee that there are no crossing
+edges for some parameterizations of our graphs.
+%
+This condition is relaxed for many of our cases as the expense to detect and
+remove what amount to somewhat rare cases for points in general position in
+high dimension seems to outweigh the benefits of imposing this rule strictly.
+%
+However, it is important to note that in general, crossing edges are not a
+desirable quality for many of the analyses presented and we discuss their
+presence in practice and how we can choose graphs that mitigate their appearance
+in Chapter~\ref{ch:graphs}.
 
 % \section{Information Theory}
 
