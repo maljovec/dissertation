@@ -13,21 +13,23 @@ Here, we formalize the different methods by which data samples can be selected f
 %
 There exists two major branches on how this can be done.
 %
-In the first case, all of the samples are selected and run in bulk.
+In the first case, all of the samples are pre-selected and run in bulk.
 %
-We classify this type of sampling as space-filling sampling.
+We classify this type of sampling as space-filling sampling since, without any knowledge of the functional relationship, our goal is usually to spread the samples out as much as possible over the range of input values.
 %
-Space-filling sampling is amenable to parallelization due to the fact that the entire sample set can be specified a priori.
+Space-filling sampling is amenable to parallelization due to the fact that the entire sample set can be specified a priori and therefore each experiment can be run independently of all other experiments.
 %
-Such designs attempt to capture the global behavior of the system under study as they tend to focus more on uniformly sampling the entire domain of interest evenly as compared to the second mode, adaptive sampling.
+Such designs attempt to capture the global behavior of the system under study and tend to focus more on uniformly sampling the entire domain of interest evenly as compared to the second mode, adaptive sampling.
 %
 Adaptive sampling selects the ``best'' candidate based on current information about the system.
 %
 The criteria for what constitutes ``best'' is investigated further in the Section~\ref{sec:adaptiveSampling}.
 %
-Adaptive sampling excels when only a limited region of the input domain is considered interesting and when a surrogate model can be used for extracting additional information about the data already collected.
+Adaptive sampling excels when only a limited region of the input domain is considered interesting or when the surrogate model is highly localized. 
 %
-Adaptive sampling works in a feedback loop where new information is continuously added to a constructed model of the data which is used to select new samples.
+In the former case, a surrogate model can be used for extracting additional information about the data already collected, and in the latter case, the model is not expected to change significantly away from the area being sampled.
+%
+Adaptive sampling works in a feedback loop where new information is continuously added to a constructed model of the data which is then used to select new samples.
 
 \subsection{Space-Filling Designs}
 \label{sec:forwardSampling}
@@ -38,7 +40,7 @@ That is, we can apply a probability distribution function (PDF) over each input,
 %
 In this way, we can manipulate the sampling density to favor specific regions where more fidelity may be desired or necessary, but often this requires some expert knowledge of the domain space prior to experimentation.
 
-The two simplest forms of forward sampling are grid-based and random sampling.
+The two simplest forms of space-filling sampling designs are grid-based and random sampling.
 %
 They also represent archetypes of the two features sought after in a ``good'' space-filling sampling strategy.
 %
@@ -65,7 +67,7 @@ On the other hand, pure random sampling counteracts this type of sampling artifa
 %
 Though, this may seem like a contrived example and adding more samples could alleviate this problem, even missing any one of these features could be belying crucial information to the system under study.
 %
-Furthermore, when moving from low to high dimensional cases both forms of sampling suffer from the well-known \emph{curse of dimensionality}~\cite{KeoghMueen2010}.
+Furthermore, when moving from low to high dimensional cases, both forms of sampling suffer from the well-known \emph{curse of dimensionality}~\cite{KeoghMueen2010}.
 %
 In this case, as we increase the dimensionality, the volume of the space increases exponentially, thus if each sample is associated with an empty volume surrounding it (i.e., a closest point Voronoi cell~\cite{deBergCheongKreveld2008}, see description below) then the number of samples needed to maintain the same volume per sample will increase exponentially as well.
 %
@@ -124,13 +126,13 @@ In a geometric sense, the sample points will exhibit no regularity, but will sti
 %
 The main techniques for achieving a blue-noise sampling include Poisson disk sampling, relaxation methods, and tile-based methods~\cite{YanGuoWang2015}.
 
-The first method, Poisson disk sampling creates samples that are guaranteed a minimum distance from all other samples and is used widely in computer graphics.
+The first method, Poisson disk sampling creates samples that are guaranteed to be a minimum distance from all other samples and is used widely in computer graphics.
 %
 The classic algorithm applies to the two dimensional case and is achieved through rejection sampling, that is points are iteratively added to the overall sample set if they do not lie inside a disk of specified radius~\cite{Cook1986}.
 %
 Accelerations off of this baseline algorithm focus on methods for efficiently tracking the empty regions left to be sampled in order to reduce the likliehood of rejecting future samples~\cite{EbeidaDavidsonPatney2011,EbeidaMitchellPatney2012,GamitoMaddock2009,Jones2006,JonesKarger2011,WhiteClineEgbert2007}.
 %
-Though most graphics problems deal in relatively low dimensional spaces, there has been some work for computing Poisson disk sampling in arbitrary dimensions~\cite{Bridson2007,EbeidaMitchellPatney2012,EbeidaMitchellPatney2015,GamitoMaddock2009} and at best these algorithms are still exponential with respect to dimensionality in terms of memory and time.
+Though most graphics problems deal in relatively low dimensional spaces, there has been some more recent work for computing Poisson disk sampling in arbitrary dimensions~\cite{Bridson2007,EbeidaMitchellPatney2012,EbeidaMitchellPatney2015,GamitoMaddock2009} and at best these algorithms are still exponential with respect to dimensionality in terms of memory and time.
 
 Of the relaxation techniques, Centroidal Voronoi tessellation (CVT)~\cite{DuFaberGunzburger1999} has been the most widely studied.
 %
@@ -348,7 +350,7 @@ We choose to focus our study on the $k$-nearest neighbor graph due to our abilit
 
 There exist several state of the art competing libraries for computing both exact and approximate $k$-nearest neighbor graphs.
 %
-The methodologies use data structures such as space-partitioning trees~\cite{Bentley1975, LiuMooreGray2004, Omohundro1989, Uhlmann1991, Yianilos1993}, product quantization~\cite{BabenkoLempitsky2012, JegouDouzeSchmid2011} locality-aware hashing~\cite{BawaCondieGanesan2005, LvJosephsonWang2007, AndoniIndyk2008, TsaiYang2014, ZhaoLuMei2014}, pemutation indices~\cite{Esuli2012, TellezChavezNavarro2013}, and graphs~\cite{AryaMount1993, DongMosesLi2011, HouleSakuma2005, IwasakiMiyazaki2018, MalkovYashunin2018, SebastianKimia2002, WangLi2012} in order to perform fast proximity queries.
+The methodologies use data structures such as space-partitioning trees~\cite{Bentley1975,LiuMooreGray2004,Omohundro1989,Uhlmann1991,Yianilos1993}, product quantization~\cite{BabenkoLempitsky2012,JegouDouzeSchmid2011} locality-aware hashing~\cite{BawaCondieGanesan2005,LvJosephsonWang2007,AndoniIndyk2008,TsaiYang2014,ZhaoLuMei2014}, pemutation indices~\cite{Esuli2012,TellezChavezNavarro2013}, and graphs~\cite{AryaMount1993,DongMosesLi2011,HouleSakuma2005,IwasakiMiyazaki2018,MalkovYashunin2018,SebastianKimia2002,WangLi2012} in order to perform fast proximity queries.
 %
 These methodologies vary in their ability to represent the exact versus approximate solutions, however we consider the approximation quality of all methods ``good enough,'' since we will be extracting many more neighbors than required for our pruning stage, and when comparing our methods to $k$-nn, we select an exact $k$-nn.
 %
@@ -371,7 +373,7 @@ We will be referencing the \emph{lune-based} definition given in Section~\ref{se
 
 The $\gamma$-neighborhood is an attempt to unify the 2D circle-based $\beta$-skeletons, Delaunay triangulation, and convex hull of a point set into a two-parameter family of techniques~\cite{Veltkamp1991}.
 %
-Other examples of graphs in this family include the diamond graph~\cite{CorreaLindstrom2011}, the Delaunay graph (where the empty region is defined over $d-1$ points)~\cite{Delaunay1934}, the $\sigma$-local graph (where the empty region is two disjoint components centered at each of the endpoints)~\cite{BoseColletteLangerman2010}, and infinite strip graphs~\cite{Veltkamp1991, CardinalColletteLangerman2009}.
+Other examples of graphs in this family include the diamond graph~\cite{CorreaLindstrom2011}, the Delaunay graph (where the empty region is defined over $d-1$ points)~\cite{Delaunay1934}, the $\sigma$-local graph (where the empty region is two disjoint components centered at each of the endpoints)~\cite{BoseColletteLangerman2010}, and infinite strip graphs~\cite{Veltkamp1991,CardinalColletteLangerman2009}.
 %
 Similar to the generalization of the Gabriel graph and relative neighbor graph into the $\beta$-skeleton~\cite{KirkpatrickRadke1985} or Veltkamp's approach with the $\gamma$-neighborhoods, in Chapter~\ref{ch:graphs}, we develop the $\beta_p$-skeleton which unifies the entire family of lune-based $\beta$-skeletons with the canonical diamond graph used by Correa and Lindstrom and the infinite strip graphs into a two-parameter $(\beta,p)$ family of graphs that also includes a spectrum of graphs occuring between these examples.
 
