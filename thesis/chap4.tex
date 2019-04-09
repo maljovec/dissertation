@@ -74,7 +74,7 @@ Integral lines on Morse functions have several useful properties:
 \begin{itemize}
 \item Integral lines are disjoint or the same
 \item Integral lines cover all of $\mathbb{M}$
-\item Origin and destination of an integral line are critical point of $f$.
+\item The origin and destination of an integral line are critical points of $f$.
 \item Integral lines are monotonic and thus $org(l) \neq dest(l)$.
 \item Each point in $\mathbb{M}$ has one and only one integral line passing through it.
 \end{itemize}
@@ -125,7 +125,7 @@ This theory works well when applied to smooth fields, but some gaps must be addr
 %
 Namely, in order to identify each point to an ascending or descending manifold, we must trace the integral lines through the available data which implies that we have some connectivity structure among the data points.
 %
-In order to do this, we employ concepts from discrete Morse theory~\cite{Forman2002}.
+In order to do this, we employ concepts from either the piecewise linear case~\cite{EdelsbrunnerLetscherZomorodian2002} or discrete Morse theory~\cite{Forman2002}.
 %
 Gyulassy has addressed many of these issues when working with structured and unstructured grids in low dimensional spaces~\cite{Gyulassy2008}, and more recently Gerber et al.~\cite{GerberBremerPascucci2010} have developed an algorithm for approximating gradient on aribtrary dimensional point clouds.
 %
@@ -140,7 +140,7 @@ As mentioned, we must impose a connectivity structure on the data in order to es
 %
 For this, a neighborhood graph is used which represents a 1-skeleton of the manifold.
 %
-The original works of Gerber et al.~\cite{GerberBremerPascucci2010,GerberPotter2012,GerberRubelBremer2011} used a $k$-nearest neighbor graph, but we have explored the use of the empty region graphs proposed by Correa and Lindstrom~\cite{CorreaLindstrom2011} which were shown to provide better results in extracting topological features from sparsely sampled data sets.
+The original works of Gerber et al.~\cite{GerberBremerPascucci2010,GerberPotter2012,GerberRubelBremer2011} used a $k$-nearest neighbor graph, but more recently, Correa and Lindstrom~\cite{CorreaLindstrom2011} explored the use of empty region graphs which have been shown to provide better results in extracting topological features from sparsely sampled data sets.
 %
 Under specific sampling densities, the $k$-nearest neighbor can tend to bias certain directions where the point density is higher.
 %
@@ -148,8 +148,9 @@ The empty region graphs, on the other hand, validate edges by ensuring no points
 %
 The shape of this region varies according to the specific type of graph used, but the end result is a less biased and more uniform distribution of edges over the hypersphere of directions emanating from any given point.
 %
-A detailed investigation corroborated these findings and is included in
-Section~\ref{paper:TopoInVis2013}.
+Cone graphs, introduced in Section~\ref{sec:bg_cones}, represent a third family of graphs that could potentially be used for imposing structure similar to that achieved by the empty region graphs.
+%
+We explore a direct comparison of these three graph types for extracting topology in Chapter~\ref{ch:graphs}.
 %
 In all of the experiments where this method is employed in this document, we denote the type of graph used.
 
@@ -167,11 +168,15 @@ We can then trace the positive integral line from each data point up to a local 
 %
 We retain the indices of the identified local minimum and maximum and this pair of indices represents the Morse-Smale cell to which this point belongs.
 
-Note, that gradient inconsistencies such as crossing integral lines can form if the graph has crossing edges.
+As was pointed out in the end of Chapter~\ref{ch:definitions}, gradient inconsistencies such as crossing integral lines can form if the graph has crossing edges.
 %
-This can be avoided by detecting and pruning such edges from the graph.
+This can be avoided by detecting and pruning such edges from the graph or by using a graph that strictly prevents them.
 %
-In pratical settings, we begin with an approximate $k$-nearest neighbor graph where $k$ is intentionally set higher than expected and prune it with one of the empty region criteria from Correa and Lindstrom's work to achieve computational efficiency.
+In most cases, the inconsistencies this causes are minor and the time needed to detect and remove such edges can often outweigh the potential existence of these inconsistencies.
+%
+Furthermore, as dimensionality increases, the likliehood of edges crossing reduces as the space becomes sparser and any set of four points have to meet an additional coplanar requirement for each dimension added.
+%
+% In pratical settings, we begin with an approximate $k$-nearest neighbor graph where $k$ is intentionally set higher than expected and prune it with one of the empty region criteria from Correa and Lindstrom's work to achieve computational efficiency.
 
 Figure~\ref{fig:mscAlgorithm} shows the three step process of the discretized Morse-Smale complex algorithm including application of a graph structure, tracing gradients to local extrema, and the third step discussed in the next section, persistence simplification, which essentially denoises the results.
 
@@ -183,9 +188,6 @@ Figure~\ref{fig:mscAlgorithm} shows the three step process of the discretized Mo
   \caption[Illustration of the Morse-Smale Approximation algorithm for unstructured data]{There are three main steps in the approximation algorithm for computing the Morse-Smale complex. They are from top to bottom: construction of graph on input data, gradient tracing to local extrema, and construction of hierarchy of features allowing for simplification of the extracted topology.}
   \label{fig:mscAlgorithm}
 \end{figure}
-
-%%TODO: I think this last part will include the contour tree, so I should mention how it is used in high-dimension, right?
-% \section{Contour Tree}
 
 \subsection{Persistence Simplification}
 At this point, we are able to identify topological features as critical points in the function space.
