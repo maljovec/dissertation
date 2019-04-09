@@ -249,7 +249,9 @@ Engineers are often concerned with identifying such limit surfaces and character
 %
 The problem is different from global fitting in that the overall fidelity is less of a concern as long as the behavior is adequately modeled around the limit surface.
 %
-The problem also differs from classification (i.e., discrete labeling which typically results in a binary decision of inside or outside a particular class) since knowing the gradient direction and magnitude along and near the limit surface can also be useful information.
+This problem of limit surface identification is similar to what is called decision boundary analysis in the classification problem setting~\cite{DiamantiniPotena2007,GoLee2003,LeeLandgrebe1993,LeeLandgrebe1997,WooLee2017,ZhangLiu2005}.
+%
+However, it also differs from classification (i.e., discrete labeling which typically results in a binary decision of inside or outside a particular class) since knowing the gradient direction and magnitude along and near the limit surface can also be useful information.
 
 In reliability engineering, this problem is known as determining the limit state function and can be thought of as the point where a system's load exceeds its capacity where load and capacity are functions of the input parameters.
 %
@@ -261,10 +263,7 @@ In similar spirit, the machine learning community has designed similar yet simpl
 %
 Bryan et al.~\cite{BryanSchneiderNichol2005} define a scoring function called the straddle function, and Gotovis et al.~\cite{GotovosCasatiHitz2013} introduce the ambiguity scoring function which can be thought of as a generalized version of the straddle function.
 %
-All three methods utilize a Gaussian process surrogate model, however the latter two are performed in what Settles~\cite{Settles2009} refers to as the pool-based active learning setting, whereas the first uses a global optimization to select the optimal point at each iteration which incurs drastically increases the overhead per iteration.
-
-%%% TODO: Expand this text
-% \nb{Why is this different? The latter is slower right?}
+All three methods utilize a Gaussian process surrogate model, however the latter two are performed in what Settles~\cite{Settles2009} refers to as the pool-based active learning setting, whereas the first uses a global optimization to select the optimal point at each iteration which drastically increases the overhead per iteration.
 
 % \subsubsection{Optimization Problems}
 \subsubsection{Design Steering}
@@ -276,7 +275,7 @@ The aforementioned methods are assumed to be completely automatic except in the 
 %
 % For example, a common human-dependent task more often involves annotating data with text labels rather than assigning often subjective numeric ranks or values to items in a dataset.
 %
-Within the visualization community, several works have explored the notion of design steering where the results require a qualitative examination, or are used to inform decisions.
+Within the visualization community, several works have explored the notion of design steering where the results require either a qualitative examination or are used to inform indirect decisions rather than in a direct sampling feedback loop.
 
 HyperMoVal~\cite{PiringerBergerKrasser2010} is a software system used for validating regression models against actual data.
 %
@@ -288,7 +287,7 @@ Berger et al.~\cite{BergerPiringerFilzmoser2011} utilize two different types of 
 %
 Utilizing the predictive power of the regression, they are able to provide a guided navigation of the high-dimensional space centered around a user-selected focal point.
 %
-The user adjusts the focal point through multiple linked views, and sensitivity and uncertainty information is encoded around the focal point.
+The user adjusts the focal point through multiple linked views, and sensitivity and uncertainty information are encoded around the focal point.
 
 Tuner~\cite{Torsney-WeirSaadMoller2011} employs an automated adaptive sampling algorithm where a sparse sampling of the parameter space is refined by building a Gaussian Process Model (GPM)~\cite{RasmussenWilliams2006}.
 %
@@ -303,6 +302,8 @@ In addition, their method involves progressive refinement of the GPM and can be 
 Most of these methods convey sensitivity information through user exploration of the input space.
 %
 We discuss sensitivity in more detail in Section~\ref{sec:sensitivity} and in Section~\ref{sec:SA_visualization}, explicit visual encodings for understanding sensitivity information are also discussed.
+%
+Sensitivity analysis plays a major role in the novel system described in Chapter~\ref{ch:visualization}.
 
 \section{Proximity Graphs}
 \label{sec:graphs}
