@@ -308,17 +308,19 @@ Sensitivity analysis plays a major role in the novel system described in Chapter
 \section{Proximity Graphs}
 \label{sec:graphs}
 
-Many scientific datasets are presented as point sampled data of low to moderate ($<$100) dimensionality.
+Our target datasets are presented as point sampled data of low to moderate ($<$100) dimensionality.
 %
 Many common analysis techniques on such data require the imposition of some structure to relate the disjoint set of point samples.
 %
 Such a structure could be used to interpolate, cluster, filter, or project/warp the data.
 %
-Depending on the questions being asked, the dimensionality of the data, and the distribution of the point samples, the desired characteristics of the data needs to be presented by different data structures.
+Depending on several factors including: the questions being asked, the dimensionality of the data, and the distribution of the point samples, the correct choice of structure among the points could vary.
 %
 For example, in low dimensional settings, it is often common to polygonize or triangulate point-sampled data, but the combinatorics of representing the high-dimensional equivalents of surfaces and volumes of even a simplicial complex quickly become infeasible to store and operate on.
 %
-What is more often found in higher dimensional settings is the use of 1-skeleton structures, so called proximity graphs.
+What is more often found in higher dimensional settings is the use of 1-skeleton structures such as those given by proximity graphs.
+%
+Proximity graphs connect nearby points in a point set via a set of edges where the presence of an edge is based on different geometric constraints depending on the choice of graph.
 
 The proximity graphs we consider fall into one of three families: distance-based, empty region, and cone-based.
 %
@@ -328,7 +330,7 @@ The empty region graphs include the Delaunay graph, the diamond graph, the Gabri
 %
 Cone-based graphs include Yao graphs and the semi-Yao or $\Theta$-graphs.
 %
-Such 1-skeleton graphs can be prone to over- and/or under-connect the point cloud data for variations of data distribitions.
+Such 1-skeleton graphs can be prone to over- and/or under-connect a point cloud depending on how the data is distributed.
 %
 Both over- and under-connected graphs can result in misleading data representations.
 %
@@ -343,17 +345,17 @@ Distance-based graphs are by far the most widely used and well-studied of the th
 %
 In fact, the methodology we propose begins with an efficient approximate $k$-nearest neighbor graph in order to prune other graphs from it.
 %
-Distance-based graphs include the $k$-nearest neighbor ($k$-nn) graph, the $\epsilon$-nearest neighbor ($\epsilon$-nn) graph.
+The two main distance-based graphs are the $k$-nearest neighbor ($k$-nn) graph and the $\epsilon$-nearest neighbor ($\epsilon$-nn) graph.
 %
-The sphere of influence graph~\cite{Toussaint1988} can also be considered in this family of graphs, though is much less commonly used and also belongs to a family of graphs known as intersection graphs which we do not consider for this study.
-%
+The sphere of influence graph~\cite{Toussaint1988} can also be considered in this family of graphs, though it is much less commonly used and also belongs to a family of graphs known as intersection graphs which we do not consider as relevant to this body of work.
+
 A $k$-nearest neighbor graph, in our setting, is an undirected graph where an edge exists between two points, $p$ and $q$, if $q$ is one of the $k$ closest points to $p$ or vice versa in some defined metric space.
 %
 The related $\epsilon$-nearest neighbor, also known as the $\epsilon$-ball graph or fixed radius graph, instead is an undirected graph where an edge exists between $p$ and $q$ if the distance metric is less than a specified $\epsilon$.
 %
 Both of these settings give a somewhat incomplete, but complementary view of the data.
 %
-On one-hand, $\epsilon$-nn graphs will use more edges to connect points in a more densely-packed regions of space.
+On one-hand, $\epsilon$-nn graphs will use more edges to connect points in a more densely-packed region of space.
 %
 On the other hand, $k$-nn graphs will guarantee every point is connected to at least $k$ other points which is useful for connecting outliers or sparsely sampled regions to the rest of the data.
 %
@@ -363,7 +365,13 @@ There exist several state of the art competing libraries for computing both exac
 %
 The methodologies use data structures such as space-partitioning trees~\cite{Bentley1975,LiuMooreGray2004,Omohundro1989,Uhlmann1991,Yianilos1993}, product quantization~\cite{BabenkoLempitsky2012,JegouDouzeSchmid2011} locality-aware hashing~\cite{BawaCondieGanesan2005,LvJosephsonWang2007,AndoniIndyk2008,TsaiYang2014,ZhaoLuMei2014}, pemutation indices~\cite{Esuli2012,TellezChavezNavarro2013}, and graphs~\cite{AryaMount1993,DongMosesLi2011,HouleSakuma2005,IwasakiMiyazaki2018,MalkovYashunin2018,SebastianKimia2002,WangLi2012} in order to perform fast proximity queries.
 %
-These methodologies vary in their ability to represent the exact versus approximate solutions, however we consider the approximation quality of all methods ``good enough,'' since we will be extracting many more neighbors than required for our pruning stage, and when comparing our methods to $k$-nn, we select an exact $k$-nn.
+These methodologies vary in their ability to represent the exact versus approximate solutions.
+%
+For the purposes of our later studies, we consider the approximation quality of all methods ``good enough.''
+%
+This is due to the fact that when using such an approximate knn throughout this document, we will be extracting many more neighbors than required in order to prune this graph using one of the remaining techniques.
+%
+In cases, where we compare or use knn in isolation, we select an exact $k$-nn for comparison.
 %
 Recently, Johnson et al. have demonstrated how to effectively perform exact $k$-nn search on the GPU, thus offering the fastest known exact $k$-nn implementation to date with the FAISS library which also supports GPU computation of approximate $k$-nn searches~\cite{JohnsonDouzeJegou2017}.
 %
@@ -372,11 +380,11 @@ For evaluating efficiency of the various approximation algorithms, consider the 
 \subsection{Empty Region Graphs}
 Consider two points $a$ and $b$ are elements of a $d$-dimensional point set, $a,b \in P \subseteq \mathbb{R}^d$.
 %
-In the empty region graph setting, an edge exists between $a$ and $b$ if and only if there exists a region, $R(a,b) \subseteq \mathbb{R}^d$, that does not contain any other point in $P$, $R(a,b) \cap P = \null$.
+In the empty region graph setting, an edge exists between $a$ and $b$ if and only if there exists a region, $R(a,b) \subseteq \mathbb{R}^d$, that does not contain any other point in $P$, $R(a,b) \cap P = \emptyset$.
 %
 Depending on the definition of $R$, different graphs can arise.
 %
-Noteworthy, examples include the relative neighbor graph~\cite{Toussaint1980}, its approximation the Urquhart graph~\cite{Urquhart1980}, and the Gabriel graph~\cite{GabrielSokal1969} which are examples of a class of graphs known as the $\beta$-skeleton~\cite{KirkpatrickRadke1985,JaromczykToussaint1992}.
+Noteworthy, examples include the relative neighbor graph~\cite{Toussaint1980}, its approximation the Urquhart graph~\cite{Urquhart1980}, and the Gabriel graph~\cite{GabrielSokal1969} which are examples of a class of graphs known as $\beta$-skeletons~\cite{KirkpatrickRadke1985,JaromczykToussaint1992}.
 %
 It is worth noting, that two definitions of the $\beta$-skeleton exist, namely the \emph{circle-based} and the \emph{lune-based} approaches.
 %
@@ -623,7 +631,7 @@ Because the learned manifold can twist and bend through the high-dimensional spa
 %
 As we have seen, many of the linear techniques above can be reformulated to construct a nonlinear dimensionality reduction scheme~\cite{ScholkopfSmolaMuller1997,CollinsDasguptaSchapire2001,MohamedGhahramaniHeller2009,HyvarinenKarhunenOja2001,MikaRatschWeston1999,McLachlan2004,FukumizuBachJordan2004,FukumizuBachJordan2009,NilssonShaJordan2007}.
 %
-In addition, other novel techniques exist such as locally linear embedding~\cite{RoweisSaul2000}, subspace clustering~\cite{}, laplacian eigenmaps~\cite{BelkinNiyogi2003}, Isomap~\cite{TenenbaumSilvaLangford2000}, and t-distributed stochastic neighborhood embedding~\cite{MaatenHinton2008}, to name a few.
+In addition, other novel techniques exist such as locally linear embedding~\cite{RoweisSaul2000}, subspace clustering~\cite{Parsons2004}, laplacian eigenmaps~\cite{BelkinNiyogi2003}, Isomap~\cite{TenenbaumSilvaLangford2000}, and t-distributed stochastic neighborhood embedding~\cite{MaatenHinton2008}, to name a few.
 
 From a sensitivity analysis standpoint, the issue with nonlinear reduction methods is illustrated in Figure~\ref{fig:axisInterpretability}.
 %
