@@ -914,7 +914,7 @@ For these reasons and the lack of interpretability of such complicated models, s
 %
 Deep learning algorithms are still largely considered a black-box solution to a problem since it difficult to trace the result of a prediction to a specific collection of neurons/coefficients especially those with several layers of abstraction.
 %
-Nonetheless, empirically they have proven successful as predictors on many datasets in varied domains such as image analysis~\cite{Daugman1988,FarabetCouprieNajman2012,HadsellSermanetPierre2009,MillertariNavabAhmadi2016,YasminSharifMohsin2013}, text, speech, and natural language processing~\cite{BengioDucharmeVincent2003,GravesWayneDanihelka2014,HochreiterSchmidhuber1997,MaPrincipe2018,SutskeverVinyalsLe2014,WestonBordesChopra2015}, graph-based problems~\cite{WuPanChen2019,ZhangCuiZhu2018,ZhouCuiZhang2018}, and even outperforming humans in complex games~\cite{MnihKavukcuogluSilver2013,SilverHuangMaddison2016}.
+Nonetheless, empirically they have proven successful as predictors on many datasets in varied domains such as image analysis~\cite{Daugman1988,FarabetCouprieNajman2012,HadsellSermanetPierre2009,KrizhevskySutskeverHinton2017,MillertariNavabAhmadi2016,YasminSharifMohsin2013}, text, speech, and natural language processing~\cite{BengioDucharmeVincent2003,GravesMohamedHinton2013,GravesWayneDanihelka2014,HochreiterSchmidhuber1997,MaPrincipe2018,SutskeverVinyalsLe2014,WestonBordesChopra2015}, graph-based problems~\cite{WuPanChen2019,ZhangCuiZhu2018,ZhouCuiZhang2018}, and even outperforming humans in complex games~\cite{MnihKavukcuogluSilver2013,SilverHuangMaddison2016}.
 
 To introduce the topic, I will explain a simple feed-forward neural network with a single hidden layer that we can later generalize to more arbitrarily complex models.
 %
@@ -938,8 +938,11 @@ The single layer neural network is a non-linear statistical model, where the res
 
 where $\mathbf{z} = (z_1, \dots, z_M)^T$ and $z_m = \sigma(\alpha_{0m} + \boldsymbol{\alpha}_m^T \mathbf{x})$.
 %
-The activation function, $\sigma(v)$ is usually taken as the sigmoid function, $\sigma(v) = 1/(1+e^{-v})$.
-\DPM{be more specific as to what an activation function is and what others can be used.}
+$\sigma(v)$ is known as the activation function and using the neural pathway example is responsible for activating/propagating a signal or quelling it.
+%
+It works by mapping a real-valued scalar value onto a desired range which may or may not be bounded depending on the application.
+%
+Example activations include the sigmoid function, $\sigma(v) = 1/(1+e^{-v})$, the hyperbolic tangent function, $\sigma(v) = \frac{e^v-e^{-v}}{e^v+e^{-v}}$, the rectified linear unit, $\sigma(v) = \max(0, v)$, and the leaky rectified linear unit, $\sigma(v) = \max(\epsilon v, v)$, where $\epsilon \ll 1$.
 %
 The unknown parameters of the neural network, which we denote by $\boldsymbol{\theta}$ are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
 %
@@ -952,8 +955,6 @@ A common solution is to add a regularization term that shrinks the weights to ze
 The minimization can be carried out in an efficient manner using gradient-based methods, as the gradient of the neural network can be computed easily using the chain rule for differentiation.
 %
 As in the case of MARS, the prediction error of the neural network can be estimated using bootstrap methods.
-
-\DPM{Expand}
 
 \subsection{Support Vector Machines}
 \label{sec:svm}
@@ -1020,7 +1021,7 @@ The image on the left represents the data in the original data space, and it is 
 %
 However, we can note that by applying a transformation operator, $K$ on the original data, we can transform it into a space where the data is linearly separable as shown in the right image.
 %
-In this case, we have kept the dimensionality the same ($d=2$), but we have transformed our cartesian coordinates ($x_1$ and $x_2$) into polar coordinates ($r$ and $theta$).
+In this case, we have kept the dimensionality the same ($d=2$), but we have transformed our cartesian coordinates ($x_1$ and $x_2$) into polar coordinates ($r$ and $\theta$).
 %
 This is the main concept behind kernel-based SVMs where often the data is projected into a higher dimensional feature space.
 
@@ -1037,7 +1038,7 @@ Common kernels include polynomial, radial basis, sigmoid, and hyperbolic tangent
 %
 It should be noted that as opposed to transforming the data into a fixed dimension space these methods instead transform the data into a feature space whose dimensionality is dependent on the number of training samples.
 
-The resulting optimization problem of all of the described SVM methods is $O(n^2)$ with respect to the training size and the computation time is not affected by the dimensionality of the original space.
+The resulting optimization problem of all of the described SVM methods is $\mathcal{O}(n^2)$ with respect to the training size and the computation time is not affected by the dimensionality of the original space.
 %
 However, it is worth noting that as dimensionality increases, the out-of-sample error can become a problem which requires more training data to counterbalance.
 
@@ -1087,7 +1088,7 @@ As such a GP can be characterized on a dataset through the use of a mean and cov
 %
 Kriging provides a \emph{best unbiased linear prediction} for unobserved locations by averaging a neighborhood of points around the query location weighted by a mean and covariance function.
 
-The response variable, $y=f(x)$ at any arbitrary location $z$ has a normal probability distribution given in Equation~\ref{eq:gp} where $X$ is a given $n$-by-$d$ design matrix of inputs, $m(X) = \mu_y$ is the expected value of an associated given output vector of size $n$.
+The response variable, $y=f(x)$ at any arbitrary location $z$ has a normal probability distribution given in Equation~\ref{eq:gp} where $X$ is a given $n \times d$ design matrix of inputs, $m(X) = \mu_y$ is the expected value of an associated given output vector of size $n$.
 
 \begin{equation}
 p(f(z)|X,y) = \mathcal{N}(m(X),k(X,z))
@@ -1119,27 +1120,27 @@ Thus, it is common to see kernel functions used such as the squared exponential 
 From a supervised learning perspective, where the model should be ``fit'' to the training data, we fit hyperparameters to a prior covariance function defined for the data which allows us to make predictions on the data.
 %
 Various methods for fitting these hyperparameters exist such as cross validation and maximization of the marginal likelihood (see Chapter 5 of Rasmussen and Williams~\cite{RasmussenWilliams2006}).
-
+%
 The training process involves optimizing hyperparameters which are parameters to the selected covariance function.
-
-\DPM{Expand}
 
 \section{Topological Data Analysis}
 A crucial step in gaining insights from large, complex, high-dimensional data involves feature abstraction, extraction, and evaluation in the spatiotemporal domain for effective exploration and visualization.
 %
 Topological data analysis (TDA, see~\cite{EdsbrunnerHarer2010,Zomorodian2005,BiasottisDeFlorianiFalcidieno2008,Carlsson2009,EdelsbrunnerHarer2008,Ghrist2009} for seminal works and surveys), has provided efficient and reliable feature-driven analysis and visualization capabilities.
 %
-Previous work in pure mathematics has focused on the study of topological spaces under smooth and continuous settings without computational considerations of noisy and discrete datasets.
+Previous work in pure mathematical fashion has focused on the study of topological spaces under smooth and continuous settings without computational considerations of noisy and discrete datasets.
 %
 TDA typically operates under the discrete setting where combinatorial structures such as graphs or simplicial complexes are imposed on the point cloud data to approximate their underlying structure.
 %
-In all of the proposed work, we apply TDA-based methods to different tasks in the design and analysis of computer experiments framework.
+In Chapters~\ref{ch:adaptiveSampling}-~\ref{ch:graphs}, we apply TDA-based methods to different tasks in the design and analysis of computer experiments framework.
 %
 As such, we review the applications of TDA specifically for multidimensional data analysis and visualization.
+%
+A specific emphasis is placed on constructs from Morse theory as they operate specifically on scalar and vector function data.
 
 Many TDA techniques construct topological structures~\cite{Reeb1946,Smale1961} from scalar functions on point clouds (e.g., Morse-Smale complexes, contour trees, and Reeb graphs) as ``summaries'' over data.
 %
-Among the commonly used TDA approaches, Reeb graphs/contour trees capture very different structural information of a real-valued function compared to the Morse-Smale complexes as the former is contour-based and the latter is gradient-based (Fig.~\ref{fig:topo-structure}).
+Among the commonly used TDA approaches, Reeb graphs/contour trees capture very different structural information of a real-valued function compared to extremum graphs and Morse and Morse-Smale complexes as the former is contour-based and the latter is gradient-based (Fig.~\ref{fig:topo-structure}).
 
 \begin{figure}[!ht]
   \centering
@@ -1166,7 +1167,7 @@ It creates a hierarchical segmentation of the data by clustering points based on
 %
 Correa and Lindstrom~\cite{CorreaLindstrom2011} suggest that by considering a different type of neighborhood structure, the accuracy in the extracted topology can be improved compared to those obtained within HDViz which relies on a $k$-nearest neighborhood which can tend to bias specific directions when the sampling density is variable across the domain.
 %
-Namely, they leverage a family of graphs known as empty region graphs which are discussed in greater detail in Section~\ref{sec:approximationMSC} and Section~\ref{paper:TopoInVis2013}.
+Namely, they leverage a family of graphs known as empty region graphs which were introduced in Section~\ref{sec:graphs} and are discussed in greater detail in Section~\ref{sec:approximationMSC} and Chapter~\ref{ch:graphs}.
 %
 
 The topological spine~\cite{CorreaLindstromBremer2011} uses the Morse-Smale complex to build an extremum graph that can more faithfully represent complex structures such as cycles and fractals occurring in the topology.
@@ -1183,7 +1184,7 @@ As we begin flooding the terrain, features will disappear, split, or develop hol
 %
 Incidentally, each of these topology changing events can be modeled by studying the critical points of the manifold.
 %
-This concept was studied and formalized into such concepts as the Reeb graph and Contour tree described below.
+This concept was studied and formalized into such concepts as the Reeb graph and contour tree described below.
 
 % \subsection{Reeb Graph}
 The formal definition of the Reeb graph is given here:
@@ -1235,7 +1236,7 @@ In terms of comparing the topologies of related data, the bottleneck distance be
 
 % \subsection{Contour Tree}
 
-For the special case, where the Reeb graph is defined over a simply connected Euclidean space $\mathbb{E}^n$, we acheive the \textbf{Contour tree}, that is a Reeb graph with no cycles and consisting of one connected component.
+For the special case, where the Reeb graph is defined over a simply connected Euclidean space $\mathbb{E}^n$, we acheive the \textbf{contour tree}, that is a Reeb graph with no cycles and consisting of one connected component.
 %
 Carr et al.~\cite{CarrSnoeyinkAxen2003} introduced the first algorithm for computing the contour tree in any dimension.
 %
