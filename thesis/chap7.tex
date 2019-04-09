@@ -81,9 +81,6 @@ Secondly, the orientation of these cones is not prescribed in any prior work, so
 %
 To do this, we utilize a constrained centroidal Voronoi tessellation (CCVT) algorithm to generate approximately equally spaced directions in high dimensions~\cite{DuGunzburgerJu2003}.
 %
-\DPM{Hesse et al.~\cite{HesseSlaonWomersley2015} claim a CVT is an equal area partition, but the only
-guarantee with a CVT sampling is that the centers of mass align with the Voronoi sites.}
-%
 \DPM{Also exploring the use of Poisson disk sampling for this.}
 %
 Specifically, we constrain a CVT sampling to the surface of a $d$-dimensional unit hypersphere.
@@ -96,9 +93,10 @@ Alternatively, we can utilize the dependence on the random seed points to genera
 %
 This fact will be exploited to create probabilistic cone-based graphs.
 
-We make the claim that the CCVT sampling will generate roughly equal cones with no formal proof.
+Generally speaking, CVTs are known to generate points that represent nearly equal-sized Voronoi
+regions~\cite{HesseSlaonWomersley2015, PeyreCohen2004}.
 %
-In lieu of a formal proof, we performed a study where we estimate the surface area of each CCVT sample's Voronoi region on the hypersphere by performing Monte Carlo sampling on the surface of the hypersphere.
+Given we use a version of Lloyd's relaxation method~\cite{DuGunzburgerJu2003} which is an iterative method, and we are working in high-dimensions, we perform our own study where we estimate the surface area of each CCVT sample's Voronoi region on the hypersphere by performing Monte Carlo sampling on the surface of the hypersphere~\cite{HarmanLacko2010, HicksWheeling1959}.
 %
 By associating every surface point to its nearest site, we can construct a histogram for the sites' count of constituent points.
 %
@@ -618,6 +616,11 @@ Zhang and King~\cite{ZhangKing2002a, ZhangKing2002b} determined that by pre-proc
 Goto et al.~\cite{GotoIshidaUchida2015} performed a similar study using the relative neighbor graph and identifying what they called \textit{bridge vectors}.
 %
 However, the first example of using proximity graphs to reduce training sizes on classification problems dates back to 1981 where Bhattacharya et al. used the technique on a nearest neighbor classifier~\cite{BhattacharyaPoulsenToussaint1981}.
+
+\begin{itemize}
+    \item \DPM{Toussaint 2005~\cite{Toussaint2005}}
+    \item \DPM{Toussaint and Berzan 2012~\cite{ToussaintBerzan2012}}
+\end{itemize}
 
 The idea for SVMs takes advantage of the fact that the SVM is made up of \textit{support vectors} that describe the boundaries of separate classes.
 %

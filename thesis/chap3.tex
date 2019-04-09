@@ -132,7 +132,7 @@ The classic algorithm applies to the two dimensional case and is achieved throug
 %
 Accelerations off of this baseline algorithm focus on methods for efficiently tracking the empty regions left to be sampled in order to reduce the likliehood of rejecting future samples~\cite{EbeidaDavidsonPatney2011,EbeidaMitchellPatney2012,GamitoMaddock2009,Jones2006,JonesKarger2011,WhiteClineEgbert2007}.
 %
-Though most graphics problems deal in relatively low dimensional spaces, there has been some more recent work for computing Poisson disk sampling in arbitrary dimensions~\cite{Bridson2007,EbeidaMitchellPatney2012,EbeidaMitchellPatney2015,GamitoMaddock2009} and at best these algorithms are still exponential with respect to dimensionality in terms of memory and time.
+Though most graphics problems deal in relatively low dimensional spaces, there has been some recent work for computing Poisson disk sampling in arbitrary dimensions~\cite{Bridson2007,EbeidaMitchellPatney2012,EbeidaMitchellPatney2015,GamitoMaddock2009,MitchellEbeidaAwad2018} and with the correct application of acceleration structures such as a kd-tree, these methods are viable up to tens of dimensions~\cite{MitchellEbeidaAwad2018}.
 
 Of the relaxation techniques, Centroidal Voronoi tessellation (CVT)~\cite{DuFaberGunzburger1999} has been the most widely studied.
 %
@@ -159,6 +159,14 @@ In this setting, a small patch or tile of the domain is pre-computed with desire
 If the boundaries are carefully constructed to be periodic or otherwise aligned in some fashion, then the tiles can be combined to create a larger domain that maintains the blue-noise property.
 %
 One can see that as the dimensionality increases, so do the boundaries that need to be matched and so most of these methods are applied to two-dimensional domains.
+
+Another class of space-filling designs that have existed for a long time are quasi-random number sequences which have been used a lot for quasi Monte Carlo methods in numerical analysis~\cite{Niederreiter1992}.
+%
+These methods are also known as low-discrepancy sequences since they tend to create near equally distributed points, however as they are deterministic can result in repeating patterns.
+%
+The low discrepancy paradigm is similar in spirit to the category of blue-noise sampling, but using a different mathematical definition based on \textem{discrepancy} of points.
+%
+Examples include the one-dimensional Van der Corput sequence~\cite{vanderCorput1935}, its higher dimensional generalizations known as Halton sequences~\cite{Halton1964,BraatenWeller1979}, Hammersley sets~\cite{HammersleyHandscomb1964}, and Sobol sequences~\cite{Sobol1967}.
 
 \subsection{Adaptive Designs}
 \label{sec:adaptiveSampling}
