@@ -398,9 +398,11 @@ Similar to the generalization of the Gabriel graph and relative neighbor graph i
 
 Kowaluk et al.~\cite{JaromczykKowaluk1987,KowalukMajewska2014} have studied relative neighbor graphs and $\beta$-skeletons under various $L^p$-spaces which is different than our regime of using $p$-norms as generators for shapes to be evaluated in $L^2$-space.
 %
-Note, that the shapes we for empty regions will always be both radially symmetric about the edge and also symmetric about the perpendicular bisector of the edge.
+Note, the shapes we use for empty regions will always be both radially symmetric about the edge and also symmetric about the perpendicular bisector of the edge.
 %
-Furthermore, under discretization (see Section~\ref{sec:discrete}), we are able to utilize any 1D function as a generator for a symmetric, high-dimensional shape to use as the empty region.
+This condition does not hold for the cases defined by Kowaluk et al.
+%
+Furthermore, under discretization (see Section~\ref{sec:gpu_bp_discrete}), we are able to generalize our method further to utilize any 1D function as a generator for a symmetric, high-dimensional shape to be used as an empty region.
 
 Lastly, $\gamma$-visibility graphs~\cite{KatzTalBasri2007,KatzTal2015,KatzTal2017} are another means of generalizing $\beta$ skeletons to include not only non-uniform shapes, but non-symmetric shapes.
 %
@@ -502,7 +504,7 @@ Linear dimensionality are so-called because they seek to find a single linear pr
 %
 The methods differ in the quality of the data that they attempt to maintain.
 %
-This linear projection operator can be expressed as a $M \cdot N$ matrix where $N$ is the original dimensionality of the problem and $M$ is the size of the reduced space.
+This linear projection operator can be expressed as an $M \times N$ matrix where $N$ is the original dimensionality of the problem and $M$ is the size of the reduced space.
 %
 Within the visualization community, we often set $M$ to two or three so we can directly visualize the results.
 
@@ -550,7 +552,7 @@ This technique can be applied to PCA to generate a set of sparse methods that ge
 %
 In the sensitivity setting, the weights of the principal components are non-zero only in the positions corresponding to the most sensitive subset of original inputs.
 
-Probabilistic PCA (PPCA)~\cite{TippingBishop1999} and related methods~\cite{Roweis1998,WellingAgakovWilliams2003,WilliamsAgakov2002}, affords many of the advantages mentioned above including dealing with missing data and the ability to handle sparse spaces efficiently.
+Probabilistic PCA (PPCA)~\cite{TippingBishop1999} and related methods~\cite{Roweis1998,WellingAgakovWilliams2003,WilliamsAgakov2002}, afford many of the advantages mentioned above including dealing with missing data and the ability to handle sparse spaces efficiently.
 %
 However, the main advantage of PPCA is that the maximum likliehood estimates can be used for classification and novelty detection~\cite{TippingBishop1999}.
 %
@@ -692,7 +694,7 @@ Vismon~\cite{BooshehrianMullrPeterman2012} provides SA to the visualization of t
 
 Canonical correlation analysis (CCA) was used in constructing the heliograph~\cite{DeganiShaftoOlson2006} and a system called Slycat~\cite{CrossnoSheadSielicki2015} to determine correlations between multiple inputs and multiple outputs in a global setting for ensemble data.
 
-The proposed method given in Section~\ref{paper:pacificVis2016} is, in spirit, similar to systems provided in May et al.~\cite{MayBannachDavey2011} and Muhlbacher et al.~\cite{MuhlbacherPiringer2013}, by providing the capability to interactively refine the partitioning during the SA to give a multi-scale view of the sensitivity information.
+The proposed method given in Chapter~\ref{ch:visualization} is, in spirit, similar to systems provided in May et al.~\cite{MayBannachDavey2011} and Muhlbacher et al.~\cite{MuhlbacherPiringer2013}, by providing the capability to interactively refine the partitioning during the SA to give a multi-scale view of the sensitivity information.
 %
 However in both previous works, data is partitioned along one or two dimensions (i.e. input parameters) while the method presented in this dissertation spans all dimensions.
 
@@ -740,7 +742,7 @@ Rearranging the terms leads to a series of \emph{normal equations}:
 
 Thus, the solution to the least squares problem is:
 \begin{equation}
-b = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}
+\mathbf{b} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}
 \label{eq:ols}
 \end{equation}
 
@@ -748,7 +750,7 @@ The case with a single input variable is called simple linear regression and the
 %
 This method can also be extended to polynomials by treating each degree of a variable as separate columns in $\mathbf{X}$, and solving for additional coefficients for each term.
 %
-This can also be extended to mixtures of different variables of varying orders.
+Similarly, the method can also be extended to mixtures of different variables of varying orders.
 %
 It is important to note, that this is the simplest version of linear and polynomial regression and more advanced methods can be performed.
 
@@ -845,7 +847,7 @@ They can be classified based on their partitioning criteria: those seeking to mi
 %
 In particular, regression trees are constructed by recursively partitioning the domain into multiple partitions at \emph{optimal} locations in the domain (where the optimal criteria can vary), and each partition is fitted with constant~\cite{BreimanFriedmanOlshen1984a}, linear~\cite{AlexanderGrimshaw1996,LiLueChen2000}, low-order spline~\cite{Friedman1991} or polynomial~\cite{ChaudhuriHuangLoh1994} models.
 
-A popular class of regression tree is Friedman's multivariate adaptive regression splines~\cite{Friedman1991} which is utilized in Section~\ref{paper:ijuq2013} (see also Hastie et al.~\cite{HastieTibshiraniFriedman2008} for a gentle introduction).
+A popular class of regression tree is Friedman's multivariate adaptive regression splines (MARS)~\cite{Friedman1991} which is utilized in Section~\ref{paper:ijuq2013} (see also Hastie et al.~\cite{HastieTibshiraniFriedman2008} for a gentle introduction).
 %
 MARS is a non-parametric regression method that uses a collection of simple basis functions to build a complex and flexible response function.
 %
@@ -874,11 +876,11 @@ In short, an ensemble of MARS models is created by repeatedly resampling, with r
 %
 An estimate of the prediction error is then given by the standard deviation of the predictions provided by the bootstrap ensemble.
 %
-This method is employed in Section~\ref{sec:ijuq2013} in order to define several of the scoring functions.
+This method is employed for adaptive sampling using a MARS model in Section~\ref{paper:ijuq2013} in order to define several of the scoring functions when using a MARS model.
 
 In terms of more geometrically motivated splitting criteria, the principal Hessian direction regression tree (PHDRT)~\cite{LiLueChen2000} splits the domain near areas of high curvature by projecting the data along its estimated principal Hessian direction and locating the area of highest curvature.
 %
-In Section~\ref{paper:pacificVis2016}, we employ the established Morse-Smale regression (MSR)~\cite{GerberRubelBremer2011}, which, being geometrically motivated, is similar to the PHDRT approach, however it is not restricted to splitting along a hyperplane and is also more robust to multiple undulations in the data.
+In Chapter~\ref{ch:visualization}, we employ the established Morse-Smale regression (MSR)~\cite{GerberRubelBremer2011}, which, being geometrically motivated, is similar to the PHDRT approach, however it is not restricted to splitting along a hyperplane and is also more robust to multiple undulations in the data.
 %
 In the PHDRT approach, a mean principal Hessian direction is computed implying that positive and negative curvatures can have a canceling effect that prevents such a direction from being discovered.
 
@@ -892,7 +894,7 @@ HDViz has been extended in order to apply it to the analysis of data in nuclear 
 %
 However, the insights made by nuclear scientists were limited by the complexity and the lack of intuition provided in the original visualization.
 %
-In the proposed research of Section~\ref{paper:pacificVis2016}, we follow an iterative process of designing and refining a new visualization system, using HDViz as a basis, that specifically targets nuclear scientists as end users and sensitivity analysis as the end task.
+In the new research of Chapter~\ref{ch:visualization}, we follow an iterative process of designing and refining a new visualization system, using HDViz as a basis, that specifically targets nuclear scientists as end users and sensitivity analysis as the end task.
 %
 % Section~\ref{paper:vis2016} discusses in more detail the drawbacks of both PHDRT and MSR and proposes the construction of a hybrid method that uses the benefits of both in order to better characterize complicated datasets.
 
@@ -912,11 +914,8 @@ For these reasons and the lack of interpretability of such complicated models, s
 %
 Deep learning algorithms are still largely considered a black-box solution to a problem since it difficult to trace the result of a prediction to a specific collection of neurons/coefficients especially those with several layers of abstraction.
 %
-Nonetheless, empirically they have proven successful as predictors on many datasets in varied domains and should not be discounted.
-%
-\DPM{Add citations of successful use of Neural Networks in practice.}
+Nonetheless, empirically they have proven successful as predictors on many datasets in varied domains such as image analysis~\cite{Daugman1988,FarabetCouprieNajman2012,HadsellSermanetPierre2009,MillertariNavabAhmadi2016,YasminSharifMohsin2013}, text, speech, and natural language processing~\cite{BengioDucharmeVincent2003,GravesWayneDanihelka2014,HochreiterSchmidhuber1997,MaPrincipe2018,SutskeverVinyalsLe2014,WestonBordesChopra2015}, graph-based problems~\cite{WuPanChen2019,ZhangCuiZhu2018,ZhouCuiZhang2018}, and even outperforming humans in complex games~\cite{MnihKavukcuogluSilver2013,SilverHuangMaddison2016}.
 
-%
 To introduce the topic, I will explain a simple feed-forward neural network with a single hidden layer that we can later generalize to more arbitrarily complex models.
 %
 For further details, I defer to Ripley~\cite{Ripley1996} and Hastie et al.~\cite{HastieTibshiraniFriedman2008} for more in-depth analysis.
