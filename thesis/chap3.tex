@@ -79,7 +79,7 @@ Applying a probability distribution over the input space and randomly sampling t
 %
 Typically, this method has been used to estimate integrals, however it, as with all other probability-weighted sampling strategies, has the side effect of placing emphasis on a particular area of interest in the domain.
 %
-In this way, we minimize the likliehood that features in the particular area of interest will not be undersampled.
+In this way, we minimize the likliehood that features in the particular area of interest will be undersampled.
 
 The Latin hypercube sampling (LHS) strategy~\cite{McKayBeckmanConover1979,Tang1993,VanDam2008} attempts to bridge the gap by providing a controlled random sampling.
 %
@@ -116,7 +116,7 @@ To this end, the permutation matrix used to construct the LHS sample can be mani
 %
 These correlation reducing strategies however may introduce bias~\cite{OlssonSandbergDahlblom2003}.
 
-In computer graphics, scientists often use blue-noise distributions of samples which have been found to match the arrangement of photoreceptors in our eyes~\cite{Yellott1982}.
+In computer graphics, practitioners often use blue-noise distributions of samples which have been found to match the arrangement of photoreceptors in our eyes~\cite{Yellott1982}.
 %
 The term blue-noise comes from signal processing and relates to the power spectrum of the noise signal~\cite{Tuzlukov2002}, but also equally applies with respect to density in the spatial domain.
 %
@@ -140,17 +140,19 @@ CVT is related to $k$-means clustering~\cite{HastieTibshiraniFriedman2008} in te
 %
 The idea is based on the closest point Voronoi diagram~\cite{deBergCheongKreveld2008}.
 %
-Given a set of \emph{sites} existing in $\mathbb{R}^d$, the closest point Voronoi diagram decomposes the space such that any location is associated to its closest representative \emph{sites} under some distance metric, typically Euclidean.
+Given a set of \emph{sites} existing in $\mathbb{R}^d$, the closest point Voronoi diagram decomposes the space such that any location is associated to its closest representative \emph{site} under some distance metric, typically Euclidean.
 %
-CVT works by aligning the center of mass, or centroid, of each Voronoi cell with its \emph{site} which then become the sample points.
+CVT works by aligning the center of mass, or centroid, of each Voronoi cell with its \emph{site} which then becomes the sample point.
 %
-By aligning the centroid to the Voronoi cells, we create a solution whereby each Voronoi cell is of equal size, or in other words, the samples are equidistant or nearly equidistant from one another.
+By aligning the centroid to the Voronoi cells, we create a solution whereby each Voronoi cell is of roughly equal size (excluding cells on the boundary which extend to infinity), or in other words, the samples are equidistant or nearly equidistant from one another.
 %
 Naive CVT can suffer from regularity as patterns can exist in the resulting sample set.
 %
 To this end, several optimizations have been performed to improve the blue noise characteristic~\cite{BalzerSchlomerDeussen2009,ChenYuanChoi2012,deGoesBreedenOstromoukhov2012,XuLiuGotsman2011}.
 %
 As with Poisson disk sampling, most research has been focused on the low-dimensional setting since the combinatorics of increasing dimensionality incur a large storage overhead when processing the Voronoi diagram in arbitrary dimension~\cite{BoissonnatChazalYvinec2017}.
+%
+However, Lloyd's method~\ref{DuFaberGunzburger1999} can be used to iterate to an approximate solution for moderate dimensionality which we utilize in Chapter~\ref{ch:graphs} for the construction of cone graphs using a constrained CVT. 
 
 Lastly, tile-based methods create small, repeatable templates which can be repeated over the domain of interest~\cite{HillerDeussenKeller2001,KopfCohenOrDeussen2006,LagaeDutre2005,Ostromoukhov2007,OstromoukhovDonohueJodoin2004,WachtelPilleboueCoeurjolly2014}.
 %
@@ -166,7 +168,7 @@ The low discrepancy paradigm is similar in spirit to the category of blue-noise 
 %
 One drawback is that these methods are deterministic and can result in repeating patterns which could suffer from the aliasing artifact highlighted in Figure~\ref{fig:samplingArtifacts}.
 %
-Examples include the one-dimensional Van der Corput sequence~\cite{vanderCorput1935}, its higher dimensional generalizations known as Halton sequences~\cite{Halton1964,BraatenWeller1979}, Hammersley sets~\cite{HammersleyHandscomb1964}, and Sobol sequences~\cite{Sobol1967}.
+Examples include the one-dimensional Van der Corput sequence~\cite{vanderCorput1935}, its higher dimensional generalization known as the Halton sequence~\cite{Halton1964,BraatenWeller1979}, the Hammersley set~\cite{HammersleyHandscomb1964}, and the Sobol sequence~\cite{Sobol1967}.
 
 \subsection{Adaptive Designs}
 \label{sec:adaptiveSampling}
