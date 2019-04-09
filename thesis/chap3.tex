@@ -160,11 +160,11 @@ If the boundaries are carefully constructed to be periodic or otherwise aligned 
 %
 One can see that as the dimensionality increases, so do the boundaries that need to be matched and so most of these methods are applied to two-dimensional domains.
 
-Another class of space-filling designs that have existed for a long time are quasi-random number sequences which have been used a lot for quasi Monte Carlo methods in numerical analysis~\cite{Niederreiter1992}.
+Another class of space-filling designs that have existed for a long time are quasi-random or low-discrepancy sequences which have been used a lot for quasi Monte Carlo methods in numerical analysis~\cite{Niederreiter1992}.
 %
-These methods are also known as low-discrepancy sequences since they tend to create near equally distributed points, however as they are deterministic can result in repeating patterns.
+The low discrepancy paradigm is similar in spirit to the category of blue-noise sampling, but using a different mathematical definition based on \textit{discrepancy} of points which basically is a measure of how much a sequence deviates from an ideal equally distributed sequence.
 %
-The low discrepancy paradigm is similar in spirit to the category of blue-noise sampling, but using a different mathematical definition based on \textem{discrepancy} of points.
+One drawback is that these methods are deterministic and can result in repeating patterns which could suffer from the aliasing artifact highlighted in Figure~\ref{fig:samplingArtifacts}.
 %
 Examples include the one-dimensional Van der Corput sequence~\cite{vanderCorput1935}, its higher dimensional generalizations known as Halton sequences~\cite{Halton1964,BraatenWeller1979}, Hammersley sets~\cite{HammersleyHandscomb1964}, and Sobol sequences~\cite{Sobol1967}.
 
