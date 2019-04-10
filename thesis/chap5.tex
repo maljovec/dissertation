@@ -1336,15 +1336,11 @@ Selecting points that are bundled in one area may improve the local fit, but are
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Adaptive Sampling Algorithms for Probabilistic Risk Assessment of Nuclear Simulations}
-  % conference paper~\cite{MaljovecWangMandelli2013b}
 \label{paper:psa}
 
-\subsection{Introduction}
-\label{sec:introduction}
-
-We now introduce a predominantly qualitative study of adaptive sampling for limit surface extraction geared at nuclear simulation data.
+The following is a predominantly qualitative study of adaptive sampling for limit surface extraction geared at nuclear simulation data.
 %
-We begin with a brief introduction of the problem space before presenting a collection of modified adaptive sampling pipelines along with results on a series 2D of problems.
+I begin with a brief introduction of the problem space before presenting a collection of modified adaptive sampling pipelines along with results on a series 2D of problems.
 
 To study the reliability and safety of complex systems (e.g. nuclear power plants, airplanes, chemical plants), one typically performs a combination of event tree and fault tree analysis \cite{Zio2009}.
 %
@@ -1352,21 +1348,23 @@ However, these methods are characterized by the following disadvantages: (a) The
 %
 For these reasons, there is currently an increasing interest in the development of dynamic Probabilistic Risk Assessment methodologies (DPRA)~\cite{Siu1994} since they can be used to address the deficiencies of the conventional methods listed above.
 
-For DPRA, propagation of uncertainties in the analysis of complex systems employs sampling algorithms which perform a series of simulation runs given a set of uncertainty parameters.
+One goal of DPRA is to analyze the propagation of uncertainty of complex systems.
+%
+Towards this end, we employ sampling algorithms which perform a series of simulation runs given a set of uncertainty parameters.
 %
 However, typically the set of uncertain parameters is very large and the computational cost of each run is very high.
 %
-Consequently, the space of the possible solutions, the response surface, can be sampled only very sparsely and this precludes the ability to fully analyze the impact of uncertainties on the system.
+Consequently, the space of the possible solutions, which we call the response surface, can be sampled only very sparsely and this precludes the ability to fully analyze the impact of uncertainties on the system.
 %
 For safety analysis applications, the following points often emerge: (a) Many regions of the response surface are not of interest; (b) The set of parameters that are of safety concern is a small subset of the original set of uncertainty parameters.
 
-Currently, the class of most used sampling algorithms include: classic stochastic sampling (e.g., Monte-Carlo \cite{Hastings1970,Liu2001}, stratified sampling such as Latin hypercube sampling \cite{HeltonDavis2003}, importance sampling~\cite{Geweke1989} and orthogonal arrays based~\cite{Owen1992} algorithms) and deterministic algorithms (e.g., Polynomial Chaos Expansions \cite{Najm2009} and Quasi Monte-Carlo \cite{Caflisch1998}).
+Currently, the class of most used sampling algorithms include: classic stochastic sampling (e.g., Monte-Carlo \cite{Hastings1970,Liu2001}, stratified sampling such as Latin hypercube sampling \cite{HeltonDavis2003}, importance sampling~\cite{Geweke1989} and orthogonal arrays based~\cite{Owen1992} algorithms) and deterministic algorithms (e.g., Polynomial Chaos Expansions~\cite{Najm2009} and Quasi Monte-Carlo~\cite{Caflisch1998}).
 %
-However, all of these sampling algorithms do not possess a sampling strategy that explicitly takes into account the results of previous simulations.
+However, none of these sampling algorithms explicitly takes into account the results of previous simulations.
 %
-Adaptive sampling algorithms, on the other hand, adopt a sampling strategy that chooses the next sample based on the results obtained by previous samples through a statistical learning model and, thus, focus sampling in risk sensitive regions such as boundaries between system safe and system failure: the limit surface.
+Adaptive sampling algorithms, on the other hand, adopt a strategy that chooses the next sample based on the results obtained by previous samples through a statistical learning model and, thus, focus sampling in yet unexplored risk sensitive regions such as boundaries between system safe and system failure: the limit surface.
 
-In this section, we present three adaptive sampling models that can be used to infer the behavior of system by estimating the limit surface.
+In this section, we present three adaptive sampling models that can be used to infer the behavior of a system by estimating the limit surface.
 %
 All three models share a general adaptive sampling pipeline but differ from one another in terms of the candidate selection process.
 %
@@ -1376,7 +1374,7 @@ The second model is topology-based.
 %
 It improves upon the first model by taking into account the topology of the prediction model based on its Morse-Smale complex structure, and samples points in local areas that are considered topologically relevant.
 %
-The final model is designed to be completely data-driven. It computes a candidate set directly from the neighborhood graph constructed from the training data, without any dependencies on a particular prediction model.
+The final model is designed to be completely data-driven and relies on the geometry of the data. It computes a candidate set directly from a neighborhood graph constructed from the training data, without any dependencies on a particular prediction model.
 %
 We discuss the advantages and limitations of our proposed models and demonstrate their fidelity on several synthetic datasets as well as a small nuclear simulation dataset modeled after a simplified Pressurized Water Reactor (PWR).
 
@@ -1404,9 +1402,9 @@ The general adaptive sampling pipeline will look similar to those discussed in p
 %
 The process begins by selecting some initial training data, running the ground truth simulation and obtaining a collection of true responses at these data points.
 %
-Next, we fit a response surface surrogate model from the initial set of training data.
+Next, we fit a surrogate model from the initial set of training data that estimates the true response surface.
 %
-Third, a pool of candidate points is chosen in the parameter space based on a specified sampling technique, and the surrogate model is evaluated at these locations, obtaining a set of approximated values.
+Third, a pool of candidate points is chosen in the parameter space based on a fixed space-filling sampling design, and the surrogate model is evaluated at these locations, obtaining a set of approximated values.
 %
 Fourth, each candidate point is assigned a score based on some adaptive sampling scoring function (usually derived from qualitative or quantitative relations between the training points, their true and estimated response values).
 %
@@ -1417,14 +1415,14 @@ Before describing each of the three models in detail, we focus on their common i
 %
 % Two main families of prediction models are used in uncertainty quantification: regression models such as Multivariate Adaptive Regression Splines (MARS) and stochastic models such as Gaussian processes.
 %
-Both $\Mone$ and $\Mtwo$ use an (\DPM{easily replaceable}) prediction model, i.e. a Gaussian process model (GPM), as the surrogate model.
+Both $\Mone$ and $\Mtwo$ use a prediction model, i.e. a Gaussian process model (GPM), as the surrogate model.
 %
-We use a specific implementation known as the Sparse Online Gaussian Process~\cite{CsatoOpper2002}.
+We use a specific implementation known as the Sparse Online Gaussian Process~\cite{CsatoOpper2002}, but note that this part of the algorithm is easily replaceable with any prediction model.
 %
 To initially sample from a prediction model, we employ a central Voronoi tessellation (CVT)
 scheme~\cite{DuFaberGunzburger1999}.
 %
-CVT samples cover the domain relatively densely but are sparser than points obtained by Latin Hypercube Sampling (LHS). \DPM{As mentioned earlier}
+As mentioned earlier in Section~\ref{sec:forwardSampling}, a CVT design has the desirable blue noise property that ensures points are well-spaced but also avoids large gaps.
 
 % Neighborhood graph
 All three models select a set of candidate points by locating the current estimate of the limit surface.
@@ -1438,6 +1436,8 @@ While many neighborhood graphs are possible~\cite{CorreaLindstrom2011,MaljovecSa
 % Scoring function
 In terms of the chosen adaptive sampling scoring function, we utilize one based on point density, referred to as the \emph{point density criterion}, where candidate points which are further away from the existing training data get higher scores.
 %
+This is similar to the distance penalty function introduced in Section~\ref{sec:classic}.
+%
 Other scoring criteria could also being employed (e.g. Active Learning MacKay criterion \cite{MacKay1992} or expected improvement criterion~\cite{Lam2008,JonesSchonlauWelch1998,Schonlau1997}), arguably leading to different convergence behaviors.
 %
 However, since our focus in this paper is not on scoring function design but rather model selection, we employ a simple and model-agnostic scoring function.
@@ -1448,13 +1448,23 @@ We now define the notion of spanning the limit surface in the context of our mod
 %
 Suppose $t$ is the function value threshold that corresponds to the limit surface and without loss of generality, suppose the failure region is considered part of the response surface whose function value is above $t$.
 %
-An edge in a relaxed Gabriel graph is a \emph{spanning edge} if it spans the threshold value $t$ in the range space, in other words, if its endpoints have function values on the opposite sides of $t$.
+An edge in a relaxed Gabriel graph is a \emph{spanning edge} if it spans the threshold value $t$ in the range space.
+%
+In other words, an edge is spanning if its endpoints have function values on opposite sides of $t$.
 %
 A Morse-Smale crystal is a \emph{spanning crystal} (i.e. spanning the limit surface) if its local maximum has a function value above $t$ and its local minimum has a function value below $t$.
 %
 A Morse-Smale crystal is a \emph{relaxed spanning crystal} if its local maxima has a function value above $t-\delta$ and its local minimum has a function value below $t+\delta$, for some limit surface tolerance parameter $\delta \geq 0$.
 %
 In a nutshell, relaxed spanning crystals allow us to investigate regions from the response surface of a prediction model that are on or near the current estimate of the limit surface, thus are important for exploratory analysis.
+%
+This is important if we have not yet recovered the full scale of the topology.
+%
+For example, we have sampled points on the side of large ``hill'' in the data, but our surrogate model being a variation diminishing model may model the highest sample on the side of the hill as the peak of the hill.
+%
+At some later point, we would hope to recover the actual hilltop.
+%
+By relaxing our notion of spanning, we give the algorithm a chance to explore these ``nearly'' spanning features to see if such a case exists.
 %
 This will become more clear subsequently when $\Mtwo$ is described in detail.
 
