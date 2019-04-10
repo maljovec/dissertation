@@ -11,9 +11,9 @@ Namely, I present methods that seek to exploit areas of high topological signifi
 %
 First, we explore new candidate scoring functions in the context of global response accuracy~\cite{MaljovecWangKupresanin2013}.
 %
-Then, we address selecting batches of candidates~\cite{MaljovecWangMoeller2014}.
+Then, we address selecting batches of candidates in both the global and limit surface cases~\cite{MaljovecWangMoeller2014}.
 %
-We then conclude this chapter by performing adaptive sampling in the limit surface case on nuclear power plant safety simulation data~\cite{MaljovecWangMandelli2013b}.
+We then conclude this chapter by performing adaptive sampling exclusively in the limit surface case on nuclear power plant safety simulation data~\cite{MaljovecWangMandelli2013b}.
 
 \section{Adaptive Sampling with Topological Scores}
 \label{paper:ijuq2013}
@@ -664,57 +664,50 @@ More specifically, we use the \texttt{randomLHS} function, which chooses uniform
 
 \section{Topology-based Batch Sampling}
 \label{paper:batch}
-  % technical report~\cite{MaljovecWangMoeller2014}
 
-\subsection{Introduction}
-
-In this next section, we investigate a slightly different form of adaptive sampling.
+Section~\ref{paper:ijuq2013} focused on applying different scoring functions, we now consider the problem of selecting multiple candidates at a time using various batch selection criteria for a fixed scoring function on two different problem settings.
 %
-We again  consider the problem of obtaining an accurate global fit, but in addition, we consider the problem of learning a limit surface.
+We again consider the problem of obtaining an accurate global fit, but in addition, we consider the problem of learning a limit surface.
 %
-In this second context, we are less concerned with fit of our surrogate over the whole domain, but instead want to define the shape of a levelset for a single isovalue of the function under consideration.
-%
-Opposed to the work above that focused on applying different scoring functions, we now consider the problem of selecting multiple candidates at a time using various batch selection criteria for a fixed scoring function on each of the two problems: global and limit surface fitting.
+In this second context, we are less concerned with the fit of our surrogate over the whole domain, but instead want to define the shape of a levelset for a single isovalue of the function under consideration.
 
-\subsection{Methodology}
-\label{method}
 
-\subsubsection{Batch Selection for Active Learning: General Pipeline}
+\subsection{Batch Selection for Active Learning: General Pipeline}
 The general pipeline of batch selection begins with a given set of training data with true response values.
 %
 First, a response surface surrogate model is fit to the training data.
 %
-Second, a pool of candidate points is chosen in the domain based on some sampling technique, typically a space-filling design that will not bias any particular area of the input domain, and the surrogate model is evaluated at these locations, obtaining a set of approximated values.
+Second, a pool of candidate points is chosen in the domain based on a given sampling technique, typically a space-filling design that will not bias any particular area of the input domain.
 %
-Third, each candidate point is assigned a score, same as before.
+Third, each candidate point is assigned a score.
 %
 Finally, a number of candidates (i.e. up to the batch size) with the highest scores are selected, evaluated (to obtain true response values), and added to the training data to begin a new round of fitting.
 %
 This pipeline is given in Algorithm~\ref{algo:al}, where we replace \textbf{SELECT} with various selection strategies.
 %
-We use the sparse online Gaussian process~\cite{CsatoOpper2002} as the surrogate model.
+We use a sparse online Gaussian process~\cite{CsatoOpper2002} as the surrogate model.
 %
 For a given candidate, such a Gaussian process model gives a (mean) prediction value and a variance associated with the prediction.
 %
 The set of candidate points and the initial training data are selected using a Centroidal Voronoi Tessellations (CVT) sampling strategy~\cite{DuFaberGunzburger1999}.
 %
-A CVT sampling strategy gives high-quality samples without the biases introduced by a uniform grid sampling, although it is cost prohibitive in high dimensions.
+A CVT sampling strategy gives high-quality samples without the biases introduced by a uniform grid sampling, although it can become cost prohibitive in high dimensions.
 %
-A Latin hypercube sampling (LHS)~\cite{ImanDavenportZeigler1980} strategy can be used for high-dimensional examples.
+A Latin hypercube sampling (LHS)~\cite{ImanDavenportZeigler1980} strategy can be used for higher dimensional examples.
 %
-For each dataset, we measure the accuracy of our global or local fitting by comparing to the ground truth at each iteration, under different metrics (e.g. root-mean-square error,  Hausdorff distance, F1-score).
+For each dataset, we measure the accuracy of our global or local fitting by comparing to the ground truth at each iteration, under different metrics described in Section~\ref{sec:evaluation_metrics}.
 
 As stated before, we consider two problems in this experiment, global fitting and limit surface extraction.
 %
-For the global surface recovery problem, we utilize the \emph{active learning McKay} (ALM) scoring function~\cite{MacKay1992} that uses the predicted variance from the surrogate model as the score for a candidate point.
+For the global surface recovery problem, we utilize the \emph{active learning McKay} (ALM) scoring function~\cite{MacKay1992} presented in Section~\ref{sec:classic} that uses the predicted variance from the surrogate model as the score for a candidate point.
 %
 In this way, we reduce the overall uncertainty of the surrogate model by placing samples in the areas of the highest variance.
 
-For the limit surface recovery problem, we utilize the \emph{straddle} scoring function \cite{BryanSchneiderNichol2005}.
+For the limit surface recovery problem, we utilize the \emph{straddle} scoring function~\cite{BryanSchneiderNichol2005}.
 %
-For a given candidate point, its score is formulated as a linear combination of the distance between its predicted value and the limit surface threshold value, and the variance.
+For a given candidate point, its score is formulated as a linear combination of the predicted variance and the distance between its predicted value and the limit surface threshold value.
 %
-In other words, a candidate will have a high score if its predicted value is near the limit surface threshold and/or it exhibits a large prediction variance.
+In other words, a candidate will have a high score if its predicted value is near the limit surface threshold and/or it exhibits a large amount of prediction uncertainty.
 
 {\fontsize{10}{10}\selectfont
 \begin{algorithm}
@@ -743,19 +736,16 @@ In other words, a candidate will have a high score if its predicted value is nea
 \end{algorithm}
 }
 
-\subsubsection{Batch Selection Strategies}
-\label{batch_description}
+We now introduce the different specific methodologies for selecting a batch of candidates once the candidates have all been scored.
 
-We now introduce the different methodologies for selecting a batch of candidates once the candidates have all been scored.
-
-\paragraph{Naive Batch Selection.}
-Batch selection is simple and straightforward when the batch size $b = 1$, where the point with the highest score is selected.
+\subsection{Naive Batch Selection}
+Batch selection is simple and straightforward when the batch size $b = 1$, we simply select the point with the highest score.
 %
 When $b>1$, it is not clear whether selecting the top $b$ highest scoring candidates is desirable.
 %
 For example, if the scoring function is based on predicted variance (e.g. Active Learning McKay, a.k.a., ALM), the selected candidates may be clustered in a single area of high variance.
 %
-However, evaluating the function value at a single location in that area would suffice to reduce the uncertainty for the whole area.
+However, obtaining a single sample in that area would suffice to reduce the uncertainty for the whole area.
 %
 Nonetheless, we use this naive strategy as a baseline and its corresponding algorithm is given in Algorithm \ref{algo:naive}.
 
@@ -781,7 +771,7 @@ Nonetheless, we use this naive strategy as a baseline and its corresponding algo
 \end{algorithm}
 }
 
-\paragraph{Surrogate Believer Batch Selection.}
+\subsection{Surrogate Believer Batch Selection}
 This strategy is inspired by the Kriging Believer strategy~\cite{GotovosCasatiHitz2013,GinsbourgerLeRicheCarraro2009}.
 %
 It takes advantage of the scoring function's reliance on the uncertainty of the surrogate model.
@@ -817,7 +807,7 @@ Formally, this process is described in Algorithm \ref{algo:believe}, where $M(x)
 \end{algorithm}
 }
 
-\paragraph{Topology-Based Batch Selection: Points with Maximum Persistence.}
+\subsection{Topology-Based Batch Selection: Points with Maximum Persistence}
 \label{subsection:topology-maxp}
 
 We now utilize the topological method described earlier to study the topology of the scoring function.
@@ -830,11 +820,11 @@ When $b > 1$, the naive strategy selects $b$ points with the highest scores, and
 %
 If we would like to guarantee some level of spatial separation among the chosen candidates, then perhaps a simple topology-based strategy would select the top $b$ \emph{local maxima} of the scoring function.
 %
-However, as the example illustrated in Figure~\ref{fig:persistence},  a 1D scoring function could contain two local maxima that are close to each another in the domain but have very different \emph{persistence}.
+However, as the example illustrated in Figure~\ref{fig:persistence} shows, a 1D scoring function could contain two local maxima that are close to each another in the domain but have very different \emph{persistence}.
 %
-Such an observation has inspired our first topology-based batch selection strategy,  based on the persistence of the candidate points.
+Such an observation inspired our first topology-based batch selection strategy which is based on the persistence of the candidate points.
 %
-Since regular points have zero persistence, such a strategy selects points among the local maxima.
+Since regular points have zero persistence, such a strategy selects points exclusively among the local maxima.
 %
 That is, we select the top $b$ candidates with the highest persistence.
 %
@@ -870,7 +860,7 @@ This strategy is detailed in Algorithm \ref{algo:maxp}.
 \end{algorithm}
 }
 
-Since we would like to generalize our batch selection process to any arbitrary dimension, we compute an approximated Morse complex of the scoring function to estimate the location of its local maxima and their corresponding persistence.
+Since we would like to generalize our batch selection process to any arbitrary dimension, we compute an approximated Morse complex of the scoring function using the algorithm from Section~\ref{sec:approximationMSC} to estimate the location of its local maxima and their corresponding persistence.
 
 \begin{figure}[!ht]
 \centering
@@ -880,7 +870,7 @@ Since we would like to generalize our batch selection process to any arbitrary d
 \label{fig:persistence}
 \end{figure}
 
-\paragraph{Topology-Based Batch Selection: Maximum Persistence and Believer Hybrid.}
+\subsection{Topology-Based Batch Selection: Maximum Persistence and Believer Hybrid}
 Our final strategy creates a hybrid between the maximum persistence strategy and the Surrogate Believer strategy.
 %
 That is, we proceed with the believer strategy by temporarily adding points with the highest persistence.
@@ -889,16 +879,11 @@ We introduce one extra parameter $m$ that indicates how many points we add tempo
 %
 Equivalently, $m$ means the number of maxima to chose before refitting the surrogate.
 %
-When $m=1$, this corresponds to the original believer strategy.
+$m=1$ corresponds to the original believer strategy and $m = b$ corresponds to the maximum persistence strategy.
 %
-When $m = b$, this corresponds to the maximum persistence strategy.
-%
-When $1 < m < b$, we have our hybrid strategy.
+For all other values in between, $1 < m < b$, we blend the two ideas together.
 %
 The process is detailed in Algorithm \ref{algo:maxp-believe}.
-%\State{}\Comment{The parameter $m$ sets the number of maxima to chose before
-%refitting the surrogate, thus $m=b$ means the MaxP strategy in our experimental
-% results section.}
 
 {\fontsize{10}{10}\selectfont
 \begin{algorithm}
@@ -936,7 +921,8 @@ The process is detailed in Algorithm \ref{algo:maxp-believe}.
 \end{algorithm}
 }
 
-\subsubsection{Metrics for Evaluation}
+\subsection{Evaluation Metrics}
+\label{sec:evaluation_metrics}
 %
 For the global surface recovery problem, we compute the \emph{root-mean-square error} (RMSE) over a validation set $V$ of the domain between the surrogate model response surface and the true response surface.
 %
@@ -1040,7 +1026,7 @@ in public domain, via Wikimedia Commons).
 \label{fig:images}
 \end{figure}
 
-\subsubsection{Results for Global Surface Recovery}
+\subsection{Results for Global Surface Recovery}
 \label{sec:global_results}
 %
 % \paragraph{RMSE Convergence Results.}
@@ -1049,6 +1035,8 @@ Table \ref{table:global-synthetic} summarizes the number of points necessary to 
 The threshold value is chosen by examining the RMSE convergence across all trials, e.g. we stop the active learning process when RMSE falls below $0.07818$ for the GMM dataset.
 %
 We report the mean number of points required as well as the standard deviation for each strategy across $10$ trials.
+%
+The numbers in parentheses are the median values across each of the ten trials.
 %
 The maximum number of points added for the synthetic test functions is capped at $256$ and for the image datasets, at $1024$.
 %
@@ -1097,13 +1085,13 @@ MaxP             & 99.2 $\pm$ 17.23 (96)        & 140.8 $\pm$ 15.68 (128)    & 1
 
 Increasing the batch size $b$ decreases the rate of convergence, since refitting the surrogate more frequently with small batch sizes would likely select more informative samples.
 %
-The naive method typically gives a baseline performance that is much worse than all other methods, but it shows the range of performance values and illustrates that the Believe, MaxP, and their hybrid strategies are competitive with one another.
+The naive method typically gives a baseline performance that is much worse than all other methods, but it shows the range of performance values and illustrates that the Believe, MaxP, and their hybrid strategies are competitive with one another with respect to the overall range.
 %
 On these smooth, relatively simple surfaces, the results shown here slightly favor the Believe strategy, in most cases.
 %
 The MaxP strategy degrades poorly when increasing the batch size from $16$ to $32$, most likely due to the fact that there are likely less than $32$ local maxima extracted from the ALM scoring function.
 %
-When all the local maxima have been selected, the remaining candidates are chosen based on the naive method.
+When all of the local maxima have been selected, the remaining candidates are chosen based on the naive method.
 %
 By coupling the MaxP strategy with the Believe strategy, we see relatively good performances across many scenarios, since such a hybrid strategy takes advantage of exploiting the topology of the scoring functions.
 
@@ -1145,7 +1133,7 @@ The results for the image datasets are shown in Table \ref{table:global-images}.
 %
 These datasets exhibit more complicated convergence behaviors.
 %
-They require more relaxed RMSE convergence thresholds and a larger number of samples to reach modest levels of approximations.
+They require more relaxed RMSE convergence thresholds and a larger number of samples to reach even modest levels of approximation.
 %
 In the case of the butterfly nebula image and the tiger image when $b=8$, the MaxP method outperforms the Believe strategy.
 %
@@ -1153,7 +1141,7 @@ In many other cases, the hybrid strategies have the best performance in terms of
 %Meanwhile, the reported standard deviations are rather large, putting most
 %scenarios within the same range of one another.
 
-\subsubsection{Results for Limit Surface Recovery}
+\subsection{Results for Limit Surface Recovery}
 \label{sec:limit_results}
 We discuss results for limit surface recovery in this section.
 %
@@ -1281,7 +1269,7 @@ Finally, we report the Hausdorff distance metric convergence results in Table~\r
 %
 We omit the image datasets as the Hausdorff distances did not converge on these tests, most likely due to the many small components of the true limit surfaces.
 %
-As stated earlier, the Hasudorff distance is a measure of the largest minimum distance between two datasets, therefore failing to capture even a single small component will cause the reported  distance to be fairly large.
+As stated earlier, the Hausdorff distance is a measure of the largest minimum distance between two datasets, therefore failing to capture even a single small component will cause the reported  distance to be fairly large.
 %
 Thus, this metric is better suited for the synthetic functions that have large, simple limit surface components.
 
@@ -1340,7 +1328,7 @@ By spacing the sample points along the limit surface, they get a ``rough'' shape
 %
 Spreading candidate points along the estimated limit surface is more likely to reduce the Hausdorff distance computation for this reason.
 %
-Selecting points that are bundled in one area may improve the local fit, but are not likely to reduce the maximum distance computed.
+Selecting points that are bundled in one area may improve the local fit, but are not likely to reduce the maximum distance computed, and thus the Hausdorff distance will converge more slowly.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

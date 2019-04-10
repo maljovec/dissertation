@@ -47,7 +47,7 @@ Note, $p$ modulates the \emph{shape} of the balls whereas $\beta$ controls the \
 %
 This allows us to evaluate the performance of an entire spectrum of different values representing graphs we have not seen before in the context of known graphs.
 
-\begin{figure}
+\begin{figure}[htbp]
     \includegraphics[width=\linewidth]{figs/chap7/emptyRegions}
     \caption{The generalization of the Gabriel graph ($\beta$-skeleton where $\beta=1$) using balls defined under different $p$-norms.
     %
@@ -112,7 +112,7 @@ The right two line plots summarize our results across dimensions and increasing 
 %
 Interestingly enough, we do not see performance degrade as we increase dimensionality, although we do see it degrade as we increase the number of cones.
 
-\begin{figure}
+\begin{figure}[htbp]
     \includegraphics[width=0.65\linewidth]{figs/chap7/cvt_study_35.png}
     \includegraphics[width=0.32\linewidth]{figs/chap7/scvt.png}
     \caption{A study of the relative areas of Constrained CVT samples indicates that their error, although non-zero, is within tolerance for the examples we consider.
@@ -243,7 +243,7 @@ This means that only points that have a $t$ value on the range $(0,1)$ can possi
 %
 For the neighbors whose $t_q \in (0,1)$, we compute the $L^2$-norm from $q$ to the edge and compare it with the empty region.
 
-\begin{figure}
+\begin{figure}[htbp]
     \includegraphics[width=0.34\linewidth]{figs/chap7/infinite_slab.png}
     \includegraphics[width=0.64\linewidth]{figs/chap7/variable_parameters.png}
     \caption{Left: Consider an edge between points $a$ and $b$ and neighbors to $a$, $q_{i}$.
@@ -285,7 +285,7 @@ Where $r$ is the radius of a 2D $p$-ball defined by Equation~\ref{eq:beta_radius
     \end{cases}
 \end{equation}
 
-\begin{figure}
+\begin{figure}[htbp]
     \includegraphics[width=0.48\linewidth]{figs/chap7/bskeleton.png}
     \includegraphics[width=0.48\linewidth]{figs/chap7/bskeletonParameter.png}
     \caption{Left: An example of a two-dimensional edge defined by points $a$ and $b$.
@@ -315,7 +315,7 @@ For example, in Figure~\ref{fig:discrete_beta}, we demonstrate the use of a seve
 %
 We compare these results with the standard $L^p$ norm example and note that the results are unique for each realized graph.
 
-\begin{figure}
+\begin{figure}[htbp]
     \includegraphics[width=\linewidth]{figs/chap7/beta_shapes.png}
     \caption{Using discretization to precompute a template function, we can employ arbitrarily complex functions without incurring any additional overhead cost.
     %
@@ -355,7 +355,7 @@ The leftmost plot shows the shape of the specific logistic function, and the cen
 %
 Here solid lines represent probability above $75\%$, dashed-dotted lines represent probability above $50\%$, dashed lines represent probability above $25\%$, and dotted lines represent edges with $<25\%$ probability.
 
-\begin{figure}
+\begin{figure}[htbp]
     \includegraphics[width=\linewidth]{figs/chap7/probabilistic_beta.png}
     \caption{An example of a probabilistic Gabriel graph.
     %
@@ -420,7 +420,7 @@ We then associate probability to an edge equal to the proportion of realizations
 %
 The justification for doing this is that stable edges will be robust to the actual cones selected.
 
-% \begin{figure}
+% \begin{figure}[htbp]
 %     \includegraphics[width=\linewidth]{figs/chap7/cone_graphs.png}
 %     \caption{Two examples are shown for determining neighbors of the
 %     same central red query point.
@@ -539,7 +539,7 @@ Furthermore the discretized version can add modest improvement to the GPU algori
 %
 \DPM{Demonstrate what is meant by a ``minor'' difference}.
 
-\begin{figure}
+\begin{figure}[htbp]
     \includegraphics[width=0.8\linewidth]{figs/chap7/strict_performance_d.png}
     \includegraphics[width=0.8\linewidth]{figs/chap7/relaxed_performance_d.png}
     \caption{We report the performance of NGL (blue) and two of our GPU
@@ -564,7 +564,7 @@ Furthermore the discretized version can add modest improvement to the GPU algori
 Here we evaluate the measures defined in Section~\ref{sec:graph_quality_measures}
 on various two dimensional distributions using different sized sample sets.
 
-\begin{figure}[!ht]
+\begin{figure}[htbp]
   \includegraphics[width=\linewidth]{figs/chap7/Combined5graphs.png}
   \caption{A graph quality heatmap based on aggregation of five graph quality measures on five proximity graphs for eight different distributions.
   %
@@ -580,7 +580,7 @@ Each cell also contains multiple sub-cells denoting the  $M_{composite}$ value f
 %
 According to the quality measure shown in Figure~\ref{fig:teaser}, there is no universal optimal parameters for different distributions and sample sizes.
 
-\begin{figure}
+\begin{figure}[htbp]
     \includegraphics[width=0.48\linewidth]{figs/chap7/yao_heatmap_2.png}
     \includegraphics[width=0.48\linewidth]{figs/chap7/optimal_quality_measures.png}
     \caption{Analysis of five different graphs using our graph quality measures.
@@ -597,7 +597,7 @@ According to the quality measure shown in Figure~\ref{fig:teaser}, there is no u
 
 \DPM{Include TopoInVis study?}
 
-\begin{figure}
+\begin{figure}[htbp]
     \includegraphics[width=0.48\linewidth]{figs/chap7/diagonal_4_nvi.png}
     \includegraphics[width=0.48\linewidth]{figs/chap7/diagonal_4_stability.png}
     \caption{Analysis of five different graphs  under the topological setting.
@@ -644,7 +644,7 @@ For the nuclear dataset (right), the upper left point of the strict $\beta$-skel
 %
 For the handwriting dataset, the strict $\beta$-skeleton is still Pareto dominant, but the degradation in performance is much worse and the other methods are more competitive in the range of accuracy most would deem acceptable.
 
-\begin{figure}
+\begin{figure}[htbp]
     \includegraphics[width=0.48\linewidth]{figs/chap7/pareto_letters.png}
     \includegraphics[width=0.48\linewidth]{figs/chap7/pareto_sbo.png}
     \caption{Analysis of five different graphs for two classification datasets.
