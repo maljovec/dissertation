@@ -1546,7 +1546,7 @@ On the other hand, since $\Mthree$ does not use a prediction model, the graph ob
 
 \subsection{Experiments}
 \label{sec:experiments}
-We demonstrate our three adaptive sampling models on six two-dimensional datasets with specially prescribed threshold values to exploit their limit surfaces, which are the boundaries of failure regions of varying sizes and shapes.
+We demonstrate our three adaptive sampling models on six two-dimensional datasets with specifically prescribed threshold values in order to exploit a topologically interesting limit surface, which are the boundaries of failure regions of varying sizes and shapes.
 %
 We start with several synthetic datasets (with analytic closed forms) of various complexity, and end with a nuclear dataset modeled after a simplified Pressurized Water Reactor (PWR).
 %
@@ -1570,7 +1570,7 @@ To recover points that lie on the true limit surface, we sample 10K CVT samples 
 %
 Similar operations are performed to recover points that lie on the estimated limit surface for models $\Mone$ and $\Mtwo$.
 %
-Since $\Mthree$ does not rely on a prediction model, thus not allowing CVT sampling of the domain, the set of points that lies on the estimated limit surface is obtained by linearly interpolating the spanning edges of the relaxed Gabriel graph constructed on the current training points.
+Since $\Mthree$ does not rely on a prediction model and therefore affords no CVT sampling of the domain, the candidate points that lie on the estimated limit surface is obtained by linearly interpolating the spanning edges of the relaxed Gabriel graph constructed on the current training points.
 %
 $\Mtwo$ introduces a limit surface tolerance parameter $\delta$, which is typically set to $5\%$ of the range of the function (except for $\delta = 10\%$ for $\SC$ and $\delta = 20\%$ for additional tests run on $\SD$).
 %
@@ -1582,7 +1582,7 @@ $2.58$ for $\SE$; $800$ for $\NF$.
 %
 For $\Mone$, we need to sample the GPM densely to recover the points on or near the estimated limit surface, therefore we use $2000$ CVT samples.
 %
-On the other hand, for $\Mtwo$, we only need to sample the GPM sparsely, using just enough samples to recover its topology, thus we query $200$ CVT samples.
+On the other hand, for $\Mtwo$, we only need to sample the GPM sparsely, using just enough samples to recover its topology, thus we query $200$ CVT samples and generate more samples from the random walks.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1840,7 +1840,7 @@ A more reasonable metric to measure the convergence of limit surfaces would be t
 \subsection{Conclusions and Discussions}
 \label{sec:discussion}
 
-In this paper, we explore three adaptive sampling models to recover the limit surface.
+In this section, we explored three adaptive sampling models to recover the limit surface.
 %
 From $\Mone$ and $\Mthree$,  we learn a global model of the entire response surface using prediction models such as GPMs or neighborhood graphs such as relaxed Gabriel graphs, and extract the limit surface as an iso-surface of the global model.
 %
@@ -1885,6 +1885,18 @@ As $\delta$ increases, the model explores more uncertain neighborhoods while red
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Summary}
-\DPM{Summarize how this all culminates to create new ways of thinking about adaptive sampling.}
+This chapter has married topology and adaptive sampling in three different settings: global surface fitting, limit surface identification, and batch selection of both cases.
+%
+An underlying theme to all of these examples is the notion of exploration versus exploitation.
+%
+In each setting, topology was injected in order to strike a balance between exploring unknown regions and exploiting known areas of interest to varying degrees of success.
+%
+We paid a lot of attention to scoring functions and scoring landscapes, but it is important to note, this is just part of a larger problem that involves careful choice of surrogate model, the arrangement of candidate points in the domain space, the complexity of the function being modeled, and the initial training samples.
+%
+It is hard to explore any of these concepts in isolation of the others, but throughout these studies we have attempted to cut a cross-section of different combinations of surrogate models, sampling designs for candidates and initial training data, varying degrees of target function complexity, and different scoring regimes to give a broader sense of the field and how topology interacts with these different scenarios.
+%
+The results here are not overwhelmingly in favor of topological techniques across the board, but it is important to note that these concepts can have broader impact beyond just the work presented here.
+%
+As an example, Liu et al.~\cite{LiuBremerJayaraman2016} have used a similar strategy as the one proposed in Section~\ref{paper:batch} in order to identify visually-significant, but topologically well-spaced random projections for exploring high-dimensional spaces.
 
 % \bibliography{\jobname}
