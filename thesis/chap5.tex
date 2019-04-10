@@ -11,14 +11,12 @@ Namely, I present methods that seek to exploit areas of high topological signifi
 %
 First, we explore new candidate scoring functions in the context of global response accuracy~\cite{MaljovecWangKupresanin2013}.
 %
-\DPM{More text needed here...}
+Then, we address selecting batches of candidates~\cite{MaljovecWangMoeller2014}.
+%
+We then conclude this chapter by performing adaptive sampling in the limit surface case on nuclear power plant safety simulation data~\cite{MaljovecWangMandelli2013b}.
 
 \section{Adaptive Sampling with Topological Scores}
 \label{paper:ijuq2013}
-  % journal paper~\cite{MaljovecWangKupresanin2013}
-
-\subsection{Introduction}
-
 In this first work, we look at the problem of desiging experiments in order to globally fit a surrogate model to data that is assumed to be represented by a smooth function.
 %
 The specific emphasis here is on adaptively sampling the input space based on the response of the surrogate model used.
@@ -47,9 +45,9 @@ Finally, the candidate with the highest score is selected and added to the set o
 %
 This new training data point will be evaluated using the ground truth and the information discovered will be used to update the prediction model, and the cycle may repeat until an appropriate convergence criteria is met.
 
-Traditional scoring functions are either based on point density, where candidate points which are further away from the existing training data receive higher scores; or are based on prediction accuracy, where candidates with higher prediction uncertainty receive higher scores.
+Traditional scoring functions are either based on point density, where candidate points which are further away from the existing training data receive higher scores; or are based on prediction confidence, where candidates with higher prediction uncertainty receive higher scores.
 %
-In the setting where the underlying data is smooth with little to no noise, the density-based and uncertainty-based strategies will both similarly favor low-density regions as the prediction uncertainty of most prediction models tends to be smallest around the training data.
+In the setting where the underlying data is smooth with little to no noise, the density-based and uncertainty-based strategies will both similarly favor low-density regions as the prediction uncertainty of most prediction models tends to be smallest near the training data.
 %
 However, such ground truth models with smooth, uniform behavior are better tackled with space-filling sampling designs that seek to more uniformly cover the input space.
 %
@@ -123,7 +121,7 @@ Recall $d_\x = d(\x,\x^*)$ is the distance from $\x$ to the closest point in the
 %
 $\rho_\x = \rho_\x (d_\x, d_0)$, where $d_0$ is the range and $q_0$ is the quantile (by default, $d_0$ is the $q_0$ quantile of $D$).
 %
-If $d_\x>d_0$, set $\rho_\x = 1$, otherwise $\rho_\x = 1.5d_\x-0.5d_\x^3$, where the coefficients are taken from spherical semivariogram.
+If $d_\x>d_0$, set $\rho_\x = 1$, otherwise $\rho_\x = 1.5d_\x-0.5d_\x^3$, where the coefficients are taken from a spherical semivariogram.
 %
 Similarly we define $ALMDP(\x) = ALM(\x) * \rho_\x$, where we approach a more space-filling point selection; and $EIDP(\x) = EI(\x) * \rho_\x$.  By default we use $q_0 = 0.5$.
 
@@ -251,7 +249,7 @@ Nevertheless, as discussed below even without an explicit representation several
 \end{center}
 \end{figure}
 
-\para{Discussions on Results} Unsurprisingly, the most significant factor in the success of any scoring function is the quality of the regression model.
+\para{Results} Unsurprisingly, the most significant factor in the success of any scoring function is the quality of the regression model.
 %
 Unfortunately, many experiments even in lower dimensions failed in the sense that the regression based on the space filling design did not converge within the number of samples tried.
 %
@@ -280,7 +278,7 @@ Subsequently, we only consider experiments in which the space filling design ind
 
 In general, the GPM based regression produces the smoothest and most distinctive plots showing clear differences between scoring functions.
 %
-Consider the 2D Ackley function shown in Figure~\ref{fig:ackley2D_results}: The ALM criterion significantly outperforms all other scoring functions with the TopoHP the only other criterion that beats the space filling design.
+Consider the 2D Ackley function shown in Figure~\ref{fig:ackley2D_results}: The ALM criterion significantly outperforms all other scoring functions with the TopoHP being the only other scoring function to beat the space filling design.
 %
 Compare this to the EARTH model shown in the same figure: Most scoring functions except TopoHP perform qualitatively similar and barely achieve the same quality as the LHS sampling.
 %
@@ -335,9 +333,9 @@ For example, in the Diagonal function with two maxima the ALM and EI criteria pe
 %
 The Delta function is on par with the LHS sampling while the other two topological criteria do not perform well.
 %
-The four maxima Diagonal version shows a similar behavior even though now small differences appear between the ALM and EI criteria and the Delta function now fails to achieve the RMSE of the space-filling sample.
+The four maxima Diagonal version shows a similar behavior even though small differences appear between the ALM and EI criteria and the Delta function now fails to achieve the RMSE of the space-filling sample.
 %
-The mixture of five Gaussians again shows a clear preference for the error driven criteria even though now the Delta function performs worse than the topological scoring functions.
+The mixture of five Gaussians again shows a clear preference for the error driven criteria and the Delta function performs worse than the topological scoring functions.
 
 The remaining functions show a very similar pattern with the noticeable exception that now the EI criteria no longer perform as well as the the ALM.
 %
@@ -376,15 +374,16 @@ However, considering other experiments listed in the same figure, other experime
 %
 Overall, the 2D Whitley function shows a good performance with nearly all adaptive criteria outperforming the LHS curve.
 %
-Interestingly, in its 3D incarnation the adaptive sampling does not nearly work as well and furthermore shows excessive variations in several curves.
+Interestingly, in its 3D incarnation the adaptive sampling does not work nearly as well and furthermore shows excessive variations in several curves.
 
-Still looking at (Figure~\ref{fig:earth_results}), in general, there appears to be no significant advantage of one scoring function over another even though for the EARTH model in many cases the TopoHP seems to perform especially bad, for example, for the 3D Whitley and 3D MGR function.
+Still looking at (Figure~\ref{fig:earth_results}), in general, there appears to be no significant advantage of one scoring function over another.
+However, for many cases with the EARTH model, the TopoHP seems to perform especially bad, for example, see the 3D Whitley and 3D MGR functions.
 %
 This is rather surprising since for the GPM model TopoHP performed rather well and typically better than the other topological scoring functions.
 %
 The fact that there exist virtually no difference among the other scoring functions is likely due to the error computation.
 %
-For non-GPM models like MARS the expected prediction error that forms the bases for both the ALM and the EI criterion is constructed through bootstrapping and thus is probably less reliable.
+For non-GPM models like MARS the expected prediction error that forms the basis for both the ALM and the EI criterion is constructed through bootstrapping and thus is probably less reliable.
 %
 This may negate the differences between error based criteria and the others, and result in across-the-board worse performance.
 %
@@ -443,7 +442,7 @@ The other MARS implementation MDA, unsurprisingly, shows largely the same behavi
 %
 Figure~\ref{fig:mda} shows four examples each in two and three dimensions.
 %
-Comparing with the Earth model, we could see typically comparable RMSE, and higher variability (e.g. the 2-diagonal and GMM functions in 2D) with the exception of 3D Whitley function.
+Comparing with the Earth model, we see typically comparable RMSE, and higher variability (e.g. the 2-diagonal and GMM functions in 2D) with the exception of 3D Whitley function.
 %
 Again the 3D mixture of two Gaussians shows the initial decrease in RMSE for several scoring functions.
 
@@ -478,7 +477,7 @@ Finally, the NNET implementation in its default setting, whose results are summa
 %
 Apart from the Ackley function, some models that performed reasonably in two dimensions are the two maxima Diagonal function, mixture of five Gaussians, and the Salomon function.
 %
-The MGR function shows a competitive RMSE as baseline but excessive variations for virtually all adaptive scoring functions as well as the LHS line.
+The MGR function shows a competitive RMSE as a baseline but excessive variations for virtually all adaptive scoring functions as well as the LHS line.
 %
 The 3D MGR function shows a similar behavior except that the LHS line now appears to be stable.
 
