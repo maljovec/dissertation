@@ -167,6 +167,10 @@ Equally, if a point has no values of higher value, it is labeled a local maxima.
 We can then trace the positive integral line from each data point up to a local maximum, and trace the negative integral line down to a local minimum.
 %
 We retain the indices of the identified local minimum and maximum and this pair of indices represents the Morse-Smale cell to which this point belongs.
+%
+Note, we can utilize a union-find data structure to prevent repeating traversals.
+%
+This short-cutting amortizes the cost of finding extrema to be a near linear complexity operation.
 
 As was pointed out in the end of Chapter~\ref{ch:definitions}, gradient inconsistencies such as crossing integral lines can form if the graph has crossing edges.
 %
@@ -312,6 +316,34 @@ This is performed recursively until a single partition exists for each connected
 \section{Extremum Graphs}
 \label{sec:extremumGraph}
 
-\DPM{Add description of this to motivate construction of streaming extremum graphs.}
+The extremum graph was first introduced by Correa et al. as a simplified substructure of the Morse-Smale complex~\cite{CorreaLindstromBremer2011}.
+%
+As such, it can also be approximated for high-dimensional data~\cite{CorreaLindstromBremer2011,ThomasNatarajan2013}.
+%
+The approximation algorithm is a slightly modified version of the Morse complex algorithm presented in Section~\ref{sec:approximationMSC} used for computing the Morse-Smale complex.
+
+We begin with a short recapitulation of the relevant Morse complex algorithm and then highlight the differences needed to compute the extremum graph.
+%
+Local maxima of the Morse complex are paired with $d-1$-index saddles occurring on the boundary of their respective descending manifolds in such a way that they can be cancelled.
+%
+Such cancellations causes a merging of descending manifolds with the local maximum of the shared boundary causing a simpler yet still valid Morse complex where gradient flow from the cancelled maximum is redirected through the cancelled saddle to the adjacent local maximum.
+%
+The order of these cancellations is typically chosen based on \textit{persistence}, that is the function value difference of the pair of cancelled critical points.
+%
+The end result is a persistence hierarchy of Morse complexes of varying degrees of complexity.
+
+The extremum graph is a variation of this persistence hierarchy that tracks not only the valid cancellations, but cancellations of potential \textit{strangulations}.
+%
+Strangulations occur when saddles are connected to the same extremum twice.
+%
+When processing the cancellations in order of increasing persistence, we may attempt to cancel a local maximum that has already been cancelled.
+%
+Normally, these cancellations would be ignored, but for the extremum graph, we cancel only the saddle and assign its persistence value accordingly.
+
+A key observation made by Liu et al.~\cite{LiuWangMaljovec2019} is that the high-dimensional approximation algorithm for the extremum graph (and the Morse and Morse-Smale complex for that matter) does not require a precomputed graph model which can be too large to fit in memory for large and high-dimensional datasets.
+%
+That is, edges can be streamed in and consumed as they are computed in two passes, one for the identification of local maximum labels, and the second to identify $(d-1)$-saddles for persistence simplification.
+%
+This coupled with the efficient computation of the empty region graphs presented in Chapter~\ref{ch:graphs} has allowed us, for the first time, to perform topological analysis on datasets on the order of tens of millions of points in higher than three dimensions.
 
 % \bibliography{\jobname}
