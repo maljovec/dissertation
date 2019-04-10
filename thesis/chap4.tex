@@ -324,7 +324,7 @@ The approximation algorithm is a slightly modified version of the Morse complex 
 
 We begin with a short recapitulation of the relevant Morse complex algorithm and then highlight the differences needed to compute the extremum graph.
 %
-Local maxima of the Morse complex are paired with $d-1$-index saddles occurring on the boundary of their respective descending manifolds in such a way that they can be cancelled.
+Local maxima of the Morse complex are paired with $(d-1)$-index saddles occurring on the boundary of their respective descending manifolds in such a way that they can be cancelled.
 %
 Such cancellations causes a merging of descending manifolds with the local maximum of the shared boundary causing a simpler yet still valid Morse complex where gradient flow from the cancelled maximum is redirected through the cancelled saddle to the adjacent local maximum.
 %
@@ -339,6 +339,8 @@ Strangulations occur when saddles are connected to the same extremum twice.
 When processing the cancellations in order of increasing persistence, we may attempt to cancel a local maximum that has already been cancelled.
 %
 Normally, these cancellations would be ignored, but for the extremum graph, we cancel only the saddle and assign its persistence value accordingly.
+%
+In the end, the hierarchy of the extremum graph is controlled by two parameters as opposed to the single persistence value used in the Morse/Morse-Smale complex setting.
 
 A key observation made by Liu et al.~\cite{LiuWangMaljovec2019} is that the high-dimensional approximation algorithm for the extremum graph (and the Morse and Morse-Smale complex for that matter) does not require a precomputed graph model which can be too large to fit in memory for large and high-dimensional datasets.
 %
