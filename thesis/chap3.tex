@@ -25,7 +25,7 @@ Adaptive sampling selects the ``best'' candidate based on current information ab
 %
 The criteria for what constitutes ``best'' is investigated further in the Section~\ref{sec:adaptiveSampling}.
 %
-Adaptive sampling excels when only a limited region of the input domain is considered interesting or when the surrogate model is highly localized. 
+Adaptive sampling excels when only a limited region of the input domain is considered interesting or when the surrogate model is highly localized.
 %
 In the former case, a surrogate model can be used for extracting additional information about the data already collected, and in the latter case, the model is not expected to change significantly away from the area being sampled.
 %
@@ -152,7 +152,7 @@ To this end, several optimizations have been performed to improve the blue noise
 %
 As with Poisson disk sampling, most research has been focused on the low-dimensional setting since the combinatorics of increasing dimensionality incur a large storage overhead when processing the Voronoi diagram in arbitrary dimension~\cite{BoissonnatChazalYvinec2017}.
 %
-However, Lloyd's method~\ref{DuFaberGunzburger1999} can be used to iterate to an approximate solution for moderate dimensionality which we utilize in Chapter~\ref{ch:graphs} for the construction of cone graphs using a constrained CVT. 
+However, Lloyd's method~\cite{DuFaberGunzburger1999} can be used to iterate to an approximate solution for moderate dimensionality which we utilize in Chapter~\ref{ch:graphs} for the construction of cone graphs using a constrained CVT.
 
 Lastly, tile-based methods create small, repeatable templates which can be repeated over the domain of interest~\cite{HillerDeussenKeller2001,KopfCohenOrDeussen2006,LagaeDutre2005,Ostromoukhov2007,OstromoukhovDonohueJodoin2004,WachtelPilleboueCoeurjolly2014}.
 %
@@ -683,7 +683,7 @@ HDViz~\cite{GerberBremerPascucci2010} characterizes the behavior of system outpu
 %
 HyperMoVal~\cite{PiringerBergerKrasser2010} highlights discrepancies occuring between the data and the model, and computes sensitivity information on the model.
 %
-The software proposed in Section~\ref{paper:pacificVis2016} provides similar capabilities by reporting on the fitness of each local regression model fit to a partition of the data.
+The software proposed in Chapter~\ref{ch:visualization} provides similar capabilities by reporting on the fitness of each local regression model fit to a partition of the data.
 %
 Berger et al.~\cite{BergerPiringerFilzmoser2011} provide a focus+context display that provides local sensitivity information on and near a user-selected focal point.
 %
