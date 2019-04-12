@@ -896,12 +896,19 @@ For more generic examples, we can formulate a ground truth labeling of the input
 
 As with the quality measures, we first evaluate each graph family in isolation and determine the optimal settings before summarizing and comparing results between the different graphs.
 %
+Here, we optimally tune each graph for the most consistently high stable
+persistence.
+%
 The summarized results are presented in Figure~\ref{fig:graph_topo}.
+%
+The NVI plots are used mostly for sanity checking to indicate that the partitions we are considering as stable line up consistently with the underlying ground truth.
+
+The results of this study seem to indicate that the $\Theta$-graph is unable to converge on the correct topology, and while the others report similar NVI behavior, the Yao graph is able to achieve this level of fidelity for the largest amount of persistence.
 
 \begin{figure}[htbp]
     \includegraphics[width=0.48\linewidth]{figs/chap7/diagonal_4_nvi.png}
     \includegraphics[width=0.48\linewidth]{figs/chap7/diagonal_4_stability.png}
-    \caption{Analysis of five different graphs  under the topological setting.
+    \caption{Analysis of five different graphs  under the topological setting for the diagonal function in four dimensions using various sample sizes.
     Left: The NVI of the best-in-class for each graph.
     %
     Right: Along with NVI we report the persistence lifespan that each graph is able to maintain the correct partition.}
@@ -910,17 +917,14 @@ The summarized results are presented in Figure~\ref{fig:graph_topo}.
 
 \subsection{SVM Classification Enhancement}
 
-Zhang and King~\cite{ZhangKing2002a,ZhangKing2002b} determined that by pre-processing a dataset with an appropriate graph structure (in this case, they chose a $\beta$-skeleton), they were able to drastically reduce the training set size for an SVM classifier thus reducing computation time, while maintaining simliar accuracy.
+Various studies have shown that utilizing proximity graphs can effectively reduce the amount of data needed to train a classifier with little to no impact on the trained model's accuracy~\cite{BhattacharyaPoulsenToussaint1981GotoIshidaUchida2015,Toussaint2005,ToussaintBerzan2012,ZhangKing2002a,ZhangKing2002b}.
 %
-Goto et al.~\cite{GotoIshidaUchida2015} performed a similar study using the relative neighbor graph and identifying what they called \textit{bridge vectors}.
+Here, we attempt to replicate some of these studies by pre-processing a dataset with our various graphs and evaluate both their ability to reduce the training size, but also the accuracy they are able to maintain.
 %
-However, the first example of using proximity graphs to reduce training sizes on classification problems dates back to 1981 where Bhattacharya et al. used the technique on a nearest neighbor classifier~\cite{BhattacharyaPoulsenToussaint1981}.
-
-% \begin{itemize}
-%     \item \DPM{Toussaint 2005~\cite{Toussaint2005}}
-%     \item \DPM{Toussaint and Berzan 2012~\cite{ToussaintBerzan2012}}
-% \end{itemize}
-
+We select to do this in a regime similar to that of Zhang and King~\cite{ZhangKing2002a,ZhangKing2002b}.
+%
+Under this setting, we use an SVM (see Section~\ref{sec:svm} for details) to train our data and the goal is to use the subset of edges that lie on the decision boundary (the endpoints of an edge belong to separate classes) to train the SVM.
+%
 The idea for SVMs takes advantage of the fact that the SVM is made up of \textit{support vectors} that describe the boundaries of separate classes.
 %
 By preprocessing the data with a proximity graph and only including the endpoints of edges that belong to separate classes, we prune away much of the uninformative data while with high probability keeping data points that will be the support vectors the model is seeking.
@@ -954,3 +958,24 @@ For the handwriting dataset, the strict $\beta$-skeleton is still Pareto dominan
     Right: We similarly report results for the station blackout dataset.}
     \label{fig:graph_svm}
 \end{figure}
+
+\section{Conclusion}
+We have presented three different methods for evaluating the various proximity graphs applicability to various problems that arise in data analysis and visualization.
+%
+First, we took the approach of identifying what we deemed to be important characteristics of a proximity graph generically speaking.
+%
+We then evaluated these five quality measures in aggregate over each family of graph before presenting a concise comparison of the optimal settings in the bar chart of Figure~\ref{fig:graph_quality}.
+%
+The preliminary analysis was performed by using plots such as the heatmaps shown in Figure~\ref{fig:teaser}.
+%
+We then evaluate the same parameter settings and graphs on two specific applications.
+
+We performed similar analysis on these two applications where we first tuned the parameters of each graph before presenting the optimal settings for a side-by-side comparison.
+%
+It is is worth noting that their is not one clear winner among all of the applications.
+%
+That is, different parameterizations of each graph performed better in different situations, and though the strict $\beta$-skeleton was able to outperform the others in the SVM case, the Yao graph could be seen as more stable for the topology case.
+
+This study represents the kinds questions that we should be asking of our underlying data structures in general.
+%
+By identifying a connection between these graphs and establishing a baseline for comparison we hope to inspire others to evaluate the applicability of one or more of these graphs to their needs.
