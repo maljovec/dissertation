@@ -899,7 +899,7 @@ As with the quality measures, we first evaluate each graph family in isolation a
 Here, we optimally tune each graph for the most consistently high stable
 persistence.
 %
-The summarized results are presented in Figure~\ref{fig:graph_topo}.
+The summarized results are presented in Figure~\ref{fig:graph_topo} for the four dimensional diagonal case.
 %
 The NVI plots are used mostly for sanity checking to indicate that the partitions we are considering as stable line up consistently with the underlying ground truth.
 
@@ -917,17 +917,19 @@ The results of this study seem to indicate that the $\Theta$-graph is unable to 
 
 \subsection{SVM Classification Enhancement}
 
-Various studies have shown that utilizing proximity graphs can effectively reduce the amount of data needed to train a classifier with little to no impact on the trained model's accuracy~\cite{BhattacharyaPoulsenToussaint1981GotoIshidaUchida2015,Toussaint2005,ToussaintBerzan2012,ZhangKing2002a,ZhangKing2002b}.
+Various studies have shown that utilizing proximity graphs can effectively reduce the amount of data needed to train a classifier with little to no impact on the trained model's accuracy~\cite{BhattacharyaPoulsenToussaint1981,GotoIshidaUchida2015,Toussaint2005,ToussaintBerzan2012,ZhangKing2002a,ZhangKing2002b}.
 %
 Here, we attempt to replicate some of these studies by pre-processing a dataset with our various graphs and evaluate both their ability to reduce the training size, but also the accuracy they are able to maintain.
 %
+The difference in our study is that we compare across empty region graphs, cone graphs, and $k$-nn graphs, and we also consider the various parameter settings of each.
+%
 We select to do this in a regime similar to that of Zhang and King~\cite{ZhangKing2002a,ZhangKing2002b}.
 %
-Under this setting, we use an SVM (see Section~\ref{sec:svm} for details) to train our data and the goal is to use the subset of edges that lie on the decision boundary (the endpoints of an edge belong to separate classes) to train the SVM.
+Under this setting, we use an SVM (see Section~\ref{sec:svm} for details) to train our data and use the subset of edges that lie on the decision boundary (the endpoints of an edge belong to separate classes) to train the SVM.
 %
-The idea for SVMs takes advantage of the fact that the SVM is made up of \textit{support vectors} that describe the boundaries of separate classes.
+This idea takes advantage of the fact that the SVM is made up of \textit{support vectors} that describe the boundaries of separate classes, and only those support vectors are needed to recover the correct decision boundary.
 %
-By preprocessing the data with a proximity graph and only including the endpoints of edges that belong to separate classes, we prune away much of the uninformative data while with high probability keeping data points that will be the support vectors the model is seeking.
+By preprocessing the data with a proximity graph and only including the endpoints of edges that belong to separate classes, we prune away much of the redundant or uninformative data while with high probability keeping data points that will be the support vectors the model is seeking.
 %
 We seek to replicate results on two classification datasets.
 %
@@ -935,11 +937,11 @@ The first is a handwritten letter analysis publicly available from the UCI Machi
 %
 The latter is studying a station blackout scenario for nuclear power plant safety simulation~\cite{MaljovecLiuWang2015}.
 %
-In this study, we study the recovery procedure from an accident situation and the goal is to classify whether the plant can be safely recovered before the core reaches an irrecoverable temperature.
+In this latter simulation ensemble, we study the recovery procedure from an accident situation and the goal is to classify whether the plant can be safely recovered before the core reaches an irrecoverable temperature.
 %
-The dimensionality of the examples are 16 and 12, respectively, and each is made up of roughly 20000 point samples.
+The dimensionality of the two examples are 16 and 12, respectively, and each is made up of roughly 20000 point samples.
 
-The results of this study are shown in the bottom row of images of Figure~\ref{fig:applications} where we show a Pareto front of parameter settings for each graph trading off data reduction with accuracy.
+The results of this study are shown in the two images of Figure~\ref{fig:applications} where we show a Pareto front of parameter settings for each graph trading off data reduction with accuracy.
 %
 Note, the scale of the horizontal axis in both images varies drastically.
 %
@@ -962,20 +964,24 @@ For the handwriting dataset, the strict $\beta$-skeleton is still Pareto dominan
 \section{Conclusion}
 We have presented three different methods for evaluating the various proximity graphs applicability to various problems that arise in data analysis and visualization.
 %
-First, we took the approach of identifying what we deemed to be important characteristics of a proximity graph generically speaking.
+First, we took the approach of identifying what we deemed to be important characteristics of a proximity graph, generically speaking.
 %
-We then evaluated these five quality measures in aggregate over each family of graph before presenting a concise comparison of the optimal settings in the bar chart of Figure~\ref{fig:graph_quality}.
+We then evaluated these five quality measures in aggregate over each family of graphs before presenting a concise comparison of the optimal settings in the bar chart of Figure~\ref{fig:graph_quality}.
 %
 The preliminary analysis was performed by using plots such as the heatmaps shown in Figure~\ref{fig:teaser}.
 %
 We then evaluate the same parameter settings and graphs on two specific applications.
 
-We performed similar analysis on these two applications where we first tuned the parameters of each graph before presenting the optimal settings for a side-by-side comparison.
+We performed similar analysis on these two applications where we first tuned the parameters of each graph before presenting the optimal settings for a side-by-side comparison of the different families of graphs.
 %
 It is is worth noting that their is not one clear winner among all of the applications.
 %
 That is, different parameterizations of each graph performed better in different situations, and though the strict $\beta$-skeleton was able to outperform the others in the SVM case, the Yao graph could be seen as more stable for the topology case.
 
-This study represents the kinds questions that we should be asking of our underlying data structures in general.
+Rather than being presenting a comprehensive and unanimous decision about graph selection, we instead present a sampling of different tests and qualities to consider when using such graphs.
 %
-By identifying a connection between these graphs and establishing a baseline for comparison we hope to inspire others to evaluate the applicability of one or more of these graphs to their needs.
+This should provide motivation and a template for future studies that rely on such graphs to critically evaluate the desirable characteristics and how they best align with needs of the application.
+%
+This study represents the kinds of questions that we should be asking of our underlying data structures in general.
+%
+By identifying a connection between these graphs, providing an efficient and common API, and establishing a baseline for comparison we hope to inspire others to evaluate the applicability of one or more of these graphs to their needs.
