@@ -925,14 +925,16 @@ We report the optimal parameter settings for the examples shown in Figure~\ref{f
 \begin{table}[htbp]
     \scriptsize
     \centering
-    \begin{tabular}{l || c | c | c}
-        Graph  & 4D Diagonal with 4 maxima & 5D Distance Field with 5 maxima & 5D Distance Field with 15 maxima \\
-    \hline\hline
+    \begin{tabular}{| l | c | c | c |}
+    \hline
+    \textbf{Graph}  & \textbf{4D Diagonal with 4 maxima} & \textbf{5D DF with 5 maxima} & \textbf{5D DF with 15 maxima} \\
+    \hline
     Strict $\beta$-Skeleton & $\beta=0.5, p=2$ & $\beta=1, p=2$  & $\beta=1, p=4$ \\
     Relaxed $\beta$-Skeleton & $\beta=0.5, p=4$ & $\beta=1, p=1$  & $\beta=1.5, p=2$ \\
     $k$-Nearest Neighbor Graph & $k=128$ & $k=64$  & $k=64$ \\
     Yao Graph & $c=32, m=2$ & $c=10, m=3$  & $c=32, m=1$ \\
     $\Theta$ Graph & $c=24, m=2$ & $c=25, m=1$  & $c=20, m=2$ \\
+    \hline
     \end{tabular}
     \caption{Optimal parameter settings used for each test function shown in Figure~\ref{fig:graph_topo}.}
     \label{tab:optimal_settings}
