@@ -789,9 +789,11 @@ The strict $\beta$-skeleton seems to favor lower $p$ values for all cases.
 
 In Figure~\ref{fig:graph_quality}, we attempt to directly compare the optimal graph performance for the composite graph measure for each of the eight distributions considered.
 %
-We find that under the most generic setting of our composite measure, the strict $\beta$-skeleton performs best across all eight distributions followed closely by the $k$-nn graph and the relaxed $\beta$-skeleton.
+We find that under the most generic setting of our composite measure, the strict $\beta$-skeleton performs best on average and the $\Theta$ graph is consistently the worst performing.
 %
-The two cone graph implementations have much worse quality measures in comparison.
+The exception to this is on the annulus dataset where there is an empty void in the center of the dataset that graphs are penalized for crossing as the $\alpha$-shape carves out this void.
+%
+It is possible that with few enough cones and the appropriate set of pseudo-random cone axes, we can better mitigate the existence of crossing edges as opposed to the $\beta$-skeletons which are more likely to have at edges crossing the spanning the void even in an otherwise, well-shaped graph.
 
 \begin{figure}[htbp]
     \centering
