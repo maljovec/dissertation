@@ -791,9 +791,11 @@ In Figure~\ref{fig:graph_quality}, we attempt to directly compare the optimal gr
 %
 We find that under the most generic setting of our composite measure, the strict $\beta$-skeleton performs best on average and the $\Theta$ graph is consistently the worst performing.
 %
-The exception to this is on the annulus dataset where there is an empty void in the center of the dataset that graphs are penalized for crossing as the $\alpha$-shape carves out this void.
+Examples of each distribution with their alpha shapes are shown with the optimal graphs from each category overlaid on top in Figures~\ref{fig:bs_quality}-~\ref{fig:theta_quality}.
 %
-It is possible that with few enough cones and the appropriate set of pseudo-random cone axes, we can better mitigate the existence of crossing edges as opposed to the $\beta$-skeletons which are more likely to have at edges crossing the spanning the void even in an otherwise, well-shaped graph.
+From these, we can see that when the topology is not simply connected, the relaxed $\beta$-skeleton is unable to recover the shape well.
+%
+This indicates that when operating on non-simply connected domains, the difference between the strict and relaxed $\beta$-skeleton is indeed significant.
 
 \begin{figure}[htbp]
     \centering
@@ -819,6 +821,40 @@ It is possible that with few enough cones and the appropriate set of pseudo-rand
     %
     Bottom row: a mixture of three distinct normal distributions with low probability of overlap, and a mixture with the same centers but with significant overlap.}
     \label{fig:graph_quality}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figs/chap7/bs_quality.png}
+    \caption{Examples of the best performing strict $\beta$-skeleton are shown for each distribution under consideration.}
+    \label{fig:bs_quality}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figs/chap7/rbs_quality.png}
+    \caption{Examples of the best performing relaxed $\beta$-skeleton are shown for each distribution under consideration.}
+    \label{fig:rbs_quality}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figs/chap7/k_quality.png}
+    \caption{Examples of the best performing $k$-nearest neighbor graphs are shown for each distribution under consideration.}
+    \label{fig:k_quality}
+\end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figs/chap7/yao_quality.png}
+    \caption{Examples of the best performing Yao graphs are shown for each distribution under consideration.}
+    \label{fig:yao_quality}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figs/chap7/theta_quality.png}
+    \caption{Examples of the best performing $\Theta$-graph are shown for each distribution under consideration.}
+    \label{fig:theta_quality}
 \end{figure}
 
 \subsection{Topological Accuracy and Stability}
