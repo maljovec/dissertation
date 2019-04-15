@@ -893,26 +893,50 @@ To compute the ground truth for the diagonal dataset, we can separate the four t
 %
 For more generic examples, we can formulate a ground truth labeling of the input data by employing a fourth-order Runge-Kutta scheme to trace the gradient from any point in the domain to its associated maximum.
 
-As with the quality measures, we first evaluate each graph family in isolation and determine the optimal settings before summarizing and comparing results between the different graphs.
+As with the quality measures, we first evaluate each graph family in isolation and determine the optimal settings for each example function and dimensionality before summarizing and comparing results between the different graphs.
 %
-Here, we optimally tune each graph for the most consistently high stable
-persistence.
+Here, we optimally tune each graph for the most consistently high stable persistence.
 %
-The summarized results are presented in Figure~\ref{fig:graph_topo} for the four dimensional diagonal case.
+The summarized results are presented in Figure~\ref{fig:graph_topo} for three different examples in four and five dimensions.
 %
 The NVI plots are used mostly for sanity checking to indicate that the partitions we are considering as stable line up consistently with the underlying ground truth.
 
-The results of this study seem to indicate that the $\Theta$-graph is unable to converge on the correct topology, and while the others report similar NVI behavior, the Yao graph is able to achieve this level of fidelity for the largest amount of persistence.
+The results of this study seem to indicate that the $\Theta$-graph is unable to converge on the correct topology for any of our examples, and while the others report similar NVI behavior, the optimal Yao graph is able to achieve this level of fidelity for the largest amount of persistence consistently across the three examples.
+%
+We report the optimal parameter settings for the examples shown in Figure~\ref{fig:graph_topo} in Table~\ref{tab:optimal_settings}.
 
 \begin{figure}[htbp]
     \includegraphics[width=0.48\linewidth]{figs/chap7/diagonal_4_nvi.png}
     \includegraphics[width=0.48\linewidth]{figs/chap7/diagonal_4_stability.png}
-    \caption{Analysis of five different graphs  under the topological setting for the diagonal function in four dimensions using various sample sizes.
+    \includegraphics[width=0.48\linewidth]{figs/chap7/df_5_5D_nvi.png}
+    \includegraphics[width=0.48\linewidth]{figs/chap7/df_5_5D.png}
+    \includegraphics[width=0.48\linewidth]{figs/chap7/df_15_5D_nvi.png}
+    \includegraphics[width=0.48\linewidth]{figs/chap7/df_15_5D.png}
+    \caption{Analysis of five different graphs  under the topological setting for various test functions in varying dimensions using various sample sizes.
     Left: The NVI of the best-in-class for each graph.
     %
-    Right: Along with NVI we report the persistence lifespan that each graph is able to maintain the correct partition.}
+    Right: Along with NVI we report the persistence lifespan that each graph is able to maintain the correct partition.
+    Top Row: Diagonal test function in four dimensions.
+    Middle Row: A  distance field function with five maxima in five dimensions.
+    Bottom Row: A  distance field function with fifteen maxima in five dimensions.}
     \label{fig:graph_topo}
 \end{figure}
+
+\begin{table}[htbp]
+    \scriptsize
+    \centering
+    \begin{tabular}{l || c | c | c}
+        Graph  & 4D Diagonal with 4 maxima & 5D Distance Field with 5 maxima & 5D Distance Field with 15 maxima \\
+    \hline\hline
+    Strict $\beta$-Skeleton & $\beta=0.5, p=2$ & $\beta=1, p=2$  & $\beta=1, p=4$ \\
+    Relaxed $\beta$-Skeleton & $\beta=0.5, p=4$ & $\beta=1, p=1$  & $\beta=1.5, p=2$ \\
+    $k$-Nearest Neighbor Graph & $k=128$ & $k=64$  & $k=64$ \\
+    Yao Graph & $c=32, m=2$ & $c=10, m=3$  & $c=32, m=1$ \\
+    $\Theta$ Graph & $c=24, m=2$ & $c=25, m=1$  & $c=20, m=2$ \\
+    \end{tabular}
+    \caption{Optimal parameter settings used for each test function shown in Figure~\ref{fig:graph_topo}.}
+    \label{tab:optimal_settings}
+\end{table}
 
 \subsection{SVM Classification Enhancement}
 
