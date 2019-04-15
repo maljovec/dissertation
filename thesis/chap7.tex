@@ -757,7 +757,7 @@ Furthermore the discretized version can add modest improvement to the GPU algori
 \subsection{2D Graph Quality Measures}
 
 Here we evaluate the measures defined in Section~\ref{sec:graph_quality_measures}
-on various two dimensional distributions using different sized sample sets.
+on various two dimensional distributions using a fixed sample size of 200 points.
 
 \begin{figure}[htbp]
   \includegraphics[width=\linewidth]{figs/chap7/Combined5graphs.png}
@@ -777,7 +777,7 @@ For the empty region graphs, the horizontal axes represent the following $\beta$
 %
 For the cone graphs, the horizontal axes represent the following $c$ cone counts (from left to right) 1, 2, 3, 4, and 5, and the vetical axes represent the following $m$ points per cone counts (from bottom to top) 1, 2, and 3.
 %
-For the $k$-nn graph, there is only one parameter $k$ and we explore the following values (from left to right)  1, 2, 3, 4, and 5.
+For the $k$-nn graph, there is only one parameter $k$ and we show the following values (from left to right)  1, 2, 3, 4, and 5.
 %
 Note, when evaluating the heatmap lower values are better for our quality measure.
 %
@@ -787,22 +787,35 @@ For instance, with the four non-space-filling distributions on the right that so
 %
 The strict $\beta$-skeleton seems to favor lower $p$ values for all cases.
 
-In Figure~\ref{fig:graph_quality}, we attempt to directly compare the optimal graph performance aggregated over all of the quality measures.
+In Figure~\ref{fig:graph_quality}, we attempt to directly compare the optimal graph performance for the composite graph measure for each of the eight distributions considered.
 %
-This is done by taking the sum of the boxes outlined in red across all eight distributions for each graph from Figure~\ref{fig:teaser} resulting in a single value for each graph.
-%
-We find that under the most generic setting of our composite measure, the strict $\beta$-skeleton performs best when summing optimal composite measures across all eight distributions followed closely by the $k$-nn graph and the relaxed $\beta$-skeleton.
+We find that under the most generic setting of our composite measure, the strict $\beta$-skeleton performs best across all eight distributions followed closely by the $k$-nn graph and the relaxed $\beta$-skeleton.
 %
 The two cone graph implementations have much worse quality measures in comparison.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.48\linewidth]{figs/chap7/optimal_quality_measures.png}
+    \includegraphics[width=0.45\linewidth]{figs/chap7/uniform_quality.png}
+    \includegraphics[width=0.45\linewidth]{figs/chap7/lhs_quality.png}
+    \includegraphics[width=0.45\linewidth]{figs/chap7/cvt_quality.png}
+    \includegraphics[width=0.45\linewidth]{figs/chap7/halton_quality.png}
+    \includegraphics[width=0.45\linewidth]{figs/chap7/s_quality.png}
+    \includegraphics[width=0.45\linewidth]{figs/chap7/shell_quality.png}
+    \includegraphics[width=0.45\linewidth]{figs/chap7/distinct_quality.png}
+    \includegraphics[width=0.45\linewidth]{figs/chap7/overlap_quality.png}
     \caption{Analysis of five different graphs using our graph quality measures.
     %
-    Once an optimal setting is decided we compare it with aggregate quality measures of the other graphs.
+    Once an optimal setting is decided for each distribution we compare it with the optimal composite quality measures of the other graphs.
     %
-    In this case, the strict $\beta$-skeleton reports the best aggregate quality as determined by the lowest possible score.}
+    The figures rows are described from left to right below.
+    %
+    Top row: a uniform distribution and an LHS design.
+    %
+    Second row: a CVT design and a Halton sequence.
+    %
+    Third row: a sinusoidal shaped manifold and an annulus.
+    %
+    Bottom row: a mixture of three distinct normal distributions with low probability of overlap, and a mixture with the same centers but with significant overlap.}
     \label{fig:graph_quality}
 \end{figure}
 
@@ -991,7 +1004,7 @@ We have presented three different methods for evaluating the various proximity g
 %
 First, we took the approach of identifying what we deemed to be important characteristics of a proximity graph, generically speaking.
 %
-We then evaluated these five quality measures in aggregate over each family of graphs before presenting a concise comparison of the optimal settings in the bar chart of Figure~\ref{fig:graph_quality}.
+We then evaluated these five quality measures in aggregate over each family of graphs before presenting a concise comparison of the optimal settings in the bar charts of Figure~\ref{fig:graph_quality}.
 %
 The preliminary analysis was performed by using plots such as the heatmaps shown in Figure~\ref{fig:teaser}.
 %
