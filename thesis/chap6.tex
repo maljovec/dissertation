@@ -60,7 +60,7 @@ We learn the targeted domain of study (in this case, SA for nuclear simulations)
 %
 In this process, we study their \emph{existing work flow} and \emph{design requirements} to better enable knowledge discovery via analysis and visualization.
 
-\subsection{Existing workflow}
+\subsection{Existing Workflow}
 Before designing our visualization solution, we actively engage nuclear scientists to understand their domain problems and the existing workflow (i.e., their common practices) in SA.
 %
 As a first approximation, the scientists typically perform a global SA via linear regression or correlation analysis.
@@ -88,7 +88,7 @@ We identify several challenges in the existing workflow that are summarized into
   \label{fig:hdviz}
 \end{figure}
 
-\subsection{Design Requirement A: Structure-based domain partitioning amenable to local SA.}
+\subsection{Design Requirement A: Structure-Based Domain Partitioning Amenable to Local SA.}
 As suggested by Gerber et al.~\cite{GerberRubelBremer2011}, we first considered numerous forms of partition-based regression that can be applied for local SA.
 %
 However, most of these are based on greedy, local operations focusing on optimizing some quality metric.
@@ -104,7 +104,7 @@ Existing local SA is restricted to be point-wise, and domain partitioning is don
 Using HDViz as a starting point (see Figure~\ref{fig:hdviz}), we iteratively defined and redefined new visual design requirements as well as refined existing ones that satisfy the various SA tasks.
 
 
-\subsection{Design Requirement B: Intuitive visualization of data hierarchy.}
+\subsection{Design Requirement B: Intuitive Visualization of Data Hierarchy.}
 Existing visualization using HDViz suffered from three drawbacks for this application: first, it has a very steep learning curve for data practitioners in general; second, it is particularly nonintuitive for nuclear scientists, and lastly, it has limited support for the SA pipeline.
 %
 For example, when presented with the topological skeleton seen in Figure~\ref{fig:hdviz}, nuclear scientists questioned the meaning and utility of the oscillations produced by the inverse regression and the geometric interpretation of their 2D projection.
@@ -124,7 +124,7 @@ partitions within a fixed scale.
 %
 The topology map described in Section~\ref{sec:saDesign} is designed to fulfill such requirements.
 
-\subsection{Design Requirement C: Integration of common practices with new designs.}
+\subsection{Design Requirement C: Integration of Common Practices with New Designs.}
 
 We incorporate visual tools that are familiar to the nuclear scientists (e.g., scatterplots) into our new visual design to ease the knowledge discovery process.
 %
@@ -136,7 +136,7 @@ In addition, the scientists find that the scatterplots also provide some sense o
 %
 Knowing such details also allows us to encode density information into other representations not prone to the occlusion problem.
 
-\subsection{Design Requirement D: Presentation of comparative and quantitative information.}
+\subsection{Design Requirement D: Presentation of Comparative and Quantitative Information.}
 
 Initial visualizations of the sensitivity information focus on a comparative analysis that uses shapes of different sizes to convey differences among individual  partitions in the data.
 %
@@ -144,7 +144,7 @@ Though it is useful for quickly detecting major trends, the scientists have requ
 %
 Additional designs have been suggested (such as the fitness view detailed in Section~\ref{sec:saDesign}) by the scientists that allow us to better understand their mental model of the data and design our visualization accordingly.
 
-\subsection{Design Requirement E: Scalable analysis and visualization.}
+\subsection{Design Requirement E: Scalable Analysis and Visualization.}
 
 The existing SA capabilities do not scale well with the increasing number of parameters/dimensions, but our proposed SA using MSR scales well in high dimensions.
 %
@@ -351,7 +351,7 @@ Such a programming environment supports rapid software prototyping and ensures t
 %
 In addition, our modular implementation and linked view design~\cite{Roberts2007}  are also suitable for extending and expanding the visualization capabilities of RAVEN in the future.
 
-\section{Deployment \& Evaluation: Nuclear Fuel Design}
+\section{Deployment and Evaluation: Nuclear Fuel Design}
 \label{sec:saApplication}
 The final \emph{deploy} stage of our design study involves software release and evaluation.
 %
