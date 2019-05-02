@@ -40,9 +40,9 @@ Chapters~\ref{ch:adaptiveSampling} and~\ref{ch:visualization} elaborate on novel
 %
 Lastly, Chapter~\ref{ch:graphs} presents an in-depth study of the approximation quality of constructs presented in earlier chapters by enhancing and evaluating the underlying graph structures used for performing various analyses.
 
-\section{Scientific Discovery Through Exploratory Data Analysis}
+\section{Scientific Discovery Through Exploratory\\Data Analysis}
 
-We, as scientists, advance the state of the art by application of the scientific method which typically begins with an observation that leads to a hypothesis.
+We, as scientists, advance the state of the art by application of the scientific method, which typically begins with an observation that leads to a hypothesis.
 %
 A reproducible experiment is designed to test the hyptothesis in a controlled environment.
 %
@@ -50,30 +50,18 @@ Data from the experimental phase is then analyzed in order to reject, amend, or 
 %
 It may seem trivial to mention such a basic tenant of the scientific discovery process, but it will serve as a basis for the problems being addressed in this dissertation that aims at alleviating issues occurring in this process in a generically applicable fashion.
 %
-Thus, the components of this body of research have a wide range of applicability to disparate fields of science all applying this methodology.
-
-% For this work, we focus on the experimental and analysis phases that deal primarily with data.
-% %
-% First, the format of the data must be decided for the experiment.
-% %
-% Next, the data is collected in a systematic fashion, so that sensible information can be derived from it.
-% %
-% Lastly, the data is analyzed, manipulated, massaged, and distilled until actionable conclusions can be drawn from that data.
-% %
-% Once conclusions have been drawn, this new knowledge is synthesized into our existing model and the process can be repeated until an adequate understanding of the problem is achieved.
-% %
-% This process is expressed in Figure~\ref{fig:dataCycle}.
+Thus, the components of this body of research have a wide range of applicability to disparate fields of science, all applying this methodology.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=.55\textwidth]{figs/chap1/pipeline}
+  \includegraphics[width=.65\textwidth]{figs/chap1/pipeline}
   \caption[Data collection cycle for scientific discovery]{A broad view of the exploratory data analysis pipeline under study.}
   \label{fig:dataCycle}
 \end{figure}
 
 Figure~\ref{fig:dataCycle} shows a summary of the exploratory data pipeline that we are considering.
 %
-The top box is the natural starting point where we must first identify what quantities of interest we are going to observe.
+The pipeline begins with the top box where we must first identify what quantities of interest we are going to observe.
 %
 Note that the inputs and outputs may not be clearly defined at this point, but the important aspect is that we are identifying a superset of the relevant quantities to be measured in our experimentation phase.
 %
@@ -85,11 +73,11 @@ An experiment in our context is a procedure used to validate or invalidate some 
 %
 The hypothesis usually seeks to define a relationship among different variable factors in a system under study.
 %
-A simulation is simply a computer experiment, i.e. a repeatable procedure with one or more variable input factors executed in a computational environment that produces one or more output factors to be analyzed.
+A simulation is simply a computer experiment, i.e., a repeatable procedure with one or more variable input factors executed in a computational environment that produces one or more output factors to be analyzed.
 %
-Most of the applications in this work will be on simulations and not physical experiments, though from our standpoint, the difference is negligible as the methods described herein apply equally to both.
+Most of the applications in this work will be on simulations and not physical experiments, although from our standpoint, the difference is negligible because the methods described herein apply equally to both.
 %
-As such, we will use the term \textit{experiment} in order to be as general as possible.
+Therefore, we will use the term \textit{experiment} in order to be as general as possible.
 %
 In order to perform an experiment, we typically perform the procedure under different settings for a set of factors we believe to be significant.
 %
@@ -105,11 +93,11 @@ In the case where the factors can be quantified, the scientist will likely utili
 %
 The scientist will thus generate and analyze data with the end goal of making a decision.
 %
-In this case, the decision may be to pursue a particular type of fuel for use in production or to use a reasonable approximation for more extensive testing at a reduced cost.
+In this case, the decision may be to pursue a particular type of fuel for use in production or to use an approximation for more extensive testing at a reduced cost.
 
-We specifically target multidimensional, numeric data which can be modeled as a scalar function.
+We specifically target multidimensional, numeric data that can be modeled as a scalar function.
 %
-A scalar function simply means that for a set of input parameters we associate a single target output value.
+A scalar function simply means that for a set of input parameters, we associate a single target output value.
 %
 Multidimensional, in this setting, is taken to mean that the collection of inputs associated to the target value consists of two or more numeric values.
 %
@@ -183,6 +171,6 @@ These techniques are reviewed in Chapter~\ref{ch:related}.
 %
 In Chapter~\ref{ch:visualization}, I highlight novel, published work that explores the use of topological techniques for performing structured sensitivity analysis within a visualization system designed specifically for nuclear engineers.
 %
-This work is incorporated into the RAVEN software~\cite{RabitiAlfonsiCogliati2015} developed at Idaho National Laboratory and is currently used by nuclear engineers for analyzing experimental results ranging from nuclear fuel design to multi-plant coordination.
+This work is incorporated into the RAVEN software~\cite{RabitiAlfonsiCogliati2015}, developed at Idaho National Laboratory and is currently used by nuclear engineers for analyzing experimental results ranging from nuclear fuel design to multiplant coordination.
 
 % \bibliography{\jobname}
