@@ -207,18 +207,18 @@ The Diagonal function consists of a sine curve aligned with the main diagonal of
 %
 The Diagonal function is attractive for testing as it is not axis aligned, its topological structure is well understood and can be computed analytically, and its complexity is easily controlled.
 %
-Section~\ref{sec:test} details the closed forms of each function and illustrates their behavior by using 2D contour plots.
+Section~\ref{sec:test} details the closed forms of each function and illustrates their behavior by using two-dimensional contour plots.
 
 \para{Plot and Specifications}
 All graphs show the root mean squared error (RMSE) of a given regression model versus the number of samples used for training.
 %
 The RMSE is computed using points evaluated on a grid.
 %
-For the 2D case, the total number of points is 2601 evenly spaced at an interval of 0.02.
+For the two-dimensional case, the total number of points is 2601 evenly spaced at an interval of 0.02.
 %
-The 3D case uses a total of 9261 points with a grid spacing of 0.05.
+The three-dimensional case uses a total of 9261 points with a grid spacing of 0.05.
 %
-The 4D case uses a total of 14641 points with a spacing of 0.1, and the 5D case uses a total of 7776 validation points with a spacing of 0.2.
+The four-dimensional case uses a total of 14641 points with a spacing of 0.1, and the 5D case uses a total of 7776 validation points with a spacing of 0.2.
 %
 All plots show the median RMSE of 10 trial runs.
 %
@@ -226,7 +226,7 @@ We use the median value since, as discussed below, several regression techniques
 %
 For a fixed prediction model, all trials start from the same LHS initial training sample $\Tcal$.
 %
-$|\Tcal| = 20, 30, 100,$ and $200$ in 2D, 3D, 4D, and 5D respectively.
+$|\Tcal| = 20, 30, 100,$ and $200$ in two, three, four, and five dimensions, respectively.
 %
 Curves are colored by scoring function with the thicker black line indicating an LHS sample of the given size.
 %
@@ -244,7 +244,7 @@ Nevertheless, as discussed below even without an explicit representation several
 \includegraphics[width=0.2425\linewidth]{figs/chap5/earth_Ackley_td=20}
 \includegraphics[width=0.2425\linewidth]{figs/chap5/mda_Ackley_td=20}
 \includegraphics[width=0.2425\linewidth]{figs/chap5/nnet_Ackley_td=20}
-\caption{Adaptive sampling of the 2D Ackley function using different regression techniques and different scoring functions. (1) GPM; (2) EARTH; (3) MDA; and (4) NNET.}
+\caption{Adaptive sampling of the two-dimensional Ackley function using different regression techniques and different scoring functions. (1) GPM; (2) EARTH; (3) MDA; and (4) NNET.}
 \label{fig:ackley2D_results}
 \end{center}
 \end{figure}
@@ -271,14 +271,14 @@ Subsequently, we only consider experiments in which the space filling design ind
  \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_MGR_td=20}
  \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Salomon_td=20}
  \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Whitley_td=20}
- \caption{Adaptive sampling various 2D test functions using the GPM. (1) Two maxima Diagonal; (2) Four maxima Diagonal; (3) Mixture of five Gaussians; (4) MGR; (5) Salomon; (6) Whitley.}
+ \caption{Adaptive sampling various two-dimensional test functions using the GPM. (1) Two maxima Diagonal; (2) Four maxima Diagonal; (3) Mixture of five Gaussians; (4) MGR; (5) Salomon; (6) Whitley.}
 \label{fig:2D_gpm_results}
 \end{center}
 \end{figure}
 
 In general, the GPM based regression produces the smoothest and most distinctive plots showing clear differences between scoring functions.
 %
-Consider the 2D Ackley function shown in Figure~\ref{fig:ackley2D_results}: The ALM criterion significantly outperforms all other scoring functions with the TopoHP being the only other scoring function to beat the space filling design.
+Consider the two-dimensional Ackley function shown in Figure~\ref{fig:ackley2D_results}: The ALM criterion significantly outperforms all other scoring functions with the TopoHP being the only other scoring function to beat the space filling design.
 %
 Compare this to the EARTH model shown in the same figure: Most scoring functions except TopoHP perform qualitatively similar and barely achieve the same quality as the LHS sampling.
 %
@@ -301,14 +301,14 @@ Overall, NNET achieves by far the worst fit at an RMSE almost an order of magnit
  \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Diag2Max_5D_td=200}\label{fig:2diag5D_gpm}
 \caption{Adaptive sampling of various test functions using the GPM.
 %
-(1)  3D Ackley;
-(2) 3D two maxima Diagonal;
-(3) 3D mixture of two Gaussians;
-(4) 3D mixture of five Gaussians;
-(5) 3D MGR;
-(6) 4D Ackley;
-(7) 5D Salomon;
-(8) 5D two maxima Diagonal function.}
+(1) three-dimensional Ackley;
+(2) three-dimensional two maxima Diagonal;
+(3) three-dimensional mixture of two Gaussians;
+(4) three-dimensional mixture of five Gaussians;
+(5) three-dimensional MGR;
+(6) four-dimensional Ackley;
+(7) five-dimensional Salomon;
+(8) five-dimensional two maxima Diagonal function.}
 \label{fig:345D_gpm}
 \end{center}
 \end{figure}
@@ -321,7 +321,7 @@ The NNET with the standard parameters consistently performs worse than all other
 %
 Furthermore, only the GPM model shows significant differences between scoring functions.
 %
-For the GPM based adaptive sampling the one trend observed in most 2D test functions is that the ALM criterion seems to outperform all others.
+For the GPM based adaptive sampling the one trend observed in most two-dimensional test functions is that the ALM criterion seems to outperform all others.
 %
 A possible explanation for this behavior is that the predicted variance on which the ALM criterion is based is an integral part of the GPM model itself.
 %
@@ -345,7 +345,7 @@ For the Salomon function, EI performs better than Delta again but both fail to b
 %
 Finally, the Whitley function shows overall a better performance with EI and Delta both outperforming the topological scoring functions.
 
-The 3D experiments using the GPM show largely similar results as shown in
+The three-dimensional experiments using the GPM show largely similar results as shown in
 Figure~\ref{fig:345D_gpm}.
 %
 The ALM function generally performs best with the remaining scoring functions in different combinations behind.
@@ -359,7 +359,7 @@ which, once found, almost entirely determine the function.
 %
 In such cases the Delta functional may perform well as it picks values purely based on the observed range.
 %
-It is unclear, however, why such a behavior is not present in the 2D versions.
+It is unclear, however, why such a behavior is not present in the two-dimensional versions.
 
 A similar behavior can be seen in higher dimensions (refer to Figure~\ref{fig:345D_gpm}): The 4D Ackley and the 5D Salomon function show the expected advantage of the ALM criterion while the 5D two maxima Diagonal
 function again prefers the Delta criterion.
@@ -372,12 +372,12 @@ The EARTH model produces results similar to the ones shown in Figure~\ref{fig:ac
 %
 However, considering other experiments listed in the same figure, other experiments show rather large fluctuations in either some adaptive sampling curves, e.g. the TopoHP curve within the MGR function or the LHS curve, e.g. the Whitley function.
 %
-Overall, the 2D Whitley function shows a good performance with nearly all adaptive criteria outperforming the LHS curve.
+Overall, the two-dimensional Whitley function shows a good performance with nearly all adaptive criteria outperforming the LHS curve.
 %
-Interestingly, in its 3D incarnation the adaptive sampling does not work nearly as well and furthermore shows excessive variations in several curves.
+Interestingly, in its three-dimensional incarnation the adaptive sampling does not work nearly as well and furthermore shows excessive variations in several curves.
 
 Still looking at (Figure~\ref{fig:earth_results}), in general, there appears to be no significant advantage of one scoring function over another.
-However, for many cases with the EARTH model, the TopoHP seems to perform especially bad, for example, see the 3D Whitley and 3D MGR functions.
+However, for many cases with the EARTH model, the TopoHP seems to perform especially bad, for example, see the three-dimensional Whitley and three-dimensional MGR functions.
 %
 This is rather surprising since for the GPM model TopoHP performed rather well and typically better than the other topological scoring functions.
 %
@@ -402,14 +402,14 @@ A failed but nevertheless interesting result comes from the mixture of two Gauss
  \includegraphics[width=0.24\linewidth]{figs/chap5/earth_MGR_td=30}
  \includegraphics[width=0.24\linewidth]{figs/chap5/earth_GMM2_3D_td=30}
  \caption{Adaptive sampling of various test functions using the EARTH regression model.
-(1) 2D two maxima Diagonal function;
-(2)2D mixture of five Gaussians;
-(3)2D MGR function;
-(4) 2D Whitley functions;
-(5) 3D Ackley function;
-(6) 3D Whitley function;
-(7) 3D MGR function;
-(8) 3D mixture of two Gaussians.}
+(1) two-dimensional two maxima Diagonal function;
+(2) two-dimensional mixture of five Gaussians;
+(3) two-dimensional MGR function;
+(4) two-dimensional Whitley functions;
+(5) three-dimensional Ackley function;
+(6) three-dimensional Whitley function;
+(7) three-dimensional MGR function;
+(8) three-dimensional mixture of two Gaussians.}
 \label{fig:earth_results}
 \end{center}
 \end{figure}
@@ -426,14 +426,14 @@ A failed but nevertheless interesting result comes from the mixture of two Gauss
   \includegraphics[width=0.24\linewidth]{figs/chap5/mda_MGR_td=30}
   \includegraphics[width=0.24\linewidth]{figs/chap5/mda_GMM2_3D_td=30}
 \caption{Adaptive sampling of various test functions using the MDA model.
-(1) 2D two maxima Diagonal;
-(2) 2D mixture of five Gaussians;
-(3) 2D MGR function;
-(4) 2D Whitley function;
-(5) 3D Ackley function;
-(6) 3D Whitley function;
-(7) 3D MGR function;
-(8) 3D mixture of two Gaussians.}
+(1) two-dimensional two maxima Diagonal;
+(2) two-dimensional mixture of five Gaussians;
+(3) two-dimensional MGR function;
+(4) two-dimensional Whitley function;
+(5) three-dimensional Ackley function;
+(6) three-dimensional Whitley function;
+(7) three-dimensional MGR function;
+(8) three-dimensional mixture of two Gaussians.}
 \label{fig:mda}
 \end{center}
 \end{figure}
@@ -442,9 +442,9 @@ The other MARS implementation MDA, unsurprisingly, shows largely the same behavi
 %
 Figure~\ref{fig:mda} shows four examples each in two and three dimensions.
 %
-Comparing with the Earth model, we see typically comparable RMSE, and higher variability (e.g. the 2-diagonal and GMM functions in 2D) with the exception of 3D Whitley function.
+Comparing with the Earth model, we see typically comparable RMSE, and higher variability (e.g. the two-diagonal and GMM functions in two-dimensional) with the exception of the three-dimensional Whitley function.
 %
-Again the 3D mixture of two Gaussians shows the initial decrease in RMSE for several scoring functions.
+Again the three-dimensional mixture of two Gaussians shows the initial decrease in RMSE for several scoring functions.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -452,7 +452,7 @@ Again the 3D mixture of two Gaussians shows the initial decrease in RMSE for sev
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_GMM5_2D_td=20}\label{fig:gmm52D_nnet}
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_MGR_td=20}\label{fig:mgr2D_nnet}
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Salomon_td=20}\label{fig:salomon2D_nnet}
-\caption{Adaptive sampling of various 2D test functions using the NNET model.
+\caption{Adaptive sampling of various two-dimensional test functions using the NNET model.
 (1) Two maxima Diagonal function;
 (2) Mixture of five Gaussians;
 (3) MGR function;
@@ -467,7 +467,7 @@ Again the 3D mixture of two Gaussians shows the initial decrease in RMSE for sev
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_MGR_td=30}\label{fig:mgr3D_nnet}
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Salomon_td=30}\label{fig:salomon3D_nnet}
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_GMM2_3D_td=30}\label{fig:gmm23D_nnet}
-\caption{Adaptive sampling of various 3D test functions using the
+\caption{Adaptive sampling of various three-dimensional test functions using the
   NNET model. (1) Ackley function; (2) MGR function; (3) Salomon function; (4) Mixture of two Gaussians.}
   \label{fig:nnet_3D}
 \end{center}
@@ -479,11 +479,11 @@ Apart from the Ackley function, some models that performed reasonably in two dim
 %
 The MGR function shows a competitive RMSE as a baseline but excessive variations for virtually all adaptive scoring functions as well as the LHS line.
 %
-The 3D MGR function shows a similar behavior except that the LHS line now appears to be stable.
+The three-dimensional MGR function shows a similar behavior except that the LHS line now appears to be stable.
 
-The 3D Ackley and Salomon function both show the high variability and high RMSE with no adaptive scoring functions able to outperform the space-filling sampling.
+The three-dimensional Ackley and Salomon function both show the high variability and high RMSE with no adaptive scoring functions able to outperform the space-filling sampling.
 %
-Just as with the two MARS implementations the 3D mixture of two Gaussians does not improve with increasing number of samples and shows the initial increase in RMSE for some scoring functions.
+Just as with the two MARS implementations the three-dimensional mixture of two Gaussians does not improve with increasing number of samples and shows the initial increase in RMSE for some scoring functions.
 
 \subsection{Discussion}
 
@@ -520,7 +520,7 @@ Nevertheless, topological scoring functions are expected to better recover the g
 \includegraphics[width=0.24\linewidth]{figs/chap5/MGR.png}
 \includegraphics[width=0.24\linewidth]{figs/chap5/Salomon.png}
 \includegraphics[width=0.24\linewidth]{figs/chap5/Whitley.png}
-\caption{Pseudo-colored contour plots of the 2D versions of the test functions.
+\caption{Pseudo-colored contour plots of the two-dimensional versions of the test functions.
 %
 From left to right: Ackley, Diagonal function with two maxima (Diag2Max), Diagonal function with four maxima (Diag4Max), Gaussian Mixture Model with two (GMM2) and five Gaussians (GMM5), Mis-scaled Generalized Rastrigin (MGR), Salomon and Whitley, respectively.}
 \label{fig:original}
@@ -1340,7 +1340,7 @@ Selecting points that are bundled in one area may improve the local fit, but are
 
 The following is a predominantly qualitative study of adaptive sampling for limit surface extraction geared at nuclear simulation data.
 %
-I begin with a brief introduction of the problem space before presenting a collection of modified adaptive sampling pipelines along with results on a series 2D of problems.
+I begin with a brief introduction of the problem space before presenting a collection of modified adaptive sampling pipelines along with results on a series two-dimensional of problems.
 
 To study the reliability and safety of complex systems (e.g. nuclear power plants, airplanes, chemical plants), one typically performs a combination of event tree and fault tree analysis \cite{Zio2009}.
 %
@@ -1831,7 +1831,7 @@ The lack of exploration in the other models affords them to only recover this co
 \label{fig:RMSE-median}
 \end{figure}
 
-Since $\Mthree$ does not rely on a prediction model, therefore it is difficult to evaluate the estimated function values of the set of points located on the true limit surface from $\Mthree$\footnote{However this is not entirely impossible, in 2D, this involves linearly interpolating within triangles; In high dimensions, this becomes a lot harder and requires construction of high-dimensional simplexes.}.
+Since $\Mthree$ does not rely on a prediction model, therefore it is difficult to evaluate the estimated function values of the set of points located on the true limit surface from $\Mthree$\footnote{However this is not entirely impossible, in two dimensions, this involves linearly interpolating within triangles; In high dimensions, this becomes a lot harder and requires construction of high-dimensional simplexes.}.
 %
 Thus we do not have RMSE convergence for $\Mthree$.
 %

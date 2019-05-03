@@ -102,8 +102,8 @@ Thus, if an input is sampled using a normal distribution, more cuts will be made
   \includegraphics[width=.27\textwidth]{figs/chap3/lhs}\qquad
   \includegraphics[width=.27\textwidth]{figs/chap3/lhs2}\qquad
   \includegraphics[width=.27\textwidth]{figs/chap3/lhs3}
-  \caption[2D Latin Hypercube Sampling Example]{An example of LHS sampling in
-  2D: Left: After selecting one point, we color its constituent row and column
+  \caption[Two-dimensional Latin hypercube sampling example]{An example of LHS sampling in
+  two dimensions: Left: After selecting one point, we color its constituent row and column
   and prevent any more samples from being drawn from the colored cells.
   Center: The end result shows a distinct color representing each of the four
   rows and four columns. Right: An example of an undesired correlation effect appearing in an LHS design. Such a correlation can be mitigated with the use of appropriate techniques.}
@@ -903,21 +903,21 @@ In the new research presented in Chapter~\ref{ch:visualization}, we follow an it
 
 \subsection{Neural Networks}
 
-The combination of accessibility to cloud computing architectures, large-scale data collection/storage, and advancements in GPU processing have made neural networks and deep learning both feasible and widely available.
+The combination of accessibility to cloud computing architectures, large-scale data collection/storage, and advancements in GPU processing has made neural networks and deep learning both feasible and widely available.
 %
 As a result, they have gained immensely in popularity due to the universal approximation theorem~\cite{Cybenko1989,Funahashi1989,Hecht-Nielsen1987,HornikStinchcombeWhite1989}.
 %
 Without first introducing the mathematical formulation of a simple neural network, we can summarize the most generic form of the universal approximation theorem as stating that a neural network with a single hidden layer containing a finite set of neurons defined over a compact set in $\mathbb{R}^n$ is capable of approximating a continuous function to within a given $\epsilon$ error under mild assumptions on the formulation of the artificial neurons.
 %
-Several authors have proven this empowering theorem under various circumstances~\cite{Hornik1991,Hornik1993,Huang2003,HuangBabri1998,IrieMiyake1988,Kurkova1992,LeshnoLinPinkus1993,ParkSandberg1991} (see the survey by Scarselli and Tsoi for a more complete list~\cite{ScarselliTsoi1998}), however caveats still remain.
+Several authors have proven this empowering theorem under various circumstances~\cite{Hornik1991,Hornik1993,Huang2003,HuangBabri1998,IrieMiyake1988,Kurkova1992,LeshnoLinPinkus1993,ParkSandberg1991} (see the survey by Scarselli and Tsoi for a more complete list~\cite{ScarselliTsoi1998}), but caveats still remain.
 
 The universal approximation theorem does not state the exact size/complexity required to attain a specific level of approximation nor that an algorithm exists that will converge to this theoretical existent model.
 %
 For these reasons and the lack of interpretability of such complicated models, some researchers are still slow to adopt these methods.
 %
-Deep learning algorithms are still largely considered a black-box solution to a problem since it difficult to trace the result of a prediction to a specific collection of neurons/coefficients especially those with several layers of abstraction.
+Deep learning algorithms are still largely considered a black-box solution to a problem since it difficult to trace the result of a prediction to a specific collection of neurons/coefficients, especially those with several layers of abstraction.
 %
-Nonetheless, empirically they have proven successful as predictors on many datasets in varied domains such as image analysis~\cite{Daugman1988,FarabetCouprieNajman2012,HadsellSermanetPierre2009,KrizhevskySutskeverHinton2017,MillertariNavabAhmadi2016,YasminSharifMohsin2013}, text, speech, and natural language processing~\cite{BengioDucharmeVincent2003,GravesMohamedHinton2013,GravesWayneDanihelka2014,HochreiterSchmidhuber1997,MaPrincipe2018,SutskeverVinyalsLe2014,WestonBordesChopra2015}, graph-based problems~\cite{WuPanChen2019,ZhangCuiZhu2018,ZhouCuiZhang2018}, and even outperforming humans in complex games~\cite{MnihKavukcuogluSilver2013,SilverHuangMaddison2016}.
+Nonetheless, empirically they have proven successful as predictors on many datasets in varied domains such as image analysis~\cite{Daugman1988,FarabetCouprieNajman2012,HadsellSermanetPierre2009,KrizhevskySutskeverHinton2017,MillertariNavabAhmadi2016,YasminSharifMohsin2013}, text, speech, natural language processing~\cite{BengioDucharmeVincent2003,GravesMohamedHinton2013,GravesWayneDanihelka2014,HochreiterSchmidhuber1997,MaPrincipe2018,SutskeverVinyalsLe2014,WestonBordesChopra2015}, graph-based problems~\cite{WuPanChen2019,ZhangCuiZhu2018,ZhouCuiZhang2018}, and even outperforming humans in complex games~\cite{MnihKavukcuogluSilver2013,SilverHuangMaddison2016}.
 
 To introduce the topic, I will explain a simple feed-forward neural network with a single hidden layer that we can later generalize to more arbitrarily complex models.
 %
@@ -925,73 +925,75 @@ For further details, I defer to Ripley~\cite{Ripley1996} and Hastie et al.~\cite
 
 An artificial neural network is modeled after neural networks seen in biology such as our own nervous system.
 %
-The idea is to view the data as being layered, where the model inputs and outputs comprise the two outermost layers which are connected by a pathway of one or more ``hidden'' layers that models how input signals are transmitted through a pathway of neurons in order to solve a problem or make a decision.
+The idea is to view the data as being layered, where the model inputs and outputs comprise the two outermost layers, which are connected by a pathway of one or more ``hidden'' layers that model how input signals are transmitted through a pathway of neurons in order to solve a problem or make a decision.
 %
-In its simplest form, a single hidden layer is comprised of artificial neurons which each perform a different operation on the incoming data and pass that information to the output layer.
+In its simplest form, a single hidden layer is comprised of artificial neurons that each perform a different operation on the incoming data and pass that information to the output layer.
 %
-The artificial neurons are trained and their connections from the input layer and to the output layer are inhibited or enforced depending on the training data.
+The artificial neurons are trained, and their connections from the input layer and to the output layer are inhibited or enforced depending on the training data.
 %
 Below, I will describe more mathematically how this can occur in order to produce a usable result.
 
-The single layer neural network is a non-linear statistical model, where the response of interest is modeled as a linear combination of $M$ derived features (the hidden units of the neural network):
-
+The single layer neural network is a nonlinear statistical model, where the response of interest is modeled as a linear combination of $M$ derived features (the hidden units of the neural network):
+%
 \begin{equation}
 \hat{y}(\mathbf{x}) = \beta_0 + \boldsymbol{\beta}^T \mathbf{z}
 \end{equation}
-
+%
 where $\mathbf{z} = (z_1, \dots, z_M)^T$ and $z_m = \sigma(\alpha_{0m} + \boldsymbol{\alpha}_m^T \mathbf{x})$.
 %
-$\sigma(v)$ is known as the activation function and using the neural pathway example is responsible for activating/propagating a signal or quelling it.
+$\sigma(v)$ is known as the activation function, and using the neural pathway example is responsible for activating/propagating a signal or quelling it.
 %
-It works by mapping a real-valued scalar value onto a desired range which may or may not be bounded depending on the application.
+It works by mapping a real-valued scalar value onto a desired range, which may or may not be bounded depending on the application.
 %
 Example activations include the sigmoid function, $\sigma(v) = 1/(1+e^{-v})$, the hyperbolic tangent function, $\sigma(v) = \frac{e^v-e^{-v}}{e^v+e^{-v}}$, the rectified linear unit, $\sigma(v) = \max(0, v)$, and the leaky rectified linear unit, $\sigma(v) = \max(\epsilon v, v)$, where $\epsilon \ll 1$.
 %
-The unknown parameters of the neural network, which we denote by $\boldsymbol{\theta}$ are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
+The unknown parameters of the neural network, which we denote by $\boldsymbol{\theta}$, are often referred to as weights, and consist of the $M(d+1)$ $\alpha$'s of the hidden layer and the $M+1$ $\beta$'s for the response model.
 %
 The weights are estimated by minimizing the sum-of-squares, $R(\boldsymbol{\theta}) = \sum_{i=1}^n (y_i - \hat{y}(\mathbf{x}_i))^2$.
 %
-However, for a large neural network, the resulting neural network over-fits the data (i.e., the neural network fits the training data well, but performs poorly on independent validation data).
+However, for a large neural network, the resulting neural network overfits the data (i.e., the neural network fits the training data well, but performs poorly on independent validation data).
 %
 A common solution is to add a regularization term that shrinks the weights to zero, such as $J(\boldsymbol{\theta}) = \sum_{m=0}^M \beta_{m}^2 + \sum_{m=0,j=1}^{M,d} \alpha_{mj}^2$, and then minimize $R(\boldsymbol{\theta}) + \lambda J(\boldsymbol{\theta})$.
 %
-The minimization can be carried out in an efficient manner using gradient-based methods, as the gradient of the neural network can be computed easily using the chain rule for differentiation.
+The minimization can be carried out in an efficient manner using gradient-based methods, because the gradient of the neural network can be computed easily using the chain rule for differentiation.
 %
 As in the case of MARS, the prediction error of the neural network can be estimated using bootstrap methods.
 
 \subsection{Support Vector Machines}
 \label{sec:svm}
 
-Support Vector Machines (SVMs) were first introduced as a means of binary classification via a linear separator~\cite{VapnikLerner1963}.
+Support vector machines (SVMs) were first introduced as a means of binary classification via a linear separator~\cite{VapnikLerner1963}.
 %
 In the classical case, a hyperplane is used to divide two classes of points where a subset of the original data is used to determine this hyperplane.
 %
-The specific subset of data used are known as the \emph{support vectors} and can intuitively be thought of as the points closest to the boundary separating the two classes.
+The specific subset of data used is known as the \emph{support vectors} and can intuitively be thought of as the points closest to the boundary separating the two classes.
 %
 Using the support vectors, we can construct the equation of the separating hyperplane, $S_0: 0 = \mathbf{w} \cdot \mathbf{x} - b$ by constructing an optimality criteria that the hyperplane has a maximal distance to the support vectors and the fewest number of misclassified points (in the case where the data is not linearly separable).
 %
 Figure~\ref{fig:svmExample} shows an annotated example of the support vector machine applied to a dataset that is linearly separable.
 
-\begin{figure}[!ht]
+\begin{figure}[b]
   \centering
   \includegraphics[width=0.85\textwidth]{figs/chap3/svmExample}
   \caption[Linear Support Vector Machine Example]{A two-dimensional example dataset showing the linear separator, margin, and support vectors of a trivial classification problem.}
   \label{fig:svmExample}
 \end{figure}
 
-We can see from Figure~\ref{fig:svmExample} that the support vectors of each class define hyperplanes that are parallel to $S_0$, namely $S_{-}$ and $S_{+}$ which are set to be defined by the equations $-1 = \mathbf{w} \cdot \mathbf{x} - b$ and $1 = \mathbf{w} \cdot \mathbf{x} - b$, respectively.
+We can see from Figure~\ref{fig:svmExample} that the support vectors of each class define hyperplanes that are parallel to $S_0$, namely $S_{-}$ and $S_{+}$, which are set to be defined by the equations $-1 = \mathbf{w} \cdot \mathbf{x} - b$ and $1 = \mathbf{w} \cdot \mathbf{x} - b$, respectively.
 %
 The shaded region bounded by the separating hyperplanes, $S_{-}$ and $S_{+}$, is known as the \emph{margin} and represents the area we seek to maximize.
 %
 The width of the margin is inversely proportional to the norm of the separating hyperplane coefficients, $\mathbf{w}$.
 %
-Therefore, by minimizing $||\mathbf{w}||$ according to the constraint that our data lies on the correct side of the margin, we obtain the optimal separating hyperplane.
+Therefore, by minimizing $||\mathbf{w}||$ according to the constraint that our data lie on the correct side of the margin, we obtain the optimal separating hyperplane.
 
 If we define our class labels to be $y_i: y_i \in \{-1,1\}$, then we can rewrite the constraints in a single equation: $y_i(\mathbf{w} \cdot \mathbf{x_i} - b ) \geq 1$ for $i=1,...,n$ where $n$ is the number of support vectors.
 %
-In the case where the data is not linearly separable in the original space, we can either relax our constraint to include a soft margin that allows points to be misclassified~\cite{CortesVapnik1995} and/or the data can be transformed into a feature space where it is linearly separable~\cite{BoserGuyonVapnik1992}.
+In the case where the data is not linearly separable in the original space, we can either relax our constraint to include a soft margin that allows points to be misclassified~\cite{CortesVapnik1995}, and/or the data can be transformed into a feature space that linearly separates the data~\cite{BoserGuyonVapnik1992}.
 
-The formulation of the SVM can also be augmented to work in a regression setting, however this is beyond the scope of this work, and so the interested reader is referred to the work of Drucker et al.~\cite{DruckerBurgesKaufman1997} for more details regarding that formulation.
+The formulation of the SVM can also be augmented to work in a regression setting, but this is beyond the scope of this work.
+%
+Therefore, the interested reader is referred to the work of Drucker et al.~\cite{DruckerBurgesKaufman1997} for more details regarding that formulation.
 
 \subsubsection{Soft Margin SVM}
 
@@ -1004,9 +1006,9 @@ l(\mathbf{x_i},y_i) = \max(0,1-y_i(\mathbf{w} \cdot \mathbf{x_i} - b))
 \label{eq:hingeLoss}
 \end{equation}
 %
-Note that for correctly classified data, the hinge loss function will return zero and the value increases the farther a misclassified point is from $S_-$ (for $y_i=-1$) or $S_+$ (for $y_i=1$).
+Note that for correctly classified data, the hinge loss function will return zero, and the value increases the farther a misclassified point is from $S_-$ (for $y_i=-1$) or $S_+$ (for $y_i=1$).
 %
-We then combine this hinge loss over all of the support vectors with the original minimization criteria on $||\mathbf{w}||$ to give the minimization problem in Equation~\ref{eq:svmSoftMargin}.
+We then combine this hinge loss over all the support vectors with the original minimization criteria on $||\mathbf{w}||$ to give the minimization problem in Equation~\ref{eq:svmSoftMargin}.
 \begin{equation}
 \argmin_{\mathbf{w},b}\frac{1}{n}\sum_{i=1}^n \left(l(\mathbf{x_i},y_i)\right) + \lambda ||\mathbf{w}||^2
 \label{eq:svmSoftMargin}
@@ -1020,18 +1022,18 @@ As $\lambda$ decreases in magnitude, the behavior of the SVM will tend toward th
 
 Consider the example shown in Figure~\ref{fig:kernelSvmExample}.
 %
-The image on the left represents the data in the original data space, and it is clear that there does not exist a line that can separate the two classes.
+The image on the left represents the data in the original data space, and it is clear that no line exists that can separate the two classes.
 %
 However, we can note that by applying a transformation operator, $K$ on the original data, we can transform it into a space where the data is linearly separable as shown in the right image.
 %
-In this case, we have kept the dimensionality the same ($d=2$), but we have transformed our cartesian coordinates ($x_1$ and $x_2$) into polar coordinates ($r$ and $\theta$).
+In this case, we have kept the dimensionality the same ($d=2$), but we have transformed our Cartesian coordinates ($x_1$ and $x_2$) into polar coordinates ($r$ and $\theta$).
 %
-This is the main concept behind kernel-based SVMs where often the data is projected into a higher dimensional feature space.
+This notion of transforming the input space is the main concept behind kernel-based SVMs where often the data is projected into a higher dimensional feature space.
 
-\begin{figure}[!ht]
+\begin{figure}[b]
   \centering
   \includegraphics[width=0.85\textwidth]{figs/chap3/kernelSvmExample}
-  \caption[Kernel Support Vector Machine Example]{A two-dimensional example dataset is transformed into a different space where it can be linearly separated and the support vector algorithm acts on the transformed space.}
+  \caption[Kernel Support Vector Machine Example]{A two-dimensional example dataset is transformed into a different space where it can be linearly separated, and the support vector algorithm acts on the transformed space.}
   \label{fig:kernelSvmExample}
 \end{figure}
 
@@ -1039,23 +1041,23 @@ When applying a kernel on the data, the same optimization process can be applied
 %
 Common kernels include polynomial, radial basis, sigmoid, and hyperbolic tangent functions.
 %
-It should be noted that as opposed to transforming the data into a fixed dimension space these methods instead transform the data into a feature space whose dimensionality is dependent on the number of training samples.
+As opposed to transforming the data into a fixed dimension space, these methods instead transform the data into a feature space whose dimensionality is dependent on the number of training samples.
 
-The resulting optimization problem of all of the described SVM methods is $\mathcal{O}(n^2)$ with respect to the training size and the computation time is not affected by the dimensionality of the original space.
+The resulting optimization problem of all the described SVM methods is $\mathcal{O}(n^2)$ with respect to the training size and the computation time is not affected by the dimensionality of the original space.
 %
-However, it is worth noting that as dimensionality increases, the out-of-sample error can become a problem which requires more training data to counterbalance.
+However, as dimensionality increases, the out-of-sample error can become a problem that requires more training data to counterbalance.
 
 \subsubsection{SVM Approximations and Optimizations}
 
-Various improvements have been made to optimize the computation costs of the support vector machines, many of these are summarized by Shawe-Taylor and Sun~\cite{Shawe-TaylorSun2011}.
+Various improvements have been made to optimize the computation costs of the support vector machines, many of which are summarized by Shawe-Taylor and Sun~\cite{Shawe-TaylorSun2011}.
 %
 The techniques can be broadly classified into a few categories.
 %
-Ther first of these formulates the SVM as a quadratic programming problem and uses the well-established interior point algorithm~\cite{BoydVandenberghe2004,FineScheinberg2002,FerrisMunson2002,ScholkopfSmola2001}.
+The first of these formulates the SVM as a quadratic programming problem and uses the well-established interior point algorithm~\cite{BoydVandenberghe2004,FineScheinberg2002,FerrisMunson2002,ScholkopfSmola2001}.
 %
 Such methods are efficient and provide reliable and precise solutions for smaller sized problems.
 %
-The second category of methods decompose the problem into smaller subproblems either by chunking~\cite{BordesErtekinWeston2005,ChangLin2011,Joachims1999,OsunaFreundGirosi1997,Platt1998,Vapnik1982,ZanniSerafiniZanghirati2006} or by employing an active set strategy~\cite{CauwenberghsPoggio2000,HastieRossetTibshirani2004,Scheinberg2006,ShiltonPalaniswamiRalph2005}.
+Methods in the second category decompose the problem into smaller subproblems either by chunking~\cite{BordesErtekinWeston2005,ChangLin2011,Joachims1999,OsunaFreundGirosi1997,Platt1998,Vapnik1982,ZanniSerafiniZanghirati2006} or by employing an active set strategy~\cite{CauwenberghsPoggio2000,HastieRossetTibshirani2004,Scheinberg2006,ShiltonPalaniswamiRalph2005}.
 %
 % Chunking the SVM problem into smaller subproblems where solutions of the subproblems are retained speeds up the computation of the larger problem until all of the training data has been used~\cite{OsunaFreundGirosi1997,Vapnik1982}.
 % %
@@ -1067,11 +1069,11 @@ The second category of methods decompose the problem into smaller subproblems ei
 A third category instead looks at decomposing the problem by focusing on one
 coordinate or parameter at a time~\cite{BordesBottouGallinari2007,FriessCristianiniCampbell1998,HsiehChangLin2008,MangasarianMusicant1999}.
 
-Whereas the aforementioned methods formulate a dual problem there are some methods which instead focus on solutions to the primal problem which can be more easily optimized and in some cases handling approximate solutions~\cite{BottouBousquet2008,Shalev-ShwartzSingerSrebro2011}.
+Whereas the first two categories formulate a dual problem, some methods instead focus on solutions to the primal problem that can be more easily optimized and in some cases handling approximate solutions~\cite{BottouBousquet2008,Shalev-ShwartzSingerSrebro2011}.
 %
-These optimizations include using Newton's method~\cite{Chapelle2007,KeerthiDeCoste2005,LeeMangasarian2001,Mangasarian2002}, stochastic sub-gradients with projection~\cite{KivinenSmolaWilliamson2004,Shalev-ShwartzSingerSrebro2011,Zhang2004}, and cutting plane methods~\cite{FrancSonnenburg2008,Joachims2006,TeoSmolaVishwanathan2007}.
+These optimizations include using Newton's method~\cite{Chapelle2007,KeerthiDeCoste2005,LeeMangasarian2001,Mangasarian2002}, stochastic subgradients with projection~\cite{KivinenSmolaWilliamson2004,Shalev-ShwartzSingerSrebro2011,Zhang2004}, and cutting plane methods~\cite{FrancSonnenburg2008,Joachims2006,TeoSmolaVishwanathan2007}.
 %
-The latter two methods are capable of handling non-differentiable objective functions.
+The latter two methods are capable of handling nondifferentiable objective functions.
 
 \subsection{Bayesian Methods}
 
@@ -1079,7 +1081,7 @@ Bayesian techniques can also be used to model the problems described herein, but
 %
 In these methods, a prior distribution is employed before sampling to express the belief about the shape of the data.
 %
-There is a rich body of work that discusses these techniques, but for an overview discussion, see MacKay~\cite{MacKay1992b}.
+A rich body of work discusses these techniques, but for an overview discussion, see MacKay~\cite{MacKay1992b}.
 %
 Of particular interest is the Gaussian process (GP) model~\cite{RasmussenWilliams2006}.
 
@@ -1087,7 +1089,7 @@ GP regression, or Kriging~\cite{Stein1999}, is a response surface method that as
 %
 Thus, any finite collection of data (read training data) can be modeled as a multivariate normal distribution over functions.
 %
-As such a GP can be characterized on a dataset through the use of a mean and covariance function.
+Therefore, a GP can be characterized on a dataset through the use of a mean and covariance function.
 %
 Kriging provides a \emph{best unbiased linear prediction} for unobserved locations by averaging a neighborhood of points around the query location weighted by a mean and covariance function.
 
@@ -1098,7 +1100,7 @@ p(f(z)|X,y) = \mathcal{N}(m(X),k(X,z))
 \label{eq:gp}
 \end{equation}
 
-Often the mean function is assumed to be zero which can simplify the computation and can be done without loss of generality~\cite{Seeger2004}.
+Often the mean function is assumed to be zero, which can simplify the computation and can be done without loss of generality~\cite{Seeger2004}.
 
 \begin{equation}
 p(f(z)|X,y) = \mathcal{N}(0,k(X,z))
@@ -1112,44 +1114,44 @@ Of general importance are the mean and variance prediction at an arbitrary locat
 \sigma(z|X,y) & = & k(z,z) - k(X,z)k(X,X)^{-1}k(X,z)^T
 \end{eqnarray}
 
-Note, $k(X,X)$ denotes a matrix of all possible covariances of the input samples, $k(X,z)$ represents a vector of the covariances of each input sample with the query location $z$.
+$k(X,X)$ denotes a matrix of all possible covariances of the input samples, and $k(X,z)$ represents a vector of the covariances of each input sample with the query location $z$.
 
-From Equation~\ref{eq:gpSimple}, the user needs only to select a covariance function to use and then set the value of its hyperparameters, in order to query a GP at an arbitrary location.
+From Equation~\ref{eq:gpSimple}, the user needs to select only a covariance function to use and then set the value of its hyperparameters, in order to query a GP at an arbitrary location.
 %
 As the covariance function works to weight the contribution of a neighboring point's influence on the prediction of a query location, it makes sense to have a function that is maximal at the query location and tends to zero as the distance from the query location grows.
 %
-Thus, it is common to see kernel functions used such as the squared exponential (most common), linear, piecewise polynomial, Mat\'{e}rn, and the Ornstein-Uhlenbeck functions, although any positive semidefinite function can be used in theory~\cite{RasmussenWilliams2006}.
+Thus, it is common to see kernel functions used, such as the squared exponential (most common), linear, piecewise polynomial, Mat\'{e}rn, and the Ornstein-Uhlenbeck functions, although any positive semidefinite function can be used in theory~\cite{RasmussenWilliams2006}.
 
-From a supervised learning perspective, where the model should be ``fit'' to the training data, we fit hyperparameters to a prior covariance function defined for the data which allows us to make predictions on the data.
+From a supervised learning perspective, where the model should be ``fit'' to the training data, we fit hyperparameters to a prior covariance function defined for the data, which allows us to make predictions on the data.
 %
 Various methods for fitting these hyperparameters exist such as cross validation and maximization of the marginal likelihood (see Chapter 5 of Rasmussen and Williams~\cite{RasmussenWilliams2006}).
 %
-The training process involves optimizing hyperparameters which are parameters to the selected covariance function.
+The training process involves optimizing hyperparameters, which are parameters to the selected covariance function.
 
 \section{Topological Data Analysis}
 A crucial step in gaining insights from large, complex, high-dimensional data involves feature abstraction, extraction, and evaluation in the spatiotemporal domain for effective exploration and visualization.
 %
-Topological data analysis (TDA, see~\cite{EdsbrunnerHarer2010,Zomorodian2005,BiasottisDeFlorianiFalcidieno2008,Carlsson2009,EdelsbrunnerHarer2008,Ghrist2009} for seminal works and surveys), has provided efficient and reliable feature-driven analysis and visualization capabilities.
+Topological data analysis (TDA, see~\cite{EdsbrunnerHarer2010,Zomorodian2005,BiasottisDeFlorianiFalcidieno2008,Carlsson2009,EdelsbrunnerHarer2008,Ghrist2009} for seminal works and surveys) has provided efficient and reliable feature-driven analysis and visualization capabilities.
 %
 Previous work in pure mathematical fashion has focused on the study of topological spaces under smooth and continuous settings without computational considerations of noisy and discrete datasets.
 %
-TDA typically operates under the discrete setting where combinatorial structures such as graphs or simplicial complexes are imposed on the point cloud data to approximate their underlying structure.
+TDA typically operates under the discrete setting, where combinatorial structures such as graphs or simplicial complexes are imposed on the point cloud data to approximate their underlying structure.
 %
 In Chapters~\ref{ch:adaptiveSampling}-~\ref{ch:graphs}, we apply TDA-based methods to different tasks in the design and analysis of computer experiments framework.
 %
-As such, we review the applications of TDA specifically for multidimensional data analysis and visualization.
+Therefore, we review the applications of TDA specifically for multidimensional data analysis and visualization.
 %
 A specific emphasis is placed on constructs from Morse theory as they operate specifically on scalar and vector function data.
 
 Many TDA techniques construct topological structures~\cite{Reeb1946,Smale1961} from scalar functions on point clouds (e.g., Morse-Smale complexes, contour trees, and Reeb graphs) as ``summaries'' over data.
 %
-Among the commonly used TDA approaches, Reeb graphs/contour trees capture very different structural information of a real-valued function compared to extremum graphs and Morse and Morse-Smale complexes as the former is contour-based and the latter is gradient-based (Fig.~\ref{fig:topo-structure}).
+Among the commonly used TDA approaches, Reeb graphs/contour trees capture very different structural information of a real-valued function compared to extremum graphs and Morse and Morse-Smale complexes, because the former is contour-based and the latter is gradient-based (Figure~\ref{fig:topo-structure}).
 
-\begin{figure}[!ht]
+\begin{figure}[b]
   \centering
   \includegraphics[width=0.85\textwidth]{figs/chap3/topostructure}
   \caption[Contour and Gradient-based Structures]{Contour- and gradient-based
-  topological structure of a 2D scalar function.}
+  topological structure of a two-dimensional scalar function.}
   \label{fig:topo-structure}
 \end{figure}
 
@@ -1168,18 +1170,18 @@ HDViz~\cite{GerberBremerPascucci2010}, mentioned previously, employs an approxim
 %
 It creates a hierarchical segmentation of the data by clustering points based on their monotonic flow behavior, and designs new visual metaphors based on such a segmentation.
 %
-Correa and Lindstrom~\cite{CorreaLindstrom2011} suggest that by considering a different type of neighborhood structure, the accuracy in the extracted topology can be improved compared to those obtained within HDViz which relies on a $k$-nearest neighborhood which can tend to bias specific directions when the sampling density is variable across the domain.
+Correa and Lindstrom~\cite{CorreaLindstrom2011} suggest that by considering a different type of neighborhood structure, the accuracy in the extracted topology can be improved compared to those obtained within HDViz, which relies on a $k$-nearest neighborhood, which can tend to bias specific directions when the sampling density is variable across the domain.
 %
-Namely, they leverage a family of graphs known as empty region graphs which were introduced in Section~\ref{sec:graphs} and are discussed in greater detail in Section~\ref{sec:approximationMSC} and Chapter~\ref{ch:graphs}.
+Namely, they leverage a family of graphs known as empty region graphs, which were introduced in Section~\ref{sec:graphs} and are discussed in greater detail in Section~\ref{sec:approximationMSC} and Chapter~\ref{ch:graphs}.
 %
 
 The topological spine~\cite{CorreaLindstromBremer2011} uses the Morse-Smale complex to build an extremum graph that can more faithfully represent complex structures such as cycles and fractals occurring in the topology.
 %
-Narayanan et al.~\cite{NarayananThomasNatarajan2015} design a metric for comparing such extremum graphs of related data that was used in time-varying data to identify significant events and periodicity in data.
+Narayanan et al.~\cite{NarayananThomasNatarajan2015} design a metric for comparing such extremum graphs of related data that is used for time-varying data to identify significant events and periodicity in data.
 
 \subsection{Levelset topology}
 
-One use of Morse theory is to study the evolution of levelsets, that is the birth and death of connected components.
+One use of Morse theory is to study the evolution of levelsets, that is, the birth and death of connected components.
 %
 In order to conceptualize this idea, consider the manifold under study as a terrain and the Morse function value as the elevation of the terrain.
 %
@@ -1202,25 +1204,25 @@ of the same connected component of $f^{-1}(f(x_i))$, where $f : \mathbb{M} \righ
 
 Informally, the Reeb graph is the result of contracting each connected component of a levelset to a point and connecting corresponding points between levelsets via edges.
 %
-As stated above, it is only necessary to represent the levelsets of the critical points as nodes in the graph, and thus allow the edges of the graph to represent the infinite number of levelsets existing between critical points.
+As stated above, it is necessary to represent the levelsets of the critical points only as nodes in the graph, and thus allow the edges of the graph to represent the infinite number of levelsets existing between critical points.
 
-Georges Reeb, a French mathematician, first formalized the toplogical construct now known as the Reeb Graph in 1946~\cite{Reeb1946}.
+Georges Reeb, a French mathematician, first formalized the toplogical construct now known as the Reeb graph in 1946~\cite{Reeb1946}.
 %
-The Reeb graph remained an abstract mathematical construct until 1991 when Shinagawa et. al.~\cite{ShinagawaKuniiKergosien1991} formalized and extended the necessary concepts from Morse theory to construct Reeb graph visualizations for reconstructing 3D surfaces from 2D cross sections.
+The Reeb graph remained an abstract mathematical construct until 1991 when Shinagawa et al.~\cite{ShinagawaKuniiKergosien1991} formalized and extended the necessary concepts from Morse theory to construct Reeb graph visualizations for reconstructing three-dimensional surfaces from two-dimensional cross sections.
 %
-Edelsbrunner et al.~\cite{EdelsbrunnerHarerMascarenhas2008} presented an improved algorithm for constructing a time-varying Reeb graph for the triangulated piecewise linear case of the Reeb graph and employed it for analysis of a function defined on a 3-sphere with no boundary.
+Edelsbrunner et al.~\cite{EdelsbrunnerHarerMascarenhas2008} presented an improved algorithm for constructing a time-varying Reeb graph for the triangulated piecewise linear case of the Reeb graph and employed it for analysis of a function defined on a three-sphere with no boundary.
 %
-Pascucci et al.~\cite{PascucciScorzelliBremer2007} later developed an online algorithm for efficiently constructing the Reeb graph on streaming data and prove its correctness on data of arbitrary dimensionality.
+Pascucci et al.~\cite{PascucciScorzelliBremer2007} later developed an online algorithm for efficiently constructing the Reeb graph on streaming data and proved its correctness on data of arbitrary dimensionality.
 %
-The survey of Biasotti et. al. gives a more thorough history of the Reeb graph, its theoretical considerations, and various applications~\cite{BiasottiGiorgiSpagnuolo2008}.
+The survey of Biasotti et al. gives a more thorough history of the Reeb graph, its theoretical considerations, and various applications~\cite{BiasottiGiorgiSpagnuolo2008}.
 
 % \nb{Insert reeb graph example}
 
-The Reeb graph of a real-valued function describes the connectivity of its level sets and has several related structures that are worth noting.
+The Reeb graph of a real-valued function describes the connectivity of its levelsets and has several related structures worth noting.
 %
 A contour tree is a special case of the Reeb graph that arises in simply connected domains.
 %
-A merge tree, also known as a barrier tree, is similar to Reeb graphs and contour trees except that it describes the connectivity of sublevel sets rather than level sets.
+A merge tree, also known as a barrier tree, is similar to Reeb graphs and contour trees except that it describes the connectivity of sublevel sets rather than levelsets.
 %
 Efficient algorithms for computing the contour tree~\cite{CarrSnoeyinkAxen2003,ChiangLenzLu2005} and merge tree~\cite{OesterlingHeineWeber2015} in arbitrary dimensional spaces exist.
 
@@ -1229,7 +1231,7 @@ Mapper~\cite{SinghMemoliCarlsson2007} is a software tool that decomposes data in
 The software has been shown to extract salient features in a study of medical data by correctly classifying normal patients and patients with two different causes of diabetes~\cite{SarikondaPettusPhatak2014}.
 %and various other applications~\cite{SchwartzFriedbergIvanov2012,KnightDavidsonHerman2014}.
 %
-It is shown, in a restrictive sense, that Mapper converges to the Reeb space (a higher-dimensional generalization of Reeb graph) in the limit~\cite{MunchWang2016}.
+It is shown, in a restrictive sense, that Mapper converges to the Reeb space (a higher dimensional generalization of Reeb graph) in the limit~\cite{MunchWang2016}.
 %
 To this end, there have been some very recent efforts in understanding Reeb spaces and fiber surfaces via visualization, although those works have largely focused on bivariate functions on tetrahedral meshes~\cite{CarrGengTierny2015,KlacanskyTiernyCarr2016,TiernyCarr2016}.
 %
@@ -1239,11 +1241,11 @@ In terms of comparing the topologies of related data, the bottleneck distance be
 
 % \subsection{Contour Tree}
 
-For the special case, where the Reeb graph is defined over a simply connected Euclidean space $\mathbb{E}^n$, we acheive the \textbf{contour tree}, that is a Reeb graph with no cycles and consisting of one connected component.
+For the special case where the Reeb graph is defined over a simply connected Euclidean space $\mathbb{E}^n$, we acheive the \textit{contour tree}, which is a Reeb graph with no cycles and consisting of one connected component.
 %
 Carr et al.~\cite{CarrSnoeyinkAxen2003} introduced the first algorithm for computing the contour tree in any dimension.
 %
-Chiang et al.~\cite{ChiangLenzLu2005} sought to improve on Carr's method by avoiding the need to sort the entire dataset thus creating an output sensitive algorithm that only sorts subsets of the data.
+Chiang et al.~\cite{ChiangLenzLu2005} sought to improve on Carr's method by avoiding the need to sort the entire dataset, thus creating an output sensitive algorithm that sorts only subsets of the data.
 %
 
 Various visual metaphors have been designed for contour trees~\cite{PascucciCole-McLaughlinScorzelli2009,WeberBremerPascucci2012}.
@@ -1252,7 +1254,7 @@ In particular, variations of topological landscapes have been used extensively~\
 %
 These visual metaphors have, or potentially have, capabilities for the visualization of high-dimensional datasets.
 %
-In particular, Weber et al.~\cite{WeberBremerPascucci2007} have presented such a metaphor for visually mapping the contour tree of high-dimensional functions to a 2D terrain where the relative size, volume, and nesting of the topological features are preserved.
+In particular, Weber et al.~\cite{WeberBremerPascucci2007} have presented such a metaphor for visually mapping the contour tree of high-dimensional functions to a two-dimensional terrain where the relative size, volume, and nesting of the topological features are preserved.
 %
 Harvey and Wang~\cite{HarveyWang2010} have extended this work by computing all possible planar landscapes, and are able to preserve exactly the volumes of the high-dimensional features in the areas of the terrain.
 %
@@ -1260,7 +1262,7 @@ In addition, the works of Oesterling et al.~\cite{OesterlingHeineJanicke2010,Oes
 %
 This collection of work uses a novel high-dimensional interpolation scheme in order to estimate the density from the raw data points and visually map the density as points on top of their generated terrains.
 
-Oesterling et al.~\cite{OesterlingHeineGunther2013} continued this line of work by creating a linked view software system including user interactions into the analysis by allowing users to brush and link with parallel coordinate plots and PCA projections of the data.
+Oesterling et al.~\cite{OesterlingHeineGunther2013} continued this line of work by creating a linked view software system, which includes user interactions into the analysis by allowing users to brush and link with parallel coordinate plots and PCA projections of the data.
 %
 In addition, they have presented a new method of sorting the features based on either persistence, cluster size, or cluster stability, thus adjusting the placement of features in the topological landscape.
 
@@ -1272,30 +1274,29 @@ In addition, they have presented a new method of sorting the features based on e
 
 The Reeb graph and its relatives all store information regarding the number of components at any function value as well as how these components split and merge as the function value changes.
 %
-Such an abstraction offers a global summary of the topology of the level sets and enables the development of compact and effective methods for modeling and visualizing scientific data, especially in high dimensions (i.e.,~\cite{SinghMemoliCarlsson2007,NicolauLevineCarlsson2011}).
+Such an abstraction offers a global summary of the topology of the levelsets and enables the development of compact and effective methods for modeling and visualizing scientific data, especially in high dimensions (i.e.,~\cite{SinghMemoliCarlsson2007,NicolauLevineCarlsson2011}).
 
 \subsection{Multifield Analysis}
 
-The methods mentioned above deal primarily with scalar field data (except for those regarding Reeb spaces~\cite{MunchWang2016,CarrGengTierny2015,KlacanskyTiernyCarr2016,TiernyCarr2016}), but more recently techniques have been developed to also deal with multi-field data.
+The methods mentioned above deal primarily with scalar field data (except for those regarding Reeb spaces~\cite{MunchWang2016,CarrGengTierny2015,KlacanskyTiernyCarr2016,TiernyCarr2016}), but more recently techniques have been developed to also deal with multifield data.
 %
-Jacobi sets~\cite{EdelsbrunnerHarer2002} have been used to locate the critical points of one scalar field restricted to the level sets of another scalar field, allowing for the simultaneous comparison of two variables of interest.
+Jacobi sets~\cite{EdelsbrunnerHarer2002} are used to locate the critical points of one scalar field restricted to the levelsets of another scalar field, allowing for the simultaneous comparison of two variables of interest.
 %
-However, most applications of Jacobi sets have been to low-dimensional examples and are restricted to comparing only two outputs of interest.
+However, most applications of Jacobi sets are to low-dimensional examples and are restricted to comparing only two outputs of interest.
 
-A more recent and general technique is the development of the Joint Contour Net (JCN), a generalization of the Reeb graph introduced by Carr et al.~\cite{CarrDuke2014,DukeCarrKnoll2012} that allows for the analysis of multifield data.
+A more recent and general technique is the development of the joint contour net (JCN), a generalization of the Reeb graph introduced by Carr et al.~\cite{CarrDuke2014,DukeCarrKnoll2012} that allows for the analysis of multifield data.
 %
-Duke and Hosseini~\cite{DukeHosseini2015} have subsequently improved the performance with a parallel implementation of the JCN, and Geng et al.~\cite{GengDukeCarr2015} have improved the interactivity by enabling brushing and linking and demonstrated its effectiveness in finding periodic patterns in oceanic data.
+Duke and Hosseini~\cite{DukeHosseini2015} subsequently improve the performance with a parallel implementation of the JCN, and Geng et al.~\cite{GengDukeCarr2015} improve the interactivity by enabling brushing and linking and demonstrate its effectiveness in finding periodic patterns in oceanic data.
 %
-Chattopadhyay et al.~\cite{ChattopadhyayCarrDuke2014,ChattopadhyayCarrDuke2016} have focused on bridging the gap between approximation and theory and produced an algorithm for performing simplification on the JCN among several other theoretical advancements.
+Chattopadhyay et al.~\cite{ChattopadhyayCarrDuke2014,ChattopadhyayCarrDuke2016} focus on bridging the gap between approximation and theory and produce an algorithm for performing simplification on the JCN among several other theoretical advancements.
 
-
-The notion of Pareto optimality has also been explored using TDA.
+The notion of Pareto optimality is also being explored using TDA.
 %
 Pareto optimality is the trade-off analysis dealt with in multitarget optimization where a Pareto maximum implies increasing one target function value cannot be done without reducing another, and vice versa for a Pareto minimum.
 %
 The simplicial Pareto set~\cite{HuettenbergerHeineCarr2013} builds off the technique proposed by Stadler and Flamm~\cite{StadlerFlamm2003} to the piecewise linear setting in order to visualize the so-called Pareto sets of a sampled multivariate dataset.
 %
-This work has been extended to deal with noisy data by using a reachability graph to perform topological simplification~\cite{HuettenbergerHeineGarth2014}.
+This work is extended to deal with noisy data by using a reachability graph to perform topological simplification~\cite{HuettenbergerHeineGarth2014}.
 %
 Huettenberger et al.~\cite{HuettenbergerHeineGarth2015} compare the JCN with the Pareto set and conclude that the JCN can be seen as a good and fast approximation of the Pareto set under specific conditions.
 
@@ -1312,13 +1313,13 @@ Subsequently, they perform dimension reduction on the data while ensuring such s
 %
 Carlsson~\cite{Carlsson2009} and Ghrist~\cite{Ghrist2009} both offer several applications of TDA and in particular highlight the topological theory used in a study of statistics of natural images~\cite{LeePedersenMumford2003}.
 %
-Rieck et al. have utilized persistent homology to structurally compare high-dimensional datasets~\cite{RieckMaraLeitte2012,RieckLeitte2014} and to compare dimensionality reduction algorithms~\cite{RieckLeitte2015}.
+Rieck et al. utilize persistent homology to structurally compare high-dimensional datasets~\cite{RieckMaraLeitte2012,RieckLeitte2014} and to compare dimensionality reduction algorithms~\cite{RieckLeitte2015}.
 %
-In the first work, they have introduced the simplicial chain graph, which can be used to characterize the ``holes'' of a high-dimensional dataset and compare datasets.
+In~\cite{RieckMaraLeitte2012}, they introduce the simplicial chain graph, which can be used to characterize the ``holes'' of a high-dimensional dataset and compare datasets.
 %
 The simplicial chain graph combines structural properties of topological analysis with the distance coherency of geometric information.
 %
-In the latter work, they create density estimator functions from the resulting embeddings of popular dimensionality reduction methods.
+In~\cite{RieckLeitte2015}, they create density estimator functions from the resulting embeddings of popular dimensionality reduction methods.
 %
 The persistence diagrams of the resulting functions applied to the original Rips graph can then be compared to the persistence diagram of the original high-dimensional data in order to determine which methods best preserve the topology of the data.
 %

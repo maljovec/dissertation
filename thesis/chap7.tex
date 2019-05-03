@@ -100,7 +100,7 @@ By associating every surface point to its nearest site, we can construct a histo
 %
 The results are summarized in Figure~\ref{fig:cvt_study}.
 %
-A 2D example CCVT sample set is shown in the left image with the surface points colored by their membership.
+A two-dimensional example CCVT sample set is shown in the left image with the surface points colored by their membership.
 %
 The histogram of the middle image shows the frequency of labels for each CCVT site.
 %
@@ -262,7 +262,7 @@ For the neighbors whose $t_q \in (0,1)$, we compute the $L^2$-norm from $q$ to t
     %
     $q_2$ and $q_3$ may violate the empty region property depending on the values of $p$ and $\beta$.
     %
-    Right: we show how $\beta$ and $p$ separately affect the shape of $R$ in 2D.}
+    Right: we show how $\beta$ and $p$ separately affect the shape of $R$ in two dimensions.}
     \label{fig:infinite_slab}
 \end{figure}
 
@@ -279,7 +279,7 @@ Given $u \in [0, 1)$ as the parameterization of a point's distance from the edge
     D(u) = \sqrt[p]{r^{p} - (u - c_x)^p} - \sqrt[p]{c_y}
 \end{equation}
 
-Where $r$ is the radius of a 2D $p$-ball defined by Equation~\ref{eq:beta_radius} and $c$ is the center of said ball with position defind by:
+Where $r$ is the radius of a two-dimensional $p$-ball defined by Equation~\ref{eq:beta_radius} and $c$ is the center of said ball with position defind by:
 
 \begin{equation}
     c =
@@ -315,7 +315,7 @@ Note, that since the function is symmetric about the midpoint, we can devote all
 
 Furthermore, this simplifciation allows us to substitute any arbitrarily complex kernel function for the $L^p$-balls presented thus far.
 %
-For example, in Figure~\ref{fig:discrete_beta}, we demonstrate the use of a several different common kernel functions including a properly scaled Gaussian, Epanechnikov, cosine, quartic, and tricubic functions on a set of 20 CVT sampled points in 2D.
+For example, in Figure~\ref{fig:discrete_beta}, we demonstrate the use of a several different common kernel functions including a properly scaled Gaussian, Epanechnikov, cosine, quartic, and tricubic functions on a set of 20 CVT sampled points in two dimensions.
 %
 We compare these results with the standard $L^p$ norm example and note that the results are unique for each realized graph.
 %
@@ -471,7 +471,7 @@ Examples of the point distributions evaluated and their extracted alpha shapes a
 
 \begin{figure}[htbp]
     \includegraphics[width=\linewidth]{figs/chap7/sample_shapes.png}
-    \caption{2D Point distributions used for our graph quality analysis and their $\alpha$-shapes.}
+    \caption{Two-dimensional point distributions used for our graph quality analysis and their $\alpha$-shapes.}
     \label{fig:shapes}
 \end{figure}
 
@@ -754,7 +754,7 @@ Furthermore the discretized version can add modest improvement to the GPU algori
     \label{fig:performance}
 \end{figure}
 
-\subsection{2D Graph Quality Measures}
+\subsection{Two-Dimensional Graph Quality Measures}
 
 Here we evaluate the measures defined in Section~\ref{sec:graph_quality_measures}
 on various two dimensional distributions using a fixed sample size of 200 points.
@@ -965,7 +965,7 @@ The convenience of these functions is that the locations of the true maxima are 
 %
 We can then measure an approximation's ability to correctly detect these features.
 %
-Figure \ref{fig:datasets} visually depicts 2D versions of the test functions.
+Figure \ref{fig:datasets} visually depicts two-dimensional versions of the test functions.
 %
 The blue regions denote regions of maxima whereas the orange/brown regions denote regions of minima.
 In addition, blue dots represent local maxima, white dots represent saddle points, red dots denote local minima, and the thick lines separate the cells

@@ -19,14 +19,14 @@ As such, the remainder of this section will address each one of these categories
 
 \section{Critical Points}
 
-\begin{lem} Morse Lemma - Let $\mathbf{p}$ be a non-degenerate critical point of $f : A \rightarrow \mathbb{R}$ where $A$ is an $n$-manifold, then there exists a local coordinate system $(x_1,...,x_n$) in a neighborhood of $\mathbf{p}$ such that $x_i(\mathbf{p}) = 0$ and is represented in a \textbf{standard form}:
+\begin{lem} Morse Lemma - Let $\mathbf{p}$ be a nondegenerate critical point of $f : A \rightarrow \mathbb{R}$ where $A$ is an $n$-manifold, then there exists a local coordinate system $(x_1,...,x_n$) in a neighborhood of $\mathbf{p}$ such that $x_i(\mathbf{p}) = 0$ and is represented in a \textbf{standard form}:
 
 \begin{equation}
 f = f(\mathbf{p}) - \sum_{i=1}^{\lambda}x_i^2 + \sum_{j=\lambda+1}^n x_j^2, \{\lambda \in \mathbb{Z} | 0 \leq \lambda < n\}
 \end{equation}
 \end{lem}
 
-This lemma claims that locally around each non-degenerate critical point, we can fit a parabolic function with respect to each dimension to represent $f$ where a given number of dimensions will have downward-facing parabolas and the remaining will have upward-facing parabolas.
+This lemma claims that locally around each nondegenerate critical point, we can fit a parabolic function with respect to each dimension to represent $f$ where a given number of dimensions will have downward-facing parabolas and the remaining will have upward-facing parabolas.
 %
 The parameter $\lambda$ specifies how many of each occur for the given critical point.
 
@@ -43,7 +43,7 @@ The $d$-index critical points represent local maxima where locally the function 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.5\textwidth]{figs/chap4/criticalPoints}
-  \caption[Critical Points of Varying Index]{The standard form of critical points is summarized in the 2D case by visualizing parabolic curves along each dimensional axis. Here we see from left, a 0-index minimum with 0 downward facing parabolas, a 1-saddle with 1 downward facing parabola, and a 2-index maximum with 2 downward facing parabolas.}
+  \caption[Critical Points of Varying Index]{The standard form of critical points is summarized in the two-dimensional case by visualizing parabolic curves along each dimensional axis. Here we see from left, a 0-index minimum with 0 downward facing parabolas, a 1-saddle with 1 downward facing parabola, and a 2-index maximum with 2 downward facing parabolas.}
   \label{fig:critical_points}
 \end{figure}
 
@@ -196,7 +196,7 @@ Figure~\ref{fig:mscAlgorithm} shows the three step process of the discretized Mo
 \subsection{Persistence Simplification}
 At this point, we are able to identify topological features as critical points in the function space.
 %
-When considering even low-dimensional examples such as a 2D terrain, it is clear that not all of the topological features are of equal significance.
+When considering even low-dimensional examples such as a two-dimensional terrain, it is clear that not all of the topological features are of equal significance.
 %
 Thus, we seek some way by which we can sort the topological features in both the Reeb graph and  Morse-Smale complex setting in some way so as to capture this ``significance.''
 %
@@ -204,7 +204,7 @@ Doing so affords us the opportunity to deconstruct the topology into a hierarchi
 
 The notion of significance that we use is taken from the field of persistent homology.
 %
-Persistent homology can be applied to non-functional point cloud data as in the simplicial complex case considered by Carlsson and Ghrist~\cite{Carlsson2009,Ghrist2009}.
+Persistent homology can be applied to nonfunctional point cloud data as in the simplicial complex case considered by Carlsson and Ghrist~\cite{Carlsson2009,Ghrist2009}.
 %
 In such a case, a filtration of a simplicial complex is analyzed in order to track the birth and death of connected components.
 %
@@ -212,7 +212,7 @@ We are concerned with the persistence of features occuring in scalar function da
 
 In order to describe persistence, we begin with the simple 1D case.
 %
-Let $f: \mathbb{R} \rightarrow \mathbb{R}$ be a smooth function with non-degenerate critical points meaning each critical point is either a local minimum or a local maximum (i.e., there are no inflection points).
+Let $f: \mathbb{R} \rightarrow \mathbb{R}$ be a smooth function with nondegenerate critical points meaning each critical point is either a local minimum or a local maximum (i.e., there are no inflection points).
 %
 One may note that the sublevel sets of $f$ change connectivity only when we pass critical values.
 %
@@ -230,7 +230,7 @@ The merged connected component retains the lower valued local minimum as its rep
 %
 Note, that once a local minimum is paired, it will not be paired again as there is no longer a connected component represented by it.
 %
-A 2D example is given in Figure~\ref{fig:persistenceFill}.
+A two-dimensional example is given in Figure~\ref{fig:persistenceFill}.
 
 \begin{figure}[!ht]
   \centering

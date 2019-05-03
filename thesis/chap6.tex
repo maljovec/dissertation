@@ -44,7 +44,7 @@ Furthermore, we report on the successful integration of our framework into the w
 
 Our system targets structured/unstructured point cloud data of up to tens of dimensions.
 %
-We validate and reflect on the efficacy of the new design using a 3D dataset from nuclear fuel analysis.
+We validate and reflect on the efficacy of the new design using a three-dimensional dataset from nuclear fuel analysis.
 %
 Our goal in this analysis is to understand the effects of different fuel parameters on the stress of the fuel cladding.
 %
@@ -83,7 +83,7 @@ We identify several challenges in the existing workflow that are summarized into
   (a) Topological skeleton: each summary curve in the visual space corresponds to a partition of the data; transparent tubes capture the spread (width) and density (luminance) of the partition.
   (b) Persistence chart: number of partitions plotted as a function of scale.
   (c) Scatterplot matrix of partitioned data.
-  (d) Inverse coordinate plots: summary curves and partitioned data are projected onto a 2D plot where the x-axis represents the output dimension, and each y-axis
+  (d) Inverse coordinate plots: summary curves and partitioned data are projected onto a two-dimensional plot where the x-axis represents the output dimension, and each y-axis
   represents an input dimension. }
   \label{fig:hdviz}
 \end{figure}
@@ -107,7 +107,7 @@ Using HDViz as a starting point (see Figure~\ref{fig:hdviz}), we iteratively def
 \subsection{Design Requirement B: Intuitive Visualization of Data Hierarchy.}
 Existing visualization using HDViz suffered from three drawbacks for this application: first, it has a very steep learning curve for data practitioners in general; second, it is particularly nonintuitive for nuclear scientists, and lastly, it has limited support for the SA pipeline.
 %
-For example, when presented with the topological skeleton seen in Figure~\ref{fig:hdviz}, nuclear scientists questioned the meaning and utility of the oscillations produced by the inverse regression and the geometric interpretation of their 2D projection.
+For example, when presented with the topological skeleton seen in Figure~\ref{fig:hdviz}, nuclear scientists questioned the meaning and utility of the oscillations produced by the inverse regression and the geometric interpretation of their two-dimensional projection.
 %
 During our contextual inquiries~\cite{HoltzblattJones1993}, we noticed that the scientists typically disabled the transparent tubes surrounding the inverse regression curves (Figure~\ref{fig:hdviz}a).
 %
@@ -117,7 +117,7 @@ Selecting the ``appropriate" scale (i.e., persistence level) from the persistenc
 %
 Understanding how the scientists interact with the topological view has greatly influenced its design in our iterative process.
 %
-We understand that the scientists are primarily interested in a high-level picture of their data; therefore, we simplify our visualization to an abstract 2D representation that enables easier selection and manipulation of partitions and supports well-integrated, interactive selection of scales.
+We understand that the scientists are primarily interested in a high-level picture of their data; therefore, we simplify our visualization to an abstract two-dimensional representation that enables easier selection and manipulation of partitions and supports well-integrated, interactive selection of scales.
 %
 Finally, the new visual representations should convey information about different scales within the data hierarchy, but also provide context about the
 partitions within a fixed scale.
@@ -170,7 +170,7 @@ These solutions were integrated into a linked view system with multiple visual c
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{figs/chap6/design-overview}
-  \caption{Our linked view visualization system using a synthetic 2D test function.
+  \caption{Our linked view visualization system using a synthetic two-dimensional test function.
   %
   The system includes (A) topology map, (B1-B3) scatterplots, (C) sensitivity view, (D) fitness view, (E1) persistence diagram, (E2) histogram, and (E3) persistence barcode.
   }
@@ -185,7 +185,7 @@ The appropriate choice of scale is then validated by the \emph{persistence diagr
 %
 At a fixed scale, the user then selects a subset of partitions for further SA.
 %
-2D or 3D scatterplots can be constructed for selected partitions by choosing any two or three input/output dimensions, where the output dimensions include both observed and predicted values.
+Two-dimensional or three-dimensional scatterplots can be constructed for selected partitions by choosing any two or three input/output dimensions, where the output dimensions include both observed and predicted values.
 %
 Subsequently, the user can choose to build a \emph{histogram} of any chosen input/output dimension.
 %
@@ -199,7 +199,7 @@ We give a detailed description of the \emph{primary} visual encodings below: top
 \label{sec:topologyMap}
 The topology map is a key data abstraction within our design study.
 %
-It is a 2D representation of the data that highlights its topological structure.
+It is a two-dimensional representation of the data that highlights its topological structure.
 %
 We generate and validate such an abstraction through an active and cyclic design process with the scientists to arrive at its current form.
 %
@@ -209,11 +209,11 @@ Such a visualization is, in spirit, similar to the topological skeleton proposed
 %
 However, based on the new requirements outlined in Section~\ref{sec:currentWorkflow}, we have completely redesigned such a visual encoding to provide a topological summary that omits geometric information but  preserves the underlying structure essential to understanding the data partitioning, thereby greatly improving its usability and scalability.
 
-As illustrated in Figure~\ref{fig:design-overview}A, each local extremum is mapped onto a 2D plane, whose \emph{x-axis} represents its \emph{persistence} and the \emph{y-axis} corresponds to its \emph{function value} (i.e., $f(x,y)$).
+As illustrated in Figure~\ref{fig:design-overview}A, each local extremum is mapped onto a two-dimensional plane, whose \emph{x-axis} represents its \emph{persistence} and the \emph{y-axis} corresponds to its \emph{function value} (i.e., $f(x,y)$).
 %
 Therefore, local maxima (minima) move toward the top (bottom) of the display, respectively; more robust features appear to the right, whereas noisy ones tend to the left.
 %
-Encoding function value to the y-axis is well aligned with the scientists' understanding of typical 2D function plots where the dependent variables are mapped to the y-axis; in fact, the inverse coordinate plots used in HDViz (Figure~\ref{fig:hdviz}d) are often misinterpreted for violating this common notion.
+Encoding function value to the y-axis is well aligned with the scientists' understanding of typical two-dimensional function plots where the dependent variables are mapped to the y-axis; in fact, the inverse coordinate plots used in HDViz (Figure~\ref{fig:hdviz}d) are often misinterpreted for violating this common notion.
 %
 In addition, the local maxima (minima) are upward (downward) pointing red (blue)  triangles for fast visual differentiation and counting.
 
@@ -270,7 +270,7 @@ The dimensions of choice include the input parameters, the observed and predicte
 %
 The users are therefore provided with detailed spatial information on demand.
 %
-The 2D height function example in Figure~\ref{fig:design-overview} includes a 2D scatterplot (involving two inputs $x$ and $y$ in B1), a 3D scatterplot (involving $x$, $y$, and an observed output $f(x,y)$ in B2), and a 3D scatterplot for the local ROMs (involving $x$, $y$, and the predicted output).
+The two-dimensional height function example in Figure~\ref{fig:design-overview} includes a two-dimensional scatterplot (involving two inputs $x$ and $y$ in B1), a three-dimensional scatterplot (involving $x$, $y$, and an observed output $f(x,y)$ in B2), and a three-dimensional scatterplot for the local ROMs (involving $x$, $y$, and the predicted output).
 
 
 \subsection{Sensitivity View}
@@ -314,7 +314,7 @@ Typically (but not always), the largest changes in $R^2$ score occur at the begi
 \label{sec:otherViews}
 We include a few secondary visual encodings to enhance and validate insights obtained from the primary ones.
 %
-The persistence diagram is the classic tool in the form of a 2D scatterplot used for separating signal from noise~\cite{EdelsbrunnerHarer2008}.
+The persistence diagram is the classic tool in the form of a two-dimensional scatterplot used for separating signal from noise~\cite{EdelsbrunnerHarer2008}.
 %
 In a nutshell, a point in the persistence diagram corresponds to a topological feature represented by the pairing of two critical points.
 %
@@ -367,8 +367,7 @@ We consider an analysis of a nuclear fuel rodlet simulation performed using the 
 %
 The rodlet is axisymmetric and composed of 10 stacked UO$_2$ pellets surrounded by a zirconium alloy shield known as the cladding.
 %
-We track the midplane von Mises stress occurring on the 3D
-cladding.
+We track the midplane von Mises stress occurring on the three-dimensional cladding.
 %
 High stress can cause the cladding to crack and allow radioactive gas to leak into the plant environment.
 %
@@ -404,7 +403,7 @@ All parameters are scaled using z-score standardization to align with both domai
   \includegraphics[width=1.0\linewidth]{figs/chap6/bisonError2}
   \caption{SA for the initial nuclear fuel dataset.
   (a) Topological map used to separate signal from noise.
-  (b) 3D Scatterplot projecting the data onto the two most significant inputs, textbf{power\_scalef} and \textbf{grainradius\_scalef}, with the third dimension reserved for the output, \textbf{midplane\_stress}.
+  (b) Three-dimensional scatterplot projecting the data onto the two most significant inputs, textbf{power\_scalef} and \textbf{grainradius\_scalef}, with the third dimension reserved for the output, \textbf{midplane\_stress}.
   (c) The linear coefficients of each partition. Note, these results violated the domain scientists assumption of the data and allowed us to quickly identify an error in the simulation.}
   \label{fig:bisonError}
 \end{figure}
