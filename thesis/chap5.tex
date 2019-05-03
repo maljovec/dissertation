@@ -1445,7 +1445,7 @@ By relaxing our notion of spanning, we give the algorithm a chance to explore th
 % This will become more clear subsequently when $\Mtwo$ is described in detail.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{$\Mone$: Global Prediction Model Limit Surface Recovery.}
+\subsubsection{$M_1$: Global Prediction Model Limit Surface Recovery.}
 As illustrated in Figure~\ref{fig:pipelines} top right, we begin with a set of training points and build a prediction model using the GPM.
 %
 Second, we \emph{densely} sample the GPM over the entire domain using a CVT scheme, and construct a relaxed Gabriel graph on the union of these CVT samples with the training points.
@@ -1456,7 +1456,7 @@ Fourth, the set of candidate points are ranked based on the point density criter
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{$\Mtwo$: Topology-Based Prediction Model Limit Surface Recovery.}
+\subsubsection{$M_2$: Topology-Based Prediction Model Limit Surface Recovery.}
 As illustrated in Figure~\ref{fig:pipelines} bottom left, $\Mtwo$ improves the global prediction model query by extracting the topology of the prediction model and focusing samples in specific regions.
 %
 First, we fit a GPM on the initial set of training points.
@@ -1501,7 +1501,7 @@ Overall, as we demonstrate in Section \ref{sec:experiments}, $\Mtwo$ behaves com
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{$\Mthree$: Data-Driven Limit Surface Recovery.}
+\subsubsection{$M_3$: Data-Driven Limit Surface Recovery.}
 As opposed to building a prediction model, $\Mthree$ (Figure~\ref{fig:pipelines} bottom right) begins by directly building a neighborhood structure as the surrogate model (e.g., a relaxed Gabriel graph) on the initial training data.
 %
 It then creates a candidate set by first obtaining linearly interpolated points at $t$ along spanning edges of the graph, and introducing a random perturbation $\epsilon$ along all dimensions to these points.
@@ -1795,18 +1795,20 @@ The lack of exploration in the other models allows them to recover this componen
 \label{fig:RMSE-mean}
 \end{figure}
 
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-median.pdf}
-\caption{Convergence of median RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ across $10$ trials.}
-\label{fig:RMSE-median}
-\end{figure}
-
 Since $\Mthree$ does not rely on a prediction model, it is difficult to evaluate the estimated function values of the set of points located on the true limit surface from $\Mthree$\footnote{However, limit surface estimation is not entirely impossible. In two dimensions, the process involves linearly interpolating within triangles; in high dimensions, the process becomes more difficult and requires construction of high-dimensional simplexes.}.
 %
 Thus, we do not have RMSE convergence for $\Mthree$.
 %
 A more reasonable metric to measure the convergence of limit surfaces would be the dynamic time warping (DTW) distance, which is currently under consideration.
+
+\clearpage
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-median.pdf}
+\caption{Convergence of median RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ across $10$ trials.}
+\label{fig:RMSE-median}
+\end{figure}
 
 \subsection{Conclusions and Discussions}
 \label{sec:discussion}
