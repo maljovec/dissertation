@@ -563,82 +563,84 @@ In the classical setting, this is accomplished by maximizing the pairwise Euclid
 %
 The end result of classical MDS is equivalent to the original PCA optimization problem~\cite{BorgGroenen2005,CoxCox2000,MardiaKentBibby1979,Williams2002}.
 %
-However, MDS can be framed in a more generic setting of minimizing a stress function over pairwise distances, thus allowing an MDS scaling to be computed without even knowing the locations of the data (as long as their relative locations are encoded in a distance matrix).
+However, MDS can be framed in a more generic setting of minimizing a stress function over pairwise distances, thus allowing an MDS scaling to be computed without even knowing the locations of the data (as long as the relative locations are encoded in a distance matrix).
 %
 The stress function can be a least squares minimization or a Sammon stress~\cite{Sammon1969}, for example.
 %
-The distance matrix of the original and reduced spaces can be specified using any distance metric and they are not required to be the same for a given solution~\cite{CunninghamGhahramani2015}.
+The distance matrix of the original and reduced spaces can be specified using any distance metric, and they are not required to be the same for a given solution~\cite{CunninghamGhahramani2015}.
 %
-MDS is not restricted to linear projections, for example the Sammon mapping results in a nonlinear dimensionality reduction, and we will discuss related nonlinear efforts in Section~\ref{sec:nonlinearDR}.
+MDS is not restricted to linear projections.
+%
+For example, the Sammon mapping results in a nonlinear dimensionality reduction, and we will discuss related nonlinear efforts in Section~\ref{sec:nonlinearDR}.
 
 Thus far, the methods we have described are appropriate for unsupervised learning applications.
 %
-That is, input parameters and output responses are treated the same, so these methods can only be useful for sensitivity analysis if the reduced space contains components where the output(s) are significantly represented.
+That is, input parameters and output responses are treated the same, so these methods can be useful for sensitivity analysis only if the reduced space contains components where the output(s) are significantly represented.
 %
-Otherwise, we are only able to correlate inputs to other inputs, thus identifying redundant dimensions in our input space.
+Otherwise, we are able to correlate only inputs to other inputs, thus identifying redundant dimensions in our input space.
 %
-Alternatively, one could perform a preliminary analysis that separates the data in a meaningful way, and then applying one of the aforementioned methods.
+Alternatively, one could perform a preliminary analysis that separates the data in a meaningful way, and then apply one of the aforementioned methods.
 %
 For example, extracting an isocontour of interest and applying PCA could reveal strong loadings on the inputs that are insensitive to the output response.
 %
-We constrast this with another set of dimensionality reduction techniques that can be considered supervised learning applications since they are label- or response-aware.
+We contrast the methods mentioned thus far with another set of dimensionality reduction techniques that can be considered supervised learning applications since they are label- or response-aware.
 
-Fisher's Linear Discriminant Analysis (LDA)~\cite{Fisher1936} is a linear dimensionality reduction technique for maximizing the separation of class labels in the reduced space.
+Fisher's linear discriminant analysis (LDA)~\cite{Fisher1936} is a linear dimensionality reduction technique for maximizing the separation of class labels in the reduced space.
 %
 This method works by simultaneously maximizing the covariance between classes while minimizing the covariance within classes.
 %
 In more informal terms, we seek a projection that clusters similar labels together while maximizing the distance between cluster labels.
 %
-One limitation of LDA is that for a $k$-class problem, the solution can be rank-deficient allowing us to project onto at most a $k-1$ space~\cite{MaszczykDuch2008}.
+One limitation of LDA is that for a $k$-class problem, the solution can be rank-deficient, allowing us to project onto at most a $k-1$ space~\cite{MaszczykDuch2008}.
 %
 However, Cheng et al. have offered several solutions for allowing construction of higher dimensional spaces~\cite{ChengZhuangYang1992}.
 %
-Similar to PCA, LDA has been augmented to allow for more robust settings such as nonlinear LDA~\cite{MikaRatschWeston1999,McLachlan2004} and local LDA~\cite{Sugiyama2006}.
+Similar to PCA, LDA has been augmented to allow for more robust settings, such as nonlinear LDA~\cite{MikaRatschWeston1999,McLachlan2004} and local LDA~\cite{Sugiyama2006}.
 %
 This latter method is most similar in spirit to our goal of being able to identify local patterns occurring in classification data.
 %
-In this work, Sugiyama reformulates the problem to optimize between and in scatter for points near to one another in the original space.
+Sugiyama~\cite{Sugiyama2006} reformulates the problem to optimize between and in scatter for points near to one another in the original space.
 %
-However, the method still relies on a single global embedding for the entire dataset which may not be suitable if the separate ``modes'' of the cluster span different subspaces.
+However, the method still relies on a single global embedding for the entire dataset, which may not be suitable if the separate ``modes'' of the cluster span different subspaces.
 
-Canonical Correlation Analysis (CCA)~\cite{Hotelling1935,HardoonSzedmakShawe-Taylor2004} is a method for performing joint dimensionality reduction on two datasets while maintaining correlations among them.
+Canonical correlation analysis (CCA)~\cite{Hotelling1935,HardoonSzedmakShawe-Taylor2004} is a method for performing joint dimensionality reduction on two datasets while maintaining correlations between them.
 %
-As such, we can use it to understand functional relationships by splitting our datasets into one group that represents all of the input dimensions, and a second dataset that specifies the target output responses.
+Therefore, we can use it to understand functional relationships by splitting our datasets into one group that represents all the input dimensions, and a second dataset that specifies the target output responses.
 %
-CCA is thus very well-aligned with the goal of extracting strong functional relationships between one or more input parameters and the target values of interest.
+CCA is thus very well aligned with the goal of extracting strong functional relationships between one or more input parameters and the target values of interest.
 %
-It is important to note that CCA assumes a linear relationship and therefore does not deal well with non-monotonic data.
+It is important to note that CCA assumes a linear relationship and therefore does not deal well with nonmonotonic data.
 %
-Additionally, multicollinearity existing between the input parameters can make the interpretation of CCA less reliable~\cite{HairAndersonTatham1998}.
+Additionally, multicollinearity existing among the input parameters can make the interpretation of CCA less reliable~\cite{HairAndersonTatham1998}.
 
-Sufficient Dimensionality Reduction (SDR) represents a class of dimensionality reduction techniques for feature extraction of regression problems.
+Sufficient dimensionality reduction (SDR) represents a class of dimensionality reduction techniques for feature extraction of regression problems.
 %
 The idea is to reduce the dimensionality without losing the statistical dependence between the input parameters and a target response.
 %
-The term sufficient is used to represent that the dimensionality reduction retains its predictive accuracy as in the reduced dimensionality is sufficient for representing the statistical dependence between the target and the inputs.
+The term ``sufficient'' is used to represent that the dimensionality reduction retains its predictive accuracy: the reduced dimensionality is sufficient for representing the statistical dependence between the target and the inputs.
 %
 Adragni and Cook~\cite{AdragniCook2009} formally define sufficiency and survey the various techniques for performing this type of dimensionality reduction in the context of a supervised learning setting.
 %
 As with the other methods described so far, SDR provides a global reduction methodology.
 %
-SDR can be extended to both an unsupervised setting~\cite{WangShaJordan2010} and nonlinear setting~\cite{FukumizuBachJordan2004,FukumizuBachJordan2009,NilssonShaJordan2007} however, these methods fall outside our scope of interest as they do not provide readily interpretable representations of sensitivity.
+SDR can be extended to both an unsupervised setting~\cite{WangShaJordan2010} and nonlinear setting~\cite{FukumizuBachJordan2004,FukumizuBachJordan2009,NilssonShaJordan2007}; however, these methods fall outside our scope of interest, because they do not provide readily interpretable representations of sensitivity.
 
 \subsubsection{Nonlinear Dimensionality Reduction Methods}
 \label{sec:nonlinearDR}
 
-This class of techniques is also often called manifold learning as the goal is to find a lower dimensional manifold embedded in the high dimensional space.
+This class of techniques is also often called manifold learning because the goal is to find a lower dimensional manifold embedded in the high-dimensional space.
 %
 Because the learned manifold can twist and bend through the high-dimensional space, there is no guarantee that a single linear projection method will work for such datasets.
 %
 As we have seen, many of the linear techniques above can be reformulated to construct a nonlinear dimensionality reduction scheme~\cite{ScholkopfSmolaMuller1997,CollinsDasguptaSchapire2001,MohamedGhahramaniHeller2009,HyvarinenKarhunenOja2001,MikaRatschWeston1999,McLachlan2004,FukumizuBachJordan2004,FukumizuBachJordan2009,NilssonShaJordan2007}.
 %
-In addition, other novel techniques exist such as locally linear embedding~\cite{RoweisSaul2000}, subspace clustering~\cite{Parsons2004}, laplacian eigenmaps~\cite{BelkinNiyogi2003}, Isomap~\cite{TenenbaumSilvaLangford2000}, and t-distributed stochastic neighborhood embedding~\cite{MaatenHinton2008}, to name a few.
+In addition, other novel techniques exist, such as locally linear embedding~\cite{RoweisSaul2000}, subspace clustering~\cite{Parsons2004}, Laplacian eigenmaps~\cite{BelkinNiyogi2003}, Isomap~\cite{TenenbaumSilvaLangford2000}, and t-distributed stochastic neighborhood embedding~\cite{MaatenHinton2008}.
 
 From a sensitivity analysis standpoint, the issue with nonlinear reduction methods is illustrated in Figure~\ref{fig:axisInterpretability}.
 %
 A linear projection generates interpretable embeddings, and out-of-sample data can be easily projected to the same space.
 %
-The non-linear projection (manifold learning) approaches, on the other hand, capture more complex structures, but the resulting embedding can be extremely difficult to interpret.
+The nonlinear projection (manifold learning) approaches, on the other hand, capture more complex structures, but the resulting embedding can be extremely difficult to interpret.
 %
 % Locality preserving Projections? neighborhood preserving embedding (NPE)?} - related to locally linear embedding and laplacian eigenmaps.
 
@@ -651,19 +653,19 @@ The non-linear projection (manifold learning) approaches, on the other hand, cap
 
 \subsection{Visualizing Sensitivity}
 \label{sec:SA_visualization}
-Within the sensitivity literature visual representations conveying sensitivity information include a variant of the bar chart known as a tornado plot, parallel coordinate plots and their circular variant, the radar chart, scatterplot matrices,  and generalized reachable sets (GRS)~\cite{SaltelliChanScott2000,BushenkovChernykhKamenev1995}.
+In the sensitivity literature, visual representations conveying sensitivity information include a variant of the bar chart known as a tornado plot, parallel coordinate plots and their circular variant, the radar chart, scatterplot matrices,  and generalized reachable sets (GRS)~\cite{SaltelliChanScott2000,BushenkovChernykhKamenev1995}.
 
 More recently, the visualization community has explored the use of glyphs to provide statistical and sensitivity information in order to present trends in the data.
 %
 By utilizing local linear regression to compute partial derivatives around sampled data points and representing the information in terms of glyph shape, sensitivity information can be visually encoded into scatterplots~\cite{CorreaChanMa2009,ChanCorreaMa2010,GuoWardRundensteiner2011,ChanCorreaMa2013}.
 
-Correa et al.~\cite{CorreaChanMa2009} aimed at incorporating uncertainty information into PCA projections and k-means clustering and accomplished this goal by augmenting scatterplots with tornado plots.
+Correa et al.~\cite{CorreaChanMa2009} aim at incorporating uncertainty information into PCA projections and k-means clustering and accomplish this goal by augmenting scatterplots with tornado plots.
 %
 Together these glyphs encode uncertainty and partial derivative information.
 %
-The idea of mapping sensitivity information to a line segment through each data point has been extended in their later work~\cite{ChanCorreaMa2010} with the introduction of the flow-based scatterplot (FBS) that highlights functional relationships between inputs and outputs.
+The idea of mapping sensitivity information to a line segment through each data point is extended in their later work~\cite{ChanCorreaMa2010} with the introduction of the flow-based scatterplot (FBS) that highlights functional relationships between inputs and outputs.
 %
-The works by Guo et al.~\cite{GuoWardRundensteiner2011} and Chan et al.~\cite{ChanCorreaMa2013} attempt to provide more than a single partial derivative information into their scatterplots by experimenting with different glyph shapes such as star plots, among others.
+The works by Guo et al.~\cite{GuoWardRundensteiner2011} and Chan et al.~\cite{ChanCorreaMa2013} attempt to provide more than a single partial derivative information into their scatterplots by experimenting with different glyph shapes, such as star plots, among others.
 %
 Guo et al. also utilize a bar chart similar to the tornado plot used by Correa et al., whereas Chan et al. provide two other interpretations.
 %
@@ -687,15 +689,15 @@ Berger et al.~\cite{BergerPiringerFilzmoser2011} provide a focus+context display
 %
 Tuner~\cite{Torsney-WeirSaadMoller2011} allows users to explore sensitivity information through interaction and visual inspection, that is, by noticing which plots change the most when the user adjusts a parameter.
 %
-Demir et al.~\cite{DemirWestermann2013} utilize the HyperSlice~\cite{VanWijkVanLiere1993} technique to enhance the understanding of the sensitivity information provided by a Gaussian Process fit.
+Demir et al.~\cite{DemirWestermann2013} utilize the HyperSlice~\cite{VanWijkVanLiere1993} technique to enhance the understanding of the sensitivity information provided by a Gaussian process fit.
 %
 Vismon~\cite{BooshehrianMullrPeterman2012} provides SA to the visualization of the uncertainty of a simulation for fisheries scientists.
 
 Canonical correlation analysis (CCA) was used in constructing the heliograph~\cite{DeganiShaftoOlson2006} and a system called Slycat~\cite{CrossnoSheadSielicki2015} to determine correlations between multiple inputs and multiple outputs in a global setting for ensemble data.
 
-The proposed method given in Chapter~\ref{ch:visualization} is, in spirit, similar to systems provided in May et al.~\cite{MayBannachDavey2011} and Muhlbacher et al.~\cite{MuhlbacherPiringer2013}, by providing the capability to interactively refine the partitioning during the SA to give a multi-scale view of the sensitivity information.
+The proposed method given in Chapter~\ref{ch:visualization} is similar to the systems provided in May et al.~\cite{MayBannachDavey2011} and Muhlbacher et al.~\cite{MuhlbacherPiringer2013}, by providing the capability to interactively refine the partitioning during the SA to give a multiscale view of the sensitivity information.
 %
-However in both previous works, data is partitioned along one or two dimensions (i.e. input parameters) while the method presented in this dissertation spans all dimensions.
+However, in both previous works, data is partitioned along one or two dimensions (i.e., input parameters), whereas the method presented in this dissertation spans all dimensions.
 
 \section{Data Modeling}
 \label{sec:regression}
@@ -709,11 +711,11 @@ We seek to capture the relationship between each $x_i$ and $y$ through linear re
 %
 This equation is given in intercept form where $\beta_0$ represents the y-intercept.
 %
-When the data is appropriately centered to have a mean of zero ($\mu_x,\mu_y = 0$), $\beta_0$ can be omitted.
+When the data is appropriately centered to have a mean of zero, ($\mu_x,\mu_y = 0$), $\beta_0$ can be omitted.
 %
-For the remainder of this section, we will adopt the more flexible matrix notation where in intercept form, $\mathbf{X} = \begin{bmatrix}\mathbf{1} & \mathbf{x}_1 & \ldots & \mathbf{x}_d \end{bmatrix}$ such that the first column is a series of ones which will be multiplied by the y-intercept term, $\beta_0$, and the remaining columns are the input dimensions.
+For the remainder of this section, we will adopt the more flexible matrix notation where in intercept form, $\mathbf{X} = \begin{bmatrix}\mathbf{1} & \mathbf{x}_1 & \ldots & \mathbf{x}_d \end{bmatrix}$, such that the first column is a series of ones that will be multiplied by the y-intercept term, $\beta_0$, and the remaining columns are the input dimensions.
 %
-In the centered case, this notation is consistent, as we can drop the initial column in $\mathbf{X}$ such that $\mathbf{X} = \begin{bmatrix}\mathbf{x}_1 & \ldots & \mathbf{x}_d\end{bmatrix}$ and remove $\beta_0$ from the linear coefficient vector, $\boldsymbol\beta$.
+In the centered case, this notation is consistent, because we can drop the initial column in $\mathbf{X}$ such that $\mathbf{X} = \begin{bmatrix}\mathbf{x}_1 & \ldots & \mathbf{x}_d\end{bmatrix}$ and remove $\beta_0$ from the linear coefficient vector, $\boldsymbol\beta$.
 
 Given a set of observations $(\mathbf{X},\mathbf{y})$, the problem in matrix form is given below:
 %
@@ -727,7 +729,7 @@ Consider the proposed solution, $\tilde{y} = \mathbf{X}\mathbf{b}$.
 %
 We define the difference between our model evaluated at an input row $\mathbf{x}_j$ and the corresponding true response $y_j$ as the residual: $r_j = y_j - \mathbf{x}_j\mathbf{b}$.
 %
-This leads us to the least squares method which minimizes the sum of squared residuals over the entire observed data:
+With the residual defined we can formulate the least squares method, which minimizes the sum of squared residuals over the entire observed data:
 \begin{equation}
 \arg\min_{\mathbf{b}} \sum_{j=0}^n(y_j - \mathbf{x}_j\mathbf{b})^2
 \end{equation}
@@ -745,13 +747,15 @@ Thus, the solution to the least squares problem is:
 \label{eq:ols}
 \end{equation}
 
-The case with a single input variable is called simple linear regression and the case where $d\geq 2$ is called multiple linear regression.
+The case with a single input variable is called simple linear regression, and the case where $d\geq 2$ is called multiple linear regression.
 %
 This method can also be extended to polynomials by treating each degree of a variable as separate columns in $\mathbf{X}$, and solving for additional coefficients for each term.
 %
-Similarly, the method can also be extended to mixtures of different variables of varying orders.
+Similarly, the method can be extended to mixtures of different variables of varying orders.
 %
-It is important to note, that this is the simplest version of linear and polynomial regression and more advanced methods can be performed.
+The method described above is the simplest version of linear and polynomial regression.
+%
+More advanced methods can be performed.
 
 The ordinary least squares method described above can fail if the problem exhibits collinearity.
 %
@@ -771,7 +775,7 @@ We review the more common techniques in the next section.
 \label{sec:regularization}
 Regularization is a generic concept that can be applied to any problem where the goal is to minimize a loss function.
 %
-Though regularization is not restricted to the linear regression problem, it expedites exposition to describe it in this context.
+Although regularization is not restricted to the linear regression problem, it expedites exposition to describe it in this context.
 %
 Regularization, in the regression setting posed, augments a minimization problem with a penalty function, $R$, that favors less complex models and a penalty term $\alpha$ that controls its influence on the solution.
 %
@@ -782,21 +786,21 @@ In the context of our linear regression problem, we would have a new minimizatio
 \label{eq:genericRegularization}
 \end{equation}
 
-Common penalization functions include the $L_1$ and $L_2$ norms of $\mathbf{b}$ which result in the least absolute shrinkage and selection operator (LASSO)~\cite{Tibshirani1996} and ridge regression~\cite{Hoerl1959,Hoerl1962}, respectively.
+Common penalization functions include the $L_1$ and $L_2$ norms of $\mathbf{b}$, which result in the least absolute shrinkage and selection operator (LASSO)~\cite{Tibshirani1996} and ridge regression~\cite{Hoerl1959,Hoerl1962}, respectively.
 %
-The ridge regression methodology tends to include all of the original terms whereas the LASSO method tends to favor models with fewer parameters, i.e. one or more parameters of $\mathbf{b}$ are set to zero.
+The ridge regression methodology tends to include all the original terms, whereas the LASSO method tends to favor models with fewer parameters, i.e., one or more parameters of $\mathbf{b}$ are set to zero.
 %
 Zou and Hastie~\cite{ZouHastie2005} point out several disadvantages of the LASSO method, as well.
 %
-For example, the LASSO method tends to be over aggressive in its parameter selection in cases where the dimensionality is larger than the sample size or if two or more variables exhibit collinearity.
+For example, the LASSO method tends to be overly aggressive in its parameter selection in cases in which the dimensionality is larger than the sample size or if two or more variables exhibit collinearity.
 %
-For this reason, they propose the elastic net method which combines the $L_1$ and $L_2$ norms to create a regularizer that counteracts the weaknesses of both ridge and LASSO regression.
+For this reason, they propose the elastic net method, which combines the $L_1$ and $L_2$ norms to create a regularizer that counteracts the weaknesses of both ridge and LASSO regression.
 
 Depending on the specific penalty function, regularization can also effectively remove parameters by forcing their coefficients in $\mathbf{b}$ to zero.
 %
-This is a form of feature or variable selection.
+Thus, regularization is a form of feature or variable selection.
 %
-Variable selection is the process of eliminating redundant or irrelevant variables in order to construct a model that uses only a subset of the original input variables and this is only one way in which it can be performed.
+Variable selection is the process of eliminating redundant or irrelevant variables in order to construct a model that uses only a subset of the original input variables.
 %
 Other methods for explicitly performing variable selection include stepwise regression~\cite{DraperSmith2014}, least-angle regression (LARS)~\cite{EfronHastieJohnstone2004}, and matching pursuit~\cite{MallatZhang1993,DavisMallatZhang1994,PatiRezaiifarKrishnaprasad1993}.
 %
@@ -814,29 +818,29 @@ This process is known as backward elimination.
 %
 A third class of methods called bidirectional elimination combines the processes of forward selection and backward elimination.
 
-The LARS method is similar to the forward selection method above in that all coefficients of our model begin at zero and we add to the coefficients depending on their influence (correlation) on the response value.
+The LARS method is similar to the forward selection method in that all coefficients of our model begin at zero, and we add to the coefficients depending on their influence (correlation) on the response value.
 %
 Iteratively, we evaluate the residuals of the current model and increase the coefficient until another parameter becomes more correlated.
 %
 At this point, the direction of coefficient increase becomes equiangular between the two most correlated features.
 %
 This process continues adding coefficients to features as they become as correlated as the existing features in the model,
-and we maintain a direction of travel that is equiangluar amongst the existing features.
+and we maintain a direction of travel that is equiangluar among the existing features.
 
-Matching pursuit~\cite{MallatZhang1993} and its orthogonalized variant~\cite{DavisMallatZhang1994,PatiRezaiifarKrishnaprasad1993} are forward selection methods that either approximate an optimal minimum number of non-zero coefficients given an error tolerance, or minimize the error given a maximum number of non-zero coefficients.
+Matching pursuit~\cite{MallatZhang1993} and its orthogonalized variant~\cite{DavisMallatZhang1994,PatiRezaiifarKrishnaprasad1993} are forward selection methods that either approximate an optimal minimum number of nonzero coefficients given an error tolerance, or minimize the error given a maximum number of nonzero coefficients.
 %
 The matching pursuit algorithm is a greedy iterative algorithm that was originally developed for compressed sensing.
 %
 At each step, the algorithm selects to include the coefficient associated to the variable that is most highly correlated to the residual of the current fit.
 %
-In the orthogonal version, all of the coefficients used so far are updated by computing the residual using an orthogonal projection on the subset of dimensions used.
+In the orthogonal version, all the coefficients used so far are updated by computing the residual using an orthogonal projection on the subset of dimensions used.
 
 \subsection{Partition-Based Models}
 Thus far, we have discussed fitting a global model to a point cloud sampling of our domain of interest.
 %
 Such regression models are easily interpretable, although their application is somewhat limited.
 %
-Linear regression models are unable to capture non-monotonic behaviors, and unless the underlying degree of the function is known a priori, polynomial regression can overfit the data.
+Linear regression models are unable to capture nonmonotonic behaviors, and unless the underlying degree of the function is known a priori, polynomial regression can overfit the data.
 %
 Of course, these effects can be mitigated if the data is partitioned appropriately.
 
@@ -846,32 +850,32 @@ They can be classified based on their partitioning criteria: those seeking to mi
 %
 In particular, regression trees are constructed by recursively partitioning the domain into multiple partitions at \emph{optimal} locations in the domain (where the optimal criteria can vary), and each partition is fitted with constant~\cite{BreimanFriedmanOlshen1984a}, linear~\cite{AlexanderGrimshaw1996,LiLueChen2000}, low-order spline~\cite{Friedman1991} or polynomial~\cite{ChaudhuriHuangLoh1994} models.
 
-A popular class of regression tree is Friedman's multivariate adaptive regression splines (MARS)~\cite{Friedman1991} which is utilized in Section~\ref{paper:ijuq2013} (see also Hastie et al.~\cite{HastieTibshiraniFriedman2008} for a gentle introduction).
+A popular class of regression tree is Friedman's multivariate adaptive regression splines (MARS)~\cite{Friedman1991}, which is utilized in Section~\ref{paper:ijuq2013} (see also Hastie et al.~\cite{HastieTibshiraniFriedman2008} for a gentle introduction).
 %
-MARS is a non-parametric regression method that uses a collection of simple basis functions to build a complex and flexible response function.
+MARS is a nonparametric regression method that uses a collection of simple basis functions to build a complex and flexible response function.
 %
 At the core of MARS are piecewise linear basis functions, given by $\max(0, x - k)$ and $\max(0, k - x)$, where $k$ is the knot (the break point).
 %
-These simple functions are used to build a collection of basis functions, $\{\max(0, x_j-k), \max(0,k-x_j)\}$, where $k \in \{x_{1j}, \dots, x_{nj})$ for $j = 1, \dots, d$.
+These simple functions are used to build a collection of basis functions, $\{\max(0, x_j-k), \max(0,k-x_j)\}$, where $k \in \{x_{1j}, \dots, x_{nj}\}$ for $j = 1, \dots, d$.
 %
-If all of the input values are different in the training data this will yield $2dn$ basis functions. The MARS predictor is then given by $\hat{y}(\mathbf{x}) = \beta_0 + \sum_{m=1}^M \beta_m h_m(\mathbf{x})$, where the $\beta_m$'s are coefficients and the $h_m$'s are basis functions, which are either given by a single function from the collection of simple basis functions or a product of
+If all the input values are different in the training data, this will yield $2dn$ basis functions. The MARS predictor is then given by $\hat{y}(\mathbf{x}) = \beta_0 + \sum_{m=1}^M \beta_m h_m(\mathbf{x})$, where the $\beta_m$'s are coefficients and the $h_m$'s are basis functions, which are either given by a single function from the collection of simple basis functions or a product of
 two or more of such functions.
 
 For a given set of basis functions, $h_1, \dots, h_m$, the $\beta$ coefficients are estimated using least squares.
 %
 The main novelty of the MARS is how the basis functions are selected using a forward selection process, followed by a backward elimination process.
 %
-The forward pass starts with a model that only includes the constant term $\beta_0$ and then adds simple basis functions in pairs in a greedy fashion.
+The forward pass starts with a model that includes only the constant term $\beta_0$ and then adds simple basis functions in pairs in a greedy fashion.
 %
-This yields a model that over fits the training data (i.e.\ has too many terms).
+The result is a model that over fits the training data (i.e.,\ has too many terms).
 %
 The backward elimination process drops terms using the generalized cross-validation (GCV) criterion, which compromises between the fidelity of the model and its complexity (size).
 
-As with most non-parametric regression methods, there is no direct method to assess their prediction error.
+As with most nonparametric regression methods, there is no direct method to assess their prediction error.
 %
 However, the prediction error can be estimated by bootstrap methods~\cite{DavisonHinkley1997}.
 %
-In short, an ensemble of MARS models is created by repeatedly resampling, with replacement, the original training data $\{ (\mathbf{x}_i, y_i) \}$ and a MARS model is fit to each batch of resampled data.
+In short, an ensemble of MARS models is created by repeatedly resampling, with replacement, the original training data $\{ (\mathbf{x}_i, y_i) \}$, and a MARS model is fit to each batch of resampled data.
 %
 An estimate of the prediction error is then given by the standard deviation of the predictions provided by the bootstrap ensemble.
 %
@@ -879,7 +883,7 @@ This method is employed for adaptive sampling using a MARS model in Section~\ref
 
 In terms of more geometrically motivated splitting criteria, the principal Hessian direction regression tree (PHDRT)~\cite{LiLueChen2000} splits the domain near areas of high curvature by projecting the data along its estimated principal Hessian direction and locating the area of highest curvature.
 %
-In Chapter~\ref{ch:visualization}, we employ the established Morse-Smale regression (MSR)~\cite{GerberRubelBremer2011}, which, being geometrically motivated, is similar to the PHDRT approach, however it is not restricted to splitting along a hyperplane and is also more robust to multiple undulations in the data.
+In Chapter~\ref{ch:visualization}, we employ the established Morse-Smale regression (MSR)~\cite{GerberRubelBremer2011}, which, being geometrically motivated, is similar to the PHDRT approach; however, it is not restricted to splitting along a hyperplane and is also more robust to multiple undulations in the data.
 %
 In the PHDRT approach, a mean principal Hessian direction is computed implying that positive and negative curvatures can have a canceling effect that prevents such a direction from being discovered.
 
@@ -891,9 +895,9 @@ The MSC is at the core of the HDViz visualization system~\cite{GerberBremerPascu
 %
 HDViz has been extended in order to apply it to the analysis of data in nuclear engineering~\cite{MaljovecLiuWang2015,MaljovecWangMandelli2013a,MaljovecWangPascucci2013}.
 %
-However, the insights made by nuclear scientists were limited by the complexity and the lack of intuition provided in the original visualization.
+However, the insights of nuclear scientists were limited by the complexity and the lack of intuition provided in the original visualization.
 %
-In the new research of Chapter~\ref{ch:visualization}, we follow an iterative process of designing and refining a new visualization system, using HDViz as a basis, that specifically targets nuclear scientists as end users and sensitivity analysis as the end task.
+In the new research presented in Chapter~\ref{ch:visualization}, we follow an iterative process of designing and refining a new visualization system, using HDViz as a basis, that specifically targets nuclear scientists as end users and sensitivity analysis as the end task.
 %
 % Section~\ref{paper:vis2016} discusses in more detail the drawbacks of both PHDRT and MSR and proposes the construction of a hybrid method that uses the benefits of both in order to better characterize complicated datasets.
 
