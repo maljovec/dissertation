@@ -634,10 +634,12 @@ More specifically, we use the \texttt{randomLHS} function, which chooses uniform
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Topology-based Batch Sampling}
+\section{Topology-Based Batch Sampling}
 \label{paper:batch}
 
-Section~\ref{paper:ijuq2013} focused on applying different scoring functions, we now consider the problem of selecting multiple candidates at a time using various batch selection criteria for a fixed scoring function on two different problem settings.
+Section~\ref{paper:ijuq2013} focused on applying different scoring functions.
+%
+We now consider the problem of selecting multiple candidates at a time using various batch selection criteria for a fixed scoring function on two problem settings.
 %
 We again consider the problem of obtaining an accurate global fit, but in addition, we consider the problem of learning a limit surface.
 %
@@ -647,21 +649,21 @@ In this second context, we are less concerned with the fit of our surrogate over
 \subsection{Batch Selection for Active Learning: General Pipeline}
 The general pipeline of batch selection begins with a given set of training data with true response values.
 %
-First, a response surface surrogate model is fit to the training data.
+First, a surrogate model is fit to the training data.
 %
 Second, a pool of candidate points is chosen in the domain based on a given sampling technique, typically a space-filling design that will not bias any particular area of the input domain.
 %
 Third, each candidate point is assigned a score.
 %
-Finally, a number of candidates (i.e. up to the batch size) with the highest scores are selected, evaluated (to obtain true response values), and added to the training data to begin a new round of fitting.
+Finally, a number of candidates (i.e., up to the batch size) with the highest scores are selected, evaluated (to obtain true response values), and added to the training data to begin a new round of fitting.
 %
-This pipeline is given in Algorithm~\ref{algo:al}, where we replace \textbf{SELECT} with various selection strategies.
+This pipeline is given in Algorithm~\ref{algo:al}, where we replace \textit{SELECT} with various selection strategies.
 %
 We use a sparse online Gaussian process~\cite{CsatoOpper2002} as the surrogate model.
 %
 For a given candidate, such a Gaussian process model gives a (mean) prediction value and a variance associated with the prediction.
 %
-The set of candidate points and the initial training data are selected using a Centroidal Voronoi Tessellations (CVT) sampling strategy~\cite{DuFaberGunzburger1999}.
+The set of candidate points and the initial training data are selected using a centroidal Voronoi tessellation (CVT) sampling strategy~\cite{DuFaberGunzburger1999}.
 %
 A CVT sampling strategy gives high-quality samples without the biases introduced by a uniform grid sampling, although it can become cost prohibitive in high dimensions.
 %
@@ -671,7 +673,7 @@ For each dataset, we measure the accuracy of our global or local fitting by comp
 
 As stated before, we consider two problems in this experiment, global fitting and limit surface extraction.
 %
-For the global surface recovery problem, we utilize the \emph{active learning McKay} (ALM) scoring function~\cite{MacKay1992} presented in Section~\ref{sec:classic} that uses the predicted variance from the surrogate model as the score for a candidate point.
+For the global surface recovery problem, we utilize the \emph{active learning MacKay} (ALM) scoring function~\cite{MacKay1992} presented in Section~\ref{sec:classic} that uses the predicted variance from the surrogate model as the score for a candidate point.
 %
 In this way, we reduce the overall uncertainty of the surrogate model by placing samples in the areas of the highest variance.
 
@@ -711,15 +713,17 @@ In other words, a candidate will have a high score if its predicted value is nea
 We now introduce the different specific methodologies for selecting a batch of candidates once the candidates have all been scored.
 
 \subsection{Naive Batch Selection}
-Batch selection is simple and straightforward when the batch size $b = 1$, we simply select the point with the highest score.
+Batch selection is simple and straightforward when the batch size is $b = 1$.
+%
+We simply select the point with the highest score.
 %
 When $b>1$, it is not clear whether selecting the top $b$ highest scoring candidates is desirable.
 %
-For example, if the scoring function is based on predicted variance (e.g. Active Learning McKay, a.k.a., ALM), the selected candidates may be clustered in a single area of high variance.
+For example, if the scoring function is based on predicted variance (e.g., active learning MacKay, ALM), the selected candidates may be clustered in a single area of high variance.
 %
 However, obtaining a single sample in that area would suffice to reduce the uncertainty for the whole area.
 %
-Nonetheless, we use this naive strategy as a baseline and its corresponding algorithm is given in Algorithm \ref{algo:naive}.
+Nonetheless, we use this naive strategy as a baseline, and its corresponding algorithm is given in Algorithm \ref{algo:naive}.
 
 {\fontsize{10}{10}\selectfont
 \begin{algorithm}
@@ -744,7 +748,7 @@ Nonetheless, we use this naive strategy as a baseline and its corresponding algo
 }
 
 \subsection{Surrogate Believer Batch Selection}
-This strategy is inspired by the Kriging Believer strategy~\cite{GotovosCasatiHitz2013,GinsbourgerLeRicheCarraro2009}.
+This strategy is inspired by the Kriging believer strategy~\cite{GotovosCasatiHitz2013,GinsbourgerLeRicheCarraro2009}.
 %
 It takes advantage of the scoring function's reliance on the uncertainty of the surrogate model.
 %
@@ -779,22 +783,22 @@ Formally, this process is described in Algorithm \ref{algo:believe}, where $M(x)
 \end{algorithm}
 }
 
-\subsection{Topology-Based Batch Selection: Points with Maximum Persistence}
+\subsection{Topology-Based Batch Selection: Points with\\Maximum Persistence}
 \label{subsection:topology-maxp}
 
 We now utilize the topological method described earlier to study the topology of the scoring function.
 %
 Scoring function $S$ is a real-valued function that takes as input a surrogate model $M$ and a point $x$, and returns a real number based on properties of $M$, the predicted value $M(x)$, the variance of the prediction, etc.
 %
-When $b = 1$, the naive strategy always select the highest scoring candidate, which topologically, corresponds to the global maximum of the scoring function.
+When $b = 1$, the naive strategy always selects the highest scoring candidate, which, topologically, corresponds to the global maximum of the scoring function.
 %
-When $b > 1$, the naive strategy selects $b$ points with the highest scores, and does not guarantee well-spacing among the selected candidates since these points may cluster around the global maxima.
+When $b > 1$, the naive strategy selects $b$ points with the highest scores, and does not guarantee good spacing among the selected candidates since these points may cluster around the global maxima.
 %
 If we would like to guarantee some level of spatial separation among the chosen candidates, then perhaps a simple topology-based strategy would select the top $b$ \emph{local maxima} of the scoring function.
 %
 However, as the example illustrated in Figure~\ref{fig:persistence} shows, a 1D scoring function could contain two local maxima that are close to each another in the domain but have very different \emph{persistence}.
 %
-Such an observation inspired our first topology-based batch selection strategy which is based on the persistence of the candidate points.
+Such an observation inspired our first topology-based batch selection strategy, which is based on the persistence of the candidate points.
 %
 Since regular points have zero persistence, such a strategy selects points exclusively among the local maxima.
 %
@@ -838,12 +842,12 @@ Since we would like to generalize our batch selection process to any arbitrary d
 \centering
 \includegraphics[width=0.32\textwidth]{figs/chap5/persistence}
 \includegraphics[width=0.32\textwidth]{figs/chap5/persistence2}
-\caption{A simple one dimensional function with four maxima showing a selection strategy that chooses the two highest-valued maxima (left) and the strategy we employ in MaxP which selects the two highest persistence maxima.}
+\caption{A simple one-dimensional function with four maxima showing a selection strategy that chooses the two highest-valued maxima (left) and the strategy we employ in MaxP, which selects the two highest persistence maxima.}
 \label{fig:persistence}
 \end{figure}
 
-\subsection{Topology-Based Batch Selection: Maximum Persistence and Believer Hybrid}
-Our final strategy creates a hybrid between the maximum persistence strategy and the Surrogate Believer strategy.
+\subsection{Topology-Based Batch Selection:\\Maximum Persistence and Believer Hybrid}
+Our final strategy creates a hybrid between the maximum persistence strategy and the surrogate believer strategy.
 %
 That is, we proceed with the believer strategy by temporarily adding points with the highest persistence.
 %
@@ -851,7 +855,7 @@ We introduce one extra parameter $m$ that indicates how many points we add tempo
 %
 Equivalently, $m$ means the number of maxima to chose before refitting the surrogate.
 %
-$m=1$ corresponds to the original believer strategy and $m = b$ corresponds to the maximum persistence strategy.
+$m=1$ corresponds to the original believer strategy, and $m = b$ corresponds to the maximum persistence strategy.
 %
 For all other values in between, $1 < m < b$, we blend the two ideas together.
 %
@@ -860,7 +864,7 @@ The process is detailed in Algorithm \ref{algo:maxp-believe}.
 {\fontsize{10}{10}\selectfont
 \begin{algorithm}
 \scriptsize
-\caption{Maximum persistence and Believer hybrid selection}
+\caption{Maximum persistence and believer hybrid selection}
 \label{algo:maxp-believe}
 % \begin{spacing}{0.8}
 \begin{algorithmic}
@@ -898,9 +902,9 @@ The process is detailed in Algorithm \ref{algo:maxp-believe}.
 %
 For the global surface recovery problem, we compute the \emph{root-mean-square error} (RMSE) over a validation set $V$ of the domain between the surrogate model response surface and the true response surface.
 %
-The validation set $V$ for our $2$D test functions is a uniform grid of resolution $100\times100$.
+The validation set $V$ for our two-dimensional test functions is a uniform grid of resolution $100\times100$.
 
-For the limit surface recovery problem, we use two different metrics to try to quantify the quality of the approximations.
+For the limit surface recovery problem, we use two metrics to try to quantify the quality of the approximations.
 %
 The \emph{Hausdorff distance} between the true limit surface and the approximated limit surface based on the surrogate model is computed to measure curve similarity.
 %
@@ -915,7 +919,7 @@ In addition, we treat our model as a binary classifier with the limit surface be
 %
 Given a ground-truth validation grid, we can evaluate the \emph{precision}, $p$, and \emph{recall}, $r$, of the classification and compute the harmonic mean of these two values to get the $F_1$-score.
 %
-The relevant equations are listed below where $t_+$ means the count of `true positives' or correctly identified labels above the limit surface, while $f_+$ means the count of `false positives' or incorrectly identified labels above the limit surface, and $f_-$ means the count of `false negatives' or incorrectly identified labels below the limit surface.
+The relevant equations are listed below, where $t_+$ means the count of `true positives' or correctly identified labels above the limit surface, $f_+$ means the count of `false positives' or incorrectly identified labels above the limit surface, and $f_-$ means the count of `false negatives' or incorrectly identified labels below the limit surface.
 
 \begin{equation}
 p = \frac{t_+}{t_+ + f_+}
@@ -936,24 +940,30 @@ It is evaluated on a validation grid of resolution $100\times100$.
 %
 The Hausdorff distance focuses on the approximation quality of the limit surface itself.
 %
-Consider a small component of the limit surface that is yet to be recovered, the F1-score may still report a high-value (corresponding to good approximation quality) since the missing component encloses only a small area of the domain space, but the Hausdorff distance may be very large (corresponding to a low approximation quality) as not all components in the limit surface have been recovered.
+Consider a small component of the limit surface that is yet to be recovered.
+%
+The F1-score may still report a high-value (corresponding to good approximation quality) since the missing component encloses only a small area of the domain space, but the Hausdorff distance may be very large (corresponding to a low approximation quality) because not all components in the limit surface have been recovered.
 
-In other words, the Hausdorff distance metric complements the F1-score metric, as the former is a shape-matching criteria and the latter focuses on classification accuracy. Thus, yielding one shape-based metric and another volume-based metric.
+In other words, the Hausdorff distance metric complements the F1-score metric, since the former is a shape-matching criterion and the latter focuses on classification accuracy.
+%
+% Thus, yielding one shape-based metric and another volume-based metric.
 
 \subsubsection{Test Functions}
-We first use a collection of $2$D synthetic functions (with closed-form expressions) as test functions.
+We first use a collection of two-dimensional synthetic functions (with closed-form expressions) as test functions.
 %
-As these functions are simple, smooth and continuous, the surrogate models on them converge very quickly during the active learning process.
+Since these functions are simple, smooth and continuous, the surrogate models on them converge very quickly during the active learning process.
 %
 We demonstrate that our methods remain competitive on these functions, where intuitively they are not expected to perform as well since the main features will be recovered quickly and will benefit more from exploitation rather than exploration.
 %
 In addition, these functions have well-defined, smooth limit surfaces that can be recovered accurately and efficiently, ensuring good convergence qualities of all methods.
 %
-We include three test functions here, we omit their closed-form expressions but illustrate the smooth functions (true response surfaces) in Figure~\ref{fig:synthetic}(a)-(c).
+We include three test functions here.
+%
+We omit their closed-form expressions but illustrate the smooth functions (true response surfaces) in Figure~\ref{fig:synthetic}(a)-(c).
 %
 Their corresponding limit surfaces (marked by yellow curves) are shown in Figure~\ref{fig:synthetic}(d)-(f).
 %
-The \textbf{GMM} corresponds to the surface of a $2$D Gaussian mixture model.
+The GMM corresponds to the surface of a two-dimensional Gaussian mixture model.
 %
 The GMM has three limit surface components with one designed to be smaller and less likely to be found immediately.
 %
@@ -972,9 +982,9 @@ The Sinusoidal function has a relatively complex limit surface with multiple com
 \label{fig:synthetic}
 \end{figure}
 
-To demonstrate that our proposed topology-based active learning methods can potentially be more advantageous with functions that have complex topology, we use a set of greyscale images as our real-world test functions.
+To demonstrate that our proposed topology-based active learning methods can potentially be more advantageous with functions that have complex topology, we use a set of grayscale images as our real-world test functions.
 %
-We treat each image as a $2$D function, where its domain is defined by the pixel locations and its range is the luminosity ranging between $0$ (black) to $255$ (white).
+We treat each image as a two-dimensional function, where its domain is defined by the pixel locations and its range is the luminosity ranging between $0$ (black) to $255$ (white).
 %
 The images we have selected contain irregular shapes, discontinuities, and noisy features, which are more indicative of real-world data.
 %
@@ -982,7 +992,7 @@ They are shown with superimposed limit surfaces in Figure~\ref{fig:images}.
 %
 The limit surfaces are highly irregular with many small components, and their corresponding threshold values are $125$, $30$, $80$, and $100$, respectively.
 
-\begin{figure}[!ht]
+\begin{figure}[b]
 \centering
 \includegraphics[width=0.98\textwidth]{figs/chap5/images}
 \caption{Test images. True limit surfaces are marked with yellow curves.
@@ -1004,23 +1014,23 @@ in public domain, via Wikimedia Commons).
 % \paragraph{RMSE Convergence Results.}
 Table \ref{table:global-synthetic} summarizes the number of points necessary to reduce the global RMSE under a given threshold for each test function.
 %
-The threshold value is chosen by examining the RMSE convergence across all trials, e.g. we stop the active learning process when RMSE falls below $0.07818$ for the GMM dataset.
+The threshold value is chosen by examining the RMSE convergence across all trials, e.g., we stop the active learning process when RMSE falls below $0.07818$ for the GMM dataset.
 %
 We report the mean number of points required as well as the standard deviation for each strategy across $10$ trials.
 %
-The numbers in parentheses are the median values across each of the ten trials.
+The numbers in parentheses are the median values across each of the $10$ trials.
 %
 The maximum number of points added for the synthetic test functions is capped at $256$ and for the image datasets, at $1024$.
 %
-We experiment with three different batch sizes, $8$, $16$ and $32$.
+We experiment with three different batch sizes, $8$, $16$, and $32$.
 %
-We adopt shorthand for each strategy in the following tables, for example, 2-MaxP+Believe means the hybrid strategy where the parameter $m = 2$.
+We adopt shorthand for each strategy in the following tables; for example, 2-MaxP+Believe means the hybrid strategy where the parameter $m = 2$.
 %
 The strategy with the best performance for each dataset is highlighted in bold font.
 %
 If the best strategy is topology-based, it is colored in red.
 
-\begin{table}[h]
+\begin{table}[t]
 \scriptsize
 \centering
 \begin{tabular}{l || c | c | c}
@@ -1057,15 +1067,15 @@ MaxP             & 99.2 $\pm$ 17.23 (96)        & 140.8 $\pm$ 15.68 (128)    & 1
 
 Increasing the batch size $b$ decreases the rate of convergence, since refitting the surrogate more frequently with small batch sizes would likely select more informative samples.
 %
-The naive method typically gives a baseline performance that is much worse than all other methods, but it shows the range of performance values and illustrates that the Believe, MaxP, and their hybrid strategies are competitive with one another with respect to the overall range.
+The naive method typically gives a baseline performance that is much worse than all other methods, but it shows the range of performance values and illustrates that the believe, MaxP, and their hybrid strategies are competitive with one another with respect to the overall range.
 %
-On these smooth, relatively simple surfaces, the results shown here slightly favor the Believe strategy, in most cases.
+On these smooth, relatively simple surfaces, the results shown here slightly favor the believe strategy, in most cases.
 %
 The MaxP strategy degrades poorly when increasing the batch size from $16$ to $32$, most likely due to the fact that there are likely less than $32$ local maxima extracted from the ALM scoring function.
 %
-When all of the local maxima have been selected, the remaining candidates are chosen based on the naive method.
+When all the local maxima have been selected, the remaining candidates are chosen based on the naive method.
 %
-By coupling the MaxP strategy with the Believe strategy, we see relatively good performances across many scenarios, since such a hybrid strategy takes advantage of exploiting the topology of the scoring functions.
+By coupling the MaxP strategy with the believe strategy, we see relatively good performances across many scenarios, since such a hybrid strategy takes advantage of exploiting the topology of the scoring functions.
 
 \begin{table}[h]
 \scriptsize
@@ -1107,7 +1117,7 @@ These datasets exhibit more complicated convergence behaviors.
 %
 They require more relaxed RMSE convergence thresholds and a larger number of samples to reach even modest levels of approximation.
 %
-In the case of the butterfly nebula image and the tiger image when $b=8$, the MaxP method outperforms the Believe strategy.
+In the case of the butterfly nebula image and the tiger image when $b=8$, the MaxP method outperforms the believe strategy.
 %
 In many other cases, the hybrid strategies have the best performance in terms of mean values.
 %Meanwhile, the reported standard deviations are rather large, putting most
@@ -1123,30 +1133,30 @@ The yellow contours denote the predicted limit surface.
 %
 The blue points are the training data (the same for both trials) and the red points are the adaptively selected points.
 %
-The green points represent the next batch of $8$ selected points.
+The green points represent the next batch of eight selected points.
 %
-The most important observation is that the Believe strategy can still select points clustered in a single region, potentially limiting the amount of information gain from a single batch, as illustrated by the points enclosed in the white circles in Figure~\ref{fig:exampleLimits}(a)-(b).
+The most important observation is that the believe strategy can still select points clustered in a single region, potentially limiting the amount of information gain from a single batch, as illustrated by the points enclosed in the white circles in Figure~\ref{fig:exampleLimits}(a)-(b).
 %
-This is due in part to the straddle function encoding both uncertainty (in the form of variance) and closeness between the predicted value and the limiting surface threshold.
+The reason for this behavior is due in part to the straddle function encoding both uncertainty (in the form of variance) and closeness between the predicted value and the limiting surface threshold.
 %
 Recall the advantage of an adaptive sampling strategy over a space-filling design is that samples can be sequentially chosen in a proportionately small area of interest.
 %
 However, we emphasize that our purpose of using batch selection is to explore different areas simultaneously.
 %
-We believe our topology-based designs are more advantageous in such a context, as illustrated in Figure~\ref{fig:exampleLimits}(c)-(d) where the (green) points selected are well-spaced from one another, capturing structural information from different areas of the domain.
+We believe our topology-based designs are more advantageous in such a context, as illustrated in Figure~\ref{fig:exampleLimits}(c)-(d), where the (green) points selected are well spaced from one another, capturing structural information from different areas of the domain.
 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figs/chap5/example-limits}
 \caption{(a)-(b): (a) Predicted response surface based on surrogate model using
-the Believe strategy and (b) its corresponding scoring function.
+the believe strategy and (b) its corresponding scoring function.
 %
 (c)-(d): (c) Predicted response surface based on MaxP strategy and (d) its
 corresponding scoring function.}
 \label{fig:exampleLimits}
 \end{figure}
 
-\paragraph{F1-Score Convergence Results.}
+\subsubsection{F1-Score Convergence Results.}
 Treating the limit surface recovery problem as a binary classification, the F1-score can be used to understand our model's ability to correctly classify points.
 %
 Table \ref{table:f1_synthetics} presents the convergence results.
@@ -1154,13 +1164,11 @@ Table \ref{table:f1_synthetics} presents the convergence results.
 %strategy on each test function.
 %A maximum of $256$ points are added for the synthetic functions, and $1024$
 %points are added for the image datasets.
-For these synthetic functions, the majority of tests favor the Believe strategy.
+For these synthetic functions, the majority of tests favor the believe strategy, most likely because on such simple and smooth examples, there is little need to explore the global space after a few rounds of sampling, and exploiting around the identified limit surface areas is more advantageous.
 %
-This is most likely due to the fact that on such simple and smooth examples, there is little need to explore the global space after a few rounds of sampling, and exploiting around the identified limit surface areas is more advantageous.
-%
-As the topology-based methods are believed to be more judicious about not placing samples very close to one another, they will not converge as quickly as the pure Believe strategy, which can select clusters of points.
+As the topology-based methods are believed to be more judicious about not placing samples very close to one another, they will not converge as quickly as the pure believe strategy, which can select clusters of points.
 
-\begin{table}[h]
+\begin{table}[t]
 \scriptsize
 \centering
 \begin{tabular}{l || c | c | c }
@@ -1193,7 +1201,7 @@ As the topology-based methods are believed to be more judicious about not placin
 \label{table:f1_synthetics}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[b]
 \scriptsize
 \centering
 \begin{tabular}{l || c | c | c | c }
@@ -1228,15 +1236,13 @@ As the topology-based methods are believed to be more judicious about not placin
 \label{table:f1_images}
 \end{table}
 
-The results for the image datasets (Table \ref{table:f1_images}) indicates that utilizing the topology of the scoring function in the active learning process is advantageous.
+The results for the image datasets (Table \ref{table:f1_images}) indicate that utilizing the topology of the scoring function in the active learning process is advantageous.
 %
 With a more complicated response surface, the corresponding scoring function also has complicated topology, which is believed to favor topology-based techniques.
 %
-For a fixed dataset (e.g. Face, Nebula), the topology-based methods can perform better than the Believe strategy as $b$ increases.
-%
-This is because the topology of the scoring function is complex enough that even after $32$ samples, we can still find additional candidates that are structurally informative.
+For a fixed dataset (e.g., Face, Nebula), the topology-based methods can perform better than the believe strategy as $b$ increases, because the topology of the scoring function is complex enough that even after $32$ samples, we can still find additional candidates that are structurally informative.
 
-\paragraph{Hausdorff Distance Convergence Results.}
+\subsubsection{Hausdorff Distance Convergence Results.}
 Finally, we report the Hausdorff distance metric convergence results in Table~\ref{table:hausdorff_synthetics}, computed between the true limit surfaces and the predicted limit surfaces.
 %
 We omit the image datasets as the Hausdorff distances did not converge on these tests, most likely due to the many small components of the true limit surfaces.
@@ -1245,7 +1251,7 @@ As stated earlier, the Hausdorff distance is a measure of the largest minimum di
 %
 Thus, this metric is better suited for the synthetic functions that have large, simple limit surface components.
 
-\begin{table}[h]
+\begin{table}[t]
 \scriptsize
 \centering
 \begin{tabular}{l || c | c | c }
@@ -1292,9 +1298,7 @@ Thus, this metric is better suited for the synthetic functions that have large, 
 \label{table:hausdorff_synthetics}
 \end{table}
 
-The Hausdorff distance metric shows even for the more simple test cases that the topology-based methods perform relatively well.
-%
-This is most likely due to the fact that topology-based methods tend to select well-spaced candidates while still focusing on interesting regions.
+The Hausdorff distance metric shows, even for the more simple test cases, that the topology-based methods perform relatively well, because topology-based methods tend to select well-spaced candidates while still focusing on interesting regions.
 %
 By spacing the sample points along the limit surface, they get a ``rough'' shape everywhere rather than a really accurate picture in one place and highly inaccurate at other locations.
 %
@@ -1314,25 +1318,25 @@ The following is a predominantly qualitative study of adaptive sampling for limi
 %
 I begin with a brief introduction of the problem space before presenting a collection of modified adaptive sampling pipelines along with results on a series two-dimensional of problems.
 
-To study the reliability and safety of complex systems (e.g. nuclear power plants, airplanes, chemical plants), one typically performs a combination of event tree and fault tree analysis \cite{Zio2009}.
+To study the reliability and safety of complex systems (e.g., nuclear power plants, airplanes, chemical plants), one typically performs a combination of event tree and fault tree analysis \cite{Zio2009}.
 %
-However, these methods are characterized by the following disadvantages: (a) The timing of events is not explicitly modeled; (b) The ordering of events is preset by the analysts; (c) The modeling of complex accident scenarios is driven by expert judgment.
+However, these methods are characterized by the following disadvantages: (1) the timing of events is not explicitly modeled; (2) the ordering of events is preset by the analysts; and (3) the modeling of complex accident scenarios is driven by expert judgment.
 %
-For these reasons, there is currently an increasing interest in the development of dynamic Probabilistic Risk Assessment methodologies (DPRA)~\cite{Siu1994} since they can be used to address the deficiencies of the conventional methods listed above.
+For these reasons, there is currently an increasing interest in the development of dynamic probabilistic risk assessment methodologies (DPRA)~\cite{Siu1994} since they can be used to address the deficiencies of the conventional methods listed above.
 
 One goal of DPRA is to analyze the propagation of uncertainty of complex systems.
 %
-Towards this end, we employ sampling algorithms which perform a series of simulation runs given a set of uncertainty parameters.
+Toward this end, we employ sampling algorithms that perform a series of simulation runs given a set of uncertainty parameters.
 %
 However, typically the set of uncertain parameters is very large and the computational cost of each run is very high.
 %
-Consequently, the space of the possible solutions, which we call the response surface, can be sampled only very sparsely and this precludes the ability to fully analyze the impact of uncertainties on the system.
+Consequently, the space of the possible solutions, which we call the response surface, can be sampled only very sparsely, which precludes the ability to fully analyze the impact of uncertainties on the system.
 %
-For safety analysis applications, the following points often emerge: (a) Many regions of the response surface are not of interest; (b) The set of parameters that are of safety concern is a small subset of the original set of uncertainty parameters.
+For safety analysis applications, the following points often emerge: (1) many regions of the response surface are not of interest; and (2) the set of parameters that are of safety concern is a small subset of the original set of uncertainty parameters.
 
-Currently, the class of most used sampling algorithms include: classic stochastic sampling (e.g., Monte-Carlo \cite{Hastings1970,Liu2001}, stratified sampling such as Latin hypercube sampling \cite{HeltonDavis2003}, importance sampling~\cite{Geweke1989} and orthogonal arrays based~\cite{Owen1992} algorithms) and deterministic algorithms (e.g., Polynomial Chaos Expansions~\cite{Najm2009} and Quasi Monte-Carlo~\cite{Caflisch1998}).
+Currently, the class of most used sampling algorithms includes classic stochastic sampling (e.g., Monte-Carlo \cite{Hastings1970,Liu2001}, stratified sampling such as Latin hypercube sampling \cite{HeltonDavis2003}, importance sampling~\cite{Geweke1989}, and orthogonal-arrays-based~\cite{Owen1992} algorithms) and deterministic algorithms (e.g., polynomial chaos expansions~\cite{Najm2009} and quasi-Monte Carlo~\cite{Caflisch1998}).
 %
-However, none of these sampling algorithms explicitly takes into account the results of previous simulations.
+However, none of these sampling algorithms explicitly take into account the results of previous simulations.
 %
 Adaptive sampling algorithms, on the other hand, adopt a strategy that chooses the next sample based on the results obtained by previous samples through a statistical learning model and, thus, focus sampling in yet unexplored risk sensitive regions such as boundaries between system safe and system failure: the limit surface.
 
@@ -1342,22 +1346,22 @@ All three models share a general adaptive sampling pipeline but differ from one 
 %
 The first model relies on globally probing a prediction model to estimate the limit surface as an iso-surface of the global response surface.
 %
-The second model is topology-based.
+The second model is topology based.
 %
 It improves upon the first model by taking into account the topology of the prediction model based on its Morse-Smale complex structure, and samples points in local areas that are considered topologically relevant.
 %
 The final model is designed to be completely data-driven and relies on the geometry of the data. It computes a candidate set directly from a neighborhood graph constructed from the training data, without any dependencies on a particular prediction model.
 %
-We discuss the advantages and limitations of our proposed models and demonstrate their fidelity on several synthetic datasets as well as a small nuclear simulation dataset modeled after a simplified Pressurized Water Reactor (PWR).
+We discuss the advantages and limitations of our proposed models and demonstrate their fidelity on several synthetic datasets as well as a small nuclear simulation dataset modeled after a simplified pressurized water reactor (PWR).
 
 \subsection{Adaptive Sampling Models}
 \label{sec:pipelines}
 
-We introduce three different adaptive sampling models.
+We introduce three adaptive sampling models.
 %
 They share a general pipeline but differ from one another in terms of the candidate selection process.
 %
-In the first model $\Mone$, we rely on globally probing a prediction model, e.g. a Gaussian process model (GPM), to estimate a candidate set that lies on the limit surface.
+In the first model $\Mone$, we rely on globally probing a prediction model, e.g., a Gaussian process model (GPM), to estimate a candidate set that lies on the limit surface.
 %
 The second model $\Mtwo$ improves upon this technique by computing the topology of the prediction model and sampling in areas deemed interesting by the topology rather than querying the entire domain.
 %
@@ -1366,13 +1370,13 @@ The final model $\Mthree$ computes a candidate set directly from the training da
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=1.0\textwidth]{figs/chap5/pipelines}
-\caption{General adaptive sampling pipeline and pipelines for $\protect\Mone$, $\protect\Mtwo$ and $\protect\Mthree$ respectively.}
+\caption{General adaptive sampling pipeline and pipelines for $\protect\Mone$, $\protect\Mtwo$, and $\protect\Mthree$, respectively.}
 \label{fig:pipelines}
 \end{figure}
 
-The general adaptive sampling pipeline will look similar to those discussed in previous studies (Figure~\ref{fig:pipelines} top left).
+The general adaptive sampling pipeline will look similar to those discussed in previous studies~\cite{MaljovecWangKupresanin2013} (Figure~\ref{fig:pipelines} top left).
 %
-The process begins by selecting some initial training data, running the ground-truth simulation and obtaining a collection of true responses at these data points.
+The process begins by selecting some initial training data, running the ground-truth simulation, and obtaining a collection of true responses at these data points.
 %
 Next, we fit a surrogate model from the initial set of training data that estimates the true response surface.
 %
@@ -1387,14 +1391,14 @@ Before describing each of the three models in detail, we focus on their common i
 %
 % Two main families of prediction models are used in uncertainty quantification: regression models such as Multivariate Adaptive Regression Splines (MARS) and stochastic models such as Gaussian processes.
 %
-Both $\Mone$ and $\Mtwo$ use a prediction model, i.e. a Gaussian process model (GPM), as the surrogate model.
+Both $\Mone$ and $\Mtwo$ use a prediction model, i.e., a Gaussian process model (GPM), as the surrogate model.
 %
 We use a specific implementation known as the sparse online Gaussian process~\cite{CsatoOpper2002}, but note that this part of the algorithm is easily replaceable with any prediction model.
 %
 To initially sample from a prediction model, we employ a central Voronoi tessellation (CVT)
 scheme~\cite{DuFaberGunzburger1999}.
 %
-As mentioned earlier in Section~\ref{sec:forwardSampling}, a CVT design has the desirable blue noise property that ensures points are well-spaced but also avoids large gaps.
+As mentioned earlier in Section~\ref{sec:forwardSampling}, a CVT design has the desirable blue-noise property that ensures points are well spaced but also avoids large gaps.
 
 % Neighborhood graph
 All three models select a set of candidate points by locating the current estimate of the limit surface.
@@ -1403,18 +1407,18 @@ The limit surface is estimated by imposing a neighborhood graph on all points wi
 %
 In the case of points estimated with a GPM, their mean value predictions are used.
 %
-While many neighborhood graphs are possible~\cite{CorreaLindstrom2011,MaljovecSahaLindstrom2013}, we use the \emph{relaxed Gabriel graph}~\cite{BoseCardinalCollette2009} which has been shown to have relatively dense connectivities.
+Although many neighborhood graphs are possible~\cite{CorreaLindstrom2011,MaljovecSahaLindstrom2013}, we use the \emph{relaxed Gabriel graph}~\cite{BoseCardinalCollette2009}, which has been shown to have relatively dense connectivities.
 
 % Scoring function
-In terms of the chosen adaptive sampling scoring function, we utilize one based on point density, referred to as the \emph{point density criterion}, where candidate points which are further away from the existing training data get higher scores.
+In terms of the chosen adaptive sampling scoring function, we utilize one based on point density, referred to as the \emph{point density criterion}, where candidate points that are further away from the existing training data get higher scores.
 %
-This is similar to the distance penalty function introduced in Section~\ref{sec:classic}.
+This strategy is similar to the distance penalty function introduced in Section~\ref{sec:classic}.
 %
-Other scoring criteria could also being employed (e.g. Active Learning MacKay criterion \cite{MacKay1992} or expected improvement criterion~\cite{Lam2008,JonesSchonlauWelch1998,Schonlau1997}), arguably leading to different convergence behaviors.
+Other scoring criteria could also being employed (e.g., Active Learning MacKay criterion \cite{MacKay1992} or expected improvement criterion~\cite{Lam2008,JonesSchonlauWelch1998,Schonlau1997}), arguably leading to different convergence behaviors.
 %
 However, since our focus in this paper is not on scoring function design but rather model selection, we employ a simple and model-agnostic scoring function.
 %
-Note the \emph{point density criterion} does not depend on the evaluation of the surrogate model and therefore can be used in the context of $\Mthree$ where we do not utilize a prediction model aside from the linear interpolation of the data points along graph edges.
+Note the \emph{point density criterion} does not depend on the evaluation of the surrogate model and therefore can be used in the context of $\Mthree$, where we do not utilize a prediction model aside from the linear interpolation of the data points along graph edges.
 
 We now define the notion of spanning the limit surface in the context of our models.
 %
@@ -1424,11 +1428,11 @@ An edge in a relaxed Gabriel graph is a \emph{spanning edge} if it spans the thr
 %
 In other words, an edge is spanning if its endpoints have function values on opposite sides of $t$.
 %
-A Morse-Smale crystal is a \emph{spanning crystal} (i.e. spanning the limit surface) if its local maximum has a function value above $t$ and its local minimum has a function value below $t$.
+A Morse-Smale crystal is a \emph{spanning crystal} (i.e., spanning the limit surface) if its local maximum has a function value above $t$ and its local minimum has a function value below $t$.
 %
 A Morse-Smale crystal is a \emph{relaxed spanning crystal} if its local maxima has a function value above $t-\delta$ and its local minimum has a function value below $t+\delta$, for some limit surface tolerance parameter $\delta \geq 0$.
 %
-In a nutshell, relaxed spanning crystals allow us to investigate regions from the response surface of a prediction model that are on or near the current estimate of the limit surface, thus are important for exploratory analysis.
+In a nutshell, relaxed spanning crystals allow us to investigate regions from the response surface of a prediction model that are on or near the current estimate of the limit surface, and thus are important for exploratory analysis.
 %
 This is important if we have not yet recovered the full scale of the topology.
 %
