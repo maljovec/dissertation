@@ -198,7 +198,7 @@ From this analysis, we can determine the largest batch size able to fit into our
     bkds_{float} + bks_{int} \leq M_{GPU}
 \end{equation}
 %
-where $M_{GPU}$ is the total amount of memory avaiable on our device (in bytes), and $s_{float}$ and $s_{int}$ are the sizes of floats and ints (in bytes), respectively.
+where $M_{GPU}$ is the total amount of memory available on our device (in bytes), and $s_{float}$ and $s_{int}$ are the sizes of floats and integers (in bytes), respectively.
 %
 On the system used for all of the tests performed, we use $s_{float} = s_{int} = 4$.
 %
@@ -281,7 +281,7 @@ Given $u \in [0, 1)$ as the parameterization of a point's distance from the edge
     D(u) = \sqrt[p]{r^{p} - (u - c_x)^p} - \sqrt[p]{c_y}
 \end{equation}
 %
-where $r$ is the radius of a two-dimensional $p$-ball defined by Equation~\ref{eq:beta_radius} and $c$ is the center of said ball with position defind by:
+where $r$ is the radius of a two-dimensional $p$-ball defined by Equation~\ref{eq:beta_radius} and $c$ is the center of said ball with position defined by:
 %
 \begin{equation}
     c =
@@ -321,7 +321,7 @@ The result is a discretized algorithm where the fidelity of the precomputed appr
 %
 Note, since the function is symmetric about the midpoint, we can devote all $s$ samples to one half of the shape, as noted by the domain of Equation~\ref{eq:beta_parameterization}.
 
-Furthermore, this simplifciation allows us to substitute any arbitrarily complex kernel function for the $L^p$-balls presented thus far.
+Furthermore, this simplification allows us to substitute any arbitrarily complex kernel function for the $L^p$-balls presented thus far.
 %
 For example, in Figure~\ref{fig:discrete_beta}, we demonstrate the use of a several different common kernel functions, including a properly scaled Gaussian, Epanechnikov, cosine, quartic, and tricubic functions on a set of 20 CVT sampled points in two dimensions.
 %
@@ -410,7 +410,7 @@ If the counting array index associated to this cone is less than $m$, we increme
 %
 Otherwise, we invalidate this edge by replacing it with a $-1$.
 %
-For the Yao graph, we make use of the ordered $k$-nearest neighbors provided by our knn query structure.
+For the Yao graph, we make use of the ordered $k$-nearest neighbors provided by our $k$-nn query structure.
 %
 Since the $k$-nearest neighbors for each point are given in order of increasing distance to the query point, we are guaranteed to fill each conic with the the closest neighbors first for the Yao graph.
 
@@ -461,13 +461,13 @@ The justification for doing this is that stable edges will be robust to the actu
 %     \label{fig:cone_graphs}
 % \end{figure}
 
-\section{Quality Measueres}
+\section{Quality Measures}
 \label{sec:graph_quality_measures}
 An open question to consider is what makes a ``good'' graph?
 %
 Although the answer largely depends on the application, we attempt to generalize properties from the topological and geometric properties of the dataset as well as our target applications and come up with five measures applicable in low dimensions to evaluate different proximity graphs.
 %
-For higher dimensions, we will rely on an application-specific studies to evlauate performance.
+For higher dimensions, we will rely on an application-specific studies to evaluate performance.
 
 The five measures are listed below with a brief justification for each.
 %
@@ -567,7 +567,7 @@ Finally, we compare the traits of $k$-nn graphs, empty region graphs, and cone g
 %
 The first uses our quality measures defined in Section~\ref{sec:graph_quality_measures}, the next seeks to determine the topological stability imposed by different graphs, and the last we apply these graphs to the classification algorithm.
 
-\subsection{KNN Comparison}
+\subsection{$K$-NN Comparison}
 \label{sec:knn_benchmark}
 
 With the speed-up from performing the empty region tests on the GPU, the runtime should be dominated by the neighborhood queries.
@@ -798,7 +798,7 @@ When evaluating the heatmap, lower values are better for our quality measure.
 %
 According to the quality measure shown in Figure~\ref{fig:teaser}, there are no universal optimal parameters for different distributions and sample sizes, although we do see some trends.
 %
-For instance, with the four non-space-filling distributions on the right that somehow have an intrinsic shape that is different from their embedding domain, the relaxed $\beta$-skeleton tends to do well with the setting $\beta=1.5$ and $p=2$, whereas the yao and $\Theta$ graphs tend to favor $m=1$ for those cases.
+For instance, with the four non-space-filling distributions on the right that somehow have an intrinsic shape that is different from their embedding domain, the relaxed $\beta$-skeleton tends to do well with the setting $\beta=1.5$ and $p=2$, whereas the Yao and $\Theta$ graphs tend to favor $m=1$ for those cases.
 %
 The strict $\beta$-skeleton seems to favor lower $p$ values for all cases.
 
@@ -927,7 +927,7 @@ For this, we again rely on the persistence hierarchy to compute the \textit{life
 %
 We define the lifespan as the range of persistence values over which the Morse complex retains the correct segmentation.
 %
-Higher values are preferred becuase they indicate that the graph is able to report the ``correct'' partition over a larger range of persistence values.
+Higher values are preferred because they indicate that the graph is able to report the ``correct'' partition over a larger range of persistence values.
 %
 However, the stability is useful only if we validate that the NVI is low enough to assume that the partitions are well-aligned.
 
@@ -935,7 +935,7 @@ For testing, we utilize a few highly controllable synthetic test functions descr
 %
 Each class of functions allows varying levels of topological complexity and can be generalized to any dimension.
 %
-The functional form of the chosen class of functions is sufficiently general to generate a wide variety of reponse surfaces.
+The functional form of the chosen class of functions is sufficiently general to generate a wide variety of response surfaces.
 %
 In addition, these functions are parameterized by the location of centers as well as the degree of smoothness.
 %

@@ -17,7 +17,7 @@ We then conclude this chapter by performing adaptive sampling exclusively in the
 
 \section{Adaptive Sampling With Topological Scores}
 \label{paper:ijuq2013}
-In this first work, we look at the problem of desiging experiments in order to globally fit a surrogate model to data that is assumed to be represented by a smooth function.
+In this first work, we look at the problem of designing experiments in order to globally fit a surrogate model to data that is assumed to be represented by a smooth function.
 %
 The specific emphasis here is on adaptively sampling the input space based on the response of the surrogate model used.
 %
@@ -33,7 +33,7 @@ We begin by selecting some initial training data, running the simulation and obt
 %
 Second, we fit a prediction model, e.g., a Gaussian process model (GPM), from the initial set of training data.
 %
-Third, a large set of candidate points is chosen in the parameter space using Latin hypercube sampling (LHS), and the prediciton model is evaluated at these points.
+Third, a large set of candidate points is chosen in the parameter space using Latin hypercube sampling (LHS), and the prediction model is evaluated at these points.
 %
 The prediction model is used to approximate values at these candidate points and is considered to be a much less expensive surrogate of the ground-truth phenomenon under study.
 %
@@ -51,7 +51,7 @@ In the setting where the underlying data is smooth with little to no noise, the 
 %
 However, such ground-truth models with smooth, uniform behavior are better tackled with space-filling sampling designs that seek to more uniformly cover the input space.
 %
-Adaptive sampling is better suited for understanding phenomena where the frequency of \emph{toplogical features} is variable, and thus we can focus more samples on higher frequency areas, and reduce sampling where the function is flat or gradually changing.
+Adaptive sampling is better suited for understanding phenomena where the frequency of \emph{topological features} is variable, and thus we can focus more samples on higher frequency areas, and reduce sampling where the function is flat or gradually changing.
 %
 Under these settings, the uncertainty of the predicting model can be quite high near training points if nearby training points are of dramatically different values.
 %
@@ -65,7 +65,7 @@ We first review several traditional scoring functions that are used as a baselin
 %
 There are three main scoring functions, Delta, ALM and EI, as detailed below.
 %
-Each funciton is further augmented with a distance penalization factor, creating three additional scoring functions.
+Each function is further augmented with a distance penalization factor, creating three additional scoring functions.
 
 Let $\Tcal = \{\z\}_{i=1}^{n}$ be the set of $n$ training points in dimension $d$.
 %
@@ -976,7 +976,7 @@ The Sinusoidal function has a relatively complex limit surface with multiple com
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figs/chap5/synthetic}
-\caption{Synthetic test functions and their designated limit surfaces.
+\caption[Test functions for batch adaptive sampling]{Synthetic test functions and their designated limit surfaces.
 (a)-(c): True response surfaces for (a) GMM, (b) Salomon and (c) Sinusoidal.
 (d)-(f): True limit surfaces for (d) GMM, (e) Salomon and (f) Sinusoidal.}
 \label{fig:synthetic}
@@ -995,7 +995,7 @@ The limit surfaces are highly irregular with many small components, and their co
 \begin{figure}[b]
 \centering
 \includegraphics[width=0.98\textwidth]{figs/chap5/images}
-\caption{Test images. True limit surfaces are marked with yellow curves.
+\caption[Test images for batch adaptive sampling]{Test images. True limit surfaces are marked with yellow curves.
 %
 (a) Face.
 %
@@ -1370,7 +1370,7 @@ The final model $\Mthree$ computes a candidate set directly from the training da
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=1.0\textwidth]{figs/chap5/pipelines}
-\caption{General adaptive sampling pipeline and pipelines for $\protect\Mone$, $\protect\Mtwo$, and $\protect\Mthree$, respectively.}
+\caption[Limit surface adaptive sampling pipelines]{General adaptive sampling pipeline and pipelines for $\protect\Mone$, $\protect\Mtwo$, and $\protect\Mthree$, respectively.}
 \label{fig:pipelines}
 \end{figure}
 
@@ -1702,7 +1702,7 @@ A typical scenario is as follows (see Figure~\ref{fig:nuclearTransient}):
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.6\textwidth]{figs/chap5/scenExample.pdf}
-  \caption{$\protect\NF$: Example of a transient for a LOOP scenario.}
+  \caption[Example of a transient for a LOOP scenario]{$\protect\NF$: Example of a transient for a LOOP scenario.}
   \label{fig:nuclearTransient}
 \end{figure}
 
@@ -1845,7 +1845,7 @@ The work is ongoing to validate our claim by applying the model to datasets whos
 %
 We may further extend topology-driven adaptive sampling schemes to include other topological structures such as contour trees or Reeb graphs, which may offer new insights into our understanding of the response surfaces.
 
-In summary, one would need to consider the tradeoff between exploration and exploitation when choosing the appropriate adaptive sampling model.
+In summary, one would need to consider the trade-off between exploration and exploitation when choosing the appropriate adaptive sampling model.
 %
 A data-driven model such as $\Mthree$ exploits the properties associated with existing training points with limited exploratory capabilities, whereas a prediction model-based model such as $\Mone$ focuses on sampling the entire domain.
 %

@@ -108,14 +108,14 @@ Thus, if $\mathbb{A}$ and $\mathbb{B}$ intersect, they do so such that their com
 \end{defn}
 
 \begin{defn}
-\textbf{Morse-Smale function} - A Morse function whose ascending and descending manifolds interesect transversally.
+\textbf{Morse-Smale function} - A Morse function whose ascending and descending manifolds intersect transversally.
 \end{defn}
 
 \begin{defn}
 \textbf{Morse-Smale Complex} - The complex formed by the intersection of the Morse complexes of $f$ and $-f$.
 \end{defn}
 
-In this way, a Morse-Smale complex identfies each location in the manifold with a local minimum (origin) and a local maximum (destination).
+In this way, a Morse-Smale complex identifies each location in the manifold with a local minimum (origin) and a local maximum (destination).
 %
 Boundaries between cells in a $d$-manifold are themselves $(d-1)$-manifolds that connect local minima to one-saddles, one-saddles to two-saddles, etc., and $(d-1)$-saddles to local maxima.
 
@@ -159,7 +159,7 @@ The algorithm is quite straightforward once the graph is imposed on the data.
 %
 We visit each point and estimate its positive and negative gradient directions according to the function value difference between itself and each of its neighbors divided by the distance between the two points.
 %
-The largest magnitude postive and negative values belong to the edges that represent the discretized integral line.
+The largest magnitude positive and negative values belong to the edges that represent the discretized integral line.
 %
 If a point has no values of lesser value, it is a local minimum.
 %
@@ -179,7 +179,7 @@ This type of error can be avoided by detecting and pruning such edges from the g
 %
 In most cases, the inconsistencies this causes are minor, and the time needed to detect and remove such edges can often outweigh the potential existence of these inconsistencies.
 %
-Furthermore, as dimensionality increases, the likliehood of edges crossing reduces as the space becomes sparser, and any set of four points have to meet an additional coplanar requirement for each dimension added.
+Furthermore, as dimensionality increases, the likelihood of edges crossing reduces as the space becomes sparser, and any set of four points have to meet an additional coplanar requirement for each dimension added.
 %
 % In pratical settings, we begin with an approximate $k$-nearest neighbor graph where $k$ is intentionally set higher than expected and prune it with one of the empty region criteria from Correa and Lindstrom's work to achieve computational efficiency.
 
@@ -201,7 +201,7 @@ When considering even low-dimensional examples such as a two-dimensional terrain
 %
 Thus, we seek some way by which we can sort the topological features in both the Reeb graph and  Morse-Smale complex setting in some way so as to capture this ``significance.''
 %
-Doing so affords us the opportunity to deconstruct the topology into a hierarchical representation whereby we can look at the topology at different scales of resolution, allowing us to de-noise the results.
+Doing so affords us the opportunity to deconstruct the topology into a hierarchical representation whereby we can look at the topology at different scales of resolution, allowing us to denoise the results.
 
 The notion of significance that we use is taken from the field of persistent homology.
 %

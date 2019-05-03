@@ -79,7 +79,7 @@ Applying a probability distribution over the input space and randomly sampling t
 %
 Typically, this method has been used to estimate integrals; however it, as with all other probability-weighted sampling strategies, has the side effect of placing emphasis on a particular area of interest in the domain.
 %
-In this way, we minimize the likliehood that features in the particular area of interest will be undersampled.
+In this way, we minimize the likelihood that features in the particular area of interest will be undersampled.
 
 The Latin hypercube sampling (LHS) strategy~\cite{McKayBeckmanConover1979,Tang1993,VanDam2008} attempts to bridge the gap by providing a controlled random sampling.
 %
@@ -130,7 +130,7 @@ The first method, Poisson disk sampling, creates samples that are guaranteed to 
 %
 The classic algorithm applies to the two-dimensional case and is achieved through rejection sampling; that is, points are iteratively added to the overall sample set if they do not lie inside a disk with a specified radius~\cite{Cook1986}.
 %
-Accelerations of this baseline algorithm focus on methods for efficiently tracking the empty regions left to be sampled in order to reduce the likliehood of rejecting future samples~\cite{EbeidaDavidsonPatney2011,EbeidaMitchellPatney2012,GamitoMaddock2009,Jones2006,JonesKarger2011,WhiteClineEgbert2007}.
+Accelerations of this baseline algorithm focus on methods for efficiently tracking the empty regions left to be sampled in order to reduce the likelihood of rejecting future samples~\cite{EbeidaDavidsonPatney2011,EbeidaMitchellPatney2012,GamitoMaddock2009,Jones2006,JonesKarger2011,WhiteClineEgbert2007}.
 %
 Although most graphics problems deal in relatively low-dimensional spaces, there has been some recent work for computing Poisson disk sampling in arbitrary dimensions~\cite{Bridson2007,EbeidaMitchellPatney2012,EbeidaMitchellPatney2015,GamitoMaddock2009,MitchellEbeidaAwad2018}, and with the correct application of acceleration structures such as a kd-tree, these methods are viable up to tens of dimensions~\cite{MitchellEbeidaAwad2018}.
 
@@ -367,11 +367,11 @@ We choose to focus our study on the $k$-nearest neighbor graph due to our abilit
 
 Several state of the art competing libraries exist for computing both exact and approximate $k$-nearest neighbor graphs.
 %
-The methodologies use data structures such as space-partitioning trees~\cite{Bentley1975,LiuMooreGray2004,Omohundro1989,Uhlmann1991,Yianilos1993}, product quantization~\cite{BabenkoLempitsky2012,JegouDouzeSchmid2011} locality-aware hashing~\cite{BawaCondieGanesan2005,LvJosephsonWang2007,AndoniIndyk2008,TsaiYang2014,ZhaoLuMei2014}, pemutation indices~\cite{Esuli2012,TellezChavezNavarro2013}, and graphs~\cite{AryaMount1993,DongMosesLi2011,HouleSakuma2005,IwasakiMiyazaki2018,MalkovYashunin2018,SebastianKimia2002,WangLi2012} in order to perform fast proximity queries.
+The methodologies use data structures such as space-partitioning trees~\cite{Bentley1975,LiuMooreGray2004,Omohundro1989,Uhlmann1991,Yianilos1993}, product quantization~\cite{BabenkoLempitsky2012,JegouDouzeSchmid2011} locality-aware hashing~\cite{BawaCondieGanesan2005,LvJosephsonWang2007,AndoniIndyk2008,TsaiYang2014,ZhaoLuMei2014}, permutation indices~\cite{Esuli2012,TellezChavezNavarro2013}, and graphs~\cite{AryaMount1993,DongMosesLi2011,HouleSakuma2005,IwasakiMiyazaki2018,MalkovYashunin2018,SebastianKimia2002,WangLi2012} in order to perform fast proximity queries.
 %
 These methodologies vary in their ability to represent the exact versus approximate solutions.
 %
-For the purposes of our later studies, we consider the approximation quality of all methods ``good enough,'' because when using such an approximate knn throughout this document, we will be extracting many more neighbors than required in order to prune this graph using one of the remaining techniques.
+For the purposes of our later studies, we consider the approximation quality of all methods ``good enough,'' because when using such an approximate $k$-nn throughout this document, we will be extracting many more neighbors than required in order to prune this graph using one of the remaining techniques.
 %
 In cases in which we compare or use $k$-nn in isolation, we select an exact $k$-nn for comparison.
 %
@@ -444,7 +444,7 @@ One example may be to understand the behavior around several local optima of a m
 %
 Another example might be to understand the behavior around an outlier or anomaly in the data generated from the model.
 %
-Global sensitvity methods, on the other hand, are able to rank the overall importance of each model input and in some cases identify redundant features.
+Global sensitivity methods, on the other hand, are able to rank the overall importance of each model input and in some cases identify redundant features.
 %
 Therefore, an application for global sensitivity analysis can be dimensionality reduction where the goal is to reveal important subspaces of the original problem.
 %
@@ -454,7 +454,7 @@ These subspaces can help us avoid the \emph{curse of dimensionality}, allowing u
 
 Differential SA computes the location-dependent partial derivatives of the output(s) with respect to each input parameter, as can be seen in methods such as brute force finite differencing using a surrogate model when neighboring data is not readily available, that is, taking a small step along one axis and evaluating the slope between the perturbed point and the reference point and repeating for each dimension.
 %
-Improvements to the finite differencing scheme exist that are less computationally expensive, such as the decoupled direct method~\cite{Dunker1981,Dunker1984}, which solves the problem as a sytem of ordinary differential equations, and the Green function method~\cite{KramerCaloRabitz1981}, which can be faster when the ratio of inputs to outputs is very high, but is more complicated and thus prone to higher numerical errors~\cite{SaltelliChanScott2000}.
+Improvements to the finite differencing scheme exist that are less computationally expensive, such as the decoupled direct method~\cite{Dunker1981,Dunker1984}, which solves the problem as a system of ordinary differential equations, and the Green function method~\cite{KramerCaloRabitz1981}, which can be faster when the ratio of inputs to outputs is very high, but is more complicated and thus prone to higher numerical errors~\cite{SaltelliChanScott2000}.
 
 \subsection{Global Sensitivity Analysis}
 
@@ -480,11 +480,11 @@ More complicated versions employ complex surrogate models and determine sensitiv
 
 The more powerful variance-based methods include such techniques as Sobol sensitivity indices~\cite{Sobol1993} and Fourier amplitude sensitivity testing (FAST)~\cite{CukierFortuinShuler1973} that are able to capture higher order sensitivities that the preceding methods do not.
 %
-The tradeoff here is these methods are more complicated to compute.
+The trade-off here is these methods are more complicated to compute.
 
 The global methods discussed thus far do not directly reduce the dimensionality, but instead associate values that can be considered as ranks or scores to each input parameter.
 %
-From this ranking, the user can directly select the number of parameters to include in a reduced anaylsis, or the number of parameters can be computed given a specified error threshold.
+From this ranking, the user can directly select the number of parameters to include in a reduced analysis, or the number of parameters can be computed given a specified error threshold.
 %
 The remaining methods instead attempt to reduce the dimensionality by transforming the model input space to be a linear combination of the original model inputs.
 %
@@ -519,7 +519,7 @@ Looking at it another way, the rows of the transformation matrix tell us which o
 %
 For a comprehensive survey of linear dimensionality techniques, I defer to the excellent work of Cunningham and Ghahramani~\cite{CunninghamGhahramani2015}.
 %
-I will instead review the most widely adopted methods and their relevant extensions and by doing so will give enough information to understand the advantages and disadvantages of linear dimensionality reduction as a tool for understanding sensistivity.
+I will instead review the most widely adopted methods and their relevant extensions and by doing so will give enough information to understand the advantages and disadvantages of linear dimensionality reduction as a tool for understanding sensitivity.
 
 Principal component analysis (PCA) is a common technique that can be described in two ways.
 %
@@ -545,7 +545,7 @@ The collection of works in this vein of research assumes a noise model on the da
 %
 For more on robust PCA, refer to the survey by Bouwmans and Zahzah~\cite{BouwmansZahzah2014}.
 
-As we will see later in Section~\ref{sec:regularization}, a technique known as regularization can be used to reduce the dimensionality of a problem by penalizing model complexity and thus favor models that use fewer dimesions.
+As we will see later in Section~\ref{sec:regularization}, a technique known as regularization can be used to reduce the dimensionality of a problem by penalizing model complexity and thus favor models that use fewer dimensions.
 %
 This technique can be applied to PCA to generate a set of sparse methods that generate lower dimensional spaces that utilize only a subset of the original parameters~\cite{dAspremontBachGhaoui2008,dAspremontGhaouiJordan2007,JourneeNesterovRichtarik2010,ZouHastieTibshirani2006}.
 %
@@ -553,7 +553,7 @@ In the sensitivity setting, the weights of the principal components are nonzero 
 
 Probabilistic PCA (PPCA)~\cite{TippingBishop1999} and related methods~\cite{Roweis1998,WellingAgakovWilliams2003,WilliamsAgakov2002} afford many of the advantages mentioned in the preceding paragraph, including dealing with missing data and the ability to handle sparse spaces efficiently.
 %
-However, the main advantage of PPCA is that the maximum likliehood estimates can be used for classification and novelty detection~\cite{TippingBishop1999}.
+However, the main advantage of PPCA is that the maximum likelihood estimates can be used for classification and novelty detection~\cite{TippingBishop1999}.
 %
 The PPCA model is closely related to a method developed much earlier known as factor analysis~\cite{Spearman1904b}.
 
@@ -1014,7 +1014,7 @@ We then combine this hinge loss over all the support vectors with the original m
 \label{eq:svmSoftMargin}
 \end{equation}
 
-The $\lambda$ in the above optimization represents a postive real number and allows a user to appropriately weight how important the size of the margin should be in comparison to the correctness of classification.
+The $\lambda$ in the above optimization represents a positive real number and allows a user to appropriately weight how important the size of the margin should be in comparison to the correctness of classification.
 %
 As $\lambda$ decreases in magnitude, the behavior of the SVM will tend toward the hard-margin case described above.
 
@@ -1206,7 +1206,7 @@ Informally, the Reeb graph is the result of contracting each connected component
 %
 As stated above, it is necessary to represent the levelsets of the critical points only as nodes in the graph, and thus allow the edges of the graph to represent the infinite number of levelsets existing between critical points.
 
-Georges Reeb, a French mathematician, first formalized the toplogical construct now known as the Reeb graph in 1946~\cite{Reeb1946}.
+Georges Reeb, a French mathematician, first formalized the biological construct now known as the Reeb graph in 1946~\cite{Reeb1946}.
 %
 The Reeb graph remained an abstract mathematical construct until 1991 when Shinagawa et al.~\cite{ShinagawaKuniiKergosien1991} formalized and extended the necessary concepts from Morse theory to construct Reeb graph visualizations for reconstructing three-dimensional surfaces from two-dimensional cross sections.
 %
@@ -1241,7 +1241,7 @@ In terms of comparing the topologies of related data, the bottleneck distance be
 
 % \subsection{Contour Tree}
 
-For the special case where the Reeb graph is defined over a simply connected Euclidean space $\mathbb{E}^n$, we acheive the \textit{contour tree}, which is a Reeb graph with no cycles and consisting of one connected component.
+For the special case where the Reeb graph is defined over a simply connected Euclidean space $\mathbb{E}^n$, we achieve the \textit{contour tree}, which is a Reeb graph with no cycles and consisting of one connected component.
 %
 Carr et al.~\cite{CarrSnoeyinkAxen2003} introduced the first algorithm for computing the contour tree in any dimension.
 %
