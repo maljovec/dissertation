@@ -1,8 +1,8 @@
 %%% -*-LaTeX-*-
 
-\chapter{Rethinking Sensitivity Analysis: A Visualization Application in Nuclear Engineering}
+\chapter{Rethinking Sensitivity Analysis: A Visualization Application in\\Nuclear Engineering}
 \label{ch:visualization}
-Nuclear fuel performance behavior is a very complex and multi-physical phenomenon that is, nonetheless, crucial in determining both the economic and safety performance of a nuclear power plant.
+Nuclear fuel performance behavior is a complex and multiphysical phenomenon that is, nonetheless, crucial in determining both the economic and safety performance of a nuclear power plant.
 %
 Since the 2011 nuclear accident in Fukushima, Japan, significant research has been focused on improving the simulation capability of fuel behavior to design safer (i.e.,\ accident-tolerant) fuel.
 %
@@ -24,9 +24,9 @@ HDViz~\cite{GerberBremerPascucci2010} uses the same domain partioning as MSR.
 %
 Our collaborating scientists have previous exposure to HDViz in risk assessment of nuclear datasets~\cite{MaljovecWangMandelli2013a,MaljovecWangPascucci2013}.
 %
-The scientists found merit in HDViz's ability to provide a meaningful partitioning amenable to SA, however the system's complexity made it difficult to isolate the desired local SA information.
+The scientists found merit in HDViz's ability to provide a meaningful partitioning amenable to sensitivity analysis (SA); however the system's complexity made it difficult to isolate the desired local SA information.
 %
-As such, we seek to provide a more targeted representation of the data for performing SA.
+Therefore, we seek to provide a more targeted representation of the data for performing SA.
 
 Combining domain decomposition with local regression on the analysis side provides us the opportunity to create more targeted and detailed visual encodings than a global approach.
 %
@@ -40,7 +40,7 @@ Such a representation leads to a unique set of visualization design requirements
 %
 In this chapter, we report on the iterative process of refining and extending an existing visualization tool, HDViz~\cite{GerberBremerPascucci2010}, to match the needs of nuclear scientists.
 %
-Furthermore, we report on the successful integration of our framework into the workflow of RAVEN~\cite{RabitiAlfonsiCogliati2015}, a multi-purpose risk assessment and uncertainty quantification software in nuclear engineering.
+Furthermore, we report on the successful integration of our framework into the workflow of RAVEN~\cite{RabitiAlfonsiCogliati2015}, a multipurpose risk assessment and uncertainty quantification software in nuclear engineering.
 
 Our system targets structured/unstructured point cloud data of up to tens of dimensions.
 %
@@ -75,6 +75,21 @@ During this phase, we listen to their description of domain problems, characteri
 %
 We identify several challenges in the existing workflow that are summarized into the design requirements described below.
 
+\subsection{Design Requirement A: Structure-Based Domain\\Partitioning Amenable to Local SA}
+As suggested by Gerber et al.~\cite{GerberRubelBremer2011}, we first considered numerous forms of partition-based regression that can be applied for local SA.
+%
+However, most of these systems are based on greedy, local operations focusing on optimizing some quality metric.
+%
+Since the task of our collaborators was understanding trends occurring in the data rather than accurately (potentially overfitting) the data, we selected MSR, as it considers the global structure of the data.
+
+In fact, MSR is particularly suited to this task as each partition is assumed monotonic and thus well described by a simple set of simple sensitivity coefficients.
+%
+In addition, its flexibility and robustness to noise allow it to be used in an exploratory task such as SA.
+%
+Existing local SA is restricted to be point-wise, and domain partitioning is done manually via a time-consuming process; whereas our proposed SA, built upon MSR, applies automatically and efficiently to partitions at multiple scales.
+%
+Using HDViz as a starting point (see Figure~\ref{fig:hdviz}), we iteratively defined and redefined new visual design requirements as well as refined existing ones that satisfy the various SA tasks.
+
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=1.0\linewidth]{figs/chap6/HDViz-original}
@@ -88,24 +103,8 @@ We identify several challenges in the existing workflow that are summarized into
   \label{fig:hdviz}
 \end{figure}
 
-\subsection{Design Requirement A: Structure-Based Domain Partitioning Amenable to Local SA.}
-As suggested by Gerber et al.~\cite{GerberRubelBremer2011}, we first considered numerous forms of partition-based regression that can be applied for local SA.
-%
-However, most of these are based on greedy, local operations focusing on optimizing some quality metric.
-%
-Since the task of our collaborators was understanding trends occurring in the data rather than accurately (potentially overfitting) the data, we selected MSR, as it considers the global structure of the data.
-
-In fact, MSR is particularly suited to this task as each partition is assumed monotonic and thus well described by a simple set of simple sensitivity coefficients.
-%
-In addition, its flexibility and robustness to noise allow it to be used in an exploratory task such as SA.
-%
-Existing local SA is restricted to be point-wise, and domain partitioning is done manually via a time-consuming process; while our proposed SA, built upon MSR, applies automatically and efficiently to partitions at multiple scales.
-%
-Using HDViz as a starting point (see Figure~\ref{fig:hdviz}), we iteratively defined and redefined new visual design requirements as well as refined existing ones that satisfy the various SA tasks.
-
-
-\subsection{Design Requirement B: Intuitive Visualization of Data Hierarchy.}
-Existing visualization using HDViz suffered from three drawbacks for this application: first, it has a very steep learning curve for data practitioners in general; second, it is particularly nonintuitive for nuclear scientists, and lastly, it has limited support for the SA pipeline.
+\subsection{Design Requirement B: Intuitive Visualization\\of Data Hierarchy}
+Existing visualization using HDViz suffered from three drawbacks for this application: first, it has a very steep learning curve for data practitioners in general; second, it is particularly nonintuitive for nuclear scientists; and lastly, it has limited support for the SA pipeline.
 %
 For example, when presented with the topological skeleton seen in Figure~\ref{fig:hdviz}, nuclear scientists questioned the meaning and utility of the oscillations produced by the inverse regression and the geometric interpretation of their two-dimensional projection.
 %
@@ -124,7 +123,7 @@ partitions within a fixed scale.
 %
 The topology map described in Section~\ref{sec:saDesign} is designed to fulfill such requirements.
 
-\subsection{Design Requirement C: Integration of Common Practices with New Designs.}
+\subsection{Design Requirement C: Integration of Common Practices\\with New Designs}
 
 We incorporate visual tools that are familiar to the nuclear scientists (e.g., scatterplots) into our new visual design to ease the knowledge discovery process.
 %
@@ -136,15 +135,15 @@ In addition, the scientists find that the scatterplots also provide some sense o
 %
 Knowing such details also allows us to encode density information into other representations not prone to the occlusion problem.
 
-\subsection{Design Requirement D: Presentation of Comparative and Quantitative Information.}
+\subsection{Design Requirement D: Presentation of Comparative and\\Quantitative Information}
 
 Initial visualizations of the sensitivity information focus on a comparative analysis that uses shapes of different sizes to convey differences among individual  partitions in the data.
 %
-Though it is useful for quickly detecting major trends, the scientists have requested the numeric measurements of each partition be displayed as this information is more familiar to them and gives them the increased amount of accuracy necessary for decision-making.
+Although it is useful for quickly detecting major trends, the scientists have requested the numeric measurements of each partition be displayed as this information is more familiar to them and gives them the increased amount of accuracy necessary for decision-making.
 %
 Additional designs have been suggested (such as the fitness view detailed in Section~\ref{sec:saDesign}) by the scientists that allow us to better understand their mental model of the data and design our visualization accordingly.
 
-\subsection{Design Requirement E: Scalable Analysis and Visualization.}
+\subsection{Design Requirement E: Scalable Analysis and Visualization}
 
 The existing SA capabilities do not scale well with the increasing number of parameters/dimensions, but our proposed SA using MSR scales well in high dimensions.
 %
@@ -167,7 +166,7 @@ We have proposed multiple visual encodings where the feedback from nuclear scien
 %
 These solutions were integrated into a linked view system with multiple visual components providing interactive functionalities, as illustrated in Figure~\ref{fig:design-overview}.
 
-\begin{figure}[htbp]
+\begin{figure}[b]
   \centering
   \includegraphics[width=\linewidth]{figs/chap6/design-overview}
   \caption{Our linked view visualization system using a synthetic two-dimensional test function.
@@ -199,7 +198,7 @@ We give a detailed description of the \emph{primary} visual encodings below: top
 \label{sec:topologyMap}
 The topology map is a key data abstraction within our design study.
 %
-It is a two-dimensional representation of the data that highlights its topological structure.
+It is a two-dimensional representation of the data that highlights the topological structure of the given data.
 %
 We generate and validate such an abstraction through an active and cyclic design process with the scientists to arrive at its current form.
 %
@@ -217,13 +216,13 @@ Encoding function value to the y-axis is well aligned with the scientists' under
 %
 In addition, the local maxima (minima) are upward (downward) pointing red (blue)  triangles for fast visual differentiation and counting.
 
-Selecting the appropriate scale (i.e., persistence level) for data partitioning is essential during the exploratory process as it helps the user to understand the data hierarchy and sensitivity information.
+Selecting the appropriate scale (i.e., persistence level) for data partitioning is essential during the exploratory process since it helps the user to understand the data hierarchy and sensitivity information.
 %
 The above design also provides a natural separation between features and noise.
 %
-The user is able to choose a scale by clicking anywhere in the plot, which creates a vertical line passing through the cursor location, separating the local extrema into those that represent robust topological features (grey region on the right) and those that represent topological noise (white region on the left).
+The user is able to choose a scale by clicking anywhere in the plot, which creates a vertical line passing through the cursor location, separating the local extrema into those that represent robust topological features (gray region on the right) and those that represent topological noise (white region on the left).
 %
-Extrema in the grey region are visualized together with their connectivities.
+Extrema in the gray region are visualized together with their connectivities.
 %
 Their sizes correspond to the point densities in their surrounding regions.
 %
@@ -241,7 +240,7 @@ On the other hand, density information encoded by the sizes of the extrema  infl
 
 Closed user feedback loops help us refine our visual encoding of the topological map.
 %
-For example, the extrema in the grey region are connected via color-coded, user-adjustable, cubic Bezier curves, each of which represents a Morse-Smale cell (i.e. a data partition).
+For example, the extrema in the gray region are connected via color-coded, user-adjustable, cubic Bezier curves, each of which represents a Morse-Smale cell (i.e., a data partition).
 %
 Such a representation affords a level of flexibility to counteract visual clutter.
 %
@@ -293,18 +292,18 @@ For each partition, the fitness view reports the fit accuracy as well as its inc
 %
 Based on the linear coefficients described in the sensitivity view, the dimensions are ordered by their magnitude and visualized via vertical bar charts.
 %
-Based on this sorted order of dimensions as a heuristic, we build lower-dimensional linear fits beginning with only the dimension with the largest coefficient in magnitude.
+Based on this sorted order of dimensions as a heuristic, we build lower dimensional linear fits beginning with only the dimension with the largest coefficient in magnitude.
 %
 We then iteratively add one dimension at a time and recompute an updated linear model.
 %
 For an $m$-dimensional dataset, we will end up with $m$ different linear fits and for each fit, we compute the coefficient of determination, $R^2$, given in Equation~\ref{eq:r_squared}:
-
+%
 \begin{equation}
     R^2 = 1 - \frac{\sum_{i=1}^n ( y_i - \hat{y}_i)^2}{\sum_{i=1}^n ( y_i - \bar{y})^2}
     \label{eq:r_squared}
 \end{equation}
-
-Where $n$ is the number of data points and for the $i$-th data point, $y_i$ is the observed response value, $\hat{y}_i = \mathbf{x_{i}}\boldsymbol\beta$ is the fitted response value, and $\bar{y} = \frac{1}{n}\sum_{i=1}^{n}y_i$ is the mean of the observed response values.
+%
+where $n$ is the number of data points and for the $i$-th data point, $y_i$ is the observed response value, $\hat{y}_i = \mathbf{x_{i}}\boldsymbol\beta$ is the fitted response value, and $\bar{y} = \frac{1}{n}\sum_{i=1}^{n}y_i$ is the mean of the observed response values.
 
 The use of vertical bar charts conveys the stepwise improvement of adding a dimension to the regression model.
 %
@@ -329,7 +328,7 @@ barcode (see~\cite{CarlssonZomorodianCollins2004} for details) that encodes simi
 %
 Histograms are provided on demand and allow the user to visualize the distribution of inputs, outputs, and various computed values on a per partition basis.
 %
-Histograms also provides an interactive filtering system.
+The histograms also provide an interactive filtering system.
 %
 These alternative visual encodings are included as part of our parallel prototyping stage, and they are implemented in our final tool to offer diversity and increase efficacy.
 
@@ -339,7 +338,7 @@ During the \emph{implement} stage of our design study, we carefully choose algor
 %
 Our implementation is integrated into RAVEN, an uncertainty quantification and probabilistic risk assessment tool actively being developed by and for nuclear scientists.
 %
-This creates a platform with good exposure for the new workflow being adopted by the scientists.
+This integration creates a platform with good exposure for the new workflow being adopted by the scientists.
 %
 Close user interactions help us refine our design and implementation in an iterative process.
 %
@@ -351,7 +350,7 @@ Such a programming environment supports rapid software prototyping and ensures t
 %
 In addition, our modular implementation and linked view design~\cite{Roberts2007}  are also suitable for extending and expanding the visualization capabilities of RAVEN in the future.
 
-\section{Deployment and Evaluation: Nuclear Fuel Design}
+\section{Deployment and Evaluation: Nuclear\\Fuel Design}
 \label{sec:saApplication}
 The final \emph{deploy} stage of our design study involves software release and evaluation.
 %
@@ -363,7 +362,7 @@ We recount such an iterative process below.
 
 \subsection{Data From Nuclear Fuel Analysis}
 \label{sec:applicationBackground}
-We consider an analysis of a nuclear fuel rodlet simulation performed using the BISON software~\cite{HalesNovasconePastore2013}, a modern finite-element based nuclear fuel performance code.
+We consider an analysis of a nuclear fuel rodlet simulation performed using the BISON software~\cite{HalesNovasconePastore2013}, a modern finite-element-based nuclear fuel performance code.
 %
 The rodlet is axisymmetric and composed of 10 stacked UO$_2$ pellets surrounded by a zirconium alloy shield known as the cladding.
 %
@@ -389,7 +388,7 @@ In the above scenario, contact is not indicative of a failure state, and is actu
 %
 The described problems arise only when the stress in the cladding becomes too high.
 %
-For this study, the scientists vary three input parameters during the simulation: (a) the linear power scaling factor ($\powerf$), a multiplier for the previously described ramping linear power; (b) the grain radius scaling factor ($\grainf$), a multiplier for the size of microstructure elements known as the grains and related to the swelling caused by the fission gas; and (c) the thermal expansion coefficient for the fuel rodlet ($\thermal$), which dictates how quickly the rod expands and thus how quickly it contacts the cladding.
+For this study, the scientists vary three input parameters during the simulation: (1) the linear power scaling factor ($\powerf$), a multiplier for the previously described ramping linear power; (2) the grain radius scaling factor ($\grainf$), a multiplier for the size of microstructure elements known as the grains and related to the swelling caused by the fission gas; and (3) the thermal expansion coefficient for the fuel rodlet ($\thermal$), which dictates how quickly the rod expands and thus how quickly it contacts the cladding.
 %
 The output parameter of interest is the final midplane von Mises stress $\maxs$ (a scalar quantity derived from the Cauchy stress tensor useful in determining at what point the cladding may yield/crack) recorded after a simulation time of $t=10^6$ seconds.
 %
@@ -404,7 +403,7 @@ All parameters are scaled using z-score standardization to align with both domai
   \caption{SA for the initial nuclear fuel dataset.
   (a) Topological map used to separate signal from noise.
   (b) Three-dimensional scatterplot projecting the data onto the two most significant inputs, textbf{power\_scalef} and \textbf{grainradius\_scalef}, with the third dimension reserved for the output, \textbf{midplane\_stress}.
-  (c) The linear coefficients of each partition. Note, these results violated the domain scientists assumption of the data and allowed us to quickly identify an error in the simulation.}
+  (c) The linear coefficients of each partition. Note, these results violated the domain scientists' assumption of the data and allowed us to quickly identify an error in the simulation.}
   \label{fig:bisonError}
 \end{figure}
 
@@ -420,17 +419,17 @@ The result would cause everything to precipitate faster: a simulation reaching t
 The expectation is that the higher the $\thermal$ is, the higher the stress becomes.
 %
 However, the linear coefficients for $\thermal$ across partitions in the sensitivity view contradict such an expectation:
-(a) $\thermal$ is positive for the green and orange partitions when $\powerf$ is low, and increases when approaching the equilibrium (located at the intersection of the three partitions);
-(b) $\thermal$ is negative for the violet partition when $\powerf$ is high, and decreases past the equilibrium.
+(1) $\thermal$ is positive for the green and orange partitions when $\powerf$ is low, and increases when approaching the equilibrium (located at the intersection of the three partitions);
+(2) $\thermal$ is negative for the violet partition when $\powerf$ is high, and decreases past the equilibrium.
 PEAR and SPEAR coefficients (not shown here) exhibit similar behaviors.
 
-After further investigation with the fuel experts, simulation parameters aside from the three sampled were found to be improperly initialized, leading to this anomaly in the initial dataset.
+After further investigation with the fuel experts, simulation parameters, aside from the three sampled, were found to be improperly initialized, leading to this anomaly in the initial dataset.
 %
-This is a very important observation as this particular dataset is being used by multiple ongoing projects where the validity of this dataset is crucial to their success.
+This is a very important observation because this particular dataset is being used by multiple ongoing projects where its validity is crucial to their success.
 %
 % Furthermore, the input files to these simulations are very large and it is not feasible to do a manual check of every simulation parameter setting.
 %
-Such an anomaly in the dataset itself would not have been exposed via a global SA since the problem was detected by comparing the behavior of an input parameter from one partition to another where the partitions carry actual physical meaning.
+Such an anomaly in the dataset itself would not have been exposed via a global SA, since the problem was detected by comparing the behavior of an input parameter from one partition to another where the partitions carry actual physical meaning.
 
 \subsection{Workflow with Corrected Data}
 \label{sec:workflow}
@@ -438,13 +437,13 @@ After fixing the bug associated with the simulation input, a new dataset is gene
 %
 Starting with the topology map in Figure~\ref{fig:bison}a, a large horizontal gap between two clusters of extrema signifies clear separation between signal and noise in the data.
 %
-The scientists therefore select a scale (a vertical line) that preserves the three extrema in the grey region as topological features, resulting in two partitions of the data domain.
+The scientists therefore select a scale (a vertical line) that preserves the three extrema in the gray region as topological features, resulting in two partitions of the data domain.
 %
 Such a selection is also supported by observing a large gap between two clusters of points within the persistence diagram (Figure~\ref{fig:bison}b), where one cluster contains points near the diagonal $y=x$ and the other contains points far away from the diagonal.
 %
-As a first order approximation, the scientists build local linear regression models for these two partitions.
+As a first-order approximation, the scientists build local linear regression models for these two partitions.
 
-\begin{figure}[htbp]
+\begin{figure}[b]
   \centering
   \includegraphics[width=.48\textwidth]{figs/chap6/bison2}
   \caption{SA of the new nuclear fuel dataset:
@@ -481,7 +480,7 @@ That is, the three $R^2$ scores increase from roughly $0.790$ to $0.898$ (Figure
 %
 Therefore, extracting the desired ROI requires two additional levels of refinements.
 
-\begin{figure}[htbp]
+\begin{figure}[b]
   \centering
   \includegraphics[width=\linewidth]{figs/chap6/bisonRefined3}
   \caption{
@@ -490,9 +489,9 @@ Therefore, extracting the desired ROI requires two additional levels of refineme
   \label{fig:bisonRefined}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[t]
   \centering
-  \includegraphics[width=.48\textwidth]{figs/chap6/bisonRefinedSensitivity2}
+  \includegraphics[width=\textwidth]{figs/chap6/bisonRefinedSensitivity2}
   \caption{
   Left: sensitivity information of the new nuclear fuel dataset under the refined setting with four partitions.
   Right: global SA of the same dataset.
@@ -532,7 +531,7 @@ On the other hand, the topology-inspired, partition-based SA is able to capture 
 
 Using our framework, the scientists have validated the behaviors of a nuclear fuel simulation to be well aligned with their expectations.
 %
-They are actively investigating higher-dimensional problems where topological partitioning could offer them additional insights that are not readily available via traditional visualization such as scatterplot projections.
+They are actively investigating higher dimensional problems where topological partitioning could offer them additional insights that are not readily available via traditional visualization such as scatterplot projections.
 %
 Our objective in validation has been confirmed by the scientists where they could perform SA faster and with higher accuracy.
 %
@@ -553,7 +552,7 @@ Instead, the presented technique allows fuel designers to decompose the analysis
 %
 Fuel performance during these different regimes can be driven by different aspects (e.g., rod fill gas pressure or fuel-cladding contact pressure), and hence, such physically based decomposition may offer more meaningful insight into the specific situations targeted by the analysis.
 %
-Though designed specifically for nuclear engineers to use, this tool has also been successfully applied to the study of hydrology data where the goal was to understand the global warming potential of various factors involved in implementing a rainwater harvesting system for controlling combined sewer overflows~\cite{Tavakol-Davani2016}.
+Although designed specifically for nuclear engineers to use, this tool has also been successfully applied to the study of hydrology data where the goal was to understand the global warming potential of various factors involved in implementing a rainwater harvesting system for controlling combined sewer overflows~\cite{Tavakol-Davani2016}.
 
 % \section{Exploration of Limit Surface Probabilities in RISMC Applications}
 %   in progress
