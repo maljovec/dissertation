@@ -5,36 +5,36 @@
 \section{Sampling Designs}
 \label{sec:sampling}
 
-Before analyzing any data, it must be collected either by instrumentation, experimentation, simulation, etc.
+Before analyzing any data, it must be collected by instrumentation, experimentation, or simulation, etc.
 %
-Under certain conditions, the input parameters may be observed rather than selected which is outside of the scope of this section.
+Under certain conditions, the input parameters may be observed rather than selected, which is outside the scope of this section.
 %
 Here, we formalize the different methods by which data samples can be selected for measurement/experimentation.
 %
 There exists two major branches on how this can be done.
 %
-In the first case, all of the samples are pre-selected and run in bulk.
+In the first case, all of the samples are preselected and run in bulk.
 %
-We classify this type of sampling as space-filling sampling since, without any knowledge of the functional relationship, our goal is usually to spread the samples out as much as possible over the range of input values.
+We classify this type of sampling as space-filling sampling, since without any knowledge of the functional relationship, our goal is usually to spread the samples out as much as possible over the range of input values.
 %
-Space-filling sampling is amenable to parallelization due to the fact that the entire sample set can be specified a priori and therefore each experiment can be run independently of all other experiments.
+Space-filling sampling is amenable to parallelization because the entire sample set can be specified a priori, and therefore each experiment can be run independently of all other experiments.
 %
 Such designs attempt to capture the global behavior of the system under study and tend to focus more on uniformly sampling the entire domain of interest evenly as compared to the second mode, adaptive sampling.
 %
 Adaptive sampling selects the ``best'' candidate based on current information about the system.
 %
-The criteria for what constitutes ``best'' is investigated further in the Section~\ref{sec:adaptiveSampling}.
+The criterion for what constitutes ``best'' is investigated further in the Section~\ref{sec:adaptiveSampling}.
 %
 Adaptive sampling excels when only a limited region of the input domain is considered interesting or when the surrogate model is highly localized.
 %
 In the former case, a surrogate model can be used for extracting additional information about the data already collected, and in the latter case, the model is not expected to change significantly away from the area being sampled.
 %
-Adaptive sampling works in a feedback loop where new information is continuously added to a constructed model of the data which is then used to select new samples.
+Adaptive sampling works in a feedback loop where new information is continuously added to a constructed model of the data, which is then used to select new samples.
 
 \subsection{Space-Filling Designs}
 \label{sec:forwardSampling}
 
-It is important to note that the methods discussed herein can be performed in the actual input space, which we will refer to as the value space, or in probability space.
+The methods discussed herein can be performed in the actual input space, which we will refer to as the value space, or in probability space.
 %
 That is, we can apply a probability distribution function (PDF) over each input, or combined inputs, and sample from the PDF rather than the input range itself.
 %
@@ -44,7 +44,7 @@ The two simplest forms of space-filling sampling designs are grid-based and rand
 %
 They also represent archetypes of the two features sought after in a ``good'' space-filling sampling strategy.
 %
-The samples in a grid-based strategy each represent equally-sized spaces of the input domain.
+The samples in a grid-based strategy each represent equally sized spaces of the input domain.
 %
 On the other hand, they can suffer from sampling artifacts due to the regularity of sampling.
 %
@@ -54,7 +54,7 @@ This type of sampling artifact is demonstrated in the left image of Figure~\ref{
 %
 % A uniform grid sampling strategy also suffers from the curse of dimensionality requiring $k^d$ sammples to resolve a grid of $k$ points per dimension in $d$ dimensions.
 
-\begin{figure}[t]
+\begin{figure}[b]
   \centering
   \includegraphics[width=.45\textwidth]{figs/chap3/sampledSine}\qquad
   \includegraphics[width=.45\textwidth]{figs/chap3/sampledGaussian}
@@ -63,21 +63,21 @@ This type of sampling artifact is demonstrated in the left image of Figure~\ref{
   \label{fig:samplingArtifacts}
 \end{figure}
 
-On the other hand, pure random sampling counteracts this type of sampling artifact by avoiding regular patterns, but also holds no guarantees on the sampling density, thus potentially leaving large areas unsampled which could result in the sampling seen in the right image of Figure~\ref{fig:samplingArtifacts} where the variability is entirely missed.
+On the other hand, pure random sampling counteracts this type of sampling artifact by avoiding regular patterns, but also holds no guarantees on the sampling density, thus potentially leaving large areas unsampled, which could result in the sampling seen in the right image of Figure~\ref{fig:samplingArtifacts} where the variability is entirely missed.
 %
-Though, this may seem like a contrived example and adding more samples could alleviate this problem, even missing any one of these features could be belying crucial information to the system under study.
+Although this example may seem contrived and adding more samples could alleviate this problem, missing a single one of these features could be failing to convey crucial information to the system under study.
 %
-Furthermore, when moving from low to high dimensional cases, both forms of sampling suffer from the well-known \emph{curse of dimensionality}~\cite{KeoghMueen2010}.
+Furthermore, when moving from low- to high-dimensional cases, both forms of sampling suffer from the well-known \emph{curse of dimensionality}~\cite{KeoghMueen2010}.
 %
-In this case, as we increase the dimensionality, the volume of the space increases exponentially, thus if each sample is associated with an empty volume surrounding it (i.e., a closest point Voronoi cell~\cite{deBergCheongKreveld2008}, see description below) then the number of samples needed to maintain the same volume per sample will increase exponentially as well.
+In this case, as we increase the dimensionality, the volume of the space increases exponentially, and thus if each sample is associated with an empty volume surrounding it (i.e., a closest point Voronoi cell~\cite{deBergCheongKreveld2008}; see description below), the number of samples needed to maintain the same volume per sample will increase exponentially as well.
 %
-This means that it is intractable to cover high-dimensional spaces with ``enough'' samples if the underlying model is of a sufficiently high-frequency.
+Thus, it is intractable to cover high-dimensional spaces with ``enough'' samples if the underlying model is of a sufficiently high frequency.
 %
-Thus, it is important to understand the complexity of the system under study to first determine if a global fit is feasible or desired.
+In turn, it is important to understand the complexity of the system under study to first determine if a global fit is feasible or desired.
 
 Applying a probability distribution over the input space and randomly sampling the distribution function results in the very popular Monte Carlo sampling method~\cite{MetropolisUlam1949}.
 %
-Typically, this method has been used to estimate integrals, however it, as with all other probability-weighted sampling strategies, has the side effect of placing emphasis on a particular area of interest in the domain.
+Typically, this method has been used to estimate integrals; however it, as with all other probability-weighted sampling strategies, has the side effect of placing emphasis on a particular area of interest in the domain.
 %
 In this way, we minimize the likliehood that features in the particular area of interest will be undersampled.
 
@@ -85,17 +85,17 @@ The Latin hypercube sampling (LHS) strategy~\cite{McKayBeckmanConover1979,Tang19
 %
 LHS divides each dimension into slabs with the condition that each slab contains only one sample.
 %
-Thus, in a two-dimensional setting, one can visualize this as dividing the input space into $n$ rows and $n$ columns where $n$ is the number of required samples.
+Thus, in a two-dimensional setting, one can visualize this strategy as dividing the input space into $n$ rows and $n$ columns where $n$ is the number of required samples.
 %
 The left two images of Figure~\ref{fig:lhsExample} demonstrate an example where $n=4$.
 %
-Though it does impose some structure, LHS can still suffer from the highly irregular sampling density exhibited by random sampling.
+Although it does impose some structure, LHS can still suffer from the highly irregular sampling density exhibited by random sampling.
 %
-Again, by applying probability information we can ensure that we have higher fidelity sampling in the regions of most interest with a minimal sampling cost.
+Again, by applying probability information, we can ensure that we have higher fidelity sampling in the regions of most interest with a minimal sampling cost.
 %
 In this setting, the input space is divided into equally probable slabs rather than equal area.
 %
-Thus, if an input is sampled using a normal distribution, more cuts will be made near the mean and as we proceed away from the mean, the cuts will get farther apart and fewer samples will be required to fill these regions.
+Thus, if an input is sampled using a normal distribution, more cuts will be made near the mean, and as we proceed away from the mean, the cuts will get farther apart and fewer samples will be required to fill these regions.
 
 \begin{figure}[t]
   \centering
@@ -106,7 +106,7 @@ Thus, if an input is sampled using a normal distribution, more cuts will be made
   2D: Left: After selecting one point, we color its constituent row and column
   and prevent any more samples from being drawn from the colored cells.
   Center: The end result shows a distinct color representing each of the four
-  rows and four columns. Right: An example of an undesired correlation effect appearing in an LHS design. Such an correlation can be mitigated with the use of appropriate techniques.}
+  rows and four columns. Right: An example of an undesired correlation effect appearing in an LHS design. Such a correlation can be mitigated with the use of appropriate techniques.}
   \label{fig:lhsExample}
 \end{figure}
 
@@ -114,74 +114,76 @@ LHS designs can also produce random correlations in the sampling, as can be seen
 %
 To this end, the permutation matrix used to construct the LHS sample can be manipulated to reduce such correlation effects when the number of samples is greater than the dimensionality~\cite{ImanConover1982,Owen1994}.
 %
-These correlation reducing strategies however may introduce bias~\cite{OlssonSandbergDahlblom2003}.
+These correlation reducing strategies, however, may introduce bias~\cite{OlssonSandbergDahlblom2003}.
 
-In computer graphics, practitioners often use blue-noise distributions of samples which have been found to match the arrangement of photoreceptors in our eyes~\cite{Yellott1982}.
+In computer graphics, practitioners often use blue-noise distributions of samples, which have been found to match the arrangement of photoreceptors in our eyes~\cite{Yellott1982}.
 %
-The term blue-noise comes from signal processing and relates to the power spectrum of the noise signal~\cite{Tuzlukov2002}, but also equally applies with respect to density in the spatial domain.
+The term blue noise comes from signal processing and relates to the power spectrum of the noise signal~\cite{Tuzlukov2002}, but also equally applies to density in the spatial domain.
 %
-Blue noise exhibits no concentrated spikes (i.e., small area with many samples, respective to the rest of the domain) and minimal low frequency components (i.e., large area with few samples, respective to the rest of the domain)~\cite{YanGuoWang2015}.
+Blue noise exhibits no concentrated spikes (i.e., small area with many samples, with respect to the rest of the domain) and minimal low frequency components (i.e., large area with few samples, with respect to the rest of the domain)~\cite{YanGuoWang2015}.
 %
 In a geometric sense, the sample points will exhibit no regularity, but will still be uniformly distributed in the domain space.
 %
 The main techniques for achieving a blue-noise sampling include Poisson disk sampling, relaxation methods, and tile-based methods~\cite{YanGuoWang2015}.
 
-The first method, Poisson disk sampling creates samples that are guaranteed to be a minimum distance from all other samples and is used widely in computer graphics.
+The first method, Poisson disk sampling, creates samples that are guaranteed to be a minimum distance from all other samples and is used widely in computer graphics.
 %
-The classic algorithm applies to the two dimensional case and is achieved through rejection sampling, that is points are iteratively added to the overall sample set if they do not lie inside a disk of specified radius~\cite{Cook1986}.
+The classic algorithm applies to the two-dimensional case and is achieved through rejection sampling; that is, points are iteratively added to the overall sample set if they do not lie inside a disk with a specified radius~\cite{Cook1986}.
 %
-Accelerations off of this baseline algorithm focus on methods for efficiently tracking the empty regions left to be sampled in order to reduce the likliehood of rejecting future samples~\cite{EbeidaDavidsonPatney2011,EbeidaMitchellPatney2012,GamitoMaddock2009,Jones2006,JonesKarger2011,WhiteClineEgbert2007}.
+Accelerations of this baseline algorithm focus on methods for efficiently tracking the empty regions left to be sampled in order to reduce the likliehood of rejecting future samples~\cite{EbeidaDavidsonPatney2011,EbeidaMitchellPatney2012,GamitoMaddock2009,Jones2006,JonesKarger2011,WhiteClineEgbert2007}.
 %
-Though most graphics problems deal in relatively low dimensional spaces, there has been some recent work for computing Poisson disk sampling in arbitrary dimensions~\cite{Bridson2007,EbeidaMitchellPatney2012,EbeidaMitchellPatney2015,GamitoMaddock2009,MitchellEbeidaAwad2018} and with the correct application of acceleration structures such as a kd-tree, these methods are viable up to tens of dimensions~\cite{MitchellEbeidaAwad2018}.
+Although most graphics problems deal in relatively low-dimensional spaces, there has been some recent work for computing Poisson disk sampling in arbitrary dimensions~\cite{Bridson2007,EbeidaMitchellPatney2012,EbeidaMitchellPatney2015,GamitoMaddock2009,MitchellEbeidaAwad2018}, and with the correct application of acceleration structures such as a kd-tree, these methods are viable up to tens of dimensions~\cite{MitchellEbeidaAwad2018}.
 
-Of the relaxation techniques, Centroidal Voronoi tessellation (CVT)~\cite{DuFaberGunzburger1999} has been the most widely studied.
+Of the relaxation techniques, centroidal Voronoi tessellation (CVT)~\cite{DuFaberGunzburger1999} has been the most widely studied.
 %
 CVT is related to $k$-means clustering~\cite{HastieTibshiraniFriedman2008} in terms of computation and can be employed to provide a sampling strategy that provides uniform sampling density without being aligned to a particular grid.
 %
 The idea is based on the closest point Voronoi diagram~\cite{deBergCheongKreveld2008}.
 %
-Given a set of \emph{sites} existing in $\mathbb{R}^d$, the closest point Voronoi diagram decomposes the space such that any location is associated to its closest representative \emph{site} under some distance metric, typically Euclidean.
+Given a set of \emph{sites} existing in $\mathbb{R}^d$, the closest point Voronoi diagram decomposes the space such that any location is associated with its closest representative \emph{site} under some distance metric, typically Euclidean.
 %
-CVT works by aligning the center of mass, or centroid, of each Voronoi cell with its \emph{site} which then becomes the sample point.
+CVT works by aligning the center of mass, or centroid, of each Voronoi cell with its \emph{site}, which then becomes the sample point.
 %
-By aligning the centroid to the Voronoi cells, we create a solution whereby each Voronoi cell is of roughly equal size (excluding cells on the boundary which extend to infinity), or in other words, the samples are equidistant or nearly equidistant from one another.
+By aligning the centroid to the Voronoi cells, we create a solution whereby each Voronoi cell is of roughly equal size (excluding cells on the boundary that extend to infinity), or in other words, the samples are equidistant or nearly equidistant from one another.
 %
-Naive CVT can suffer from regularity as patterns can exist in the resulting sample set.
+Naive CVT can suffer from regularity because patterns can exist in the resulting sample set.
 %
-To this end, several optimizations have been performed to improve the blue noise characteristic~\cite{BalzerSchlomerDeussen2009,ChenYuanChoi2012,deGoesBreedenOstromoukhov2012,XuLiuGotsman2011}.
+To this end, several optimizations have been performed to improve the blue-noise characteristic~\cite{BalzerSchlomerDeussen2009,ChenYuanChoi2012,deGoesBreedenOstromoukhov2012,XuLiuGotsman2011}.
 %
-As with Poisson disk sampling, most research has been focused on the low-dimensional setting since the combinatorics of increasing dimensionality incur a large storage overhead when processing the Voronoi diagram in arbitrary dimension~\cite{BoissonnatChazalYvinec2017}.
+As with Poisson disk sampling, most research has been focused on the low-dimensional setting since the combinatorics of increasing dimensionality incur a large storage overhead when processing the Voronoi diagram in an arbitrary dimension~\cite{BoissonnatChazalYvinec2017}.
 %
-However, Lloyd's method~\cite{DuFaberGunzburger1999} can be used to iterate to an approximate solution for moderate dimensionality which we utilize in Chapter~\ref{ch:graphs} for the construction of cone graphs using a constrained CVT.
+However, Lloyd's method~\cite{DuFaberGunzburger1999} can be used to iterate to an approximate solution for moderate dimensionality, which we utilize in Chapter~\ref{ch:graphs} for the construction of cone graphs using a constrained CVT.
 
-Lastly, tile-based methods create small, repeatable templates which can be repeated over the domain of interest~\cite{HillerDeussenKeller2001,KopfCohenOrDeussen2006,LagaeDutre2005,Ostromoukhov2007,OstromoukhovDonohueJodoin2004,WachtelPilleboueCoeurjolly2014}.
+Lastly, tile-based methods create small, repeatable templates that can be repeated over the domain of interest~\cite{HillerDeussenKeller2001,KopfCohenOrDeussen2006,LagaeDutre2005,Ostromoukhov2007,OstromoukhovDonohueJodoin2004,WachtelPilleboueCoeurjolly2014}.
 %
-In this setting, a small patch or tile of the domain is pre-computed with desired blue-noise characteristic.
+In this setting, a small patch or tile of the domain is precomputed with desired blue-noise characteristic.
 %
 If the boundaries are carefully constructed to be periodic or otherwise aligned in some fashion, then the tiles can be combined to create a larger domain that maintains the blue-noise property.
 %
-One can see that as the dimensionality increases, so do the boundaries that need to be matched and so most of these methods are applied to two-dimensional domains.
+One can see that as the dimensionality increases, so do the boundaries that need to be matched, and so most of these methods are applied to two-dimensional domains.
 
-Another class of space-filling designs that have existed for a long time are quasi-random or low-discrepancy sequences which have been used a lot for quasi Monte Carlo methods in numerical analysis~\cite{Niederreiter1992}.
+Another class of space-filling designs that have existed for a long time is quasi-random or low-discrepancy sequences, which are frequently used for quasi Monte Carlo methods in numerical analysis~\cite{Niederreiter1992}.
 %
-The low discrepancy paradigm is similar in spirit to the category of blue-noise sampling, but using a different mathematical definition based on \textit{discrepancy} of points which basically is a measure of how much a sequence deviates from an ideal equally distributed sequence.
+The low-discrepancy paradigm is similar in spirit to the category of blue-noise sampling, but uses a different mathematical definition based on \textit{discrepancy} of points, which basically is a measure of how much a sequence deviates from an ideal equally distributed sequence.
 %
-One drawback is that these methods are deterministic and can result in repeating patterns which could suffer from the aliasing artifact highlighted in Figure~\ref{fig:samplingArtifacts}.
+One drawback is that these methods are deterministic and can result in repeating patterns that could suffer from the aliasing artifact highlighted in Figure~\ref{fig:samplingArtifacts}.
 %
 Examples include the one-dimensional Van der Corput sequence~\cite{vanderCorput1935}, its higher dimensional generalization known as the Halton sequence~\cite{Halton1964,BraatenWeller1979}, the Hammersley set~\cite{HammersleyHandscomb1964}, and the Sobol sequence~\cite{Sobol1967}.
 
 \subsection{Adaptive Designs}
 \label{sec:adaptiveSampling}
 
-In contrast to the techniques described above, adaptive sampling selects new candidate samples by utilizing all of the previously collected information, and therefore, the full set of samples cannot be generated a priori.
+In contrast to the techniques described above, adaptive sampling selects new candidate samples by utilizing all the previously collected information, and therefore, the full set of samples cannot be generated a priori.
 %
-Another term commonly used in the data mining community is active learning and spans a wider class of algorithms aimed more broadly at the problems of classification and regression~\cite{Settles2009}.
+Another term commonly used in the data mining community is active learning, which spans a wider class of algorithms aimed more broadly at the problems of classification and regression~\cite{Settles2009}.
 %
-Other names appear in the literature as well such as sequential sampling and optimal experimental design.
+Other terms also appear in the literature, such as sequential sampling and optimal experimental design.
 %
-We focus our attention specifically on the problem of regression over real-valued domains, and follow the general adaptive sampling pipeline laid out in Figure~\ref{fig:asCycle} which is repeated until a convergence criterion is met, typically the residual between consecutive iterations falls below a preset threshold.
+We focus our attention specifically on the problem of regression over real-valued domains, and follow the general adaptive sampling pipeline laid out in Figure~\ref{fig:asCycle} that is repeated until a convergence criterion is met.
+%
+Typically, the convergence criteria is the residual between consecutive iterations falling below a preset threshold.
 
-\begin{figure}[t]
+\begin{figure}[b]
   \centering
   \includegraphics[width=.75\textwidth]{figs/chap3/pipeline}
   \caption[Adaptive Sampling Cycle]{A broad picture of the adaptive sampling
@@ -189,7 +191,7 @@ We focus our attention specifically on the problem of regression over real-value
   \label{fig:asCycle}
 \end{figure}
 
-The cycle begins by querying the oracle or ground truth model using an initial sampling of the input space, such as a sparse version of one of the space-filling designs presented in Section~\ref{sec:forwardSampling}.
+The cycle begins by querying the oracle or ground-truth model using an initial sampling of the input space, such as a sparse version of one of the space-filling designs presented in Section~\ref{sec:forwardSampling}.
 %
 With the queried information, we then build a predictive model of the system.
 %
@@ -197,9 +199,9 @@ With the queried information, we then build a predictive model of the system.
 %
 The predictive model allows us to score or rank the input space or a sample set derived from it.
 %
-From the scored candidates, one or more points is/are selected to be sent to the oracle for querying.
+From the scored candidates, one point or more is selected to be sent to the oracle for querying.
 %
-The new information is added to the predictive model and the cycle repeats until the specified convergence criterion is met.
+The new information is added to the predictive model, and the cycle repeats until the specified convergence criterion is met.
 
 Variations of this theme have been explored at every stage in the cycle.
 %
@@ -215,7 +217,7 @@ Afterwards, we review the related works within the visualization community in an
 
 \subsubsection{Global Fitting Problems}
 
-Adaptive sampling has been used to train neural networks, Gaussian mixture models, and locally weighted regression models among others~\cite{CohnGhahramaniJordan1996}.
+Adaptive sampling has been used to train neural networks, Gaussian mixture models, and locally weighted regression models, among others~\cite{CohnGhahramaniJordan1996}.
 %
 Most of the methods described herein can be accomplished by employing a scoring function upon which all of the candidates can be evaluated and ranked.
 %
@@ -223,18 +225,18 @@ The basic process of global adaptive sampling tries to converge to an acceptable
 %
 Techniques for achieving this include reducing global uncertainty~\cite{CohnGhahramaniJordan1996,TongKoller2001}, exploiting areas of high gradient~\cite{MaljovecWangKupresanin2013}, and focusing on otherwise ``interesting'' regions.
 %
-Interesting in this context can mean several different things such as unexplored regions~\cite{Whitehead1991}, regions of low confidence~\cite{ThrunMoller1992}, poorly fit regions~\cite{LindenWeber1993}, areas of expected change~\cite{CohnAtlasLadner1990,CohnAtlasLadner1994}, and/or areas where information gain is optimal~\cite{Lam2008}.
+Interesting in this context can mean, for example, unexplored regions~\cite{Whitehead1991}, regions of low confidence~\cite{ThrunMoller1992}, poorly fit regions~\cite{LindenWeber1993}, areas of expected change~\cite{CohnAtlasLadner1990,CohnAtlasLadner1994}, and/or areas where information gain is optimal~\cite{Lam2008}.
 %Maybe we should dig into each of these a bit more thoroughly? Like what are the drawbacks of each, or why is directly extracting the topology well-aligned with what some of these are already attempting to accomplish.
 
 A slightly modified version is aimed at global optimization rather than global accuracy of the model~\cite{MooreSchneider1996,JonesSchonlauWelch1998}.
 %
-In this context, the goal is to identify a global optimal parameter setting where either a single figure of merit is maximized or minimized or a Pareto optimum that trades off amongst several figures of merit is optimized.
+In this context, the goal is to identify a global optimal parameter setting where either a single figure of merit is maximized or minimized or a Pareto optimum that trades off among several figures of merit is optimized.
 %
 The active search method takes a slightly different approach by looking at the problem as attempting to sample points contained in a single class~\cite{GarnettKrishnamurthyXiong2012}.
 %
-This last case is related to the problem of limit surface recovery discussed below in Section~\ref{sec:limitSurface} where we are interested in defining the boundary between two classes.
+This last case is related to the problem of limit surface recovery discussed below in Section~\ref{sec:limitSurface}, where we are interested in defining the boundary between two classes.
 
-Most of these methods exploit geometric or statistical properties of the data, but none have explored the topological impact of the data as proposed in this body of work (See Chapter~\ref{ch:adaptiveSampling} for more details).
+Most of these methods exploit geometric or statistical properties of the data, but none have explored the topological impact of the data as proposed in this body of work (see Chapter~\ref{ch:adaptiveSampling} for more details).
 
 \subsubsection{Limit Surface Problems}
 \label{sec:limitSurface}
@@ -243,33 +245,33 @@ On the border between regression and classification is the notion of thresholdin
 %
 That is, when learning a regression model, the user is less interested in the value of the response surface, but more in its ability to detect when the response lies above or below a particular threshold value.
 %
-This is a common problem in risk assessment where the isocontour specified by the threshold value is called the limit surface and it separates the success region from the failure region.
+This is a common problem in risk assessment where the isocontour specified by the threshold value is called the limit surface, which separates the success region from the failure region.
 %
-Engineers are often concerned with identifying such limit surfaces and characterizing them in order to perform trade-off analysis and to set adequate safety margins.
+Engineers are often concerned with identifying such limit surfaces and characterizing them in order to perform a trade-off analysis and to set adequate safety margins.
 %
 The problem is different from global fitting in that the overall fidelity is less of a concern as long as the behavior is adequately modeled around the limit surface.
 %
-This problem of limit surface identification is similar to what is called decision boundary analysis in the classification problem setting~\cite{DiamantiniPotena2007,GoLee2003,LeeLandgrebe1993,LeeLandgrebe1997,WooLee2017,ZhangLiu2005}.
+This problem of limit-surface identification is similar to what is called decision-boundary analysis in the classification problem setting~\cite{DiamantiniPotena2007,GoLee2003,LeeLandgrebe1993,LeeLandgrebe1997,WooLee2017,ZhangLiu2005}.
 %
-However, it also differs from classification (i.e., discrete labeling which typically results in a binary decision of inside or outside a particular class) since knowing the gradient direction and magnitude along and near the limit surface can also be useful information.
+However, it also differs from classification (i.e., discrete labeling, which typically results in a binary decision of inside or outside a particular class), since knowing the gradient direction and magnitude along and near the limit surface can also be useful information.
 
-In reliability engineering, this problem is known as determining the limit state function and can be thought of as the point where a system's load exceeds its capacity where load and capacity are functions of the input parameters.
+In reliability engineering, this problem is known as determining the limit-state function and can be thought of as the point where a system's load exceeds its capacity, where load and capacity are functions of the input parameters.
 %
 The literature in this field attempts to either converge to a single most probable point (MPP) through nonlinear optimization methods~\cite{EldredBichon2006,EldredAgarwalPerez2007} or through adaptive sampling~\cite{Wu1994,DeyMahadevan1998,ZouMahadevanMourelatos2002,BichonEldredSwiler2008}.
 
 In the statistics literature, Ranjan et al.~\cite{RanjanBinghamMichailidis2008} have attempted to solve this problem by defining an expected improvement candidate scoring function that harnesses both a prediction's proximity to the threshold value and also the uncertainty associated with the prediction.
 %
-In similar spirit, the machine learning community has designed similar yet simpler scoring functions that take advantage of similar information.
+The machine learning community has designed similar yet simpler scoring functions.
 %
-Bryan et al.~\cite{BryanSchneiderNichol2005} define a scoring function called the straddle function, and Gotovis et al.~\cite{GotovosCasatiHitz2013} introduce the ambiguity scoring function which can be thought of as a generalized version of the straddle function.
+Specifically, Bryan et al.~\cite{BryanSchneiderNichol2005} define a scoring function called the straddle function, and Gotovis et al.~\cite{GotovosCasatiHitz2013} introduce the ambiguity scoring function, which can be thought of as a generalized version of the straddle function.
 %
-All three methods utilize a Gaussian process surrogate model, however the latter two are performed in what Settles~\cite{Settles2009} refers to as the pool-based active learning setting, whereas the first uses a global optimization to select the optimal point at each iteration which drastically increases the overhead per iteration.
+All three methods utilize a Gaussian process surrogate model; however, the latter two are performed in what Settles~\cite{Settles2009} refers to as the pool-based active learning setting, whereas the first uses a global optimization to select the optimal point at each iteration, which drastically increases the overhead per iteration.
 
 % \subsubsection{Optimization Problems}
 \subsubsection{Design Steering}
 \label{sec:designSteering}
 
-The aforementioned methods are assumed to be completely automatic except in the instance where the human is required to act as the oracle, though such settings are more rare in the regression (i.e., continuous) context than in the classification (i.e., discrete) context.
+The methods discussed in the previous section are assumed to be completely automatic except in the instance where the human is required to act as the oracle, although such settings are more rare in the regression (i.e., continuous) context than in the classification (i.e., discrete) context.
 %
 %The latter context of classification is beyond the scope of this work.
 %
@@ -283,13 +285,13 @@ It uses support vector regression (SVR)~\cite{SmolaScholkopf2004} to fit a model
 %
 The software allows for adding more model parameters to refine the regression to an acceptable level of accuracy.
 %
-Berger et al.~\cite{BergerPiringerFilzmoser2011} utilize two different types of regression models (SVR and nearest neighbor regression) to analyze a trade-off study in performance car engine design.
+Berger et al.~\cite{BergerPiringerFilzmoser2011} utilize two types of regression models (SVR and nearest neighbor regression) to analyze a trade-off study in performance car engine design.
 %
 Utilizing the predictive power of the regression, they are able to provide a guided navigation of the high-dimensional space centered around a user-selected focal point.
 %
 The user adjusts the focal point through multiple linked views, and sensitivity and uncertainty information are encoded around the focal point.
 
-Tuner~\cite{Torsney-WeirSaadMoller2011} employs an automated adaptive sampling algorithm where a sparse sampling of the parameter space is refined by building a Gaussian Process Model (GPM)~\cite{RasmussenWilliams2006}.
+Tuner~\cite{Torsney-WeirSaadMoller2011} employs an automated adaptive sampling algorithm where a sparse sampling of the parameter space is refined by building a Gaussian process model (GPM)~\cite{RasmussenWilliams2006}.
 %
 The adaptive sampling focuses additional samples in areas where either the response is near an optimal setting or the model has high uncertainty.
 %
@@ -301,24 +303,26 @@ In addition, their method involves progressive refinement of the GPM and can be 
 
 Most of these methods convey sensitivity information through user exploration of the input space.
 %
-We discuss sensitivity in more detail in Section~\ref{sec:sensitivity} and in Section~\ref{sec:SA_visualization}, explicit visual encodings for understanding sensitivity information are also discussed.
+We discuss sensitivity in more detail in Sections~\ref{sec:sensitivity} and~\ref{sec:SA_visualization}.
+%
+Explicit visual encodings for understanding sensitivity information are also discussed.
 %
 Sensitivity analysis plays a major role in the novel system described in Chapter~\ref{ch:visualization}.
 
 \section{Proximity Graphs}
 \label{sec:graphs}
 
-Our target datasets are presented as point sampled data of low to moderate ($<$100) dimensionality.
+Our target datasets are presented as point-sampled data of low to moderate ($<$100) dimensionality.
 %
 Many common analysis techniques on such data require the imposition of some structure to relate the disjoint set of point samples.
 %
 Such a structure could be used to interpolate, cluster, filter, or project/warp the data.
 %
-Depending on several factors including: the questions being asked, the dimensionality of the data, and the distribution of the point samples, the correct choice of structure among the points could vary.
+Depending on several factors---the questions being asked, the dimensionality of the data, and the distribution of the point samples---the correct choice of structure among the points could vary.
 %
-For example, in low dimensional settings, it is often common to polygonize or triangulate point-sampled data, but the combinatorics of representing the high-dimensional equivalents of surfaces and volumes of even a simplicial complex quickly become infeasible to store and operate on.
+For example, in low-dimensional settings, it is often common to polygonize or triangulate point-sampled data, but the combinatorics of representing the high-dimensional equivalents of surfaces and volumes of even a simplicial complex quickly become infeasible to store and operate on.
 %
-What is more often found in higher dimensional settings is the use of 1-skeleton structures such as those given by proximity graphs.
+What is more often found in higher dimensional settings is the use of 1-skeleton structures, such as those given by proximity graphs.
 %
 Proximity graphs connect nearby points in a point set via a set of edges where the presence of an edge is based on different geometric constraints depending on the choice of graph.
 
@@ -330,11 +334,11 @@ The empty region graphs include the Delaunay graph, the diamond graph, the Gabri
 %
 Cone-based graphs include Yao graphs and the semi-Yao or $\Theta$-graphs.
 %
-Such 1-skeleton graphs can be prone to over- and/or under-connect a point cloud depending on how the data is distributed.
+Such 1-skeleton graphs can be prone to over- or underconnect a point cloud depending on how the data is distributed.
 %
-Both over- and under-connected graphs can result in misleading data representations.
+Both over- and underconnected graphs can result in misleading data representations.
 %
-Though efforts have been made to improve the neighborhood quality in high dimension, these issues can still not be wholly avoided.
+Although efforts have been made to improve the neighborhood quality in high dimensions, these issues still cannot be wholly avoided.
 %
 In other words, there is no silver bullet.
 %
@@ -347,66 +351,66 @@ In fact, the methodology we propose begins with an efficient approximate $k$-nea
 %
 The two main distance-based graphs are the $k$-nearest neighbor ($k$-nn) graph and the $\epsilon$-nearest neighbor ($\epsilon$-nn) graph.
 %
-The sphere of influence graph~\cite{Toussaint1988} can also be considered in this family of graphs, though it is much less commonly used and also belongs to a family of graphs known as intersection graphs which we do not consider as relevant to this body of work.
+The sphere of influence graph~\cite{Toussaint1988} can also be considered in this family of graphs, although it is much less commonly used and also belongs to a family of graphs known as intersection graphs, which we do not consider as relevant to this body of work.
 
 A $k$-nearest neighbor graph, in our setting, is an undirected graph where an edge exists between two points, $p$ and $q$, if $q$ is one of the $k$ closest points to $p$ or vice versa in some defined metric space.
 %
 The related $\epsilon$-nearest neighbor, also known as the $\epsilon$-ball graph or fixed radius graph, instead is an undirected graph where an edge exists between $p$ and $q$ if the distance metric is less than a specified $\epsilon$.
 %
-Both of these settings give a somewhat incomplete, but complementary view of the data.
+Both of these settings give a somewhat incomplete, but complementary, view of the data.
 %
-On one-hand, $\epsilon$-nn graphs will use more edges to connect points in a more densely-packed region of space.
+On one hand, $\epsilon$-nn graphs will use more edges to connect points in a more densely packed region of space.
 %
-On the other hand, $k$-nn graphs will guarantee every point is connected to at least $k$ other points which is useful for connecting outliers or sparsely sampled regions to the rest of the data.
+On the other hand, $k$-nn graphs will guarantee every point is connected to at least $k$ other points, which is useful for connecting outliers or sparsely sampled regions to the rest of the data.
 %
 We choose to focus our study on the $k$-nearest neighbor graph due to our ability to more sensibly tune the $k$ parameter and its prevalence in the literature.
 
-There exist several state of the art competing libraries for computing both exact and approximate $k$-nearest neighbor graphs.
+Several state of the art competing libraries exist for computing both exact and approximate $k$-nearest neighbor graphs.
 %
 The methodologies use data structures such as space-partitioning trees~\cite{Bentley1975,LiuMooreGray2004,Omohundro1989,Uhlmann1991,Yianilos1993}, product quantization~\cite{BabenkoLempitsky2012,JegouDouzeSchmid2011} locality-aware hashing~\cite{BawaCondieGanesan2005,LvJosephsonWang2007,AndoniIndyk2008,TsaiYang2014,ZhaoLuMei2014}, pemutation indices~\cite{Esuli2012,TellezChavezNavarro2013}, and graphs~\cite{AryaMount1993,DongMosesLi2011,HouleSakuma2005,IwasakiMiyazaki2018,MalkovYashunin2018,SebastianKimia2002,WangLi2012} in order to perform fast proximity queries.
 %
 These methodologies vary in their ability to represent the exact versus approximate solutions.
 %
-For the purposes of our later studies, we consider the approximation quality of all methods ``good enough.''
+For the purposes of our later studies, we consider the approximation quality of all methods ``good enough,'' because when using such an approximate knn throughout this document, we will be extracting many more neighbors than required in order to prune this graph using one of the remaining techniques.
 %
-This is due to the fact that when using such an approximate knn throughout this document, we will be extracting many more neighbors than required in order to prune this graph using one of the remaining techniques.
+In cases in which we compare or use $k$-nn in isolation, we select an exact $k$-nn for comparison.
 %
-In cases, where we compare or use knn in isolation, we select an exact $k$-nn for comparison.
+Recently, Johnson et al. have demonstrated how to effectively perform an exact $k$-nn search on the GPU, thus offering the fastest known exact $k$-nn implementation to date with the FAISS library, which also supports GPU computation of approximate $k$-nn searches~\cite{JohnsonDouzeJegou2017}.
 %
-Recently, Johnson et al. have demonstrated how to effectively perform exact $k$-nn search on the GPU, thus offering the fastest known exact $k$-nn implementation to date with the FAISS library which also supports GPU computation of approximate $k$-nn searches~\cite{JohnsonDouzeJegou2017}.
+Aumuller et al.~\cite{AumullerBernhardssonFaithfull2017} and Chisholm et al.~\cite{ChisholmRichmondMaddock2016} have developed benchmarks for evaluating the efficiency of the various approximation algorithms.
 %
-For evaluating efficiency of the various approximation algorithms, consider the benchmarks developed by Aumuller et al.~\cite{AumullerBernhardssonFaithfull2017} and Chisholm et al.~\cite{ChisholmRichmondMaddock2016}.
+In Section~\ref{sec:knn_benchmark}, I provide an alternative benchmark with an explanation of the difference with the existing benchmarks.
 
 \subsection{Empty Region Graphs}
-Consider two points $a$ and $b$ are elements of a $d$-dimensional point set, $a,b \in P \subseteq \mathbb{R}^d$.
+Consider two points $a$ and $b$, which are elements of a $d$-dimensional point set, $a,b \in P \subseteq \mathbb{R}^d$.
 %
 In the empty region graph setting, an edge exists between $a$ and $b$ if and only if there exists a region, $R(a,b) \subseteq \mathbb{R}^d$, that does not contain any other point in $P$, $R(a,b) \cap P = \emptyset$.
 %
 Depending on the definition of $R$, different graphs can arise.
 %
-Noteworthy, examples include the relative neighbor graph~\cite{Toussaint1980}, its approximation the Urquhart graph~\cite{Urquhart1980}, and the Gabriel graph~\cite{GabrielSokal1969} which are examples of a class of graphs known as $\beta$-skeletons~\cite{KirkpatrickRadke1985,JaromczykToussaint1992}.
+Noteworthy examples include the relative neighbor graph~\cite{Toussaint1980}, its approximation the Urquhart graph~\cite{Urquhart1980}, and the Gabriel graph~\cite{GabrielSokal1969}, which are examples of a class of graphs known as $\beta$-skeletons~\cite{KirkpatrickRadke1985,JaromczykToussaint1992}.
 %
-It is worth noting, that two definitions of the $\beta$-skeleton exist, namely the \emph{circle-based} and the \emph{lune-based} approaches.
+Two definitions of the $\beta$-skeleton exist, namely the \emph{circle-based} and the \emph{lune-based} approaches.
 %
 We will be referencing the \emph{lune-based} definition given in Section~\ref{sec:bpskeleton} unless otherwise noted.
 
-The $\gamma$-neighborhood is an attempt to unify the 2D circle-based $\beta$-skeletons, Delaunay triangulation, and convex hull of a point set into a two-parameter family of techniques~\cite{Veltkamp1991}.
+The $\gamma$-neighborhood is an attempt to unify the two-dimensional circle-based $\beta$-skeletons, Delaunay triangulation, and convex hull of a point set into a two-parameter family of techniques~\cite{Veltkamp1991}.
 %
-Other examples of graphs in this family include the diamond graph~\cite{CorreaLindstrom2011}, the Delaunay graph (where the empty region is defined over $d-1$ points)~\cite{Delaunay1934}, the $\sigma$-local graph (where the empty region is two disjoint components centered at each of the endpoints)~\cite{BoseColletteLangerman2010}, and infinite strip graphs~\cite{Veltkamp1991,CardinalColletteLangerman2009}.
+Other examples of graphs in this family include the diamond graph~\cite{CorreaLindstrom2011}, the Delaunay graph (where the empty region is defined over $d-1$ points)~\cite{Delaunay1934}, the $\sigma$-local graph (where the empty region is two disjoint components centered at each endpoint)~\cite{BoseColletteLangerman2010}, and infinite strip graphs~\cite{Veltkamp1991,CardinalColletteLangerman2009}.
 %
-Similar to the generalization of the Gabriel graph and relative neighbor graph into the $\beta$-skeleton~\cite{KirkpatrickRadke1985} or Veltkamp's approach with the $\gamma$-neighborhoods, in Chapter~\ref{ch:graphs}, we develop the $\beta_p$-skeleton which unifies the entire family of lune-based $\beta$-skeletons with the canonical diamond graph used by Correa and Lindstrom and the infinite strip graphs into a two-parameter $(\beta,p)$ family of graphs that also includes a spectrum of graphs occuring between these examples.
+Similar to the generalization of the Gabriel graph and relative neighbor graph into the $\beta$-skeleton~\cite{KirkpatrickRadke1985} or Veltkamp's approach with the $\gamma$-neighborhoods, in Chapter~\ref{ch:graphs}, we develop the $\beta_p$-skeleton, which unifies the entire family of lune-based $\beta$-skeletons with the canonical diamond graph used by Correa and Lindstrom and the infinite strip graphs into a two-parameter $(\beta,p)$ family of graphs that also includes a spectrum of graphs occurring between these examples.
 
-Kowaluk et al.~\cite{JaromczykKowaluk1987,KowalukMajewska2014} have studied relative neighbor graphs and $\beta$-skeletons under various $L^p$-spaces which is different than our regime of using $p$-norms as generators for shapes to be evaluated in $L^2$-space.
+Kowaluk et al.~\cite{JaromczykKowaluk1987,KowalukMajewska2014} have studied relative neighbor graphs and $\beta$-skeletons under various $L^p$-spaces, which is different from our regime of using $p$-norms as generators for shapes to be evaluated in $L^2$-space.
 %
-Note, the shapes we use for empty regions will always be both radially symmetric about the edge and also symmetric about the perpendicular bisector of the edge.
+Note that the shapes we use for empty regions will always be both radially symmetric about the edge and also symmetric about the perpendicular bisector of the edge.
 %
 This condition does not hold for the cases defined by Kowaluk et al.
 %
-Furthermore, under discretization (see Section~\ref{sec:gpu_bp_discrete}), we are able to generalize our method further to utilize any 1D function as a generator for a symmetric, high-dimensional shape to be used as an empty region.
+Furthermore, under discretization (see Section~\ref{sec:gpu_bp_discrete}), we are able to generalize our method further to utilize any one-dimensional function as a generator for a symmetric, high-dimensional shape to be used as an empty region.
 
-Lastly, $\gamma$-visibility graphs~\cite{KatzTalBasri2007,KatzTal2015,KatzTal2017} are another means of generalizing $\beta$ skeletons to include not only non-uniform shapes, but non-symmetric shapes.
+Lastly, $\gamma$-visibility graphs~\cite{KatzTalBasri2007,KatzTal2015,KatzTal2017} are another means of generalizing $\beta$ skeletons to include not only nonuniform shapes but also nonsymmetric shapes.
 %
-In some ways this technique allows for more generic shapes than our own which is restricted to radially symmetric shapes, but as noted by the authors, the work is largely theoretical and we instead focus on an intuitive shape parameterization that generalizes well to higher dimensions.
+In some ways, this technique allows for more generic shapes than our own, which is restricted to radially symmetric shapes, but as noted by the authors, the work is largely theoretical, and we instead focus on an intuitive shape parameterization that generalizes well to higher dimensions.
 
 \subsection{Cone-Based Graphs}
 \label{sec:bg_cones}
@@ -423,16 +427,16 @@ The Yao graph selects the closest point in each conic section to be a neighbor o
 %
 The $\Theta$-graph, or semi-Yao graph, selects the point whose projected distance from the point onto the cone's axis is closest as a neighbor of $a$~\cite{Clarkson1987,Keil1988}.
 %
-Rahmati et. al generalized this graph to connect $a$ to $k$ neighbors in each section and called it the $k$-semi-Yao graph~\cite{RahmatiKingWhitesides2013}.
+Rahmati et al. generalized this graph to connect $a$ to $k$ neighbors in each section and called it the $k$-semi-Yao graph~\cite{RahmatiKingWhitesides2013}.
 %
 We consider this generalization for both Yao and $\Theta$-graphs and call them $k$-Yao and $k$-$\Theta$ graphs for simplicity.
 
 \section{Sensitivity Analysis}
 \label{sec:sensitivity}
 
-Sensitivity analysis (SA) studies how changes in the model inputs affect the outputs and can take many different mathematical forms.
+Sensitivity analysis (SA), which studies how changes in the model inputs affect the outputs, can take many different mathematical forms.
 %
-Broadly speaking, SA methods can be categorized as being local, relative to point estimates of the parameter space, or global which considers the entire parameter distribution~\cite{Hamby1995}.
+Broadly speaking, SA methods can be categorized as being local, relative to point estimates of the parameter space, or global, which considers the entire parameter distribution~\cite{Hamby1995}.
 %
 Local SA or differential SA studies the change of model response around specific locations in the input space and is often useful for doing deep analysis on a subset of a larger corpus of data.
 %
@@ -442,17 +446,15 @@ Another example might be to understand the behavior around an outlier or anomaly
 %
 Global sensitvity methods, on the other hand, are able to rank the overall importance of each model input and in some cases identify redundant features.
 %
-As such, an application for global sensitivity analysis can be dimensionality reduction where the goal is to reveal important subspaces of the original problem.
+Therefore, an application for global sensitivity analysis can be dimensionality reduction where the goal is to reveal important subspaces of the original problem.
 %
-These subspaces can help us avoid the \emph{curse of dimensionality} allowing us to sample the subspace more robustly and compute subsequent analysis more efficiently.
+These subspaces can help us avoid the \emph{curse of dimensionality}, allowing us to sample the subspace more robustly and compute subsequent analysis more efficiently.
 
 \subsection{Local Sensitivity Analysis}
 
-Differential SA computes the location-dependent partial derivatives of the output(s) with respect to each input parameter as can be seen in methods such as brute force finite differencing using a surrogate model when neighboring data is not readily available.
+Differential SA computes the location-dependent partial derivatives of the output(s) with respect to each input parameter, as can be seen in methods such as brute force finite differencing using a surrogate model when neighboring data is not readily available, that is, taking a small step along one axis and evaluating the slope between the perturbed point and the reference point and repeating for each dimension.
 %
-That is, take a small step along one axis and evaluating the slope between the perturbed point and the reference point and repeating for each dimension.
-%
-Improvements to the finite differencing scheme exist that are less computationally expensive such as the decoupled direct method~\cite{Dunker1981,Dunker1984} which solves the problem as a sytem of ordinary differential equations and the Green function method~\cite{KramerCaloRabitz1981} which can be faster when the ratio of inputs to outputs is very high, but is more complicated and thus prone to higher numerical errors~\cite{SaltelliChanScott2000}.
+Improvements to the finite differencing scheme exist that are less computationally expensive, such as the decoupled direct method~\cite{Dunker1981,Dunker1984}, which solves the problem as a sytem of ordinary differential equations, and the Green function method~\cite{KramerCaloRabitz1981}, which can be faster when the ratio of inputs to outputs is very high, but is more complicated and thus prone to higher numerical errors~\cite{SaltelliChanScott2000}.
 
 \subsection{Global Sensitivity Analysis}
 
@@ -466,46 +468,44 @@ Correlation analysis represents another class of methods that are fairly simple 
 %
 Correlation analysis uses the covariance of two variables (typically one input and one output) in order to describe the significance of their functional relationship.
 %
-Such methods include the Pearson correlation coefficients~\cite{Pearson1895} which measure the linearity between two parameters.
+Such methods include the Pearson correlation coefficients~\cite{Pearson1895}, which measure the linearity between two parameters.
 %
 The slightly more robust Spearman rank correlation coefficients~\cite{Spearman1904a} and Kendall rank coefficients~\cite{KendallGibbons1990} measure the monotonicity between parameters and can thus capture nonlinear, but still monotonic, relationships.
 
 Screening methods measure the amount of information gained/lost when one or more inputs are removed from a parametric model or allowed to vary.
 %
-Such methods include the simple Morris one-at-a-time (MOAT)~\cite{Morris1991} which repeatedly computes the local SA and collects the information into a statistical average and standard deviation for each input.
+Such methods include the simple Morris one-at-a-time (MOAT)~\cite{Morris1991}, which repeatedly computes the local SA and collects the information into a statistical average and standard deviation for each input.
 %
-More complicated versions, employ complex surrogate models and determine sensitivities from the hyperparameter settings.
-%
-These include multivariate adaptive regression spline (MARS) screening~\cite{Friedman1991} and Gaussian Process screening~\cite{RasmussenWilliams2006}.
+More complicated versions employ complex surrogate models and determine sensitivities from the hyperparameter settings, including multivariate adaptive regression spline (MARS) screening~\cite{Friedman1991} and Gaussian process screening~\cite{RasmussenWilliams2006}.
 
-The more powerful variance-based methods include such techniques as Sobol sensitivity indices~\cite{Sobol1993} and Fourier amplitude sensitivity testing (FAST)~\cite{CukierFortuinShuler1973} which are able to capture higher order sensitivities that the preceding methods do not.
+The more powerful variance-based methods include such techniques as Sobol sensitivity indices~\cite{Sobol1993} and Fourier amplitude sensitivity testing (FAST)~\cite{CukierFortuinShuler1973} that are able to capture higher order sensitivities that the preceding methods do not.
 %
 The tradeoff here is these methods are more complicated to compute.
 
 The global methods discussed thus far do not directly reduce the dimensionality, but instead associate values that can be considered as ranks or scores to each input parameter.
 %
-From this ranking, the user can either directly select the number of parameters to include in any reduced anaylsis, or the number of parameters can be computed given a specified error threshold.
+From this ranking, the user can directly select the number of parameters to include in a reduced anaylsis, or the number of parameters can be computed given a specified error threshold.
 %
 The remaining methods instead attempt to reduce the dimensionality by transforming the model input space to be a linear combination of the original model inputs.
 %
 
-\subsection{Dimensionality Reduction Methods for Sensitivity Analysis}
+\subsection{Dimensionality Reduction Methods for\\Sensitivity Analysis}
 
 Recall that one main goal of understanding sensitivity is to reduce the problem space into a more tractable or human-comprehensible domain without sacrificing much in the way of model fidelity.
 %
-It turns out there are a class of methods directly designed for this purpose, although not all of them respect the functional relationship between input parameters and output responses.
+A class of methods is specifically designed for this purpose, although not all of the methods respect the functional relationship between input parameters and output responses.
 %
-Broadly speaking, such dimensionality reduction methods can be classified into two categories: linear and non-linear methods.
+Broadly speaking, such dimensionality reduction methods can be classified into two categories: linear and nonlinear methods.
 %
 I will briefly review them here.
 
 \subsubsection{Linear Dimensionality Reduction Methods}
 
-Linear dimensionality are so-called because they seek to find a single linear projection operator that can be applied to the data that best preserves some quality of the data.
+Linear dimensionality methods are so-called because they seek to find a single linear projection operator that can be applied to the data that best preserve some quality of the data.
 %
 The methods differ in the quality of the data that they attempt to maintain.
 %
-This linear projection operator can be expressed as an $M \times N$ matrix where $N$ is the original dimensionality of the problem and $M$ is the size of the reduced space.
+This linear projection operator can be expressed as an $M \times N$ matrix, where $N$ is the original dimensionality of the problem and $M$ is the size of the reduced space.
 %
 Within the visualization community, we often set $M$ to two or three so we can directly visualize the results.
 
@@ -519,53 +519,51 @@ Looking at it another way, the rows of the transformation matrix tell us which o
 %
 For a comprehensive survey of linear dimensionality techniques, I defer to the excellent work of Cunningham and Ghahramani~\cite{CunninghamGhahramani2015}.
 %
-I will instead review the most widely adopted methods and their relevant extensions.
-%
-This will give us enough information so as to understand the advantages and disadvantages of linear dimensionality reduction as a tool for understanding sensistivity.
+I will instead review the most widely adopted methods and their relevant extensions and by doing so will give enough information to understand the advantages and disadvantages of linear dimensionality reduction as a tool for understanding sensistivity.
 
-Principal Component Analysis (PCA) is a common technique that can be described in two different ways.
+Principal component analysis (PCA) is a common technique that can be described in two ways.
 %
 The first formulates the dimensionality reduction problem as minimizing the sum of squared residuals between projected data points and their original counterparts~\cite{Pearson1901}.
 %
 Equivalently, PCA maximizes the variance of the data in the lower dimensional space~\cite{Hotelling1933}.
 %
-Several extensions have been made to the classical PCA solution framing the problem in unique settings such as a probabilistic model, kernel feature space, robustness to outliers, sparse solutions, and nonlinear solutions.
+Several extensions have been made to the classical PCA solution framing the problem in unique settings, such as a probabilistic model, kernel feature space, robustness to outliers, sparse solutions, and nonlinear solutions.
 
-Note, that not all of these variants are applicable for sensitivity analysis and some seek to solve different goals.
+Note that not all of these variants are applicable for sensitivity analysis and some seek to solve different goals.
 %
 For instance, kernel PCA first projects the original data into a feature space using a kernel function and then applies PCA to the feature space.
 %
-The principal components, which we can use to examine the sensitivity of a space, are not explicitly represented in this formulation and instead this technique is used for clustering and novelty detection~\cite{ScholkopfSmolaMuller1997}.
+The principal components, which we can use to examine the sensitivity of a space, are not explicitly represented in this formulation, and instead this technique is used for clustering and novelty detection~\cite{ScholkopfSmolaMuller1997}.
 %
-Furthermore, the principal components are nonlinear with respect to the original input space~\cite{BishopNasrabadi2006} which shares the quality with other nonlinear PCA works~\cite{CollinsDasguptaSchapire2001,MohamedGhahramaniHeller2009,HyvarinenKarhunenOja2001} in that they lose some level of interpretability.
+Furthermore, the principal components are nonlinear with respect to the original input space~\cite{BishopNasrabadi2006}, which shares the quality with other nonlinear PCA works~\cite{CollinsDasguptaSchapire2001,MohamedGhahramaniHeller2009,HyvarinenKarhunenOja2001} in that they lose some level of interpretability.
 %
-The remaining settings for PCA however can be more directly used for global sensitivity analysis.
+The remaining settings for PCA, however, can be more directly used for global sensitivity analysis.
 
 Robust PCA refers to robustness against a small collection of outliers that can cause drastic changes when PCA is applied in the classical sense.
 %
-The collection of works in this vein of research assume a noise model on the data which accounts for both missing values and the aforementioned outliers~\cite{CandesLiMa2011,Choulakian2006,GalpinHawkins1987}.
+The collection of works in this vein of research assumes a noise model on the data that accounts for both missing values and outliers~\cite{CandesLiMa2011,Choulakian2006,GalpinHawkins1987}.
 %
-For more on robust PCA refer to the survey by Bouwmans and Zahzah~\cite{BouwmansZahzah2014}.
+For more on robust PCA, refer to the survey by Bouwmans and Zahzah~\cite{BouwmansZahzah2014}.
 
-As we will see later in Section~\ref{sec:regularization}, a technique known as regularization can be used in order to reduce the dimensionality of a problem by penalizing model complexity and thus favor models that use fewer dimesions.
+As we will see later in Section~\ref{sec:regularization}, a technique known as regularization can be used to reduce the dimensionality of a problem by penalizing model complexity and thus favor models that use fewer dimesions.
 %
 This technique can be applied to PCA to generate a set of sparse methods that generate lower dimensional spaces that utilize only a subset of the original parameters~\cite{dAspremontBachGhaoui2008,dAspremontGhaouiJordan2007,JourneeNesterovRichtarik2010,ZouHastieTibshirani2006}.
 %
-In the sensitivity setting, the weights of the principal components are non-zero only in the positions corresponding to the most sensitive subset of original inputs.
+In the sensitivity setting, the weights of the principal components are nonzero only in the positions corresponding to the most sensitive subset of original inputs.
 
-Probabilistic PCA (PPCA)~\cite{TippingBishop1999} and related methods~\cite{Roweis1998,WellingAgakovWilliams2003,WilliamsAgakov2002}, afford many of the advantages mentioned above including dealing with missing data and the ability to handle sparse spaces efficiently.
+Probabilistic PCA (PPCA)~\cite{TippingBishop1999} and related methods~\cite{Roweis1998,WellingAgakovWilliams2003,WilliamsAgakov2002} afford many of the advantages mentioned in the preceding paragraph, including dealing with missing data and the ability to handle sparse spaces efficiently.
 %
 However, the main advantage of PPCA is that the maximum likliehood estimates can be used for classification and novelty detection~\cite{TippingBishop1999}.
 %
-The PPCA model is closely related to a much earlier developed method known as factor analysis~\cite{Spearman1904b}.
+The PPCA model is closely related to a method developed much earlier known as factor analysis~\cite{Spearman1904b}.
 
-Multidimensional Scaling (MDS)~\cite{BorgGroenen2005,CoxCox2000,Torgerson1952} attempts to construct a linear projection that maximizes the scatter or spread of the data in the lower dimensional space.
+Multidimensional scaling (MDS)~\cite{BorgGroenen2005,CoxCox2000,Torgerson1952} attempts to construct a linear projection that maximizes the scatter or spread of the data in the lower dimensional space.
 %
-In the classical setting, this is accomplished my maximizing the pairwise Euclidean distance among points in the reduced space.
+In the classical setting, this is accomplished by maximizing the pairwise Euclidean distance among points in the reduced space.
 %
 The end result of classical MDS is equivalent to the original PCA optimization problem~\cite{BorgGroenen2005,CoxCox2000,MardiaKentBibby1979,Williams2002}.
 %
-However, MDS can be framed in a more generic setting of minimizing a stress function over pairwise distances thus allowing an MDS scaling to be computed without even knowing the locations of the data (as long as their relative locations are encoded in a distance matrix).
+However, MDS can be framed in a more generic setting of minimizing a stress function over pairwise distances, thus allowing an MDS scaling to be computed without even knowing the locations of the data (as long as their relative locations are encoded in a distance matrix).
 %
 The stress function can be a least squares minimization or a Sammon stress~\cite{Sammon1969}, for example.
 %
@@ -681,7 +679,7 @@ Most of these systems enable visual exploration of local sensitivity information
 
 HDViz~\cite{GerberBremerPascucci2010} characterizes the behavior of system outputs with respect to input parameters geometrically.
 %
-HyperMoVal~\cite{PiringerBergerKrasser2010} highlights discrepancies occuring between the data and the model, and computes sensitivity information on the model.
+HyperMoVal~\cite{PiringerBergerKrasser2010} highlights discrepancies occurring between the data and the model, and computes sensitivity information on the model.
 %
 The software proposed in Chapter~\ref{ch:visualization} provides similar capabilities by reporting on the fitness of each local regression model fit to a partition of the data.
 %
