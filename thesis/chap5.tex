@@ -5,9 +5,9 @@
 
 In Section~\ref{sec:adaptiveSampling}, we reviewed the major advances in adaptive sampling.
 %
-In this chapter, I will build upon the concepts presented previously and offer a new perspective by which to select candidates in the adaptive sampling process.
+In this chapter, we build upon the concepts presented previously and offer a new perspective by which to select candidates in the adaptive sampling process.
 %
-Namely, I present methods that seek to exploit areas of high topological significance under different settings.
+Namely, we present methods that seek to exploit areas of high topological significance under different settings.
 %
 First, we explore new candidate scoring functions in the context of global response accuracy~\cite{MaljovecWangKupresanin2013}.
 %
@@ -15,7 +15,7 @@ Then, we address selecting batches of candidates in both the global and limit su
 %
 We then conclude this chapter by performing adaptive sampling exclusively in the limit surface case on nuclear power plant safety simulation data~\cite{MaljovecWangMandelli2013b}.
 
-\section{Adaptive Sampling with Topological Scores}
+\section{Adaptive Sampling With Topological Scores}
 \label{paper:ijuq2013}
 In this first work, we look at the problem of desiging experiments in order to globally fit a surrogate model to data that is assumed to be represented by a smooth function.
 %
@@ -31,11 +31,11 @@ Our general pipeline as illustrated in Figure~\ref{fig:asCycle} is applicable to
 
 We begin by selecting some initial training data, running the simulation and obtaining a collection of true responses at these data points.
 %
-Second, we fit a prediction model, e.g. a Gaussian Process Model, from the initial set of training data.
+Second, we fit a prediction model, e.g., a Gaussian process model (GPM), from the initial set of training data.
 %
-Third, a large set of candidate points is chosen in the parameter space using Latin Hypercube Sampling (LHS), and the prediciton model is evaluated at these points.
+Third, a large set of candidate points is chosen in the parameter space using Latin hypercube sampling (LHS), and the prediciton model is evaluated at these points.
 %
-The prediction model is used to approximate values at these candidate points and is considered to be a much less expensive surrogate of the ground truth phenomenon under study.
+The prediction model is used to approximate values at these candidate points and is considered to be a much less expensive surrogate of the ground-truth phenomenon under study.
 %
 Therefore, we can evaluate a large pool of candidate points relatively quickly and cheaply.
 %
@@ -43,17 +43,17 @@ Fourth, each candidate point is assigned a score denoting our need to sample it.
 %
 Finally, the candidate with the highest score is selected and added to the set of training data.
 %
-This new training data point will be evaluated using the ground truth and the information discovered will be used to update the prediction model, and the cycle may repeat until an appropriate convergence criteria is met.
+This new training data point will be evaluated using the ground-truth and the information discovered will be used to update the prediction model, and the cycle may repeat until an appropriate convergence criterion is met.
 
-Traditional scoring functions are either based on point density, where candidate points which are further away from the existing training data receive higher scores; or are based on prediction confidence, where candidates with higher prediction uncertainty receive higher scores.
+Traditional scoring functions are based on either point density, where candidate points that are further away from the existing training data receive higher scores, or on prediction confidence, where candidates with higher prediction uncertainty receive higher scores.
 %
-In the setting where the underlying data is smooth with little to no noise, the density-based and uncertainty-based strategies will both similarly favor low-density regions as the prediction uncertainty of most prediction models tends to be smallest near the training data.
+In the setting where the underlying data is smooth with little to no noise, the density-based and uncertainty-based strategies will both similarly favor low-density regions because the prediction uncertainty of most prediction models tends to be smallest near the training data.
 %
-However, such ground truth models with smooth, uniform behavior are better tackled with space-filling sampling designs that seek to more uniformly cover the input space.
+However, such ground-truth models with smooth, uniform behavior are better tackled with space-filling sampling designs that seek to more uniformly cover the input space.
 %
-Adaptive sampling is better suited for understanding phenomenon where the frequency of \emph{toplogical features} is variable, and thus we can focus more samples on higher frequency areas, and reduce sampling where things are flat or smoothly changing.
+Adaptive sampling is better suited for understanding phenomena where the frequency of \emph{toplogical features} is variable, and thus we can focus more samples on higher frequency areas, and reduce sampling where the function is flat or gradually changing.
 %
-Under these settings, the uncertainty of the predicting model can be quite high near training points if nearby training points are of dramatically different value.
+Under these settings, the uncertainty of the predicting model can be quite high near training points if nearby training points are of dramatically different values.
 %
 For this reason, we propose a third class of scoring functions that more directly targets this topological
 information, where candidate points in the area of larger topological changes are assigned higher scores.
@@ -61,11 +61,11 @@ information, where candidate points in the area of larger topological changes ar
 \subsubsection{Traditional Scoring Functions}
 \label{sec:classic}
 
-We first review several traditional scoring functions which are used as a baseline comparison for our own topological scoring functions.
+We first review several traditional scoring functions that are used as a baseline comparison for our own topological scoring functions.
 %
-There are three main scoring functions, namely, Delta, ALM and EI, as detailed below.
+There are three main scoring functions, Delta, ALM and EI, as detailed below.
 %
-Each of them is further augmented with a distance penalization factor, creating three additional scoring functions.
+Each funciton is further augmented with a distance penalization factor, creating three additional scoring functions.
 
 Let $\Tcal = \{\z\}_{i=1}^{n}$ be the set of $n$ training points in dimension $d$.
 %
@@ -75,13 +75,13 @@ Let $\Scal = \{\x\}_{i=1}^{m}$ be the set of $m$ candidate points in dimension $
 %
 The predicted response at a point $\x \in \Scal$ is denoted as $\hat{y}(\x)$.
 
-\para{Delta} This criterion can be seen as a way to evenly sample the range space of the function.
+\subsubsubsection{Delta} This criterion can be seen as a way to evenly sample the range space of the function.
 %
 It is defined as the absolute value of the difference between the predicted response at a candidate point and the response at the nearest training point.
 %
 Points are chosen wherever the response model predicts a large gap in function value.
 %
-Note that while the delta criterion is very intuitive it does not consider either gradient magnitudes nor ``predictability.''
+Although the delta criterion is intuitive, it considers neither gradient magnitudes nor ``predictability.''
 %
 For example, a point in the middle of a steep but linear ramp is easily predicted even though it may have a large difference in function value.
 %
@@ -89,31 +89,31 @@ Similarly, a point with a large difference in function value far away from the n
 %
 Formally, for a point $\x \in \Scal$, $Delta(\x)$ is the absolute difference, to the $q$-th power, between the predicted response and the response observed at the closest point in the training sample, as measured by the $L_p$ distance metric, that is, $d(\x,\x') = (\sum_{i=1}^{d}|x_i-x'_i|^p)^{1/p}$.
 %
-That is, for some fixed parameters $p$ and $q$, let $\x^* = \argmin_{\z \in \Tcal} d(\x,\z)$, then $Delta(\x) = |\hat{y}(\x) - y(\x^*)|^q$.
+Said another way, for some fixed parameters $p$ and $q$, let $\x^* = \argmin_{\z \in \Tcal} d(\x,\z)$, then $Delta(\x) = |\hat{y}(\x) - y(\x^*)|^q$.
 %
 In the default setting, $p = 2$ and $q = 2$.
 
-\para{ALM} This is the Active Learning MacKay criterion described in~\cite{MacKay1992} which attempts to optimize the predictive variance.
+\subsubsubsection{Active Learning MacKay (ALM)} The ALM criterion, described in~\cite{MacKay1992}, attempts to optimize the predictive variance.
 %
-The idea is that the variance represents a notion of uncertainty in the prediction and new samples should be evaluated in the least well understand regions of the parameter space.
+The idea is that the variance represents a notion of uncertainty in the prediction, and new samples should be evaluated in the least well understand regions of the parameter space.
 %
-For the GPM the variance can be computed directly from the model which appears to be a significant advantage (see Section~\ref{sec:exp}).
+For the GPM, the variance can be computed directly from the model, which appears to be a significant advantage (see Section~\ref{sec:exp}).
 %
-For the other prediction models we use bootstrapping (as described in Section~\ref{sec:regression} and~\ref{sec:package}) to estimate the variance.
+For the other prediction models, we use bootstrapping (as described in Sections~\ref{sec:regression} and~\ref{sec:package}) to estimate the variance.
 
-\para{EI} This is the expected improvement criterion.
+\subsubsubsection{Expected Improvement (EI)}
 %
-As discussed in Section~\ref{sec:sampling}, this can be seen as a combination of the expected prediction error used in the ALM method and the Delta criterion.
+As discussed in Section~\ref{sec:sampling}, EI can be seen as a combination of the expected prediction error used in the ALM method and the Delta criterion.
 %
 Points are chosen that either show a large uncertainty in their current prediction or have a large discrepancy with the closest existing sample.
 %
 Our predication model uses $EI(\x) = (|\hat{y}(\x) - y(\x^*)|^2+ ALM(\x))^{1/2}$.
 
-\para{Distance Penalization} Each of the above three scoring functions can be augmented with a distance penalization factor, therefore creating three additional scoring functions, namely, \emph{DeltaDP}, \emph{ALMDP} and \emph{EIDP}.
+\subsubsubsection{Distance Penalization (DP)} Each of the above three scoring functions can be augmented with a distance penalization factor, thereby creating three additional scoring functions: \emph{DeltaDP}, \emph{ALMDP} and \emph{EIDP}.
 %
 For DeltaDP, the Delta criterion with an additional penalty term, we can prevent samples from lying too close to the training set.
 %
-The scaling attempts to balance the goal of sampling in areas of large function variance with the ability to detect yet unknown features by preferring under-sampled areas.
+The scaling attempts to balance the goal of sampling in areas of large function variance with the ability to detect yet unknown features by preferring undersampled areas.
 %
 For a point $\x \in \Scal$, $DeltaDP(\x) = Delta(\x) * \rho_\x$, where $\rho_\x$ is the distance scaling factor.
 %
@@ -123,30 +123,30 @@ $\rho_\x = \rho_\x (d_\x, d_0)$, where $d_0$ is the range and $q_0$ is the quant
 %
 If $d_\x>d_0$, set $\rho_\x = 1$, otherwise $\rho_\x = 1.5d_\x-0.5d_\x^3$, where the coefficients are taken from a spherical semivariogram.
 %
-Similarly we define $ALMDP(\x) = ALM(\x) * \rho_\x$, where we approach a more space-filling point selection; and $EIDP(\x) = EI(\x) * \rho_\x$.  By default we use $q_0 = 0.5$.
-
+Similarly, we define $ALMDP(\x) = ALM(\x) * \rho_\x$, where we approach a more space-filling point selection; and $EIDP(\x) = EI(\x) * \rho_\x$.
+%
+By default, we use $q_0 = 0.5$.
 
 \subsubsection{Topological Scoring Functions}
 \label{sec:toposcoring}
-All of the scoring functions discussed above pick sample points more or less directly based on the idea of globally improving the prediction accuracy.
+The scoring functions discussed above pick sample points more or less directly based on the idea of globally improving the prediction accuracy.
 %
 However, these points are not necessarily the optimal candidates.
 %
-Imagine, for example, a steep mountain that (by random chance) has already been sampled both close to its peak as well as somewhere near the base.
+Imagine, for example, a steep mountain that (by random chance) has already been sampled both close to its peak and somewhere near the base.
 %
-For points on the slope of the mountain, the prediction will show a large difference in function value thus
-making it attractive for most standard techniques.
+For points on the slope of the mountain, the prediction will show a large difference in function value, thus making it attractive for most standard techniques.
 %
 However, evaluating the prediction in more detail would also show that even taking a sizable prediction error into account the global structure of the mountain would not change by adding a point on its slope.
 %
-More specifically, the single mountain would remain a single mountain for a wide range of potential new values even considering errors and uncertainty.
+More specifically, the single mountain would remain a single mountain for a wide range of potential new values, even considering errors and uncertainty.
 %
 This rationale leads to topology based scoring functions aimed at discovering the global structure -- the topology -- of a function rather than its detailed geometry.
 %
-In particular, we propose three different topology based scoring functions, named, \emph{TopoHP}, \emph{TopoP} and \emph{TopoB} as detailed below, illustrated in Figure~\ref{fig:topo-all}.
+In particular, we propose three topology-based scoring functions, \emph{TopoHP}, \emph{TopoP} and \emph{TopoB} as detailed below and illustrated in Figure~\ref{fig:topo-all}.
 
 
-\para{TopoHP} The first strategy is aimed at sampling at or near predicted critical points with significant influence on the topology.
+\subsubsubsection{TopoHP} The first strategy is aimed at sampling at or near predicted critical points with significant influence on the topology.
 %
 It is defined as the persistence of a candidate point within an (approximated) Morse-Smale complex constructed from oversampling the current response model.
 %
@@ -156,14 +156,14 @@ We then assign all critical points of the complex that are part of the candidate
 %
 Referring to Figure~\ref{fig:topo-all}(a), the silver points illustrate the training points $\Tcal$ and the purple points correspond to the candidate points $\Scal$.
 %
-We construct a Morse-Smale complex over $\Tcal \cup \Scal$, and return the persistence of the critical points within the candidates.
+We construct a Morse-Smale complex over $\Tcal \cup \Scal$ and return the persistence of the critical points within the candidates.
 %
-Here, point $\x$ is selected with the highest persistence, therefore, the highest $TopoHP(\x)$.
+Here, point $\x$ is selected with the highest persistence, and therefore, the highest $TopoHP(\x)$.
 
-\begin{figure}[!ht]
+\begin{figure}[!t]
 \begin{center}
 \includegraphics[width=1.0\linewidth]{figs/chap5/topo-all}
-\caption{(a) TopoHP: Construct a Morse-Smale complex from training data (silver) as well as all candidates with predicted responses (purple), return the persistence of the critical points within the candidates.
+\caption{(a) TopoHP: Construct a Morse-Smale complex from training data (silver) as well as all candidates with predicted responses (purple), and return the persistence of the critical points within the candidates.
 %
 Point $\protect\x$ is selected with the highest $TopoHP(\protect\x)$.
 %
@@ -176,7 +176,7 @@ TopoB (right): bottleneck distance between the corresponding persistence diagram
 \end{center}
 \end{figure}
 
-\para{TopoP} Similar to a bootstrapping approach, this strategy aims to evaluate how much the topology (as represented by the persistences) would change if a new candidate point is added.
+\subsubsubsection{TopoP} Similar to a bootstrapping approach, this strategy aims to evaluate how much the topology (as represented by the persistences) would change if a new candidate point is added.
 %
 It is defined as the average change of persistence for all current extrema when a given candidate point with its predicted response is inserted into the Morse-Smale complex.
 %
@@ -184,13 +184,13 @@ As shown in Figure~\ref{fig:topo-all}(b), we first construct the Morse-Smale com
 %
 Then for each candidate point $\x \in \Scal$, we construct a new Morse-Smale complex consisting of $\Tcal \cup \x$ (Figure~\ref{fig:topo-all}(b) right).
 %
-To score the candidate $\x$, we compute the change in persistence for each training point $\x \in \Tcal$ that remains as an extrema point between the original and enhanced Morse-Smale complex, and average these changes to obtain a single, nonnegative value.
+To score the candidate $\x$, we compute the change in persistence for each training point $\x \in \Tcal$ that remains as an extrema point between the original and enhanced Morse-Smale complex, and average these changes to obtain a single, non-negative value.
 
-\para{TopoB} For each point $\x \in \Scal$, $TopoB(\x)$ is defined as the bottleneck distance between the persistence diagram of the Morse-Smale complex over $\Tcal$ versus the Morse-Smale complex consisting of $\Tcal \cup \x$.
+\subsubsubsection{TopoB} For each point $\x \in \Scal$, $TopoB(\x)$ is defined as the bottleneck distance between the persistence diagram of the Morse-Smale complex over $\Tcal$ versus the Morse-Smale complex consisting of $\Tcal \cup \x$.
 %
-This strategy is similar to the TopoP scoring except that the bottleneck distance not only takes the persistence values into account but also the order  and nesting of the corresponding simplification.
+This strategy is similar to the TopoP scoring except that the bottleneck distance takes not only the persistence values into account but also the order and nesting of the corresponding simplification.
 %
-This is shown in Figure~\ref{fig:topo-all}(c), where left and middle illustrate the (approximated) Morse-Smale complexes before and after inserting a candidate point $\x$, and right displays the corresponding persistence diagrams of these complexes.
+This strategy is shown in Figure~\ref{fig:topo-all}(c), where left and middle images illustrate the (approximated) Morse-Smale complexes before and after inserting a candidate point $\x$, and the right image displays the corresponding persistence diagrams of these complexes.
 %
 $TopoB(\x)$ is defined as the bottleneck distance between them.
 
@@ -199,17 +199,17 @@ $TopoB(\x)$ is defined as the bottleneck distance between them.
 
 This section summarizes the different experiments and highlights apparent trends and interesting behaviors.
 
-\para{Example Data Sets} To evaluate the different scoring functions and understand the behavior in different scenarios we have conducted a series of experiments with well-known analytic functions, which can be generalized to high-dimensions.
+\subsubsubsection{Example Datasets} To evaluate the different scoring functions and understand the behavior in different scenarios, we have conducted a series of experiments with well-known analytic functions, which can be generalized to high-dimensions.
 %
-For example, a widely used multimodal test function from the optimization literature \emph{Ackley} \cite{Ackley1987}, as well as easily controlled test functions such as \emph{Gaussian Mixtures}, and the \emph{Diagonal} function.
+For example, we use a widely used multimodal test function from the optimization literature, the Ackley function~\cite{Ackley1987}, as well as easily controlled test functions such as a Gaussian mixture and the diagonal function.
 %
-The Diagonal function consists of a sine curve aligned with the main diagonal of the unit (hyper-)cube convolved with a Gaussian kernel in the hyperplane orthogonal to the diagonal (see~\cite{GerberBremerPascucci2010}).
+The diagonal function consists of a sine curve aligned with the main diagonal of the unit (hyper-)cube convolved with a Gaussian kernel in the hyperplane orthogonal to the diagonal (see~\cite{GerberBremerPascucci2010}).
 %
-The Diagonal function is attractive for testing as it is not axis aligned, its topological structure is well understood and can be computed analytically, and its complexity is easily controlled.
+The diagonal function is attractive for testing because it is not axis aligned, its topological structure is well understood and can be computed analytically, and its complexity is easily controlled.
 %
 Section~\ref{sec:test} details the closed forms of each function and illustrates their behavior by using two-dimensional contour plots.
 
-\para{Plot and Specifications}
+\subsubsubsection{Plot and Specifications}
 All graphs show the root mean squared error (RMSE) of a given regression model versus the number of samples used for training.
 %
 The RMSE is computed using points evaluated on a grid.
@@ -222,7 +222,7 @@ The four-dimensional case uses a total of 14641 points with a spacing of 0.1, an
 %
 All plots show the median RMSE of 10 trial runs.
 %
-We use the median value since, as discussed below, several regression techniques seem to fail for particular sets of samples and the median is more robust against the resulting outliers in the RMSE.
+We use the median value since, as discussed below, several regression techniques seem to fail for particular sets of samples, and the median is more robust against the resulting outliers in the RMSE.
 %
 For a fixed prediction model, all trials start from the same LHS initial training sample $\Tcal$.
 %
@@ -233,277 +233,247 @@ Curves are colored by scoring function with the thicker black line indicating an
 During each step of the adaptive sampling, a point is chosen among all $|\Scal| =
 200*d$ candidate points selected using LHS with the highest score.
 %
-We have opted to not show variances or percentiles alongside the medians as the resulting plots become too cluttered.
+We have opted to not show variances or percentiles alongside the medians because the resulting plots become too cluttered.
 %
-Nevertheless, as discussed below even without an explicit representation several of the plots suggest drastic differences in the stability of the regression.
+Nevertheless, as discussed below, even without an explicit representation several of the plots suggest drastic differences in the stability of the regression.
 
 
 \begin{figure}[!ht]
 \begin{center}
-\includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Ackley_td=20}
-\includegraphics[width=0.2425\linewidth]{figs/chap5/earth_Ackley_td=20}
-\includegraphics[width=0.2425\linewidth]{figs/chap5/mda_Ackley_td=20}
-\includegraphics[width=0.2425\linewidth]{figs/chap5/nnet_Ackley_td=20}
-\caption{Adaptive sampling of the two-dimensional Ackley function using different regression techniques and different scoring functions. (1) GPM; (2) EARTH; (3) MDA; and (4) NNET.}
+\includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Ackley_td=20}
+\includegraphics[width=0.45\linewidth]{figs/chap5/earth_Ackley_td=20}
+\includegraphics[width=0.45\linewidth]{figs/chap5/mda_Ackley_td=20}
+\includegraphics[width=0.45\linewidth]{figs/chap5/nnet_Ackley_td=20}
+\caption{Adaptive sampling of the two-dimensional Ackley function using different regression techniques and different scoring functions. From left to right and top to bottom results are shown for the following models: GPM, EARTH, MDA, and NNET.}
 \label{fig:ackley2D_results}
 \end{center}
 \end{figure}
 
-\para{Results} Unsurprisingly, the most significant factor in the success of any scoring function is the quality of the regression model.
+\subsubsubsection{Results} Unsurprisingly, the most significant factor in the success of any scoring function is the quality of the regression model.
 %
-Unfortunately, many experiments even in lower dimensions failed in the sense that the regression based on the space filling design did not converge within the number of samples tried.
+Unfortunately, many experiments even in lower dimensions failed in the sense that the regression based on the space-filling design did not converge within the number of samples tried.
 %
 In fact, for some functions some techniques did not show signs of improvement with an increasing number of samples.
 %
-While it is possible that these results could be improved through manual parameter tuning, this would likely not be feasible in a real world application where no ground truth is known and the number of samples is typically severely limited.
+These results could be improved through manual parameter tuning, but this type of tuning would likely not be feasible in a real-world application where no ground-truth is known and the number of samples is typically severely limited.
 %
-Furthermore, any manual or semi-automatic parameter tuning would make comparing models even more challenging and potentially bias the results.
+Furthermore, any manual or semiautomatic parameter tuning would make comparing models even more challenging and potentially bias the results.
 %
-Therefore, we have selected to run all experiments with the default values provide with the various regression packages listed in Section~\ref{sec:package}.
+Therefore, we have selected to run all experiments with the default values provided with the various regression packages listed in Section~\ref{sec:package}.
 %
-Subsequently, we only consider experiments in which the space filling design indicated a valid surrogate model.
+Subsequently, we consider only experiments in which the space-filling design indicated a valid surrogate model.
 
 \begin{figure}[htbp]
 \begin{center}
- \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Diag2Max_td=20}
- \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Diag4Max_td=20}
- \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_GMM5_2D_td=20}
- \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_MGR_td=20}
- \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Salomon_td=20}
- \includegraphics[width=0.2425\linewidth]{figs/chap5/gpm_Whitley_td=20}
- \caption{Adaptive sampling various two-dimensional test functions using the GPM. (1) Two maxima Diagonal; (2) Four maxima Diagonal; (3) Mixture of five Gaussians; (4) MGR; (5) Salomon; (6) Whitley.}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Diag2Max_td=20}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Diag4Max_td=20}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_GMM5_2D_td=20}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_MGR_td=20}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Salomon_td=20}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Whitley_td=20}
+ \caption{Adaptive sampling various two-dimensional test functions using the GPM. From left to right and top to bottom the following functions are shown: the two-maxima diagonal, the four-maxima diagonal, the mixture of five Gaussians, the MGR, the Salomon, and the Whitley.}
 \label{fig:2D_gpm_results}
 \end{center}
 \end{figure}
 
-In general, the GPM based regression produces the smoothest and most distinctive plots showing clear differences between scoring functions.
+In general, the GPM-based regression produces the smoothest and most distinctive plots showing clear differences between scoring functions.
 %
-Consider the two-dimensional Ackley function shown in Figure~\ref{fig:ackley2D_results}: The ALM criterion significantly outperforms all other scoring functions with the TopoHP being the only other scoring function to beat the space filling design.
+Consider the two-dimensional Ackley function shown in Figure~\ref{fig:ackley2D_results}: The ALM criterion significantly outperforms all other scoring functions with the TopoHP being the only other scoring function to beat the space-filling design.
 %
-Compare this to the EARTH model shown in the same figure: Most scoring functions except TopoHP perform qualitatively similar and barely achieve the same quality as the LHS sampling.
+Compare the GPM results to the EARTH model shown in the same figure: most scoring functions except TopoHP perform qualitatively similar and barely achieve the same quality as the LHS sampling.
 %
-Furthermore, all curves are less smooth suggesting a high variance among the different trials.
+Furthermore, all curves are less smooth, suggesting a high variance among the different trials.
 %
-The other MARS implementation, MDA, performs slightly worse but qualitatively similar with very rough curves without clear trends that fail to achieve the same performance as the space filling sample.
+The other MARS implementation, MDA, performs slightly worse but qualitatively similar with very rough curves without clear trends that fail to achieve the same performance as the space-filling sample.
 %
-Finally, the NNET implementation barely shows any improvement in RMSE with increasing samples, and all sampling strategies including the LHS sample seem to perform similar with large fluctuations.
+Finally, the NNET implementation barely shows any improvement in RMSE with increasing samples, and all sampling strategies, including the LHS sample, seem to perform similarly with large fluctuations.
 %
 Overall, NNET achieves by far the worst fit at an RMSE almost an order of magnitude larger than that of the Gaussian process model.
-\begin{figure}[htbp]
-\begin{center}
- \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Ackley_td=30}\label{fig:ackley3D_gpm}
- \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Diag2Max_3D_td=30}\label{fig:2diag3D_gpm}
- \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_GMM2_3D_td=30}\label{fig:gmm23D_gpm}
- \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_GMM5_3D_td=30}\label{fig:gmm53D_gpm}
- \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_MGR_td=30}\label{fig:mgr3D_gpm}
- \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Ackley_td=100}\label{fig:ackley4D_gpm}
- \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Salomon_td=200}\label{fig:salomon5D_gpm}
- \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Diag2Max_5D_td=200}\label{fig:2diag5D_gpm}
-\caption{Adaptive sampling of various test functions using the GPM.
-%
-(1) three-dimensional Ackley;
-(2) three-dimensional two maxima Diagonal;
-(3) three-dimensional mixture of two Gaussians;
-(4) three-dimensional mixture of five Gaussians;
-(5) three-dimensional MGR;
-(6) four-dimensional Ackley;
-(7) five-dimensional Salomon;
-(8) five-dimensional two maxima Diagonal function.}
-\label{fig:345D_gpm}
-\end{center}
-\end{figure}
 
 The general differences between regression models seen in the Ackley functions are present for all test functions.
 %
-Where the GPM models tend to converge for some reasonable number of samples and even in higher dimensions, both MARS implementations have difficulties with non-axis aligned structures such as the Diagonal and the Salomon function.
+Where the GPM models tend to converge for some reasonable number of samples and even in higher dimensions, both MARS implementations have difficulties with non-axis-aligned structures such as the diagonal and the Salomon function.
 %
 The NNET with the standard parameters consistently performs worse than all other models, and among all techniques only the GPM shows the smoothly converging curves one would traditionally expect.
 %
 Furthermore, only the GPM model shows significant differences between scoring functions.
 %
-For the GPM based adaptive sampling the one trend observed in most two-dimensional test functions is that the ALM criterion seems to outperform all others.
+For the GPM-based adaptive sampling, the one trend observed in most two-dimensional test functions is that the ALM criterion seems to outperform all others.
 %
-A possible explanation for this behavior is that the predicted variance on which the ALM criterion is based is an integral part of the GPM model itself.
-%
-This makes the ALM criterion especially well-suited for a GPM model and could explain the consistently better performance.
+A possible explanation for this behavior is that the predicted variance on which the ALM criterion is based is an integral part of the GPM model itself, which makes the ALM criterion especially well suited for a GPM model and could explain the consistently better performance.
 
-Nevertheless, the performance of the scoring functions even for the well behaved GPM regression is far from consistent across test functions as seen in Figure~~\ref{fig:2D_gpm_results}.
+Nevertheless, the performance of the scoring functions even for the well-behaved GPM regression is far from consistent across test functions as seen in Figure~~\ref{fig:2D_gpm_results}.
 %
-For example, in the Diagonal function with two maxima the ALM and EI criteria perform best closely followed by TopoHP.
+For example, in the diagonal function with two maxima, the ALM and EI criteria perform best, closely followed by TopoHP.
 %
-The Delta function is on par with the LHS sampling while the other two topological criteria do not perform well.
+The Delta function is on par with the LHS sampling, whereas the other two topological criteria do not perform well.
 %
-The four maxima Diagonal version shows a similar behavior even though small differences appear between the ALM and EI criteria and the Delta function now fails to achieve the RMSE of the space-filling sample.
+The four-maxima diagonal version shows a similar behavior even though small differences appear between the ALM and EI criteria, and the Delta function now fails to achieve the RMSE of the space-filling sample.
 %
-The mixture of five Gaussians again shows a clear preference for the error driven criteria and the Delta function performs worse than the topological scoring functions.
+The mixture of five Gaussians again shows a clear preference for the error-driven criteria and the Delta function performs worse than the topological scoring functions.
 
-The remaining functions show a very similar pattern with the noticeable exception that now the EI criteria no longer perform as well as the the ALM.
+The remaining functions show a very similar pattern with the noticeable exception that now the EI criteria no longer perform as well as the ALM.
 %
-For the MGR function, TopoHP performs second best with EI and Delta mirroring the LHS line.
+For the MGR function, TopoHP performs second best, with EI and Delta mirroring the LHS line.
 %
-For the Salomon function, EI performs better than Delta again but both fail to beat the space-filling sample.
+For the Salomon function, EI performs better than Delta again, but both fail to beat the space-filling sample.
 %
-Finally, the Whitley function shows overall a better performance with EI and Delta both outperforming the topological scoring functions.
+Finally, the Whitley function shows overall a better performance, with EI and Delta both outperforming the topological scoring functions.
 
-The three-dimensional experiments using the GPM show largely similar results as shown in
+The three-dimensional experiments using the GPM show largely similar results, as shown in
 Figure~\ref{fig:345D_gpm}.
 %
-The ALM function generally performs best with the remaining scoring functions in different combinations behind.
+The ALM function generally performs best, with the remaining scoring functions in different combinations behind.
 %
-However, a notable and interesting exception are the mixtures of two and five Gaussians.
+However, a notable and interesting exception is the mixtures of two and five Gaussians.
 %
-For both functions the Delta criterion performs significantly better than the rest.
+For both functions, the Delta criterion performs significantly better than the rest.
 %
 One explanation is that these functions are characterized by a few large mountains
-which, once found, almost entirely determine the function.
+that, once found, almost entirely determine the function.
 %
-In such cases the Delta functional may perform well as it picks values purely based on the observed range.
+In such cases, the Delta functional may perform well because it picks values purely based on the observed range.
 %
 It is unclear, however, why such a behavior is not present in the two-dimensional versions.
 
-A similar behavior can be seen in higher dimensions (refer to Figure~\ref{fig:345D_gpm}): The 4D Ackley and the 5D Salomon function show the expected advantage of the ALM criterion while the 5D two maxima Diagonal
-function again prefers the Delta criterion.
-%
-However, in this case all three topological functions outperform the remaining score functions even though they only perform on par with the LHS samples.
-
-As mentioned above the performance of the other regression techniques is rather spotty and the results of the adaptive scoring experiments are correspondingly inconsistent.
-%
-The EARTH model produces results similar to the ones shown in Figure~\ref{fig:ackley2D_results} in case the model itself converges, for example for the two maxima Diagonal function and the mixture of five Gaussians (Figure~\ref{fig:earth_results}).
-%
-However, considering other experiments listed in the same figure, other experiments show rather large fluctuations in either some adaptive sampling curves, e.g. the TopoHP curve within the MGR function or the LHS curve, e.g. the Whitley function.
-%
-Overall, the two-dimensional Whitley function shows a good performance with nearly all adaptive criteria outperforming the LHS curve.
-%
-Interestingly, in its three-dimensional incarnation the adaptive sampling does not work nearly as well and furthermore shows excessive variations in several curves.
-
-Still looking at (Figure~\ref{fig:earth_results}), in general, there appears to be no significant advantage of one scoring function over another.
-However, for many cases with the EARTH model, the TopoHP seems to perform especially bad, for example, see the three-dimensional Whitley and three-dimensional MGR functions.
-%
-This is rather surprising since for the GPM model TopoHP performed rather well and typically better than the other topological scoring functions.
-%
-The fact that there exist virtually no difference among the other scoring functions is likely due to the error computation.
-%
-For non-GPM models like MARS the expected prediction error that forms the basis for both the ALM and the EI criterion is constructed through bootstrapping and thus is probably less reliable.
-%
-This may negate the differences between error based criteria and the others, and result in across-the-board worse performance.
-%
-Unfortunately, we have not been able to get acceptable results for dimensions beyond three as even for simple models like the mixture of two Gaussians the non-GPM models did not converge.
-%
-A failed but nevertheless interesting result comes from the mixture of two Gaussians where the model in general shows no real improvements for higher number of points but both the Delta and the EI criteria first decrease the quality of the fit.
-
 \begin{figure}[htbp]
+  \begin{center}
+   \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Ackley_td=30}\label{fig:ackley3D_gpm}
+   \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Diag2Max_3D_td=30}\label{fig:2diag3D_gpm}
+   \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_GMM2_3D_td=30}\label{fig:gmm23D_gpm}
+   \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_GMM5_3D_td=30}\label{fig:gmm53D_gpm}
+   \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_MGR_td=30}\label{fig:mgr3D_gpm}
+   \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Ackley_td=100}\label{fig:ackley4D_gpm}
+   \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Salomon_td=200}\label{fig:salomon5D_gpm}
+   \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Diag2Max_5D_td=200}\label{fig:2diag5D_gpm}
+  \caption{Adaptive sampling of various test functions using the GPM. From left to right and top to bottom the following cases are shown: the three-dimensional Ackley,
+  the three-dimensional, two-maxima diagonal, the three-dimensional mixture of two Gaussians, the three-dimensional mixture of five Gaussians, the three-dimensional MGR, the four-dimensional Ackley, the five-dimensional Salomon, and the five-dimensional two-maxima diagonal function.}
+  \label{fig:345D_gpm}
+  \end{center}
+\end{figure}
+
+A similar behavior can be seen in higher dimensions (refer to Figure~\ref{fig:345D_gpm}): The four-dimensional Ackley and the five-dimensional Salomon function show the expected advantage of the ALM criterion, whereas the five-dimensional, two-maxima diagonal function again prefers the Delta criterion.
+%
+However, in this case all three topological functions outperform the remaining score functions even though they perform on par with only the LHS samples.
+
+As mentioned above, the performance of the other regression techniques is rather spotty, and the results of the adaptive scoring experiments are correspondingly inconsistent.
+%
+The EARTH model produces results similar to the ones shown in Figure~\ref{fig:ackley2D_results} in case the model itself converges, for example for the two-maxima diagonal function and the mixture of five Gaussians (Figure~\ref{fig:earth_results}).
+%
+However, considering other experiments listed in the same figure, other experiments show rather large fluctuations in some adaptive sampling curves, e.g., either the TopoHP curve within the MGR function or the LHS curve, e.g., the Whitley function.
+%
+Overall, the two-dimensional Whitley function shows a good performance, with nearly all adaptive criteria outperforming the LHS curve.
+%
+Interestingly, in its three-dimensional incarnation, the adaptive sampling does not work nearly as well and also shows excessive variations in several curves.
+
+Still looking at Figure~\ref{fig:earth_results}, in general, there appears to be no significant advantage of one scoring function over another.
+However, for many cases with the EARTH model, the TopoHP seems to perform especially bad; for example, see the three-dimensional Whitley and three-dimensional MGR functions.
+%
+This poor performance is rather surprising since, for the GPM model, TopoHP performed rather well and typically better than the other topological scoring functions.
+%
+The lack of difference among the other scoring functions is likely due to the error computation.
+%
+For non-GPM models like MARS, the expected prediction error that forms the basis for both the ALM and the EI criteria is constructed through bootstrapping and thus is probably less reliable.
+%
+The bootstrapping may negate the differences between error-based criteria and the others, and result in across-the-board worse performance.
+%
+Unfortunately, we have not been able to get acceptable results for dimensions beyond three, due to the fact that even for simple models like the mixture of two Gaussians, the non-GPM models did not converge.
+%
+A failed but nevertheless interesting result comes from the mixture of two Gaussians where the model in general shows no real improvements for higher number of points, but both the Delta and the EI criteria first decrease the quality of the fit.
+
+\begin{figure}[t]
 \begin{center}
- \includegraphics[width=0.24\linewidth]{figs/chap5/earth_Diag2Max_td=20}
- \includegraphics[width=0.24\linewidth]{figs/chap5/earth_GMM5_2D_td=20}
- \includegraphics[width=0.24\linewidth]{figs/chap5/earth_MGR_td=20}
- \includegraphics[width=0.24\linewidth]{figs/chap5/earth_Whitley_td=20}
- \includegraphics[width=0.24\linewidth]{figs/chap5/earth_Ackley_td=30}
- \includegraphics[width=0.24\linewidth]{figs/chap5/earth_Whitley_td=30}
- \includegraphics[width=0.24\linewidth]{figs/chap5/earth_MGR_td=30}
- \includegraphics[width=0.24\linewidth]{figs/chap5/earth_GMM2_3D_td=30}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/earth_Diag2Max_td=20}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/earth_GMM5_2D_td=20}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/earth_MGR_td=20}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/earth_Whitley_td=20}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/earth_Ackley_td=30}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/earth_Whitley_td=30}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/earth_MGR_td=30}
+ \includegraphics[width=0.45\linewidth]{figs/chap5/earth_GMM2_3D_td=30}
  \caption{Adaptive sampling of various test functions using the EARTH regression model.
-(1) two-dimensional two maxima Diagonal function;
-(2) two-dimensional mixture of five Gaussians;
-(3) two-dimensional MGR function;
-(4) two-dimensional Whitley functions;
-(5) three-dimensional Ackley function;
-(6) three-dimensional Whitley function;
-(7) three-dimensional MGR function;
-(8) three-dimensional mixture of two Gaussians.}
+ From left to right, top to bottom the graphs for each of the following datasets are shown: the two-dimensional, two-maxima diagonal function, the two-dimensional mixture of five Gaussians, two-dimensional MGR function, the two-dimensional Whitley functions, the three-dimensional Ackley function, the three-dimensional Whitley function, the three-dimensional MGR function, and the three-dimensional mixture of two Gaussians.}
 \label{fig:earth_results}
 \end{center}
 \end{figure}
 
-
-\begin{figure}[htbp]
+\begin{figure}[t]
 \begin{center}
-  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_Diag2Max_td=20}
-  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_GMM5_2D_td=20}
-  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_MGR_td=20}
-  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_Whitley_td=20}
-  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_Ackley_td=30}
-  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_Whitley_td=30}
-  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_MGR_td=30}
-  \includegraphics[width=0.24\linewidth]{figs/chap5/mda_GMM2_3D_td=30}
-\caption{Adaptive sampling of various test functions using the MDA model.
-(1) two-dimensional two maxima Diagonal;
-(2) two-dimensional mixture of five Gaussians;
-(3) two-dimensional MGR function;
-(4) two-dimensional Whitley function;
-(5) three-dimensional Ackley function;
-(6) three-dimensional Whitley function;
-(7) three-dimensional MGR function;
-(8) three-dimensional mixture of two Gaussians.}
+  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_Diag2Max_td=20}
+  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_GMM5_2D_td=20}
+  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_MGR_td=20}
+  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_Whitley_td=20}
+  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_Ackley_td=30}
+  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_Whitley_td=30}
+  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_MGR_td=30}
+  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_GMM2_3D_td=30}
+\caption{Adaptive sampling of various test functions using the MDA model. From left to right and top to bottom, the plots for the following cases are shown: the two-dimensional two-maxima diagonal, the two-dimensional mixture of five Gaussians, the two-dimensional MGR function, the two-dimensional Whitley function, the three-dimensional Ackley function, the three-dimensional Whitley function, the three-dimensional MGR function, and the three-dimensional mixture of two Gaussians.}
 \label{fig:mda}
 \end{center}
 \end{figure}
 
 The other MARS implementation MDA, unsurprisingly, shows largely the same behavior as EARTH.
 %
-Figure~\ref{fig:mda} shows four examples each in two and three dimensions.
+Figure~\ref{fig:mda} shows four examples, each in two and three dimensions.
 %
-Comparing with the Earth model, we see typically comparable RMSE, and higher variability (e.g. the two-diagonal and GMM functions in two-dimensional) with the exception of the three-dimensional Whitley function.
+Comparing with the Earth model, we see typically comparable RMSE and higher variability (e.g., the two-diagonal and GMM functions in two-dimensional) with the exception of the three-dimensional Whitley function.
 %
-Again the three-dimensional mixture of two Gaussians shows the initial decrease in RMSE for several scoring functions.
+Again, the three-dimensional mixture of two Gaussians shows the initial decrease in RMSE for several scoring functions.
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \begin{center}
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Diag2Max_td=20}\label{fig:2diag2D_nnet}
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_GMM5_2D_td=20}\label{fig:gmm52D_nnet}
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_MGR_td=20}\label{fig:mgr2D_nnet}
   \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Salomon_td=20}\label{fig:salomon2D_nnet}
-\caption{Adaptive sampling of various two-dimensional test functions using the NNET model.
-(1) Two maxima Diagonal function;
-(2) Mixture of five Gaussians;
-(3) MGR function;
-(4) Salomon function.}
+\caption{Adaptive sampling of various two-dimensional test functions using the NNET model. From left to right and top to bottom the following cases are shown: the two-maxima diagonal function, the mixture of five Gaussians, the MGR function, and the Salomon function.}
 \label{fig:nnet_2D}
 \end{center}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \begin{center}
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Ackley_td=30}\label{fig:ackley3D_nnet}
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_MGR_td=30}\label{fig:mgr3D_nnet}
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_Salomon_td=30}\label{fig:salomon3D_nnet}
 \includegraphics[width=0.48\linewidth]{figs/chap5/nnet_GMM2_3D_td=30}\label{fig:gmm23D_nnet}
 \caption{Adaptive sampling of various three-dimensional test functions using the
-  NNET model. (1) Ackley function; (2) MGR function; (3) Salomon function; (4) Mixture of two Gaussians.}
+  NNET model. From left to right and top to bottom the following cases are shown: the Ackley function, the MGR function, the Salomon function, and the mixture of two Gaussians.}
   \label{fig:nnet_3D}
 \end{center}
 \end{figure}
 
-Finally, the NNET implementation in its default setting, whose results are summarized in Figures~\ref{fig:nnet_2D} and~\ref{fig:nnet_3D}, performs clearly worse with excessive variability in all plots which makes interpretation of any possible trends questionable.
+Finally, the NNET implementation in its default setting, whose results are summarized in Figures~\ref{fig:nnet_2D} and~\ref{fig:nnet_3D}, performs clearly worse, with excessive variability in all plots, which makes interpretation of any possible trends questionable.
 %
-Apart from the Ackley function, some models that performed reasonably in two dimensions are the two maxima Diagonal function, mixture of five Gaussians, and the Salomon function.
+Apart from the Ackley function, some models that performed reasonably in two dimensions are the two-maxima diagonal function, the mixture of five Gaussians, and the Salomon function.
 %
 The MGR function shows a competitive RMSE as a baseline but excessive variations for virtually all adaptive scoring functions as well as the LHS line.
 %
 The three-dimensional MGR function shows a similar behavior except that the LHS line now appears to be stable.
 
-The three-dimensional Ackley and Salomon function both show the high variability and high RMSE with no adaptive scoring functions able to outperform the space-filling sampling.
+The three-dimensional Ackley and Salomon functions both show the high variability and high RMSE with no adaptive scoring functions able to outperform the space-filling sampling.
 %
-Just as with the two MARS implementations the three-dimensional mixture of two Gaussians does not improve with increasing number of samples and shows the initial increase in RMSE for some scoring functions.
+Just as with the two MARS implementations, the three-dimensional mixture of two Gaussians does not improve with an increasing number of samples and shows the initial increase in RMSE for some scoring functions.
 
 \subsection{Discussion}
 
-After running an extensive set of experiments in two to five dimensions with nine different scoring functions some general trends appear even though the fundamental question of which particular scoring function to use remains largely inconclusive.
+After running an extensive set of experiments in two to five dimensions with nine different scoring functions, some general trends appear even though the fundamental question of which particular scoring function to use remains largely inconclusive.
 %
 The results listed above are only a small first step in this direction.
 %
-The first, not necessarily surprisingly result is that the quality of the underlying regression model plays a key role in the performance of any adaptive sampling technique.
+The first not necessarily surprisingly result is that the quality of the underlying regression model plays a key role in the performance of any adaptive sampling technique.
 %
-In this study the GPM model performs the best and is the only one showing significant differences between scoring functions.
+In this study, the GPM model performs the best and is the only one showing significant differences between scoring functions.
 %
-Overall, it seems that the combination of ALM and GPM is the preferred choice even though some functions perform well with the Delta criteria.
+Overall, it seems that the combination of ALM and GPM is the preferred choice, even though some functions perform well with the Delta criteria.
 
-The remaining regression models all show problems fitting many of the test functions and the large variability suggest that they are sensitive to specific sample locations.
+The remaining regression models all show problems fitting many of the test functions, and the large variability suggests that they are sensitive to specific sample locations.
 %
-In the cases where reasonable fits have been achieved all scoring functions perform equally well (or poorly).
+In the cases where reasonable fits have been achieved, all scoring functions perform equally well (or poorly).
 
 The new topological scoring functions are largely competitive in terms of RMSE and often perform among the top scoring functions.
 %
-Some results suggest that detailed fits with a high number of samples are less well suited for topological scoring functions as they are designed to recover larger scale features.
+Some results suggest that detailed fits with a high number of samples are less well suited for topological scoring functions since they are designed to recover larger scale features.
 %
 Nevertheless, topological scoring functions are expected to better recover the global structure of a function, and finding quantitative metrics to test this hypothesis as well as expanding the class of such functions will be the focus of future research.
 
@@ -522,14 +492,14 @@ Nevertheless, topological scoring functions are expected to better recover the g
 \includegraphics[width=0.24\linewidth]{figs/chap5/Whitley.png}
 \caption{Pseudo-colored contour plots of the two-dimensional versions of the test functions.
 %
-From left to right: Ackley, Diagonal function with two maxima (Diag2Max), Diagonal function with four maxima (Diag4Max), Gaussian Mixture Model with two (GMM2) and five Gaussians (GMM5), Mis-scaled Generalized Rastrigin (MGR), Salomon and Whitley, respectively.}
+From left to right: Ackley, diagonal function with two maxima (Diag2Max), diagonal function with four maxima (Diag4Max), Gaussian mixture model with two (GMM2) and five Gaussians (GMM5), Mis-scaled Generalized Rastrigin (MGR), Salomon and Whitley, respectively.}
 \label{fig:original}
 \end{center}
 \end{figure}
 
 We use several testing functions with closed forms described below.
 %
-All functions can be generalized to higher dimensions and their two dimensional contour plots are shown in Fig~\ref{fig:original}.
+All functions can be generalized to higher dimensions, and their two-dimensional contour plots are shown in Figure~\ref{fig:original}.
 %
 Let $D$ be the dimension of the input vector $\vec{\theta}$.
 
@@ -564,13 +534,13 @@ Let $D$ be the dimension of the input vector $\vec{\theta}$.
 %   \end{center}
 % \end{table}
 
-\para{Ackley}
+\subsubsubsection{Ackley}
 $$
 f(\vec{\theta}) = \sum_{i=1}^{D-1}\left(e^{-0.2}\sqrt{\theta_i^2+\theta_{i+1}^2} + 3(\cos(2\theta_i) + \sin(2\theta_{i+1}))\right),
 $$
 where $\{\vec{\theta}|\theta_i\in [-3,3]\}$.
 
-\para{Diagonal}
+\subsubsubsection{Diagonal}
 Let $m$ be the number of maxima along the main diagonal,
 \begin{eqnarray*}
 f(\vec{\theta}) = & \frac{1}{2}\sin\left(\pi\left(\frac{1}{2} + \left((m+1) \bmod{2}\right) + \frac{m\left(\sum_{i=1}^{D}\theta_i\right)}{D}\right)\right)
@@ -579,7 +549,7 @@ f(\vec{\theta}) = & \frac{1}{2}\sin\left(\pi\left(\frac{1}{2} + \left((m+1) \bmo
 where
 $\{\vec{\theta}|\theta_i\in [-1,1]\}$.
 
-\para{Random Gaussian Mixture Model}
+\subsubsubsection{Random Gaussian Mixture Model}
 
 Let $m$ be the number of extrema in the domain.
 Let $a_i$ be the amplitude of the $i^{th}$ extrema.
@@ -591,7 +561,7 @@ $$
 where $\{\vec{\theta}|\theta_i\in [0,1]\}$.
 
 
-\para{Mis-scaled Generalized Rastrigin}
+\subsubsubsection{Mis-scaled Generalized Rastrigin}
 $$
 f(\vec{\theta}) = 10D + \sum_{i=1}^{D}\left((10^{\frac{i-1}{D-1}}\theta_i)^2 - 10\cos(2\pi(10^{\frac{i-1}{D-1}}\theta_i))\right)
 $$
@@ -599,13 +569,13 @@ where
 $\{\vec{\theta}|\theta_i\in [-2,2]\}$.
 
 
-\para{Salomon}
+\subsubsubsection{Salomon}
 $$
 f(\vec{\theta}) = -\cos\left(2\pi\sum_{i=1}^D\theta_i^2\right) + 0.1\sqrt{\sum_{i=1}^D\theta_i^2} + 1
 $$
 where $\{\vec{\theta}|\theta_i\in [-1,1]\}$.
 
-\para{Whitley}
+\subsubsubsection{Whitley}
 $$
 f(\vec{\theta}) = \sum_{i=1}^{D}\sum_{j=1}^{D}\left(\frac{k_{ij}^2}{4000} - cos(k_{ij}) + 1\right)
 $$
@@ -617,15 +587,17 @@ $k_{ij} = (100(\theta_i^2-\theta_j)^2 + (1-\theta_j)^2)$.
 
 Now we give details on packages and parameter settings used in our experiments.
 
-The GPM model we use is the \texttt{Sparse Online Gaussian Process} (SOGP) C++ library \cite{gpm}, which is based on work in \cite{Csato2002,CsatoOpper2002}.
+The GPM model we use is the \texttt{sparse online Gaussian process} (SOGP) C++ library \cite{gpm}, which is based on work in \cite{Csato2002,CsatoOpper2002}.
 %
-The default parameters are employed, see~\cite{CsatoOpper2002} for details, i.e. we use the Radial Basis Kernel with a spherical covariance set to $\sigma_0^2 = 0.1$, the widths are uniformly set to 0.1, and the amplitude $A=1$.
+The default parameters are employed; see~\cite{CsatoOpper2002} for details.
+%
+In other words, we use the radial basis kernel with a spherical covariance set to $\sigma_0^2 = 0.1$, the widths are uniformly set to 0.1, and the amplitude $A=1$.
 
-For EARTH, MDA and NNET, we use non-parametric bootstrapping using $250$ samples without cross-validation.
+For EARTH, MDA and NNET, we use nonparametric bootstrapping using $250$ samples without cross-validation.
 
 For EARTH, we use the \texttt{earth} library in \texttt{R} \cite{earth}.
 %
-We use the following parameter settings, see \cite{earth} for details.
+We use the following parameter settings; see \cite{earth} for details.
 %
 If a parameter is not listed, the default value given by the package is used.
 %
@@ -637,7 +609,7 @@ thresh=1e-8  //Forward stepping threshold
 penalty=3 //Generalized Cross Validation Penalty per knot
 \end{code}
 
-For MDA, we use \texttt{mda} library in \texttt{R}, with the following parameters (see \cite{mda} for details, non-listed parameters use package defaults),
+For MDA, we use \texttt{mda} library in \texttt{R}, with the following parameters (see \cite{mda} for details; nonlisted parameters use package defaults):
 \begin{code}
 degree=3 // Maximum degree of interaction (Friedman's mi)
 nk=63  //Maximum number of model terms
@@ -645,7 +617,7 @@ thresh=1e-8 // Forward stepping threshold
 penalty=3 // The cost per degree of freedom charge
 \end{code}
 
-For NNET, we use \texttt{nnet} library in \texttt{R}, with the following parameters (see \cite{nnet} for details, non-listed parameters use package defaults),
+For NNET, we use \texttt{nnet} library in \texttt{R}, with the following parameters (see \cite{nnet} for details; nonlisted parameters use package defaults):
 \begin{code}
 size=1+ceiling(sqrt(D)) // Number of units in the hidden layer
                         // D is the dimensionality of the input
@@ -654,7 +626,7 @@ skip=TRUE // Add skip-layer connections from input to output
 linout=TRUE // Linear output units, as opposed to logistic
 \end{code}
 
-To create the space filling samplings, the \texttt{lhs} library in \texttt{R} \cite{lhs} is used.
+To create the space-filling samplings, the \texttt{lhs} library in \texttt{R} \cite{lhs} is used.
 %
 More specifically, we use the \texttt{randomLHS} function, which chooses uniform, random samples without any attempts to optimize the design, to construct the training data, candidate data, and LHS samples in the plots shown.
 
@@ -695,7 +667,7 @@ A CVT sampling strategy gives high-quality samples without the biases introduced
 %
 A Latin hypercube sampling (LHS)~\cite{ImanDavenportZeigler1980} strategy can be used for higher dimensional examples.
 %
-For each dataset, we measure the accuracy of our global or local fitting by comparing to the ground truth at each iteration, under different metrics described in Section~\ref{sec:evaluation_metrics}.
+For each dataset, we measure the accuracy of our global or local fitting by comparing to the ground-truth at each iteration, under different metrics described in Section~\ref{sec:evaluation_metrics}.
 
 As stated before, we consider two problems in this experiment, global fitting and limit surface extraction.
 %
@@ -941,7 +913,7 @@ d(x,y),\sup_{y \in Y} \inf_{x \in X} d(x,y)\right).
 
 In addition, we treat our model as a binary classifier with the limit surface being the boundary and compute the \emph{$F_1$-score}.
 %
-Given a ground truth validation grid, we can evaluate the \emph{precision}, $p$, and \emph{recall}, $r$, of the classification and compute the harmonic mean of these two values to get the $F_1$-score.
+Given a ground-truth validation grid, we can evaluate the \emph{precision}, $p$, and \emph{recall}, $r$, of the classification and compute the harmonic mean of these two values to get the $F_1$-score.
 %
 The relevant equations are listed below where $t_+$ means the count of `true positives' or correctly identified labels above the limit surface, while $f_+$ means the count of `false positives' or incorrectly identified labels above the limit surface, and $f_-$ means the count of `false negatives' or incorrectly identified labels below the limit surface.
 
@@ -1400,7 +1372,7 @@ The final model $\Mthree$ computes a candidate set directly from the training da
 
 The general adaptive sampling pipeline will look similar to those discussed in previous studies (Figure~\ref{fig:pipelines} top left).
 %
-The process begins by selecting some initial training data, running the ground truth simulation and obtaining a collection of true responses at these data points.
+The process begins by selecting some initial training data, running the ground-truth simulation and obtaining a collection of true responses at these data points.
 %
 Next, we fit a surrogate model from the initial set of training data that estimates the true response surface.
 %
@@ -1417,7 +1389,7 @@ Before describing each of the three models in detail, we focus on their common i
 %
 Both $\Mone$ and $\Mtwo$ use a prediction model, i.e. a Gaussian process model (GPM), as the surrogate model.
 %
-We use a specific implementation known as the Sparse Online Gaussian Process~\cite{CsatoOpper2002}, but note that this part of the algorithm is easily replaceable with any prediction model.
+We use a specific implementation known as the sparse online Gaussian process~\cite{CsatoOpper2002}, but note that this part of the algorithm is easily replaceable with any prediction model.
 %
 To initially sample from a prediction model, we employ a central Voronoi tessellation (CVT)
 scheme~\cite{DuFaberGunzburger1999}.
@@ -1566,7 +1538,7 @@ For the initial training points, we use the same $10$ points for $\SA$ and $\SB$
 %
 We add an additional $100$ adaptively sampled points (one at a time) to the training points through our experiments.
 %
-To recover points that lie on the true limit surface, we sample 10K CVT samples from the ground truth model (either in closed form for the synthetic datasets or in terms of black-box simulation for the nuclear dataset), impose a relaxed Gabriel graph on these samples and linearly interpolate the spanning edges at the given threshold value.
+To recover points that lie on the true limit surface, we sample 10K CVT samples from the ground-truth model (either in closed form for the synthetic datasets or in terms of black-box simulation for the nuclear dataset), impose a relaxed Gabriel graph on these samples and linearly interpolate the spanning edges at the given threshold value.
 %
 Similar operations are performed to recover points that lie on the estimated limit surface for models $\Mone$ and $\Mtwo$.
 %
@@ -1784,7 +1756,7 @@ On the other hand, since $\Mthree$ is not dependent on the prediction model, it 
 
 To further understand the convergence behavior of the limit surfaces estimated by $\Mone$ and $\Mtwo$, we obtain convergence plots in terms of the root mean squared error (RMSE) in Figure~\ref{fig:RMSE-convergence}.
 %
-All plots show the RMSE between estimated limit surfaces and the true limit surface\footnote{In the case where ground truth limit surface is not available, we could compute RMSE with respect to the previous round to estimate the convergence behavior.}, versus the number of samples added in the training data up to $100$ points.
+All plots show the RMSE between estimated limit surfaces and the true limit surface\footnote{In the case where ground-truth limit surface is not available, we could compute RMSE with respect to the previous round to estimate the convergence behavior.}, versus the number of samples added in the training data up to $100$ points.
 %
 The RMSE is computed using a dense sampling of points located on the true limit surfaces.
 

@@ -896,9 +896,9 @@ In this section, we evaluate the ability of our three families of graphs to extr
 %
 Specifically, we look at approximating the Morse complex using the algorithm from Gerber et al.~\cite{GerberBremerPascucci2010} and computing the persistence hierarchy to understand not only accuracy, but also stability of the correct result.
 %
-We compare these results to a ground truth acquired through either numerical methods or by exploiting the simple geometry of the test functions Morse complex.
+We compare these results to a ground-truth acquired through either numerical methods or by exploiting the simple geometry of the test functions Morse complex.
 %
-To compare our approximated results to the ground truth, we use persistence simplification~\cite{EdelsbrunnerLetscherZomorodian2002,EdelsbrunnerHarer2008} to denoise our approximation to the correct number of manifolds.
+To compare our approximated results to the ground-truth, we use persistence simplification~\cite{EdelsbrunnerLetscherZomorodian2002,EdelsbrunnerHarer2008} to denoise our approximation to the correct number of manifolds.
 %
 We then compute the normalized variation of information~\cite{VinhEppsBailey2010} to compute the level of correspondence between the two partitions.
 %
@@ -971,9 +971,9 @@ The blue regions denote regions of maxima whereas the orange/brown regions denot
 In addition, blue dots represent local maxima, white dots represent saddle points, red dots denote local minima, and the thick lines separate the cells
 of the Morse complex of the function, $f$.
 
-To compute the ground truth for the diagonal dataset, we can separate the four true segments in closed form by defining hyperplanes through each of three uniformly-spaced minima and orthogonal to the main diagonal.
+To compute the ground-truth for the diagonal dataset, we can separate the four true segments in closed form by defining hyperplanes through each of three uniformly-spaced minima and orthogonal to the main diagonal.
 %
-For more generic examples, we can formulate a ground truth labeling of the input data by employing a fourth-order Runge-Kutta scheme to trace the gradient from any point in the domain to its associated maximum.
+For more generic examples, we can formulate a ground-truth labeling of the input data by employing a fourth-order Runge-Kutta scheme to trace the gradient from any point in the domain to its associated maximum.
 
 As with the quality measures, we first evaluate each graph family in isolation and determine the optimal settings for each example function and dimensionality before summarizing and comparing results between the different graphs.
 %
@@ -981,7 +981,7 @@ Here, we optimally tune each graph for the most consistently high stable persist
 %
 The summarized results are presented in Figure~\ref{fig:graph_topo} for three different examples in four and five dimensions.
 %
-The NVI plots are used mostly for sanity checking to indicate that the partitions we are considering as stable line up consistently with the underlying ground truth.
+The NVI plots are used mostly for sanity checking to indicate that the partitions we are considering as stable line up consistently with the underlying ground-truth.
 
 The results of this study seem to indicate that the $\Theta$-graph is unable to converge on the correct topology for any of our examples, and while the others report similar NVI behavior, the optimal Yao graph is able to achieve this level of fidelity for the largest amount of persistence consistently across the three examples.
 %
