@@ -163,7 +163,7 @@ Here, point $\x$ is selected with the highest persistence, and therefore, the hi
 \begin{figure}[!t]
 \begin{center}
 \includegraphics[width=1.0\linewidth]{figs/chap5/topo-all}
-\caption{(a) TopoHP: Construct a Morse-Smale complex from training data (silver) as well as all candidates with predicted responses (purple), and return the persistence of the critical points within the candidates.
+\caption[Illustration of topological scoring methods]{(a) TopoHP: Construct a Morse-Smale complex from training data (silver) as well as all candidates with predicted responses (purple), and return the persistence of the critical points within the candidates.
 %
 Point $\protect\x$ is selected with the highest $TopoHP(\protect\x)$.
 %
@@ -244,7 +244,7 @@ Nevertheless, as discussed below, even without an explicit representation severa
 \includegraphics[width=0.45\linewidth]{figs/chap5/earth_Ackley_td=20}
 \includegraphics[width=0.45\linewidth]{figs/chap5/mda_Ackley_td=20}
 \includegraphics[width=0.45\linewidth]{figs/chap5/nnet_Ackley_td=20}
-\caption{Adaptive sampling of the two-dimensional Ackley function using different regression techniques and different scoring functions. From left to right and top to bottom results are shown for the following models: GPM, EARTH, MDA, and NNET.}
+\caption[Comparison of RMSE using four prediction models]{Adaptive sampling of the two-dimensional Ackley function using different regression techniques and different scoring functions. From left to right and top to bottom results are shown for the following models: GPM, EARTH, MDA, and NNET.}
 \label{fig:ackley2D_results}
 \end{center}
 \end{figure}
@@ -1061,7 +1061,7 @@ MaxP             & 99.2 $\pm$ 17.23 (96)        & 140.8 $\pm$ 15.68 (128)    & 1
 2-MaxP + Believe & \myemph{67.2 $\pm$ 9.6 (64)} & 99.2 $\pm$ 9.6 (96)        & 83.2 $\pm$ 15.68 (96)\\
 4-MaxP + Believe & 70.4 $\pm$ 12.8 (64)         & \myemph{96.0 $\pm$ 0 (96)} & 86.4 $\pm$ 14.66 (96)\\
 \end{tabular}
-\caption{RMSE convergence results for synthetic test functions.}
+\caption[RMSE convergence results for synthetic test functions]{RMSE convergence results for synthetic test functions.}
 \label{table:global-synthetic}
 \end{table}
 
@@ -1107,7 +1107,7 @@ MaxP             & 828.8 $\pm$ 36.35 (832)          & 742.4 $\pm$ 104.0 (736)   
 2-MaxP + Believe & 787.2 $\pm$ 32.63 (784)          & 739.2 $\pm$ 103.6 (704)          & 806.4 $\pm$ 129.4 (784)          & \myemph{617.6 $\pm$ 116.3 (608)} \\
 4-MaxP + Believe & \myemph{761.6 $\pm$ 49.16 (768)} & 656.0 $\pm$ 90.79 (608)          & 803.2 $\pm$ 84.0 (800)           & 630.4 $\pm$ 79.74 (640)\\
 \end{tabular}
-\caption{RMSE convergence results for image datasets.}
+\caption[RMSE convergence results for image datasets]{RMSE convergence results for image datasets.}
 \label{table:global-images}
 \end{table}
 
@@ -1197,7 +1197,7 @@ As the topology-based methods are believed to be more judicious about not placin
  2-MaxP + Believe & 86.4 $\pm$ 20.49 (96)         & 147.2 $\pm$ 15.68 (160)         & \myemph{131.2 $\pm$ 22.4 (128)} \\
  4-MaxP + Believe & 86.4 $\pm$ 14.66 (96)         & \myemph{134.4 $\pm$ 12.8 (128)} & 128.0 $\pm$ 14.31 (128)\\
 \end{tabular}
-\caption{F1-Score convergence results for synthetic datasets.}
+\caption[F1-Score convergence results for synthetic datasets]{F1-Score convergence results for synthetic datasets.}
 \label{table:f1_synthetics}
 \end{table}
 
@@ -1232,7 +1232,7 @@ As the topology-based methods are believed to be more judicious about not placin
  2-MaxP + Believe & \myemph{60.8 $\pm$ 17.23 (64)} & \myemph{118.4 $\pm$ 38.0 (128)} & \myemph{166.4 $\pm$ 103.0 (144)} & 198.4 $\pm$ 104.0 (192)\\
  4-MaxP + Believe & \myemph{60.8 $\pm$ 17.23 (64)} & \myemph{118.4 $\pm$ 38.0 (128)} & 169.6 $\pm$ 103.2 (160)          & 198.4 $\pm$ 104.0 (192)\\
 \end{tabular}
-\caption{F1-Score convergence results for image datasets. *Denotes where the fastest median convergence differs from the fastest mean convergence.}
+\caption[F1-Score convergence results for image datasets]{F1-Score convergence results for image datasets. *Denotes where the fastest median convergence differs from the fastest mean convergence.}
 \label{table:f1_images}
 \end{table}
 
