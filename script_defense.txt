@@ -69,15 +69,25 @@ In the lower example, we are showing a Morse-Smale complex which instead partiti
 
 Slide 12
 
-
+Again, I just want to review some terminology. I have already defined the Morse-Smale complex on the right and the partitioning that it imposes, but if we take a step back to how we arrived at that setup, what we have is two different partitionings. For example, if we only consider positive gradient flow and associate each location to a local maximum, then we have a partitioning that is known as the stable manifolds or descending manifolds. The complex that imposes this structure is simply the Morse complex. Then, if we were to flip over our function (by negating it), and do the same thing, we would associate every point to its local mininimum yielding the unstable or ascending manifolds. The graph shown here connecting local maxima and saddles with ridge lines is the Morse complex of the negative function.
 
 Slide 13
-Slide 14
-Slide 15
-Slide 16
-Slide 17
 
-Slide 18
+I showed this already, but again we can compute this segmentation by traversing the steepest descent from each point in the domain and identifying every point with a minimum, for instance.
+
+Slide 14
+
+The trouble is what we are usually dealing with is a point cloud sample and we don't have the underlying function that we are trying to segment the data according to.
+
+Slide 15
+
+One answer is to impose some sort of neighborhood to each point and approximate gradient flow based on the edges emanating from each point.
+
+Slide 16
+
+Take the highlighted point in the center of this graph as an example. We can trace out its descending gradient among its neighbors and continue the process from each subsequent neighbor until we arrive at a point that has no lower neighbors like the one in the lower left.
+
+Slide 17
 
 A nice feature of the Morse-Smale complex is that we can associate a notion of feature scale. That is we can simplify or smooth away smaller features while maintaining the larger ones to arrive at a less resolved partitioning. This is done through a process known as persistence simplification.
 
@@ -89,25 +99,131 @@ Next, we pair the larger maximum and minimum together.
 
 Lastly, we pair the local minimum and maximum occuring at the boundaries of the data. Note, that the last pair are not adjacent in the function, but since we have cancelled all of the other critical points they are now considered adjacent.
 
+Slide 18
+
+With the requisite background in hand, I want to move on to discuss how we can use topology in the sampling phase. Particularly, I want to summarize the main takeaways from two publications I led on adaptive sampling methodologies.
+
 Slide 19
+
+Given the nature of nuclear energy, it should come as no surprise that physical experimentation can be very dangerous, and so often we rely on computer simulations. However, due to the complexity of the physics we are modeling, collecting copious amounts of data can still be expensive and time-consuming. Therefore, it is to our advantage to extract the most amount of information from the least amount of data.
+
+Furthermore, the input spaces we are interested can be of arbitrary input dimensionality, and from the curse of dimensionality we know that the space needed to sample grows exponentially with respect to increasing dimensionality. So, it is unlikely that we will ever recover a dense enough sampling in high-dimensions to do a meaningful global analysis.
+
 Slide 20
+
+Here, I am showing a typical adaptive sampling pipeline used for initial data sampling. We begin with no knowledge of our response value of interest and so select several training data locations based on some space-filling design, and evaluate our ground truth model on it.
+
+We fit a predicting model to the obtained data.
+
+We next generate a pool of candidates and based on information from the predicting model we score these candidates to determine which candidate will give us the most useful information. We then select a candidate, evaluate it using the ground truth, and add it to our training data and repeat the process.
+
+So, of these four steps I want to focus our attention on the third step: namely how we select and score candidates for training.
+
 Slide 21
+
+Many predicting models are probabilistic or can be made probablistic by methods such as boostrap aggregating. In this way, we can associate an uncertainty with each location in our input space.
+
+Here, we consider a 1D problem fit with a probabilistic model.
+
+McKay et al. introduced a method geared at targeting highly uncertain regions. So, we can see in this example, that we want to select candidates that have large error bars associated with them. The problem here is that sometimes this methodology can waste effort looking in regions where the predicting model is relatively flat and uninteresting.
+
+Thus, a third and similar method was introduced later that targets not only uncertain regions, but also areas of steep gradient. This was termed the expected improvement function. In this case, we combine the difference in mean value prediction of a candidate with its nearest neighboring training point with the uncertainty of the predicting model.
+
+This last method starts to get at a key component of adaptive sampling, that is can we avoid "flat" regions and instead place samples where the function is doing something more interesting.
+
+In understanding this concept, we developed several scoring metrics that were more directly geared at this by exploiting the topology of
+the predicting model directly in order to identify areas of high persistence features, or where adding a point will likely affect the overall global topology.
+
 Slide 22
+
+And so, we developed 3 novel scoring functions based on the Morse-Smale complex that attempted to capture these topological changes in different ways: by looking for which candidate globally affected the topology the most, and also by highlighting the most topologically significant candidate.
+
+This work is highlighted in our 2013 IJUQ paper titled Adaptive Sampling with Topological Scores.
+
 Slide 23
+
+Let me take a brief second to discuss a slightly different problem that nuclear engineers often deal with.  Our last study, looked at adaptive sampling with the goal of obtaining a globally accurate fit of the data.
+
+Often in the nuclear accident analysis, they are dealing with simulations where the goal is to understand the frontier that separates recoverable scenarios from system failure scenarios. The frontier we seek is known as the limit surface and the often the goal is to understand the probability of failure which amounts to determining the integral over the failure region.
+
+In order to characterize the limit surface, they often rely on adaptive sampling methods.
+
 Slide 24
+
+For the limit surface problem, we actually took a different approach and built three variations of the adaptive sampling pipeline from a prior slide. Two of these methods represent more exploitive models similar to what we have done before, and so in the interest of time, I will highlight what is referred to here as M2.
+
 Slide 25
+
+This model computes the Morse complex of the data and then utilizes a relaxation parameter to search for partitions in the data that either span or "nearly" span the threshold value. In this way, we can explore regions where the maximum of a dataset may be close to the threshold.
+
 Slide 26
+
+We see that with the appropriate relaxation setting, this model is actually able to identify a component of the true limit surface that was not captured in the initial training data.
+
+This work was presented in a nuclear engineering conference and was runner-up for the best student paper award.
+
 Slide 27
+
+With that I want to go a bit out of order and talk about my contributions to the analysis phase which are this notion of structured sensitivity analysis, and then wrap up with some observations we have been able to make after using this approximate topology construct which seques nicely into the third part of the talk.
+
 Slide 28
+
+Typically the first go-to is a global sensitivity study and we have seen methods in visualization that do this for arbitrary input dimensions. These methods are great for parameter screening, however these types of methods struggle on non-monotonic data unless higher order methods are used, but these lack the direct interpretibility of simple partial derivative type information.
+
+On the other hand, local sensitivity analysis looks at a user-defined focal point giving a much more local and on-demand view of the information. These methods are better suited for drilldown techniques such as when one has identfied an area of interest or in optimization settings.
+
+In terms of structured sensitivity, there has been past work, but these rely on 1 or 2D axis-aligned cuts of the data. The exception being the use of the Morse-Smale complex by Sam Gerber et al. which is where we want to focus our attention.
+
+Here, I am highlighting the 2011 work that developed this software called HDViz. I utilized this technique in some of my earlier analysis with nuclear engineers, however after several iterations the nuclear engineers still relied heavily on expert users of the system, and so the idea of this work was to develop something intuitive and usable by the domain scientists directly.
+
 Slide 29
+
+I then started working at INL and performed an informal design study with a team of nuclear engineers focusing on the problem space they were interested in explicitly and how we could design visual metaphors that optimized their time using the software. The result of that design study is shown on this slide, namely a MCV piece of software explicitly for sensitivity analysis and parameter screening tasks.
+
 Slide 30
+
+So, the engineers used this tool to analyze the nuclear fuel data from before, and within 10 minutes, they were able to select an appropriate partition level and identified an anomaly in the data with respect to their expectation. The sign of one of the parameters was actually inverse of what they had expected, and so, we looked more closely at one of the simulations and noted that there was an error in the input deck that we were perturbing in order to generate this dataset.
+
+It is important to note that in this process we cycled through an entire iteration of the pipeline introduced at the outset where we were able to identify an error and correct the model.
+
+This work was presented at PacificVis 2016.
+
 Slide 31
+
+When evaluating this data, it is important to not that we are using an approximation of the Morse-Smale complex dependent on the amount of data we have. That is, we approximate gradient flow based on a neighborhood graph imposed on the data.
+
 Slide 32
+
+This can lead to one of two problems in the approximation. The first is the result of having too few edges in the data. In the extreme case, this will create islands of data that are disjoint and unable to be analyzed, however the more common case results in spurious extrema as shown here.
+
+In many cases, we can alleviate this problem with persistence simplification, but only if the feature scale is small.
+
 Slide 33
+
+The other case results from an overconnected graph which completely misses the existence of extrema by edges that basically "skip over" saddle locations.
+
 Slide 34
+
+In two different real world datasets, one of which we have seen already, the domain scientists discovered partitions they did not expect, and upon closer inspection appeared to be the result of poor sampling density in the regions of interest.
+
+In this way, persistence simplification alone is unable to remove such features from the data.
+
+We have seen this in several synthetic cases we designed, but also these real-world applications have been highlighted in a few different published works.
+
 Slide 35
+
+The goal then here with the final chapter of this talk is to discuss ways we can improve our approximation quality, so to put it in terms of our pipeline we are going to be following this arrow here back to the modeling phase.
+
 Slide 36
+
+Here I want to talk about two ways in which we can improve the topological information by constructing a better "structural model" on the data. In the first way, we just want to consider more graphs and if there are other graphs or ways to tune the parameters of a graph to better fit a dataset. In the second way, we are going to greatly improve the efficiency of how these graphs are constructed. This is going to allow us to operate not only on much larger datasets, but we can also start to think about creating ensembles of topologies to come up with a more uncertain-aware topology where specific regions of the domain may be less certain about where they will eventually end up. Now mind you, this notion of uncertainty-aware topology is in its nascent phase, but I am currently working with Tushar Athawale and Bei on a project that is looking at this for two-dimensional cases, and I think doing something with multidimensional data could be a big future work that utilizes this framework I am going to talk about today.
+
+I have a few different papers from my time working at INL on using different models for various plant safety simulations, but again today I want to focus on this more recent work I have been a part of dealing with graphs imposed on our point cloud data, what I am referring to as "structural modeling."
+
 Slide 37
+
+We start this work with asking the question, what kinds of graphs are currently out there? The simplest graph we can use is known as the k-nearest neighbor graph.
+
 Slide 38
 Slide 39
 Slide 40
@@ -131,4 +247,3 @@ Slide 57
 Slide 58
 Slide 59
 Slide 60
-Slide 61
