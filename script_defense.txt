@@ -222,28 +222,154 @@ I have a few different papers from my time working at INL on using different mod
 
 Slide 37
 
-We start this work with asking the question, what kinds of graphs are currently out there? The simplest graph we can use is known as the k-nearest neighbor graph.
+We start this work with asking the question, what kinds of graphs are currently out there?
+
+When this algorithm was first introduced we used the undirected kNN graph. In this case, I have set k=4, and what we then will do is connect each point to its 4 nearest neighbors in terms of Euclidean distance. Note, that some  points have more than 4 edges, this is because we construct an undirected kNN  graph, so even though b is not one of the 4 nearest neighbors of a because a is one of the 4 nearest neighbors of b, the edge exists. In practice, setting this k parameter can be difficult because depending on the density of your samples  and the dimensionality in which your samples exist, you will want to use more or fewer neighbors.
 
 Slide 38
+
+Next, we consider a a class of neighborhood graphs known as beta skeletons which are part of a larger class of graphs called empty region graphs. These graphs and their relaxed versions were highlighted by a 2011 paper by Peter Lindstrom and Carlos Correa, and we have been using them ever since. The basic premise is that each edge between two points a and b is enveloped in a fixed region of empty space where no other neighbors of a or b intersect. The empty region for a beta skeleton is defined by the intersection of all balls each with a diameter set according to the beta parameter as shown here.
+
 Slide 39
+
+We can see, as we grow the beta parameter, we increase the size of the empty region. The special case of beta = 1, is known as the Gabriel graph and we can see that it's empty region is just the circumcircle of the edge.
+
 Slide 40
+
+We can continue to grow the empty region until we arrive at the case where beta = 2 which gives us another special graph called the
+relative neighbor graph. The take away here is that increasing beta, decreases the number of edges in our graph. In their work, Peter and Carlos noted that we can relax this strict definition and they claim without drastically changing the underlying graph.
+
 Slide 41
+
+This relaxation to the empty region property is that we apply it to only points that are neighbors to both p and q. Take the example shown here. We want to attempt to connect the a and b, but the point c lies within the empty region of edge ab. However, c is not a neighbor of a, so we can still add this edge based on our relaxed condition.
+
 Slide 42
+
+So, this was the state of the art when I started working on this problem. This led me to a few different questions, one is can we more generically describe these empty regions, and two are there other representations in the literature that do something similar. That is, if we examine why the beta skeleton works well, we note that it is able to more evenly sample the space of directions surrounding a point. Now, mind you this is operating under that our input space is dense in the sense that the "manifold" is the entire space, but I can elaborate more on that if you want later.
+
+So, after poking around, I stumbled on these graphs known as cone-based spanners, where the idea is to break up the directions surrounding a query point into equal-sized cones and connect the point to a neighbor in each cone. There are two versions that are only slight modifications of one another, the first is the m-Yao graph. Here m is a free parameter stating how many points we will draw from each cone. The Yao graph is going to simply add an edge to the m closest points in each cone.
+
 Slide 43
+
+The m-Theta graph rather than taking the closest distance, will project the points onto the axis of the cone and take the closest projected distance. Note, how this changes this example here.
+
 Slide 44
+
+As I mentioned before, my goal is to create a unified framework to compute any one of these graphs and in order to do that we make a few observations:
+
+1 - These can all be approximated with a sufficiently large kNN graph. This optimization is already employed for the empty region graphs by Carlos and Peter's implementation.
+2 - We can process all the neighbors of a given point in isolation, making an embarrassingly parallel problem where we can utilize the GPU for.
+
 Slide 45
+
+So, to put this in a generic algorithm, we get something like this, where we will iterate over each point in our point set, and compute its k neighbors and prune them depending on the neighborhoods of p and possibly q.
+
+In this way, we can parallelize this outer loop by giving each GPU thread a query point and all of its neighbors to prune.
+
+There are a few caveats here:
+
+1 - We need the full point set and need to compute a knn search index on this entire dataset. This is not a big problem as this is a well-studied problem and we can use off-the-shelf libraries to do this efficiently. The point here is that we are not creating a streaming algorithm with respect to the points, but we can stream our output graphs by generating legit edges and consuming them immediately. This is useful when working with very large datasets where the full graph may be several GBs or start to push the TB scale.
+
+2 - The full knng being a supergraph won't fit entirely on the GPU, so we need to be able to chunk the problem. This is easy enough for the cone graphs and relaxed beta skeletons since they only need the neighbors of our query point, but if we perform a worst case analysis for this chunk size on the strict beta skeleton, we are going to find a drastically reduced amount of parallelism. So, this deepens the existing gap between the performance of the relaxed versus the strict beta skeleton.
+
 Slide 46
+
+So, there are two major contributions I want to get at here besides the fact that I was able to put this all on the GPU.
+First, is the fact that we can generalize the shapes used by the beta skeletons. This is what I am calling beta-p skeletons because we are going to use different p-norms to change the shape of these empty regions.
+
+Let me start by discussing the mathematical formulation I came up with for efficiently doing these tests. The idea is we want to parameterize this problem and basically turn it into a one-dimensional problem. To do that, we define two vectors, one for the edge, and one for the query point.
+
 Slide 47
+
+Note, that in the limit, our shape can be the infinite slab perpendicular bounded by two hyperplanes incident on each of the endpoints and perpendicular to the edge.
+
+If we project our query point onto the edge with a dot product, we get this parameterization, t. If t is outside of the range 0-1 then we don't have to consider this point.
+
 Slide 48
+
+So, with this parameterization, we can develop a function, m, that tells us the minimum allowable distance at this point on the edge. Note, here the symmetry allows us to consider this reflective about the midpoint of the edge.
+
+Then, we can determine the Euclidean distance from R to the edge and compare that with our value for m(t). If it is less than m(t), R lies inside the empty region and thus invalidates the edge.
+
 Slide 49
+
+The cool thing here is that since we abstracted this function, m, we can actually use any shape we want. For the traditional beta skeletons, we end up with these lune shapes whose size is determined by beta that defines the distance of the balls from the midpoint of the edge, but we can also vary the Lp norm used to generate diamond graphs, concave shapes, and a box graph. This allows us to explore a richer set of graphs to understand if there are potentially better graphs than we have considered in the past.
+
 Slide 50
+
+Furthermore, because m(t) is abstracted away, we can precompute it and scale it to the particular edge at runtime, and thus use any arbitrarily complicated function can be used here.
+
 Slide 51
+
+To test this, I ran a bunch of common kernel functions used in kernel density estimation problems to show that each example yields a slightly different results with different results. You can see here that certain graphs are overconnecting the domain and others are underconnecting leaving large "holes." Still some do a better job striking a balance with relatively few "large" holes and no crossing edges.
+
 Slide 52
+
+Okay, with that I want to change gears a bit and talk about how we can estimate these cone graphs in multidimensional spaces. The first thing to note is that we don't need to explicitly encode the cones, we only need their axes because we can perform dot products with each of the axes to determine which cone a particular point belongs to.
+
+So, then we have this problem of generating equally-spaced direction vectors emanating from a query location. For that, I want to take a brief detour to talk about this notion of blue noise sampling where the goal is to minimize the presence of either sparse or dense regions that we don't necessarily get with a random sampling. Poisson disk sampling is one of the major ideas existing in this realm, but it has only been recently scaled up to higher than two or three dimensions reliably and furthermore, what we want specifically is to constrain our samples to the surface of a hypersphere.
+
+It turns out there was some work out of Florida State that can do this using what is known as a Centroidal Voronoi Tessellation. Quickly, a Voronoi tessellation is defined for a set of points called sites, such that every location is associated with its nearest "site." Furthermore, a Centoridal Voronoi tessellation is a Voronoi tessellation where the sites are coincident with the centroids of the regions they define.
+
 Slide 53
+
+An example is shown here, but to get more specific we want a constrained CVT that is restricted to the surface of a hypersphere. It turns out, Geoffrey Womeldorff was able to do this, and we use his algorithm. Let me demonstrate, the idea is that we randomly generate points on the surface of a hypersphere. We perform the typically Lloyd's relaxation that will iteratively move the sites toward their centroid's until they converge. This will naturally pull the points towards the interior of the sphere.
+
 Slide 54
+
+Then once, we are converge, we can project these points back outward to the surface and they represent roughly equally-spaced vectors.
+
 Slide 55
+
+Since this is a few levels of approximation, as a verification, I ran some tests on this using the dimensionality and range of cones we want to consider and we were able to show that with increasing dimensionality, we don't see an upward trend in deviation from the equal-spaced case, but we do see more degradation as we ask for more cones. At least from the example, shown here though, this is well within our tolerance. An interesting note here is that we could formulate ensemble graphs by simply generating more of these initial CCVT sample sets.
+
 Slide 56
+
+So, we did a bunch of evaluations of these graphs and in the interest of time I want to focus on just one example and also talk briefly about the performance improvements we realize with this new implementation.
+
 Slide 57
+
+So, this slide summmarizes the performance improvements we see by switching to a GPU-based implementation. The baseline algorithm is shown in blue, and then the algorithm I described is shown in orange, and finally we can see a modest improvement from using the discretized optimization I pointed out. Each example is pruning the Gabriel graph from the same supergraph in varying dimensions. Here we are increasing k with dimensionality, so we see some effects of that as well. The graph from left to right show increasing sized problems, and the rows represent the strict and relaxed cases, respectively.
+
 Slide 58
+
+So, to bring it all together, we looked at how these different graphs can be used to influence the topology extracted on some known, well-described functions. So, I haven't spent a lot of time talking about persistence since we first introduced it, but I want to talk about it now.
+
+In the absence of any domain-specific knowledge to help guide us, typically, the way we select the "correct" persistence level for analysis is by looking at a plot like the two shown here. The idea is that we want to find a stable persistence range where the count of extrema is not varying wildly.
+
+To do that, we try to find a wide horizontal bar and set the persistence based on that. So, for the first case, it may be this line here, but for the second case, it may be something further in. So, what if I told you that this was two different sample sets or graphs built on the same function and that the "correct" level was given by this blue box. I would hope that you would agree with me that the blue example in this case would be the "better" example since it allows us to more intuitively select the "correct" level.
+
+That is what I want to showcase in the results on the next slide.
+
 Slide 59
+
+So, here is our well-defined function where we can come up with ground-truth labels quite easily by slicing the domain with these hyperplanes that are perpendicular to the main diagonal. By the way, this example is a four dimensional input case.
+
+Mind you, what we have done is run several cases of different parameters for each graph and selected the optimal-performing graph for each family and show the results for just that graph here.
+
+There are two plots we are showing here, the first is what is known as the Normalized variation of information. Note, here that lower values are more in agreement with the ground truth. This is mostly done as a sanity check to ensure that our stable convergence is not to the wrong segmentation, which in the case of the theta graph could be the case.
+
+The more interesting graph here is the bottom graph where I am showing that as we increase the size of our sample set, what is the stability or width of the "correct" bar from the previous slide.
+
+The point I want to make here is that in many of the tests we performed, the Yao graph was either as good as or sometimes better than the strict Gabriel graph, and in many cases the strict graph is much better than the relaxed version.
+
+This is important because the last plot on performance should indicate to you that the strict beta skeletons are much slower to compute, and so if we can use the Yao graph to get similar fidelity while maintaining the speed of the relaxed beta skeleton, we may want to consider the Yao as a good alternative in practice. The one caveat is that it can sometimes be harder to tune the Yao graph parameters when compared to the beta skeletons when working in arbitrary dimensional spaces.
+
 Slide 60
+
+Alright, so in summary, we walked through using topology to enhance the adaptive sampling pipeline, shown by the purple arrows here.
+
+Then, we discussed this structured sensitivity analysis case and explored errors occurring in the extracted topology. This led us on this inner cycle with the modeling phase, and also several of the publications I listed at the outset were concerned with driving from analysis to decisions.
+
+And lastly, we took the errors we learned from various analyses to augment and improve our structural model to create better, more accurate topological representations.
+
+If I were to summarize the contributions into a condensed bullet-list, it would be something like this:
+
+- I performed several repeatable and well-formulated studies for evaluating adaptive sampling methods where we looked at combinations of various scoring functions with various regression models.
+- I developed this framework for performing structured sensitivity analysis which is still in the RAVEN tool and can be used by nuclear engineers.
+- I highlighted problems that can arise with the approximation we are using for multidimensional topological extraction.
+- I proposed a solution by extending the types of graphs we can use in practice.
+- I made all of those graphs performant.
+- Lastly, I gave a few different case studies that can be examples for future users to evaluate the efficacy of these and other graphs for their data. I believe that these cases highlight some best practices and some more things for future researchers to think about before blindly applying a particular graph to a new problem.
+
+With that I want to conclude and thank you all for your time today.
