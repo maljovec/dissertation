@@ -1,0 +1,134 @@
+Slide 1
+
+Thank you all for coming to my defense today which is on the topic of topological models for safety analysis. Largely, I am going to be talking about exploratory data analysis for multidimensional scalar function data.
+
+Slide 2
+
+We are operating under the assumption that we have some multidimensional input space where we may or may not have control over the parameters and a functional relationship with one or more target outputs, and we want to understand the relationships well enough to inform some decision process.
+
+For example, a lot of my work has dealt with working with nuclear engineers who study the safety and proliferation of our now aging nuclear infrastructure. They often run safety simulations to understand when and how our nuclear power plants are at risk and how they can be made safer. These are often multi-million dollar decisions and should not be made lightly.
+
+This is where I come in: the work I have been a part of is this exploratory data analysis pipeline which I am describing on this slide as occuring in three phases.
+
+In the first phase, we generate the data, and this can be done in several different ways. It could be anything from space-filling designs to the extreme case where we may just be able to collect data from fixed sensors or something where the data is determined by physical constraints. In particular, I want to spend some time today talking about some work I did early on in my tenure dealing with adaptive sampling, this work has been summarized in two different publications.
+
+Next, once we have collected data, we have the option of building a model on that data. Here, we are talking about regressors or classifiers depending on the type of data represented by the output. For this portion of the talk, I want to focus on this notion of structural modeling where we impose a geometric structure on our data.
+
+Lastly, and arguably the most important phase is the analysis we perform on the data and/or model. Here, we could be looking at summary statistics, correlations and sensitivities between inputs and outputs, and various visualizations to support these and other tasks.
+
+Slide 3
+
+What I want to run through with you are a few different pipelines that interconnect these three phases. Notably, we must always start with some form of sampling to generate data, and it may be that analyzing or generating a picture of that data is enough to drive the decision we are tasked with making. Alternatively, we may choose to build a model off of that data that could be used to perform simpler computations in practice, or maybe we want to analyze the efficacy of our model. This type of analysis could leave us to either determine that we need more data or that our assumptions were not correct and we need a more flexible or rigid model. And so, you can see we have built up quite a complicated system now.
+
+The main theme from today's talk is that I want to employ topology to help solve each phase of this problem.
+
+Slide 4
+
+Specifically, I want to discuss how we have employed topology to inform adaptive sampling pipelines. To give you a sense of my contributions, I am just showing publications that I have led or been a part of for each of these phases.
+
+Slide 5
+
+Then, I want to discuss how we have improved analysis in the context of several nuclear probabilistic risk assessments, and highlight some problems that can occur in the approximation scheme we are using.
+
+Slide 6
+
+And I want to finish my talk discussing how we can potentially improve the approximation by considering alternative structural models for use in the topological decomposition which I will introduce shortly.
+
+Slide 7
+
+Lastly, for good measure, here are a bunch of application-specific works I have been a part of where we focused less on novel techniques, but instead utilized best practices in analysis and visualization to publish a bunch of papers I am calling part of the "decision" phase, since here the main stories were typically how the nuclear engineers were able to use the analysis.
+
+Slide 8
+
+All told, while studying at the University of Utah, I have been a part of 17 peer-reviewed publications, 7 of which I am first author, an additional tech report and 3 more pending submissions.
+
+I have been fortunate enough to work at three different national labs and contribute to separate lab-sponsored open source projects at each of them. From these experiences, I was inspired to branch out and author four of my own open source software projects which are all related to different aspects of the exploratory data analysis pipeline I am discussing today.
+
+Slide 9
+
+So, with that intro out of the way, let me get back to this notion of topology underpinning this whole thing.
+
+In order to adapt methods from topology, we make a few assumptions on our data space namely: we consider the arbitray dimensional input space as a manifold, and the target outputs as smooth functions on that manifold space meaning anywhere on the manifold we can evaluate a target response value.
+
+Specifically, we are going to consider a branch of differential topology called Morse theory to augment each of these three components: exploration, analysis, and synthesis.
+
+Slide 10
+To clarify, I want to define a few terms from the previous slide. A manifold is a space that locally resembles a Euclidean space of that dimensionality everywhere it is defined.
+
+In addition, the target responses we are evaluating will be treated as smooth functions defined over the manifolds. This means at any location in the input manifold, the target and its derivative are continuously defined.
+
+Slide 11
+
+From Morse theory, there are two major branches. In the first branch, we look at the evolution of levelsets or sub/super levelsets over the range of function values the manifold attains.
+
+We see the vertical position of each node in the tree in this top example represents the isovalue at which that event occurs. So, if we choose an isovalue and cut the tree, we note that each intersection with the dashed line represents a seaparate component of the levelset.
+
+The more relevant type of topology for today comes from consideration of the Morse and Morse-Smale complex shown on the bottom image. Here, we are concerned with uniform gradient behavior and the locations of critical points. So, the Morse-Smale complex is this complex that partitions the data into patches of monotonic gradient behavior where every partition is associated with the same local maximum and minimum.
+
+In the lower example, we are showing a Morse-Smale complex which instead partitions the data based on gradient flow. In this example, every location is associated with the source and sink of the integral line that passes through it. So, if we consider the orange partition that is facing us, if we trace the gradient from any location upward we will end up at the blue maximum point occuring in the center of the image. Conversely, if we trace the negative gradient from any location on the orange patch, we will end up at the minimum occuring at the lower right of the image.
+
+Slide 12
+
+
+
+Slide 13
+Slide 14
+Slide 15
+Slide 16
+Slide 17
+
+Slide 18
+
+A nice feature of the Morse-Smale complex is that we can associate a notion of feature scale. That is we can simplify or smooth away smaller features while maintaining the larger ones to arrive at a less resolved partitioning. This is done through a process known as persistence simplification.
+
+Consider, this 1D function. Basically, we are going to pair neighboring critical points based on their smallest function value difference neighboring critical point (at the time of cancellation), and associate their function value difference as their combined persistence.
+
+In this case, we first pair and cancel the small peak/valley combination on the left of this function.
+
+Next, we pair the larger maximum and minimum together.
+
+Lastly, we pair the local minimum and maximum occuring at the boundaries of the data. Note, that the last pair are not adjacent in the function, but since we have cancelled all of the other critical points they are now considered adjacent.
+
+Slide 19
+Slide 20
+Slide 21
+Slide 22
+Slide 23
+Slide 24
+Slide 25
+Slide 26
+Slide 27
+Slide 28
+Slide 29
+Slide 30
+Slide 31
+Slide 32
+Slide 33
+Slide 34
+Slide 35
+Slide 36
+Slide 37
+Slide 38
+Slide 39
+Slide 40
+Slide 41
+Slide 42
+Slide 43
+Slide 44
+Slide 45
+Slide 46
+Slide 47
+Slide 48
+Slide 49
+Slide 50
+Slide 51
+Slide 52
+Slide 53
+Slide 54
+Slide 55
+Slide 56
+Slide 57
+Slide 58
+Slide 59
+Slide 60
+Slide 61
