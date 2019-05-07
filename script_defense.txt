@@ -50,7 +50,7 @@ So, with that intro out of the way, let me get back to this notion of topology u
 
 In order to adapt methods from topology, we make a few assumptions on our data space namely: we consider the arbitray dimensional input space as a manifold, and the target outputs as smooth functions on that manifold space meaning anywhere on the manifold we can evaluate a target response value.
 
-Specifically, we are going to consider a branch of differential topology called Morse theory to augment each of these three components: exploration, analysis, and synthesis.
+Specifically, we are going to consider a branch of differential topology called Morse theory to augment each of these three phases.
 
 Slide 10
 To clarify, I want to define a few terms from the previous slide. A manifold is a space that locally resembles a Euclidean space of that dimensionality everywhere it is defined.
