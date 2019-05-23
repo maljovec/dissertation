@@ -95,7 +95,7 @@ In the default setting, $p = 2$ and $q = 2$.
 
 \subsubsubsection{Active Learning MacKay (ALM)} The ALM criterion, described in~\cite{MacKay1992}, attempts to optimize the predictive variance.
 %
-The idea is that the variance represents a notion of uncertainty in the prediction, and new samples should be evaluated in the least well understand regions of the parameter space.
+The idea is that the variance represents a notion of uncertainty in the prediction, and new samples should be evaluated in the least well understood regions of the parameter space.
 %
 For the GPM, the variance can be computed directly from the model, which appears to be a significant advantage (see Section~\ref{sec:exp}).
 %
@@ -107,7 +107,7 @@ As discussed in Section~\ref{sec:sampling}, EI can be seen as a combination of t
 %
 Points are chosen that either show a large uncertainty in their current prediction or have a large discrepancy with the closest existing sample.
 %
-Our predication model uses $EI(\x) = (|\hat{y}(\x) - y(\x^*)|^2+ ALM(\x))^{1/2}$.
+Our predication model uses $EI(\x) = \left(\left(\hat{y}(\x) - y(\x^*)\right)^2+ ALM(\x)\right)^{1/2}$.
 
 \subsubsubsection{Distance Penalization (DP)} Each of the above three scoring functions can be augmented with a distance penalization factor, thereby creating three additional scoring functions: \emph{DeltaDP}, \emph{ALMDP} and \emph{EIDP}.
 %
@@ -216,9 +216,9 @@ The RMSE is computed using points evaluated on a grid.
 %
 For the two-dimensional case, the total number of points is 2601 evenly spaced at an interval of 0.02.
 %
-The three-dimensional case uses a total of 9261 points with a grid spacing of 0.05.
+The three-dimensional (3D) case uses a total of 9261 points with a grid spacing of 0.05.
 %
-The four-dimensional case uses a total of 14641 points with a spacing of 0.1, and the 5D case uses a total of 7776 validation points with a spacing of 0.2.
+The four-dimensional (4D) case uses a total of 14641 points with a spacing of 0.1, and the five-dimensional (5D) case uses a total of 7776 validation points with a spacing of 0.2.
 %
 All plots show the median RMSE of 10 trial runs.
 %
@@ -226,7 +226,7 @@ We use the median value since, as discussed below, several regression techniques
 %
 For a fixed prediction model, all trials start from the same LHS initial training sample $\Tcal$.
 %
-$|\Tcal| = 20, 30, 100,$ and $200$ in two, three, four, and five dimensions, respectively.
+$|\Tcal| = 20, 30, 100,$ and $200$ in $2-5$D, respectively.
 %
 Curves are colored by scoring function with the thicker black line indicating an LHS sample of the given size.
 %
@@ -235,7 +235,7 @@ During each step of the adaptive sampling, a point is chosen among all $|\Scal| 
 %
 We have opted to not show variances or percentiles alongside the medians because the resulting plots become too cluttered.
 %
-Nevertheless, as discussed below, even without an explicit representation several of the plots suggest drastic differences in the stability of the regression.
+Nevertheless, as discussed below, even without an explicit representation, several of the plots suggest drastic differences in the stability of the regression.
 
 
 \begin{figure}[!ht]
@@ -300,7 +300,7 @@ Furthermore, only the GPM model shows significant differences between scoring fu
 %
 For the GPM-based adaptive sampling, the one trend observed in most two-dimensional test functions is that the ALM criterion seems to outperform all others.
 %
-A possible explanation for this behavior is that the predicted variance on which the ALM criterion is based is an integral part of the GPM model itself, which makes the ALM criterion especially well suited for a GPM model and could explain the consistently better performance.
+A possible explanation for this behavior is that the predicted variance, on which the ALM criterion is based, is an integral part of the GPM model itself, which makes the ALM criterion especially well suited for a GPM model and could explain the consistently better performance.
 
 Nevertheless, the performance of the scoring functions even for the well-behaved GPM regression is far from consistent across test functions as seen in Figure~~\ref{fig:2D_gpm_results}.
 %
@@ -551,7 +551,7 @@ $\{\vec{\theta}|\theta_i\in [-1,1]\}$.
 
 \subsubsubsection{Random Gaussian Mixture Model}
 
-Let $m$ be the number of extrema in the domain.
+Let $m$ be the number of extrema for the domain.
 Let $a_i$ be the amplitude of the $i^{th}$ extrema.
 Let $c_{i,j}$ be the $j^{th}$ coordinate of the $i^{th}$ extrema.
 Let $\sigma_{i,j}$ be the standard deviation of the $i^{th}$ extrema with respect to the  $j^{th}$ coordinate.
@@ -587,7 +587,7 @@ $k_{ij} = (100(\theta_i^2-\theta_j)^2 + (1-\theta_j)^2)$.
 
 Now we give details on packages and parameter settings used in our experiments.
 
-The GPM model we use is the \texttt{sparse online Gaussian process} (SOGP) C++ library \cite{gpm}, which is based on work in \cite{Csato2002,CsatoOpper2002}.
+The GPM model that we use is the \texttt{sparse online Gaussian process} (SOGP) C++ library~\cite{gpm}, which is based on work in \cite{Csato2002,CsatoOpper2002}.
 %
 The default parameters are employed; see~\cite{CsatoOpper2002} for details.
 %
@@ -649,7 +649,7 @@ In this second context, we are less concerned with the fit of our surrogate over
 \subsection{Batch Selection for Active Learning: General Pipeline}
 The general pipeline of batch selection begins with a given set of training data with true response values.
 %
-First, a surrogate model is fit to the training data.
+First, a surrogate model is fitted to the training data.
 %
 Second, a pool of candidate points is chosen in the domain based on a given sampling technique, typically a space-filling design that will not bias any particular area of the input domain.
 %
@@ -917,7 +917,7 @@ d(x,y),\sup_{y \in Y} \inf_{x \in X} d(x,y)\right).
 
 In addition, we treat our model as a binary classifier with the limit surface being the boundary and compute the \emph{$F_1$-score}.
 %
-Given a ground-truth validation grid, we can evaluate the \emph{precision}, $p$, and \emph{recall}, $r$, of the classification and compute the harmonic mean of these two values to get the $F_1$-score.
+Given a ground-truth validation grid, we can evaluate \emph{precision} $p$ and \emph{recall} $r$ of the classification and compute the harmonic mean of these two values to get the $F_1$-score.
 %
 The relevant equations are listed below, where $t_+$ means the count of `true positives' or correctly identified labels above the limit surface, $f_+$ means the count of `false positives' or incorrectly identified labels above the limit surface, and $f_-$ means the count of `false negatives' or incorrectly identified labels below the limit surface.
 
@@ -1336,7 +1336,7 @@ For safety analysis applications, the following points often emerge: (1) many re
 
 Currently, the class of most used sampling algorithms includes classic stochastic sampling (e.g., Monte-Carlo \cite{Hastings1970,Liu2001}, stratified sampling such as Latin hypercube sampling \cite{HeltonDavis2003}, importance sampling~\cite{Geweke1989}, and orthogonal-arrays-based~\cite{Owen1992} algorithms) and deterministic algorithms (e.g., polynomial chaos expansions~\cite{Najm2009} and quasi-Monte Carlo~\cite{Caflisch1998}).
 %
-However, none of these sampling algorithms explicitly take into account the results of previous simulations.
+However, none of these sampling algorithms explicitly takes into account the results of previous simulations.
 %
 Adaptive sampling algorithms, on the other hand, adopt a strategy that chooses the next sample based on the results obtained by previous samples through a statistical learning model and, thus, focus sampling in yet unexplored risk sensitive regions such as boundaries between system safe and system failure: the limit surface.
 
@@ -1384,7 +1384,7 @@ Third, a pool of candidate points is chosen in the parameter space based on a fi
 %
 Fourth, each candidate point is assigned a score based on some adaptive sampling scoring function (usually derived from qualitative or quantitative relations between the training points, their true and estimated response values).
 %
-Finally, the candidate(s) with the highest score(s) are selected and added to the set of training data to begin a new cycle.
+Finally, the candidate(s) with the highest score(s) is selected and added to the set of training data to begin a new cycle.
 
 % PM
 Before describing each of the three models in detail, we focus on their common ingredients.
@@ -1431,6 +1431,8 @@ In other words, an edge is spanning if its endpoints have function values on opp
 A Morse-Smale crystal is a \emph{spanning crystal} (i.e., spanning the limit surface) if its local maximum has a function value above $t$ and its local minimum has a function value below $t$.
 %
 A Morse-Smale crystal is a \emph{relaxed spanning crystal} if its local maxima has a function value above $t-\delta$ and its local minimum has a function value below $t+\delta$, for some limit surface tolerance parameter $\delta \geq 0$.
+%
+When $\delta = 0$, the relaxed spanning crystal is equivalent to the spanning crystal.
 %
 In a nutshell, relaxed spanning crystals allow us to investigate regions from the response surface of a prediction model that are on or near the current estimate of the limit surface, and thus are important for exploratory analysis.
 %
@@ -1543,7 +1545,7 @@ For the initial training points, we use the same $10$ points for $\SA$ and $\SB$
 We add an additional $100$ adaptively sampled points (one at a time) to the training points through our experiments.
 %
 To recover points that lie on the true limit surface, we generate 10K CVT samples from the ground-truth model (either in closed form for the synthetic datasets or in terms of black-box simulation for the nuclear dataset), impose a relaxed Gabriel graph on these samples, and linearly interpolate the spanning edges at the given threshold value.
-%
+
 Similar operations are performed to recover points that lie on the estimated limit surface for models $\Mone$ and $\Mtwo$.
 %
 Since $\Mthree$ does not rely on a prediction model and therefore affords no CVT sampling of the domain, the candidate points that lie on the estimated limit surface are obtained by linearly interpolating the spanning edges of the relaxed Gabriel graph constructed on the current training points.
@@ -1695,7 +1697,7 @@ A typical scenario is as follows (see Figure~\ref{fig:nuclearTransient}):
   \item External events force the reactor trip at time $0$;
   \item Offsite power is no longer available at $T_{PG\_SD}$ (LOOP condition);
   \item Diesel generators fail to start (station blackout condition) and batteries provide energy only for instrumentation;
-  \item The temperature of the core starts to rise since heat removal is incapacitated. A failure condition is reached when temperature reach 800C;
+  \item The temperature of the core starts to rise since heat removal is incapacitated. A failure condition is reached when the temperature reaches 800$^{\circ}$C;
   \item Diesel generators become available $T_{DG}$ after the LOOP condition, and the ECCS is now able to remove decay heat.
 \end{itemize}
 
@@ -1730,11 +1732,11 @@ The catch here is that if we do not know what regions are interesting, it might 
 
 To further illustrate the bias the GPM in $\Mone$ and $\Mtwo$ imposes on the data, we illustrate the evolution of the estimated response surfaces as well as estimated limit surfaces for all three models in Figure~\ref{fig:nuclear-F-surface-converge}.
 %
-We see that the assumption of a Gaussian prior leads to less desirable limit surface estimates in Figure~\ref{fig:nuclear-F}(f) and (g) and also in Figure~\ref{fig:nuclear-F-surface-converge}, where the absence of data causes the function fall off rather than maintaining the trend as one might expect to see if the assumption was a linear prior.
+We see that the assumption of a Gaussian prior leads to less desirable limit surface estimates in Figure~\ref{fig:nuclear-F}(f) and (g) and also in Figure~\ref{fig:nuclear-F-surface-converge}, where the absence of data causes the function to fall off rather than maintain the trend as one might expect to see if the assumption were a linear prior.
 %
 The surfaces of Figure~\ref{fig:nuclear-F-surface-converge} are rendered after every 10 adaptively sampled points are added to the training data up to 90 points.
 %
-It is again evident that $\Mone$ and $\Mtwo$ based upon the GPM introduce a bias toward response surface fitting that more adaptively sampled points do not improve the fit drastically after 50 points or so.
+It is again evident that $\Mone$ and $\Mtwo$ based upon the GPM introduce a bias toward response surface fitting and that more adaptively sampled points do not improve the fit drastically after 50 points or so.
 %
 On the other hand, since $\Mthree$ is not dependent on the prediction model, it converges to the true limit surface (through visual inspection) reasonably fast after only 30 adaptively sampled points.
 
@@ -1764,7 +1766,7 @@ The RMSE is computed using a dense sampling of points located on the true limit 
 
 $\Mtwo$ behaves comparably with $\Mone$ for general cases, e.g., for $\SA$, $\SB$, $\SC$, and $\SD$; and for $\SD$, $\Mtwo$ converges to the same level only faster than $\Mone$.
 %
-$\Mtwo$ appears to perform drastically better in certain situations, e.g., for $\SE$ and $\NF$.
+$\Mtwo$ appears to perform dramatically better in certain situations, e.g., for $\SE$ and $\NF$.
 %
 The improved performance is due to the topology-based model $\Mtwo$, with the tolerance parameter allowing exploration of potentially interesting regions of the domain that could contain failure regions.
 %

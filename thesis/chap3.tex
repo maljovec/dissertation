@@ -713,9 +713,9 @@ This equation is given in intercept form where $\beta_0$ represents the y-interc
 %
 When the data is appropriately centered to have a mean of zero, ($\mu_x,\mu_y = 0$), $\beta_0$ can be omitted.
 %
-For the remainder of this section, we will adopt the more flexible matrix notation where in intercept form, $\mathbf{X} = \begin{bmatrix}\mathbf{1} & \mathbf{x}_1 & \ldots & \mathbf{x}_d \end{bmatrix}$, such that the first column is a series of ones that will be multiplied by the y-intercept term, $\beta_0$, and the remaining columns are the input dimensions.
+For the remainder of this section, we will adopt the more flexible matrix notation where in intercept form, $\mathbf{X} = \begin{bmatrix}\mathbf{1} & \mathbf{x}_1 & \ldots & \mathbf{x}_d \end{bmatrix}$, such that the first column is a series of ones that will be multiplied by the y-intercept term $\beta_0$ and the remaining columns are the input dimensions.
 %
-In the centered case, this notation is consistent, because we can drop the initial column in $\mathbf{X}$ such that $\mathbf{X} = \begin{bmatrix}\mathbf{x}_1 & \ldots & \mathbf{x}_d\end{bmatrix}$ and remove $\beta_0$ from the linear coefficient vector, $\boldsymbol\beta$.
+In the centered case, this notation is consistent, because we can drop the initial column in $\mathbf{X}$ such that $\mathbf{X} = \begin{bmatrix}\mathbf{x}_1 & \ldots & \mathbf{x}_d\end{bmatrix}$ and remove $\beta_0$ from the linear coefficient vector $\boldsymbol\beta$.
 
 Given a set of observations $(\mathbf{X},\mathbf{y})$, the problem in matrix form is given below:
 %
@@ -777,7 +777,7 @@ Regularization is a generic concept that can be applied to any problem where the
 %
 Although regularization is not restricted to the linear regression problem, it expedites exposition to describe it in this context.
 %
-Regularization, in the regression setting posed, augments a minimization problem with a penalty function, $R$, that favors less complex models and a penalty term $\alpha$ that controls its influence on the solution.
+Regularization, in the regression setting posed, augments a minimization problem with penalty function $R$ that favors less complex models and penalty term $\alpha$ that controls its influence on the solution.
 %
 In the context of our linear regression problem, we would have a new minimization problem resembling the one given below:
 
@@ -1199,7 +1199,7 @@ The formal definition of the Reeb graph is given here:
 $\mathbb{M} \times \mathbb{R}$ defined by the equivalence relation
 $(\mathbf{x_i},f(\mathbf{x_i})) \sim (\mathbf{x_j},f(\mathbf{x_j}))$ iff
 $f(\mathbf{x_i}) = f(\mathbf{x_j})$ and $\mathbf{x_i}$,$\mathbf{x_j}$ are part
-of the same connected component of $f^{-1}(f(x_i))$, where $f : \mathbb{M} \rightarrow \mathbb{R}$ is a scalar function defined on a compact manifold, $\mathbb{M}$.
+of the same connected component of $f^{-1}(f(x_i))$, where $f : \mathbb{M} \rightarrow \mathbb{R}$ is a scalar function defined on a compact manifold $\mathbb{M}$.
 \end{defn}
 
 Informally, the Reeb graph is the result of contracting each connected component of a levelset to a point and connecting corresponding points between levelsets via edges.

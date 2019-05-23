@@ -12,7 +12,7 @@ It is therefore natural to try to improve this process by increasing the underst
 
 Given the large span of phenomena impacting fuel performance, engineers are tasked with finding the optimal design in a multidimensional simulation space where the system behavior is potentially nonlinear.
 %
-Sensitivity analysis via regression has historically been used to guide engineers in the optimization process and in identifying the leading phenomena.
+Sensitivity analysis via regression has historically been used to guide engineers in the optimization process and in identifying the dominant phenomena.
 %
 However, using a simple linear regression model in \emph{global} sensitivity analysis may fail to capture intrinsic local behaviors when the system is highly nonlinear.
 %
@@ -24,7 +24,7 @@ HDViz~\cite{GerberBremerPascucci2010} uses the same domain partitioning as MSR.
 %
 Our collaborating scientists have previous exposure to HDViz in risk assessment of nuclear datasets~\cite{MaljovecWangMandelli2013a,MaljovecWangPascucci2013}.
 %
-The scientists found merit in HDViz's ability to provide a meaningful partitioning amenable to sensitivity analysis (SA); however the system's complexity made it difficult to isolate the desired local SA information.
+The scientists found merit in HDViz's ability to provide a meaningful partitioning amenable to sensitivity analysis (SA); however the complexity of the visual interface made it difficult to isolate the desired local SA information.
 %
 Therefore, we seek to provide a more targeted representation of the data for performing SA.
 
@@ -61,7 +61,7 @@ We learn the targeted domain of study (in this case, SA for nuclear simulations)
 In this process, we study their \emph{existing work flow} and \emph{design requirements} to better enable knowledge discovery via analysis and visualization.
 
 \subsection{Existing Workflow}
-Before designing our visualization solution, we actively engage nuclear scientists to understand their domain problems and the existing workflow (i.e., their common practices) in SA.
+Before designing our visualization solution, we actively engaged nuclear scientists to understand their domain problems and the existing workflow (i.e., their common practices) in SA.
 %
 As a first approximation, the scientists typically perform a global SA via linear regression or correlation analysis.
 %
@@ -69,7 +69,7 @@ Point-wise SA is used to estimate gradient information at specific locations via
 %
 The scientists would also manually divide the data domain into subregions that exhibit changes in gradient behavior based on axis-aligned scatterplot projections; then global SA that combines resampling and ROM construction is applied to each manually extracted subregion.
 
-During the discover stage, we help the nuclear scientists formulate and examine their data analysis and visualization needs through an iterative process.
+During the discover stage, we helped the nuclear scientists formulate and examine their data analysis and visualization needs through an iterative process.
 %
 During this phase, we listen to their description of domain problems, characterize and abstract their problems into design requirements, and obtain feedback regarding abstractions for continuous refinement.
 %
@@ -104,7 +104,13 @@ Using HDViz as a starting point (see Figure~\ref{fig:hdviz}), we iteratively def
 \end{figure}
 
 \subsection{Design Requirement B: Intuitive Visualization\\of Data Hierarchy}
-Existing visualization using HDViz suffered from three drawbacks for this application: first, it has a very steep learning curve for data practitioners in general; second, it is particularly nonintuitive for nuclear scientists; and lastly, it has limited support for the SA pipeline.
+Existing visualization using HDViz suffered from three drawbacks for this application.
+%
+First, it has a very steep learning curve for data practitioners in general.
+%
+Second, it is particularly nonintuitive for nuclear scientists.
+%
+And lastly, it has limited support for the SA pipeline.
 %
 For example, when presented with the topological skeleton seen in Figure~\ref{fig:hdviz}, nuclear scientists questioned the meaning and utility of the oscillations produced by the inverse regression and the geometric interpretation of their two-dimensional projection.
 %
@@ -112,13 +118,13 @@ During our contextual inquiries~\cite{HoltzblattJones1993}, we noticed that the 
 %
 Further interactions revealed that the density and geometry information provided was considered ``distracting" and uninformative in their context. Instead, the scientists use the topological tube view to count the number of partitions and extrema at various scales.
 
-Selecting the ``appropriate" scale (i.e., persistence level) from the persistence chart remains an unintuitive process when the scientists are rarely aware of how many ``noisy" features exist in the data. We have expended effort designing various ways to convey such information to the users, as evidenced in Section~\ref{sec:saDesign}.
+Selecting the ``appropriate" scale (i.e., persistence level) from the persistence chart remains an unintuitive process when the scientists are rarely aware of how many ``noisy" features exist in the data. We have invested effort designing various ways to convey such information to the users, as evidenced in Section~\ref{sec:saDesign}.
 %
 Understanding how the scientists interact with the topological view has greatly influenced its design in our iterative process.
 %
 We understand that the scientists are primarily interested in a high-level picture of their data; therefore, we simplify our visualization to an abstract two-dimensional representation that enables easier selection and manipulation of partitions and supports well-integrated, interactive selection of scales.
 %
-Finally, the new visual representations should convey information about different scales within the data hierarchy, but also provide context about the
+Finally, the new visual representations should not only convey information about different scales within the data hierarchy, but also provide context about the
 partitions within a fixed scale.
 %
 The topology map described in Section~\ref{sec:saDesign} is designed to fulfill such requirements.
@@ -261,9 +267,9 @@ For datasets with topological complexity that is beyond moderate, we would emplo
 
 \subsection{Scatterplot Projection}
 \label{sec:scatterPlot}
-The scatterplot projection is a common tool familiar to nuclear scientists.
+Scatterplot projection is a common tool familiar to the nuclear scientists with whom we interacted.
 %
-It allows the user to select up to three dimensions to be mapped to spatial coordinates, and a potential fourth dimension to be mapped to color.
+It allows the user to select up to three dimensions to be mapped to spatial coordinates, and a potential fourth dimension to be mapped to a color space.
 %
 The dimensions of choice include the input parameters, the observed and predicted output parameters, and the residuals of the ROM.
 %
@@ -296,14 +302,14 @@ Based on this sorted order of dimensions as a heuristic, we build lower dimensio
 %
 We then iteratively add one dimension at a time and recompute an updated linear model.
 %
-For an $m$-dimensional dataset, we will end up with $m$ different linear fits and for each fit, we compute the coefficient of determination, $R^2$, given in Equation~\ref{eq:r_squared}:
+For an $m$-dimensional dataset, we will end up with $m$ different linear fits and for each fit, we compute the coefficient of determination $R^2$ given in Equation~\ref{eq:r_squared}:
 %
 \begin{equation}
     R^2 = 1 - \frac{\sum_{i=1}^n ( y_i - \hat{y}_i)^2}{\sum_{i=1}^n ( y_i - \bar{y})^2}
     \label{eq:r_squared}
 \end{equation}
 %
-where $n$ is the number of data points and for the $i$-th data point, $y_i$ is the observed response value, $\hat{y}_i = \mathbf{x_{i}}\boldsymbol\beta$ is the fitted response value, and $\bar{y} = \frac{1}{n}\sum_{i=1}^{n}y_i$ is the mean of the observed response values.
+where $n$ is the number of data points and, for the $i$-th data point, $y_i$ is the observed response value, $\hat{y}_i = \mathbf{x_{i}}\boldsymbol\beta$ is the fitted response value, and $\bar{y} = \frac{1}{n}\sum_{i=1}^{n}y_i$ is the mean of the observed response values.
 
 The use of vertical bar charts conveys the stepwise improvement of adding a dimension to the regression model.
 %
@@ -370,11 +376,11 @@ We track the midplane von Mises stress occurring on the three-dimensional claddi
 %
 High stress can cause the cladding to crack and allow radioactive gas to leak into the plant environment.
 %
-The simulation looks at a ramping of the linear power in the reactor from time $t=0$, up to $t=10000$ (seconds), whereupon the power level maintains a constant value for the remainder of the simulation.
+The simulation looks at a ramping of the linear power in the reactor from time $t=0$, up to $t=10,000$ (seconds), whereupon the power level maintains a constant value for the remainder of the simulation.
 %
-The linear power begins at $0$ W/m at $t=0$ and linearly climbs to a value of $25000$ W/m before leveling off.
+At $t=0$, The linear power begins at $0$ W/m and then linearly climbs to a value of $25,000$ W/m before leveling off.
 
-The goal is a better understanding of the physics happening at the \emph{contact point} that occurs when the fuel rodlet expands to the point of touching the cladding.
+The goal is to gain a better understanding of the physics happening at the \emph{contact point} that occurs when the fuel rodlet expands to the point of touching the cladding.
 %
 The stress on the cladding at $t=0$ is due to a compressive force from the water pressure outside the cladding.
 %
