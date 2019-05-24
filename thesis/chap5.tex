@@ -503,53 +503,22 @@ We use several testing functions with closed forms described below.
 %
 All functions can be generalized to higher dimensions, and their two-dimensional contour plots are shown in Figure~\ref{fig:original}.
 %
-Let $D$ be the dimension of the input vector $\vec{\theta}$.
-
-
-% \begin{table}[h!]
-%   \begin{center}
-%     \begin{tabular}{ | c | c | l | }
-%       \hline \\
-%       Name & Contour Plot & Equation \\
-%       \hline \\
-%       Ackley
-%       &
-%      \raisebox{-\totalheight}{\includegraphics[width=0.15\textwidth]{figs/Ackley.png}}
-%       &
-%       \(\displaystyle f(\vec{\theta}) = \sum_{i=1}^{D-1}\left(e^{-0.2}\sqrt{\theta_i^2+\theta_{i+1}^2} + 3(\cos(2\theta_i) + \sin(2\theta_{i+1}))\right), \) where $\{\vec{\theta}|\theta_i\in [-3,3]\}$. \\
-%       \hline \\
-%       Gaussian Mixture Model
-%       &
-%       \raisebox{-\totalheight}{\includegraphics[width=0.15\textwidth]{figs/GMM5_2D.png}}
-%       &
-%       Let $m$ be the number of extrema in the domain.
-%       Let $a_i$ be the amplitude of the $i^{th}$ extrema.
-%       Let $c_{i,j}$ be the $j^{th}$ coordinate of the $i^{th}$ extrema.
-%       Let $\sigma_{i,j}$ be the standard deviation of the $i^{th}$ extrema with respect to the  $j^{th}$ coordinate.
-%       \(
-%       f(\vec{\theta}) = \sum_{i=1}^{m}\left(a_i e^{-\left(\sum_{j=1}^{D}\frac{\left(\theta_{i,j}-c_{i,j}\right)^2}{2\sigma_{i,j}^2}\right)}\right)\)
-%       where $\{\vec{\theta}|\theta_i\in [0,1]\}$.
-%       \hline
-%       \end{tabular}
-%       \caption{Test functions used}
-%       \label{tbl:myLboro}
-%   \end{center}
-% \end{table}
+Let $D$ be the dimension of the input vector $\mathbf{\theta}$.
 
 \subsubsubsection{Ackley}
 $$
-f(\vec{\theta}) = \sum_{i=1}^{D-1}\left(e^{-0.2}\sqrt{\theta_i^2+\theta_{i+1}^2} + 3(\cos(2\theta_i) + \sin(2\theta_{i+1}))\right),
+f(\mathbf{\theta}) = \sum_{i=1}^{D-1}\left(e^{-0.2}\sqrt{\theta_i^2+\theta_{i+1}^2} + 3(\cos(2\theta_i) + \sin(2\theta_{i+1}))\right),
 $$
-where $\{\vec{\theta}|\theta_i\in [-3,3]\}$.
+where $\{\mathbf{\theta}|\theta_i\in [-3,3]\}$.
 
 \subsubsubsection{Diagonal}
 Let $m$ be the number of maxima along the main diagonal,
 \begin{eqnarray*}
-f(\vec{\theta}) = & \frac{1}{2}\sin\left(\pi\left(\frac{1}{2} + \left((m+1) \bmod{2}\right) + \frac{m\left(\sum_{i=1}^{D}\theta_i\right)}{D}\right)\right)
+f(\mathbf{\theta}) = & \frac{1}{2}\sin\left(\pi\left(\frac{1}{2} + \left((m+1) \bmod{2}\right) + \frac{m\left(\sum_{i=1}^{D}\theta_i\right)}{D}\right)\right)
  \times e^{\left(\left(\sum_{i=1}^{D}\theta_i^2 -\frac{\left(\sum_{i=1}^{D}\theta_i\right)^2}{D}\right)\left(\frac{\log(0.001)}{\sqrt{D}}\right)\right)},
 \end{eqnarray*}
 where
-$\{\vec{\theta}|\theta_i\in [-1,1]\}$.
+$\{\mathbf{\theta}|\theta_i\in [-1,1]\}$.
 
 \subsubsubsection{Random Gaussian Mixture Model}
 
@@ -558,30 +527,30 @@ Let $a_i$ be the amplitude of the $i^{th}$ extrema.
 Let $c_{i,j}$ be the $j^{th}$ coordinate of the $i^{th}$ extrema.
 Let $\sigma_{i,j}$ be the standard deviation of the $i^{th}$ extrema with respect to the  $j^{th}$ coordinate.
 $$
-f(\vec{\theta}) = \sum_{i=1}^{m}\left(a_i e^{-\left(\sum_{j=1}^{D}\frac{\left(\theta_{i,j}-c_{i,j}\right)^2}{2\sigma_{i,j}^2}\right)}\right)
+f(\mathbf{\theta}) = \sum_{i=1}^{m}\left(a_i e^{-\left(\sum_{j=1}^{D}\frac{\left(\theta_{i,j}-c_{i,j}\right)^2}{2\sigma_{i,j}^2}\right)}\right)
 $$
-where $\{\vec{\theta}|\theta_i\in [0,1]\}$.
+where $\{\mathbf{\theta}|\theta_i\in [0,1]\}$.
 
 
 \subsubsubsection{Mis-scaled Generalized Rastrigin}
 $$
-f(\vec{\theta}) = 10D + \sum_{i=1}^{D}\left((10^{\frac{i-1}{D-1}}\theta_i)^2 - 10\cos(2\pi(10^{\frac{i-1}{D-1}}\theta_i))\right)
+f(\mathbf{\theta}) = 10D + \sum_{i=1}^{D}\left((10^{\frac{i-1}{D-1}}\theta_i)^2 - 10\cos(2\pi(10^{\frac{i-1}{D-1}}\theta_i))\right)
 $$
 where
-$\{\vec{\theta}|\theta_i\in [-2,2]\}$.
+$\{\mathbf{\theta}|\theta_i\in [-2,2]\}$.
 
 
 \subsubsubsection{Salomon}
 $$
-f(\vec{\theta}) = -\cos\left(2\pi\sum_{i=1}^D\theta_i^2\right) + 0.1\sqrt{\sum_{i=1}^D\theta_i^2} + 1
+f(\mathbf{\theta}) = -\cos\left(2\pi\sum_{i=1}^D\theta_i^2\right) + 0.1\sqrt{\sum_{i=1}^D\theta_i^2} + 1
 $$
-where $\{\vec{\theta}|\theta_i\in [-1,1]\}$.
+where $\{\mathbf{\theta}|\theta_i\in [-1,1]\}$.
 
 \subsubsubsection{Whitley}
 $$
-f(\vec{\theta}) = \sum_{i=1}^{D}\sum_{j=1}^{D}\left(\frac{k_{ij}^2}{4000} - cos(k_{ij}) + 1\right)
+f(\mathbf{\theta}) = \sum_{i=1}^{D}\sum_{j=1}^{D}\left(\frac{k_{ij}^2}{4000} - cos(k_{ij}) + 1\right)
 $$
-where $\{\vec{\theta}|\theta_i\in [-1,2]\}$, and
+where $\{\mathbf{\theta}|\theta_i\in [-1,2]\}$, and
 $k_{ij} = (100(\theta_i^2-\theta_j)^2 + (1-\theta_j)^2)$.
 
 \subsection{Software Packages and Parameter Settings}
@@ -1648,8 +1617,8 @@ Therefore, each of the five center points defines a local minimum.
 However, due to the interactions between the different centers, this function produces geometrically different shapes than the ellipses, or combinations of ellipses, given by the Gaussian family of functions.
 %
 The function in closed form is expressed as
-$f(\vec{x}) = \bigl(\sum_i \langle\vec{x}-\vec{c_i},A_i(\vec{x}-\vec{c_i})
-\rangle^{p}\bigr)^{1/p}$, where $\vec{c_i}$ is the center point, $A_i$ is the covariance matrix, and the parameter $p$ allows tuning the smoothness of this approximation to a nondifferentiable distance field ($p = \infty$ gives a true distance field).
+$f(\mathbf{x}) = \bigl(\sum_i \langle\mathbf{x}-\mathbf{c_i},A_i(\mathbf{x}-\mathbf{c_i})
+\rangle^{p}\bigr)^{1/p}$, where $\mathbf{c_i}$ is the center point, $A_i$ is the covariance matrix, and the parameter $p$ allows tuning the smoothness of this approximation to a nondifferentiable distance field ($p = \infty$ gives a true distance field).
 %
 We set $p=2$ here.
 

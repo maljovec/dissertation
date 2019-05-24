@@ -965,27 +965,18 @@ In closed form, this function is expressed as,
 %
 where each $x_i$ is in the range $[-1,1]$, $d$ denotes dimension and $m$ is the number of maxima along the main diagonal.
 
-The \emph{Distance Field (DF)} class of functions first generates a user-specified number of uniform random centers, and the function value at any location is an $L_p$-norm over the vector of $m$ (anisotropic) distances to the centers.
+The \emph{Distance Field (DF)} function in closed form is expressed as $f(\mathbf{x}) = -\bigl(\sum_i \langle\mathbf{x}-\mathbf{c_i},A_i(\mathbf{x}-\mathbf{c_i})\rangle^{p/2}\bigr)^{1/p}$, where the parameter $p < 0$ allows tuning the smoothness of this approximation to a nondifferentiable distance field ($p = -\infty$ gives a true distance field).
 %
-To add variation in values around the centers, each center is assigned a random anisotropic covariance matrix.
-%
-We negate the function in order to produce local maxima at the center locations.
-%
-This technique of generating \emph{Distance Field (DF)} functions produces a local maxima at each center but makes it difficult to control the number of minima generated.
-%
-The \emph{Distance Field (DF)} function in closed form is expressed as $f(\vec{x}) = \bigl(\sum_i \langle\vec{x}-\vec{c_i},A_i(\vec{x}-\vec{c_i})\rangle^{p/2}\bigr)^{1/p}$, where the parameter $p < 0$ allows tuning the smoothness of this approximation to a nondifferentiable distance field ($p = -\infty$ gives a true distance field).
-%
-$A_i$ is a $d \times d$ randomly generated covariance matrix associated to the $i^{th}$ center, and $\vec{c_i}$ is the vector defining the location of the $i^{th}$ center.
+$A_i$ is a $d \times d$ randomly generated covariance matrix associated to the $i^{th}$ center, and $\mathbf{c_i}$ is the vector defining the location of the $i^{th}$ center.
 %
 The convenience of these functions is that the locations of the true maxima are known and can be added to our sample sets.
 %
 We can then measure an approximation's ability to correctly detect these features.
 %
-Figure \ref{fig:datasets} visually depicts two-dimensional versions of the test functions.
+Figure \ref{fig:datasets} visually depicts 2D versions of the test functions where we use two different values for the .
 %
 The blue regions denote regions of maxima whereas the orange/brown regions denote regions of minima.
-In addition, blue dots represent local maxima, white dots represent saddle points, red dots denote local minima, and the thick lines separate the cells
-of the Morse complex of the function, $f$.
+In addition, blue dots represent local maxima, white dots represent saddle points, red dots denote local minima, and the thick lines separate the cells of the Morse complex of the function, $f$.
 
 \begin{figure}[htbp]
     \includegraphics[width=0.32\textwidth]{figs/chap7/diag4.png}
