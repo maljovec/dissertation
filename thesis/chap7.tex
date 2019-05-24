@@ -37,11 +37,7 @@ Equation~\ref{eq:beta_radius} allows us to now define the region for the edge $a
     R_{\beta,p}(a,b) = \left(\bigcap_{c \in C} B_{r,p}(c)\right)
 \end{equation}
 %
-where $C$ is the set of points equidistant to both $a$ and $b$:
-%
-\begin{equation}
-    C = \{c \in \mathbb{R}^d: ||a -c||_2 = ||b - c||_2 = r\}
-\end{equation}
+where $C$ is the set of points equidistant to both $a$ and $b$ for the case where $\beta < 1$: $C = \{c \in \mathbb{R}^d: ||a -c||_2 = ||b - c||_2 = r\}$, and where $C = {(2-\beta)*\frac{a+b}{2} + (\beta-1)*a, (2-\beta)*\frac{a+b}{2} + (\beta-1)*b}$ for the case where $\beta \geq 1$.
 %
 Formally, we extend the existing empty region definition by considering various $p$ values in Equation~\ref{eq:ball}.
 %
