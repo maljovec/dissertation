@@ -121,7 +121,9 @@ Recall $d_\x = d(\x,\x^*)$ is the distance from $\x$ to the closest point in the
 %
 $\rho_\x = \rho_\x (d_\x, d_0)$, where $d_0$ is the range and $q_0$ is the quantile (by default, $d_0$ is the $q_0$ quantile of $D$).
 %
-If $d_\x>d_0$, set $\rho_\x = 1$, otherwise $\rho_\x = 1.5d_\x-0.5d_\x^3$, where the coefficients are taken from a spherical semivariogram.
+If $d_\x>d_0$, set $\rho_\x = 1$, otherwise $\rho_\x = 1.5d_\x-0.5d_\x^3$, where the coefficients are taken from the spherical semivariogram.
+%
+A semivariogram is a graph of the dependence of two observations as a function of the distance between them, and the spherical semivariogram is one example.
 %
 Similarly, we define $ALMDP(\x) = ALM(\x) * \rho_\x$, where we approach a more space-filling point selection; and $EIDP(\x) = EI(\x) * \rho_\x$.
 %
