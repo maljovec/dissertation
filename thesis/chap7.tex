@@ -26,7 +26,7 @@ Given two points $a$ and $b$, their $L^2$ distance $l_{ab}$, and a $\beta$ param
     \label{eq:beta_radius}
     r =
     \begin{cases}
-        \frac{l_{ab}}{2\beta}, & \text{if $0 < \beta < 1$}.\\
+        \frac{l_{ab}}{2\beta}, & \text{if $0 < \beta < 1$}\\
         \frac{l_{ab}\beta}{2}, & \text{otherwise}.
     \end{cases}
 \end{equation}
@@ -37,7 +37,15 @@ Equation~\ref{eq:beta_radius} allows us to now define the region for the edge $a
     R_{\beta,p}(a,b) = \left(\bigcap_{c \in C} B_{r,p}(c)\right)
 \end{equation}
 %
-where $C$ is the set of points equidistant to both $a$ and $b$ for the case where $\beta < 1$: $C = \{c \in \mathbb{R}^d: ||a -c||_2 = ||b - c||_2 = r\}$, and where $C = {(2-\beta)*\frac{a+b}{2} + (\beta-1)*a, (2-\beta)*\frac{a+b}{2} + (\beta-1)*b}$ for the case where $\beta \geq 1$.
+where $C$ is the set of centers defining the balls:
+%
+\begin{equation}
+C =
+\begin{cases}
+    \{c \in \mathbb{R}^d: ||a -c||_2 = ||b - c||_2 = r\}, & \text{if $0 < \beta < 1$}\\
+    {(2-\beta)*\frac{a+b}{2} + (\beta-1)*a, (2-\beta)*\frac{a+b}{2} + (\beta-1)*b}, & \text{otherwise}.
+\end{cases}
+\end{equation}
 %
 Formally, we extend the existing empty region definition by considering various $p$ values in Equation~\ref{eq:ball}.
 %
