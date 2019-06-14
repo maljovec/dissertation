@@ -11,25 +11,42 @@
 %%% The text of this file should be about 350 words or less.
 
 % Complete in less than 350 words.
+% Researchers on the forefront of many scientific fields rely on experimentation and simulation to better understand phenomena occurring in nature and society.
+% %
+% The goal of such research is typically to understand the effect of one or more stimuli on the condition under study.
+% %
+% The number of effective ``stimuli,'' or inputs, can vary from a single parameter to hundreds of parameters in modern-day experiments.
+% %
+% It is therefore important to identify the most crucial ones and to also understand the behavior of the input space in an efficient and reliable manner, because obtaining data under such circumstances can be expensive, dangerous, difficult, and/or time-consuming.
+% %
+% To this end, researchers have developed effective sampling strategies, uncertainty quantification techniques, regression models, and sensitivity analyses rooted in the foundations of  probability, statistics, and geometry.
+% %
+% All these methods are aimed at providing the most knowledge from the least amount of information under the given constraints.
+
+% In this work, we explore injecting foundations from the fields of topology and visualization into each of these processes to improve the scientist's intuition and understanding of the data being collected.
+% %
+% Specifically, this document focuses on methods that treat multidimensional, numeric data as a scalar function, that is a fixed, arbitrary number of inputs describing a single output value of interest.
+% %
+% The term multidimensional is used to convey input spaces of dimensionality larger than the two or three dimensions typically used in visualization.
+% %
+% In this way, we are able to synthesize ideas from computational geometry/topology, regression analysis, data mining, and visualization in order to facilitate low-level tasks such as identifying parameters or regions of interest within the input space, choosing informative samples, summarizing trends in the data, and validating models with ground-truth datasets.
+% %
+% The techniques provided are demonstrated on applications arising from the field of nuclear engineering.
+
 On the forefront of research in many scientific fields, experts rely on experimentation and simulation to better understand phenomena occurring in nature and society.
 %
 The goal of such studies is typically to understand the effect of one or more stimuli on the condition under study.
 %
-The number of effective ``stimuli,'' or inputs, can vary from a single parameter to hundreds of parameters in modern day experiments.
+The number of effective "stimuli," or inputs, can vary from a single parameter to hundreds of parameters in modern day experiments and often represent a superset of the minimal, necessary set of inputs needed to predict an outcome.
 %
 It is therefore important to identify the most crucial ones and to also understand the behavior of the input space in an efficient and reliable manner as obtaining data under such circumstances can be expensive, dangerous, difficult, and/or time-consuming.
 %
-To this end, researchers have developed effective sampling strategies, uncertainty quantification techniques, regression models, and sensitivity analyses rooted in foundations of the fields of probability, statistics, and geometry.
+In this work, we explore marrying existing methods for regression analysis and data mining based on probability, statistics, and geometry with a combination of a visualization and branch of topology known as Morse Theory.
 %
-All of these methods are aimed at providing the most knowledge from the least amount of information under the given constraints.
-
-In this work, we explore injecting foundations from the fields of topology and visualization into each of these processes to improve the scientist's intuition and understanding of the data being collected.
+Specifically, we focus on obtaining more informative data with fewer samples through topology-aware adaptive sampling in three different settings, and extracting the maximal amount of information from preliminary data through structured sensitivity analysis.
 %
-Specifically, this document focuses on methods that treat multidimensional, numeric data as a scalar function, that is a fixed, arbitrary number of inputs describing a single output value of interest.
+Lastly, I comment on existing limitations of the approximate topological model used for the aforementioned multidimensional data generation and subsequent analysis and explore improvements by augmenting the underlying geometric graph model.
 %
-The term multidimensional is used to convey input spaces of dimensionality larger than the traditional two or three dimensions typically used in visualization.
+Namely, we improve the scalability through exploiting the GPU in order to perform topological analysis on the scale of hundreds of millions of data points in up to ten dimensions and changing the underlying graph model to allow for more robust downstream representations of the data for classification and topological analysis.
 %
-In this way, we are able to synthesize ideas from computational geometry/topology, regression analysis, data mining, and visualization in order to facilitate low-level tasks such as identifying parameters or regions of interest within the input space, choosing informative samples, summarizing trends in the data, and validating models with ground truth datasets.
-%
-The techniques provided are demonstrated on applications arising from the field of nuclear engineering.
-
+The techniques provided are demonstrated on applications arising from the field of nuclear engineering safety analysis.

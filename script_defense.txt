@@ -1,0 +1,375 @@
+Slide 1
+
+Thank you all for coming to my defense today which is on the topic of topological models for safety analysis. Largely, I am going to be talking about exploratory data analysis for multidimensional scalar function data.
+
+Slide 2
+
+We are operating under the assumption that we have some multidimensional input space where we may or may not have control over the parameters and a functional relationship with one or more target outputs, and we want to understand the relationships well enough to inform some decision process.
+
+For example, a lot of my work has dealt with working with nuclear engineers who study the safety and proliferation of our now aging nuclear infrastructure. They often run safety simulations to understand when and how our nuclear power plants are at risk and how they can be made safer. These are often multi-million dollar decisions and should not be made lightly.
+
+This is where I come in: the work I have been a part of is this exploratory data analysis pipeline which I am describing on this slide as occuring in three phases.
+
+In the first phase, we generate the data, and this can be done in several different ways. It could be anything from space-filling designs to the extreme case where we may just be able to collect data from fixed sensors or something where the data is determined by physical constraints. In particular, I want to spend some time today talking about some work I did early on in my tenure dealing with adaptive sampling, this work has been summarized in two different publications.
+
+Next, once we have collected data, we have the option of building a model on that data. Here, we are talking about regressors or classifiers depending on the type of data represented by the output. For this portion of the talk, I want to focus on this notion of structural modeling where we impose a geometric structure on our data.
+
+Lastly, and arguably the most important phase is the analysis we perform on the data and/or model. Here, we could be looking at summary statistics, correlations and sensitivities between inputs and outputs, and various visualizations to support these and other tasks.
+
+Slide 3
+
+What I want to run through with you are a few different pipelines that interconnect these three phases. Notably, we must always start with some form of sampling to generate data, and it may be that analyzing or generating a picture of that data is enough to drive the decision we are tasked with making. Alternatively, we may choose to build a model off of that data that could be used to perform simpler computations in practice, or maybe we want to analyze the efficacy of our model. This type of analysis could leave us to either determine that we need more data or that our assumptions were not correct and we need a more flexible or rigid model. And so, you can see we have built up quite a complicated system now.
+
+The main theme from today's talk is that I want to employ topology to help solve each phase of this problem.
+
+Slide 4
+
+Specifically, I want to discuss how we have employed topology to inform adaptive sampling pipelines. To give you a sense of my contributions, I am just showing publications that I have led or been a part of for each of these phases.
+
+Slide 5
+
+Then, I want to discuss how we have improved analysis in the context of several nuclear probabilistic risk assessments, and highlight some problems that can occur in the approximation scheme we are using.
+
+Slide 6
+
+And I want to finish my talk discussing how we can potentially improve the approximation by considering alternative structural models for use in the topological decomposition which I will introduce shortly.
+
+Slide 7
+
+Lastly, for good measure, here are a bunch of application-specific works I have been a part of where we focused less on novel techniques, but instead utilized best practices in analysis and visualization to publish a bunch of papers I am calling part of the "decision" phase, since here the main stories were typically how the nuclear engineers were able to use the analysis.
+
+Slide 8
+
+All told, while studying at the University of Utah, I have been a part of 17 peer-reviewed publications, 7 of which I am first author, an additional tech report and 3 more pending submissions.
+
+I have been fortunate enough to work at three different national labs and contribute to separate lab-sponsored open source projects at each of them. From these experiences, I was inspired to branch out and author four of my own open source software projects which are all related to different aspects of the exploratory data analysis pipeline I am discussing today.
+
+Slide 9
+
+So, with that intro out of the way, let me get back to this notion of topology underpinning this whole thing.
+
+In order to adapt methods from topology, we make a few assumptions on our data space namely: we consider the arbitray dimensional input space as a manifold, and the target outputs as smooth functions on that manifold space meaning anywhere on the manifold we can evaluate a target response value.
+
+Specifically, we are going to consider a branch of differential topology called Morse theory to augment each of these three phases.
+
+Slide 10
+To clarify, I want to define a few terms from the previous slide. A manifold is a space that locally resembles a Euclidean space of that dimensionality everywhere it is defined.
+
+In addition, the target responses we are evaluating will be treated as smooth functions defined over the manifolds. This means at any location in the input manifold, the target and its derivative are continuously defined.
+
+Slide 11
+
+From Morse theory, there are two major branches. In the first branch, we look at the evolution of levelsets or sub/super levelsets over the range of function values the manifold attains.
+
+We see the vertical position of each node in the tree in this top example represents the isovalue at which that event occurs. So, if we choose an isovalue and cut the tree, we note that each intersection with the dashed line represents a seaparate component of the levelset.
+
+The more relevant type of topology for today comes from consideration of the Morse and Morse-Smale complex shown on the bottom image. Here, we are concerned with uniform gradient behavior and the locations of critical points. So, the Morse-Smale complex is this complex that partitions the data into patches of monotonic gradient behavior where every partition is associated with the same local maximum and minimum.
+
+In the lower example, we are showing a Morse-Smale complex which instead partitions the data based on gradient flow. In this example, every location is associated with the source and sink of the integral line that passes through it. So, if we consider the orange partition that is facing us, if we trace the gradient from any location upward we will end up at the blue maximum point occuring in the center of the image. Conversely, if we trace the negative gradient from any location on the orange patch, we will end up at the minimum occuring at the lower right of the image.
+
+Slide 12
+
+Again, I just want to review some terminology. I have already defined the Morse-Smale complex on the right and the partitioning that it imposes, but if we take a step back to how we arrived at that setup, what we have is two different partitionings. For example, if we only consider positive gradient flow and associate each location to a local maximum, then we have a partitioning that is known as the stable manifolds or descending manifolds. The complex that imposes this structure is simply the Morse complex. Then, if we were to flip over our function (by negating it), and do the same thing, we would associate every point to its local mininimum yielding the unstable or ascending manifolds. The graph shown here connecting local maxima and saddles with ridge lines is the Morse complex of the negative function.
+
+Slide 13
+
+I showed this already, but again we can compute this segmentation by traversing the steepest descent from each point in the domain and identifying every point with a minimum, for instance.
+
+Slide 14
+
+The trouble is what we are usually dealing with is a point cloud sample and we don't have the underlying function that we are trying to segment the data according to.
+
+Slide 15
+
+One answer is to impose some sort of neighborhood to each point and approximate gradient flow based on the edges emanating from each point.
+
+Slide 16
+
+Take the highlighted point in the center of this graph as an example. We can trace out its descending gradient among its neighbors and continue the process from each subsequent neighbor until we arrive at a point that has no lower neighbors like the one in the lower left.
+
+Slide 17
+
+A nice feature of the Morse-Smale complex is that we can associate a notion of feature scale. That is we can simplify or smooth away smaller features while maintaining the larger ones to arrive at a less resolved partitioning. This is done through a process known as persistence simplification.
+
+Consider, this 1D function. Basically, we are going to pair neighboring critical points based on their smallest function value difference neighboring critical point (at the time of cancellation), and associate their function value difference as their combined persistence.
+
+In this case, we first pair and cancel the small peak/valley combination on the left of this function.
+
+Next, we pair the larger maximum and minimum together.
+
+Lastly, we pair the local minimum and maximum occuring at the boundaries of the data. Note, that the last pair are not adjacent in the function, but since we have cancelled all of the other critical points they are now considered adjacent.
+
+Slide 18
+
+With the requisite background in hand, I want to move on to discuss how we can use topology in the sampling phase. Particularly, I want to summarize the main takeaways from two publications I led on adaptive sampling methodologies.
+
+Slide 19
+
+Given the nature of nuclear energy, it should come as no surprise that physical experimentation can be very dangerous, and so often we rely on computer simulations. However, due to the complexity of the physics we are modeling, collecting copious amounts of data can still be expensive and time-consuming. Therefore, it is to our advantage to extract the most amount of information from the least amount of data.
+
+Furthermore, the input spaces we are interested can be of arbitrary input dimensionality, and from the curse of dimensionality we know that the space needed to sample grows exponentially with respect to increasing dimensionality. So, it is unlikely that we will ever recover a dense enough sampling in high-dimensions to do a meaningful global analysis.
+
+Slide 20
+
+Here, I am showing a typical adaptive sampling pipeline used for initial data sampling. We begin with no knowledge of our response value of interest and so select several training data locations based on some space-filling design, and evaluate our ground truth model on it.
+
+We fit a predicting model to the obtained data.
+
+We next generate a pool of candidates and based on information from the predicting model we score these candidates to determine which candidate will give us the most useful information. We then select a candidate, evaluate it using the ground truth, and add it to our training data and repeat the process.
+
+So, of these four steps I want to focus our attention on the third step: namely how we select and score candidates for training.
+
+Slide 21
+
+Many predicting models are probabilistic or can be made probablistic by methods such as boostrap aggregating. In this way, we can associate an uncertainty with each location in our input space.
+
+Here, we consider a 1D problem fit with a probabilistic model.
+
+McKay et al. introduced a method geared at targeting highly uncertain regions. So, we can see in this example, that we want to select candidates that have large error bars associated with them. The problem here is that sometimes this methodology can waste effort looking in regions where the predicting model is relatively flat and uninteresting.
+
+Thus, a third and similar method was introduced later that targets not only uncertain regions, but also areas of steep gradient. This was termed the expected improvement function. In this case, we combine the difference in mean value prediction of a candidate with its nearest neighboring training point with the uncertainty of the predicting model.
+
+This last method starts to get at a key component of adaptive sampling, that is can we avoid "flat" regions and instead place samples where the function is doing something more interesting.
+
+In understanding this concept, we developed several scoring metrics that were more directly geared at this by exploiting the topology of
+the predicting model directly in order to identify areas of high persistence features, or where adding a point will likely affect the overall global topology.
+
+Slide 22
+
+And so, we developed 3 novel scoring functions based on the Morse-Smale complex that attempted to capture these topological changes in different ways: by looking for which candidate globally affected the topology the most, and also by highlighting the most topologically significant candidate.
+
+This work is highlighted in our 2013 IJUQ paper titled Adaptive Sampling with Topological Scores.
+
+Slide 23
+
+Let me take a brief second to discuss a slightly different problem that nuclear engineers often deal with.  Our last study, looked at adaptive sampling with the goal of obtaining a globally accurate fit of the data.
+
+Often in the nuclear accident analysis, they are dealing with simulations where the goal is to understand the frontier that separates recoverable scenarios from system failure scenarios. The frontier we seek is known as the limit surface and the often the goal is to understand the probability of failure which amounts to determining the integral over the failure region.
+
+In order to characterize the limit surface, they often rely on adaptive sampling methods.
+
+Slide 24
+
+For the limit surface problem, we actually took a different approach and built three variations of the adaptive sampling pipeline from a prior slide. Two of these methods represent more exploitive models similar to what we have done before, and so in the interest of time, I will highlight what is referred to here as M2.
+
+Slide 25
+
+This model computes the Morse complex of the data and then utilizes a relaxation parameter to search for partitions in the data that either span or "nearly" span the threshold value. In this way, we can explore regions where the maximum of a dataset may be close to the threshold.
+
+Slide 26
+
+We see that with the appropriate relaxation setting, this model is actually able to identify a component of the true limit surface that was not captured in the initial training data.
+
+This work was presented in a nuclear engineering conference and was runner-up for the best student paper award.
+
+Slide 27
+
+With that I want to go a bit out of order and talk about my contributions to the analysis phase which are this notion of structured sensitivity analysis, and then wrap up with some observations we have been able to make after using this approximate topology construct which seques nicely into the third part of the talk.
+
+Slide 28
+
+Typically the first go-to is a global sensitivity study and we have seen methods in visualization that do this for arbitrary input dimensions. These methods are great for parameter screening, however these types of methods struggle on non-monotonic data unless higher order methods are used, but these lack the direct interpretibility of simple partial derivative type information.
+
+On the other hand, local sensitivity analysis looks at a user-defined focal point giving a much more local and on-demand view of the information. These methods are better suited for drilldown techniques such as when one has identfied an area of interest or in optimization settings.
+
+In terms of structured sensitivity, there has been past work, but these rely on 1 or 2D axis-aligned cuts of the data. The exception being the use of the Morse-Smale complex by Sam Gerber et al. which is where we want to focus our attention.
+
+Here, I am highlighting the 2011 work that developed this software called HDViz. I utilized this technique in some of my earlier analysis with nuclear engineers, however after several iterations the nuclear engineers still relied heavily on expert users of the system, and so the idea of this work was to develop something intuitive and usable by the domain scientists directly.
+
+Slide 29
+
+I then started working at INL and performed an informal design study with a team of nuclear engineers focusing on the problem space they were interested in explicitly and how we could design visual metaphors that optimized their time using the software. The result of that design study is shown on this slide, namely a MCV piece of software explicitly for sensitivity analysis and parameter screening tasks.
+
+Slide 30
+
+So, the engineers used this tool to analyze the nuclear fuel data from before, and within 10 minutes, they were able to select an appropriate partition level and identified an anomaly in the data with respect to their expectation. The sign of one of the parameters was actually inverse of what they had expected, and so, we looked more closely at one of the simulations and noted that there was an error in the input deck that we were perturbing in order to generate this dataset.
+
+It is important to note that in this process we cycled through an entire iteration of the pipeline introduced at the outset where we were able to identify an error and correct the model.
+
+This work was presented at PacificVis 2016.
+
+Slide 31
+
+When evaluating this data, it is important to not that we are using an approximation of the Morse-Smale complex dependent on the amount of data we have. That is, we approximate gradient flow based on a neighborhood graph imposed on the data.
+
+Slide 32
+
+This can lead to one of two problems in the approximation. The first is the result of having too few edges in the data. In the extreme case, this will create islands of data that are disjoint and unable to be analyzed, however the more common case results in spurious extrema as shown here.
+
+In many cases, we can alleviate this problem with persistence simplification, but only if the feature scale is small.
+
+Slide 33
+
+The other case results from an overconnected graph which completely misses the existence of extrema by edges that basically "skip over" saddle locations.
+
+Slide 34
+
+In two different real world datasets, one of which we have seen already, the domain scientists discovered partitions they did not expect, and upon closer inspection appeared to be the result of poor sampling density in the regions of interest.
+
+In this way, persistence simplification alone is unable to remove such features from the data.
+
+We have seen this in several synthetic cases we designed, but also these real-world applications have been highlighted in a few different published works.
+
+Slide 35
+
+The goal then here with the final chapter of this talk is to discuss ways we can improve our approximation quality, so to put it in terms of our pipeline we are going to be following this arrow here back to the modeling phase.
+
+Slide 36
+
+Here I want to talk about two ways in which we can improve the topological information by constructing a better "structural model" on the data. In the first way, we just want to consider more graphs and if there are other graphs or ways to tune the parameters of a graph to better fit a dataset. In the second way, we are going to greatly improve the efficiency of how these graphs are constructed. This is going to allow us to operate not only on much larger datasets, but we can also start to think about creating ensembles of topologies to come up with a more uncertain-aware topology where specific regions of the domain may be less certain about where they will eventually end up. Now mind you, this notion of uncertainty-aware topology is in its nascent phase, but I am currently working with Tushar Athawale and Bei on a project that is looking at this for two-dimensional cases, and I think doing something with multidimensional data could be a big future work that utilizes this framework I am going to talk about today.
+
+I have a few different papers from my time working at INL on using different models for various plant safety simulations, but again today I want to focus on this more recent work I have been a part of dealing with graphs imposed on our point cloud data, what I am referring to as "structural modeling."
+
+Slide 37
+
+We start this work with asking the question, what kinds of graphs are currently out there?
+
+When this algorithm was first introduced we used the undirected kNN graph. In this case, I have set k=4, and what we then will do is connect each point to its 4 nearest neighbors in terms of Euclidean distance. Note, that some  points have more than 4 edges, this is because we construct an undirected kNN  graph, so even though b is not one of the 4 nearest neighbors of a because a is one of the 4 nearest neighbors of b, the edge exists. In practice, setting this k parameter can be difficult because depending on the density of your samples  and the dimensionality in which your samples exist, you will want to use more or fewer neighbors.
+
+Slide 38
+
+Next, we consider a a class of neighborhood graphs known as beta skeletons which are part of a larger class of graphs called empty region graphs. These graphs and their relaxed versions were highlighted by a 2011 paper by Peter Lindstrom and Carlos Correa, and we have been using them ever since. The basic premise is that each edge between two points a and b is enveloped in a fixed region of empty space where no other neighbors of a or b intersect. The empty region for a beta skeleton is defined by the intersection of all balls each with a diameter set according to the beta parameter as shown here.
+
+Slide 39
+
+We can see, as we grow the beta parameter, we increase the size of the empty region. The special case of beta = 1, is known as the Gabriel graph and we can see that it's empty region is just the circumcircle of the edge.
+
+Slide 40
+
+We can continue to grow the empty region until we arrive at the case where beta = 2 which gives us another special graph called the
+relative neighbor graph. The take away here is that increasing beta, decreases the number of edges in our graph. In their work, Peter and Carlos noted that we can relax this strict definition and they claim without drastically changing the underlying graph.
+
+Slide 41
+
+This relaxation to the empty region property is that we apply it to only points that are neighbors to both p and q. Take the example shown here. We want to attempt to connect the a and b, but the point c lies within the empty region of edge ab. However, c is not a neighbor of a, so we can still add this edge based on our relaxed condition.
+
+Slide 42
+
+So, this was the state of the art when I started working on this problem. This led me to a few different questions, one is can we more generically describe these empty regions, and two are there other representations in the literature that do something similar. That is, if we examine why the beta skeleton works well, we note that it is able to more evenly sample the space of directions surrounding a point. Now, mind you this is operating under that our input space is dense in the sense that the "manifold" is the entire space, but I can elaborate more on that if you want later.
+
+So, after poking around, I stumbled on these graphs known as cone-based spanners, where the idea is to break up the directions surrounding a query point into equal-sized cones and connect the point to a neighbor in each cone. There are two versions that are only slight modifications of one another, the first is the m-Yao graph. Here m is a free parameter stating how many points we will draw from each cone. The Yao graph is going to simply add an edge to the m closest points in each cone.
+
+Slide 43
+
+The m-Theta graph rather than taking the closest distance, will project the points onto the axis of the cone and take the closest projected distance. Note, how this changes this example here.
+
+Slide 44
+
+As I mentioned before, my goal is to create a unified framework to compute any one of these graphs and in order to do that we make a few observations:
+
+1 - These can all be approximated with a sufficiently large kNN graph. This optimization is already employed for the empty region graphs by Carlos and Peter's implementation.
+2 - We can process all the neighbors of a given point in isolation, making an embarrassingly parallel problem where we can utilize the GPU for.
+
+Slide 45
+
+So, to put this in a generic algorithm, we get something like this, where we will iterate over each point in our point set, and compute its k neighbors and prune them depending on the neighborhoods of p and possibly q.
+
+In this way, we can parallelize this outer loop by giving each GPU thread a query point and all of its neighbors to prune.
+
+There are a few caveats here:
+
+1 - We need the full point set and need to compute a knn search index on this entire dataset. This is not a big problem as this is a well-studied problem and we can use off-the-shelf libraries to do this efficiently. The point here is that we are not creating a streaming algorithm with respect to the points, but we can stream our output graphs by generating legit edges and consuming them immediately. This is useful when working with very large datasets where the full graph may be several GBs or start to push the TB scale.
+
+2 - The full knng being a supergraph won't fit entirely on the GPU, so we need to be able to chunk the problem. This is easy enough for the cone graphs and relaxed beta skeletons since they only need the neighbors of our query point, but if we perform a worst case analysis for this chunk size on the strict beta skeleton, we are going to find a drastically reduced amount of parallelism. So, this deepens the existing gap between the performance of the relaxed versus the strict beta skeleton.
+
+Slide 46
+
+So, there are two major contributions I want to get at here besides the fact that I was able to put this all on the GPU.
+First, is the fact that we can generalize the shapes used by the beta skeletons. This is what I am calling beta-p skeletons because we are going to use different p-norms to change the shape of these empty regions.
+
+Let me start by discussing the mathematical formulation I came up with for efficiently doing these tests. The idea is we want to parameterize this problem and basically turn it into a one-dimensional problem. To do that, we define two vectors, one for the edge, and one for the query point.
+
+Slide 47
+
+Note, that in the limit, our shape can be the infinite slab perpendicular bounded by two hyperplanes incident on each of the endpoints and perpendicular to the edge.
+
+If we project our query point onto the edge with a dot product, we get this parameterization, t. If t is outside of the range 0-1 then we don't have to consider this point.
+
+Slide 48
+
+So, with this parameterization, we can develop a function, m, that tells us the minimum allowable distance at this point on the edge. Note, here the symmetry allows us to consider this reflective about the midpoint of the edge.
+
+Then, we can determine the Euclidean distance from R to the edge and compare that with our value for m(t). If it is less than m(t), R lies inside the empty region and thus invalidates the edge.
+
+Slide 49
+
+The cool thing here is that since we abstracted this function, m, we can actually use any shape we want. For the traditional beta skeletons, we end up with these lune shapes whose size is determined by beta that defines the distance of the balls from the midpoint of the edge, but we can also vary the Lp norm used to generate diamond graphs, concave shapes, and a box graph. This allows us to explore a richer set of graphs to understand if there are potentially better graphs than we have considered in the past.
+
+Slide 50
+
+Furthermore, because m(t) is abstracted away, we can precompute it and scale it to the particular edge at runtime, and thus use any arbitrarily complicated function can be used here.
+
+Slide 51
+
+To test this, I ran a bunch of common kernel functions used in kernel density estimation problems to show that each example yields a slightly different results with different results. You can see here that certain graphs are overconnecting the domain and others are underconnecting leaving large "holes." Still some do a better job striking a balance with relatively few "large" holes and no crossing edges.
+
+Slide 52
+
+Okay, with that I want to change gears a bit and talk about how we can estimate these cone graphs in multidimensional spaces. The first thing to note is that we don't need to explicitly encode the cones, we only need their axes because we can perform dot products with each of the axes to determine which cone a particular point belongs to.
+
+So, then we have this problem of generating equally-spaced direction vectors emanating from a query location. For that, I want to take a brief detour to talk about this notion of blue noise sampling where the goal is to minimize the presence of either sparse or dense regions that we don't necessarily get with a random sampling. Poisson disk sampling is one of the major ideas existing in this realm, but it has only been recently scaled up to higher than two or three dimensions reliably and furthermore, what we want specifically is to constrain our samples to the surface of a hypersphere.
+
+It turns out there was some work out of Florida State that can do this using what is known as a Centroidal Voronoi Tessellation. Quickly, a Voronoi tessellation is defined for a set of points called sites, such that every location is associated with its nearest "site." Furthermore, a Centoridal Voronoi tessellation is a Voronoi tessellation where the sites are coincident with the centroids of the regions they define.
+
+Slide 53
+
+An example is shown here, but to get more specific we want a constrained CVT that is restricted to the surface of a hypersphere. It turns out, Geoffrey Womeldorff was able to do this, and we use his algorithm. Let me demonstrate, the idea is that we randomly generate points on the surface of a hypersphere. We perform the typically Lloyd's relaxation that will iteratively move the sites toward their centroid's until they converge. This will naturally pull the points towards the interior of the sphere.
+
+Slide 54
+
+Then once, we are converge, we can project these points back outward to the surface and they represent roughly equally-spaced vectors.
+
+Slide 55
+
+Since this is a few levels of approximation, as a verification, I ran some tests on this using the dimensionality and range of cones we want to consider and we were able to show that with increasing dimensionality, we don't see an upward trend in deviation from the equal-spaced case, but we do see more degradation as we ask for more cones. At least from the example, shown here though, this is well within our tolerance. An interesting note here is that we could formulate ensemble graphs by simply generating more of these initial CCVT sample sets.
+
+Slide 56
+
+So, we did a bunch of evaluations of these graphs and in the interest of time I want to focus on just one example and also talk briefly about the performance improvements we realize with this new implementation.
+
+Slide 57
+
+So, this slide summmarizes the performance improvements we see by switching to a GPU-based implementation. The baseline algorithm is shown in blue, and then the algorithm I described is shown in orange, and finally we can see a modest improvement from using the discretized optimization I pointed out. Each example is pruning the Gabriel graph from the same supergraph in varying dimensions. Here we are increasing k with dimensionality, so we see some effects of that as well. The graph from left to right show increasing sized problems, and the rows represent the strict and relaxed cases, respectively.
+
+Slide 58
+
+So, to bring it all together, we looked at how these different graphs can be used to influence the topology extracted on some known, well-described functions. So, I haven't spent a lot of time talking about persistence since we first introduced it, but I want to talk about it now.
+
+In the absence of any domain-specific knowledge to help guide us, typically, the way we select the "correct" persistence level for analysis is by looking at a plot like the two shown here. The idea is that we want to find a stable persistence range where the count of extrema is not varying wildly.
+
+To do that, we try to find a wide horizontal bar and set the persistence based on that. So, for the first case, it may be this line here, but for the second case, it may be something further in. So, what if I told you that this was two different sample sets or graphs built on the same function and that the "correct" level was given by this blue box. I would hope that you would agree with me that the blue example in this case would be the "better" example since it allows us to more intuitively select the "correct" level.
+
+That is what I want to showcase in the results on the next slide.
+
+Slide 59
+
+So, here is our well-defined function where we can come up with ground-truth labels quite easily by slicing the domain with these hyperplanes that are perpendicular to the main diagonal. By the way, this example is a four dimensional input case.
+
+Mind you, what we have done is run several cases of different parameters for each graph and selected the optimal-performing graph for each family and show the results for just that graph here.
+
+There are two plots we are showing here, the first is what is known as the Normalized variation of information. Note, here that lower values are more in agreement with the ground truth. This is mostly done as a sanity check to ensure that our stable convergence is not to the wrong segmentation, which in the case of the theta graph could be the case.
+
+The more interesting graph here is the bottom graph where I am showing that as we increase the size of our sample set, what is the stability or width of the "correct" bar from the previous slide.
+
+The point I want to make here is that in many of the tests we performed, the Yao graph was either as good as or sometimes better than the strict Gabriel graph, and in many cases the strict graph is much better than the relaxed version.
+
+This is important because the last plot on performance should indicate to you that the strict beta skeletons are much slower to compute, and so if we can use the Yao graph to get similar fidelity while maintaining the speed of the relaxed beta skeleton, we may want to consider the Yao as a good alternative in practice. The one caveat is that it can sometimes be harder to tune the Yao graph parameters when compared to the beta skeletons when working in arbitrary dimensional spaces.
+
+Slide 60
+
+Alright, so in summary, we walked through using topology to enhance the adaptive sampling pipeline, shown by the purple arrows here.
+
+Then, we discussed this structured sensitivity analysis case and explored errors occurring in the extracted topology. This led us on this inner cycle with the modeling phase, and also several of the publications I listed at the outset were concerned with driving from analysis to decisions.
+
+And lastly, we took the errors we learned from various analyses to augment and improve our structural model to create better, more accurate topological representations.
+
+If I were to summarize the contributions into a condensed bullet-list, it would be something like this:
+
+- I performed several repeatable and well-formulated studies for evaluating adaptive sampling methods where we looked at combinations of various scoring functions with various regression models.
+- I developed this framework for performing structured sensitivity analysis which is still in the RAVEN tool and can be used by nuclear engineers.
+- I highlighted problems that can arise with the approximation we are using for multidimensional topological extraction.
+- I proposed a solution by extending the types of graphs we can use in practice.
+- I made all of those graphs performant.
+- Lastly, I gave a few different case studies that can be examples for future users to evaluate the efficacy of these and other graphs for their data. I believe that these cases highlight some best practices and some more things for future researchers to think about before blindly applying a particular graph to a new problem.
+
+With that I want to conclude and thank you all for your time today.

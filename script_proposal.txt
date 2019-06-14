@@ -1,0 +1,263 @@
+Slide 1
+
+Thank you all for coming to my thesis proposal talk today which is on the topic of topological models for the design and analysis of experimental data. The work I will be talking about today is either work that has been accomplished toward the completion of my degree or work yet to be done. I will do my best to make this distinction where applicable.
+
+Slide 2
+
+My proposed thesis statement is:
+
+I propose to investigate the efficacy of topological techniques in order to aid the experimental design process by generating more informative samples, enhancing scientist's understanding, and efficiently computing and storing extracted structures.
+
+Slide 3
+
+Here is a list of my current publications, and for today's talk I am going to focus on talking about only a few of them which I have highlighted here plus some additional yet to be published efforts.
+
+Slide 4
+
+So, scientific research at its most basic level is about observing phenomena occuring in nature and our surroundings through relationships of different quantities of interest. For our purposes, we are interested in studying the relationship between some input parameters that we have direct control over and observable target outputs, we believe to be correlated to a subset of those inputs. We perform our experimental design and the end result is some enhanced approximation or theory about the relationship.
+
+We are interested in what is happening in this middle box, so if we lift the covers and look a bit more closely we see three major componenets of the experimental design process: Explore, Analyze, and Synthesize.
+
+Slide 5
+
+The process begins with data collection. My focus on this portion of the talk will be on adaptive sampling methodologies.
+
+Next, we have the analysis phase where we traditionally see visualization techniques employed. The range of analysis techniques is quite broad and depends heavily on the goal of the analysis. Today, I will be focus on a very narrow goal of providing interpretable and accurate sensitivty analysis.
+
+The last phase is synthesis. Here, we correct our assumptions of the data in order to build more accurate or more efficient models that we can then feed back into the pipeline for more exploration and analysis.
+
+Tbe important thing to note, is this is a feedback loop, so we can utilize our enhanced model to begin the cycle again.
+
+As suggested in the opening thesis statement, my proposal is to inject topological methods into each phase of this pipeline in order to gain a better understanding of the data.
+
+Slide 6
+In order to adapt methods from topology, we make a few assumptions on our data space namely: we consider the arbitray dimensional input space as a manifold, and the target outputs as smooth functions on that manifold space meaning anywhere on the manifold we can evaluate a target response value.
+
+Specifically, we are going to consider a branch of differential topology called Morse theory to augment each of these three components: exploration, analysis, and synthesis.
+
+Slide 7
+To clarify, I want to define a few terms from the previous slide. A manifold is a space that locally resembles a Euclidean space of that dimensionality everywhere it is defined.
+
+In addition, the target responses we are evaluating will be treated as smooth functions defined over the manifolds. This means at any location in the input manifold, the target and its derivative are continuously defined.
+
+Slide 8
+
+From Morse theory, we are interested in two key concepts illustrated here. So, consider the terrain on the left as a 2D manifold with height representing the function value. In the top image, we are tracking the evolution of levelsets. That is, when the topology of the levelsets changes. You see on the right image a tree view  that shows each leaf as the birth or death of a connected component of the levelset and branches in the tree represent splits and merges of the connected components.
+
+We see the vertical position of each node in the tree represents the isovalue at which that event occurs. So, if we choose an isovalue and cut the tree, we note that each intersection with the dashed line represents a seaparate component of the levelset.
+
+In the lower example, we are showing a Morse-Smale complex which instead partitions the data based on gradient flow. In this example, every location is associated with the source and sink of the integral line that passes through it. So, if we consider the orange partition that is facing us, if we trace the gradient from any location upward we will end up at the blue maximum point occuring in the center of the image. Conversely, if we trace the negative gradient from any location on the orange patch, we will end up at the minimum occuring at the lower right of the image.
+
+Slide 9
+
+A nice feature of the Morse-Smale complex is that we can associate a notion of feature scale. That is we can simplify or smooth away smaller features while maintaining the larger ones to arrive at a less resolved partitioning. This is done through a process known as persistence simplification.
+
+Consider, this 1D function. Basically, we are going to pair neighboring critical points based on their smallest function value difference neighboring critical point (at the time of cancellation), and associate their function value difference as their combined persistence.
+
+In this case, we first pair and cancel the small peak/valley combination on the left of this function.
+
+Next, we pair the larger maximum and minimum together.
+
+Lastly, we pair the local minimum and maximum occuring at the boundaries of the data. Note, that the last pair are not adjacent in the function, but since we have cancelled all of the other critical points they are now considered adjacent.
+
+Slide 10
+
+Okay, so now with the necessary background in hand, we will begin by seeing how we can inject some of these concepts into the exploration phase.
+
+Slide 11
+
+Given the nature of nuclear energy, it should come as no surprise that physical experimentation can be very dangerous, and so often we rely on computer simulations. However, due to the complexity of the physics we are modeling, collecting copious amounts of data can still be expensive and time-consuming. Therefore, it is to our advantage to extract the most amount of information from the least amount of data.
+
+Furthermore, the input spaces we are interested can be of arbitrary input dimensionality, and from the curse of dimensionality we know that the space needed to sample grows exponentially with respect to increasing dimensionality. So, it is unlikely that we will ever recover a dense enough sampling in high-dimensions to do a meaningful global analysis.
+
+Slide 12
+
+Here, I am showing a typical adaptive sampling pipeline used for initial data sampling. We begin with no knowledge of our response value of interest and so select several training data locations based on some space-filling design, and evaluate our ground truth model on it.
+
+We fit a predicting model to the obtained data.
+
+We next generate a pool of candidates and based on information from the predicting model we score these candidates to determine which candidate will give us the most useful information. We then select a candidate, evaluate it using the ground truth, and add it to our training data and repeat the process.
+
+So, of these four steps I want to focus our attention on these last two steps: namely how we score and select candidates for training.
+
+Slide 13
+
+Many predicting models are probabilistic or can be made probablistic by methods such as boostrap aggregating. In this way, we can associate an uncertainty with each location in our input space.
+
+Here, we consider a 1D problem fit with a probabilistic model.
+
+McKay et al. introduced a method geared at targeting highly uncertain regions. So, we can see in this example, that we want to select candidates that have large error bars associated with them. The problem here is that sometimes this methodology can waste effort looking in regions where the predicting model is relatively flat and uninteresting.
+
+Thus, a third and similar method was introduced later that targets not only uncertain regions, but also areas of steep gradient. This was termed the expected improvement function. In this case, we combine the difference in mean value prediction of a candidate with its nearest neighboring training point with the uncertainty of the predicting model.
+
+This last method starts to get at a key component of adaptive sampling, that is can we avoid "flat" regions and instead place samples where the function is doing something more interesting.
+
+In understanding this concept, we developed several scoring metrics that were more directly geared at this by exploiting the topology of
+the predicting model directly in order to identify areas of high persistence features, or where adding a point will likely affect the overall global topology.
+
+Slide 14
+
+And so, we developed 3 novel scoring functions based on the Morse-Smale complex that attempted to capture these topological changes in different ways: by looking for which candidate globally affected the topology the most, and also by highlighting the most topologically significant candidate.
+
+This work is highlighted in our 2013 IJUQ paper titled Adaptive Sampling with Topological Scores.
+
+Slide 15
+
+Let me take a brief second to discuss a slightly different problem that nuclear engineers often deal with.  Our last study, looked at adaptive sampling with the goal of obtaining a globally accurate fit of the data.
+
+Often in the nuclear accident analysis, they are dealing with simulations where the goal is to understand the frontier that separates recoverable scenarios from system failure scenarios. The frontier we seek is known as the limit surface and the often the goal is to understand the probability of failure which amounts to determining the integral over the failure region.
+
+In order to characterize the limit surface, they often rely on adaptive sampling methods.
+
+Slide 16
+
+For the limit surface problem, we actually took a different approach and built three variations of the adaptive sampling pipeline from a prior slide. Two of these methods represent more exploitive models similar to what we have done before, and so in the interest of time, I will highlight what is referred to here as M2.
+
+Slide 17
+
+This model computes the Morse complex of the data and then utilizes a relaxation parameter to search for partitions in the data that either span or "nearly" span the threshold value. In this way, we can explore regions where the maximum of a dataset may be close to the threshold.
+
+Slide 18
+
+We see that with the appropriate relaxation setting, this model is actually able to identify a component of the true limit surface that was not captured in the initial training data.
+
+This work was presented in a nuclear engineering conference and was runner-up for the best student paper award.
+
+Slide 19
+
+The last step of the general adaptive sampling pipeline is candidate selection. So far, we have assumed the context of selecting one point before refitting. Under parallel settings, though we can see the benefit of being able to execute several ground truth simulations at once especially since these can take hours or days to complete.
+
+For this, we instead focused our attention on the topology of the scoring landscape rather than the topology of the predicting model. In this way, we can explore distinct topological peaks in the data.
+
+This work is part of a tech report where we compared results in the low-dimensional setting for both global and limit surface problems.
+
+Slide 20
+
+We now move on to discuss work being performed in the analysis phase.
+
+Slide 21
+
+Here, we investigate the problem of designing safer nuclear fuels. So, we investigate a simulation that looks at understanding the maximum stress occurring in the shielding that surrounds a nuclear fuel rod undergoing normal operation.
+
+There are several different parameters of the fuel rod that interact with this stress in the system, and the scientists were interested in studying what drives the stress by performing sensitivity analysis, however we identified this problem as being ill-suited for a global sensitivity study due to the non-monotonic nature of the input. So, we needed to develop a method that was more amenable to this situation.
+
+Slide 22
+
+So, typically the first go-to is a global sensitivity study and we have seen methods in visualization that do this for arbitrary input dimensions. These methods are great for parameter screening, however these types of methods struggle on non-monotonic data unless higher order methods are used, but these lack the direct interpretibility of simple partial derivative type information.
+
+On the other hand, local sensitivity analysis looks at a user-defined focal point giving a much more local and on-demand view of the information. These methods are better suited for drilldown techniques such as when one has identfied an area of interest or in optimization settings.
+
+In terms of structured sensitivity, there has been past work, but these rely on 1 or 2D axis-aligned cuts of the data. The exception being the use of the Morse-Smale complex by Sam Gerber et al. which is where we want to focus our attention.
+
+Here, I am highlighting the 2011 work that developed this software called HDViz. I utilized this technique in some of my earlier analysis with nuclear engineers, however after several iterations the nuclear engineers still relied heavily on expert users of the system, and so the idea of this work was to develop something intuitive and usable by the domain scientists directly.
+
+Slide 23
+
+I then started working at INL and performed an informal design study with a team of nuclear engineers focusing on the problem space they were interested in explicitly and how we could design visual metaphors that optimized their time using the software. The result of that design study is shown on this slide, namely a MCV piece of software explicitly for sensitivity analysis and parameter screening tasks.
+
+Slide 24
+
+So, the engineers used this tool to analyze the nuclear fuel data from before, and within 10 minutes, they were able to select an appropriate partition level and identified an anomaly in the data with respect to their expectation. The sign of one of the parameters was actually inverse of what they had expected, and so, we looked more closely at one of the simulations and noted that there was an error in the input deck that we were perturbing in order to generate this dataset.
+
+It is important to note that in this process we cycled through an entire iteration of the experimental design process where we were able to identify an error and correct. For the sake of time, I am going to omit the corrected analysis on this data.
+
+This work was presented this past spring at PacificVis.
+
+Slide 25
+
+When evaluating this data, it is important to not that we are using an approximation of the Morse-Smale complex dependent on the amount of data we have. That is, we approximate gradient flow based on a neighborhood graph imposed on the data.
+
+Slide 26
+
+This can lead to one of two problems in the approximation. The first is the result of having too few edges in the data. In the extreme case, this will create islands of data that are disjoint and unable to be analyzed, however the more common case results in spurious extrema as shown here.
+
+In many cases, we can alleviate this problem with persistence simplifcation, but only if the feature scale is small.
+
+Slide 27
+
+The other case results from an overconnected graph which completely misses the existence of extrema by edges that basically "skip over" saddle locations.
+
+We performed several empirical tests on 2-5D test cases which were compiled into a Workshop paper in 2013.
+
+Slide 28
+
+In two different real world datasets, one of which we have seen already, the domain scientists discovered partitions they did not expect, and upon closer inspection appeared to be the result of poor sampling density in the regions of interest.
+
+In this way, persistence simplification alone is unable to remove such features from the data.
+
+One avenue of proposed work yet to be completed is to call attention to such problems and rely on a more user-guided interaction of the topology that allows them to explore certain branches of the hierarchy in exclusion and augment them manually if necessary.
+
+In addition, I would like to explore the idea of further decomposing the monotonic patches of the Morse-Smale complex since monotonicity does not ensure an accurate linear fit.
+
+Slide 29
+
+In order to augment them manually, I refer to a method based on principal Hessian directions, or PHD. PHD is similar to PCA, in that it seeks to reduce the dimensionality of functional data by finding the direction of highest mean curvature.
+
+So, in this example, the first PHD is aligned with the undulation we see in this data, and in the regression tree context we can then project the data along this direction and obtain an "ideal" cut of the data.
+
+The problem with PHD arises when you have sinusoidal shapes in your data, as it can suffer from cancellation effects from the positive and negative curvature since we are using the mean curvature.
+
+Slide 30
+
+The good news is these problems are complementary and we can utilize these together. So long as we ensure the data is monotonic, then we can safely assume that the PHD will extract the appropriate curvature.
+
+Slide 31
+
+If instead we combine the two, using first the Morse-Smale complex to decompose the data monotonically, we can then more effectively employ PHD to find the correct directions along with to most faithfully cut the data.
+
+To compare this to other partition-based techniques it is important to note that since we have considered the geometry of the data, we are obtaining in some sense a minimal set of cuts.
+
+Slide 32
+
+We now move into the last phase: synthesis where I will briefly talk about some open work on representing a limit surface.
+
+Slide 33
+
+Hopefully, I have given adequate motivation as to performing limit surface analysis, so let me dive right in by talking about representing the limit surface.
+
+The limit surface problem is similar to the isosurfacing problem faced in visualization, except oftentimes, nuclear engineers are dealing only with points on a discretized grid and not on representing the isosurface as a collection of simplices. This simplifies the storage a bit and allows us to more gracefully handle higher dimensional problems.
+
+However, the basic algorithm remains the same: marching cubes. In the most naive setting we vist each cell of the discretized space and keep track of cell vertices that intersect the isovalue.
+
+
+Slide 34
+
+As in isosurfacing, we can utilize data structures to speed up this computation and avoid computation on areas away from the limit surface. In the RAVEN software, which I deal with at INL, this is done using a multigrid method.
+
+Slide 35
+
+Where we begin with a coarse evaluation and gradually refine the grid only on cells that intersect the limit surface.
+
+Slide 36
+
+We identify and refine.
+
+Slide 37
+
+We identify and refine.
+
+Slide 38
+
+In isosurfacing, it was noted that one can use the contour tree discussed before to identify seed sets for each connected component of the levelset. We can utilize that same theory here. Where cutting the contour tree at the specified level gains us a seed point for each of the identified components of the limit surface.
+
+Slide 39
+
+We can then explore the neighborhoods of each seed point in a flood fill fashion to obtain the limit surface.
+
+Slide 40
+
+In this way, we look at most, one grid cell away from the limit surface and drastically reduce the amount of computation. I have implemented this method recently in RAVEN and was able to gain speed-up on extraction of a 7D problem.
+
+Slide 41
+
+However, the size of the limit surface is quite large and each identified cell requires a lookup of 3^d neighbors.
+
+Slide 42
+
+The open problem I would like to address is can we utilize the gradient information of the limit surface to identify clusters in the limit surface where the gradient is similar in order to more compactly store the limit surface.
+
+Slide 43
+
+That is, in a way can we get away with a representation similar to the one shown here where we store a few control points and gradient information.
+
+In addition, though this is a bigger leap, at the time of extraction, can we utilize the gradient information to reduce the number of neighbors we need to consider?

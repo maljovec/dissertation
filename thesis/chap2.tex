@@ -3,13 +3,11 @@
 \chapter{Definitions}
 \label{ch:definitions}
 
-We begin by establishing a common language by defining terms from different areas of mathematics.
+The goal of this chapter is to establish a common language by defining terms from different areas of mathematics and to provide a formal structure allowing for the use of certain terms with more precision in order to facilitate later discussion.
 %
-You may already be familiar with many of these terms, however the goal here is to provide a formal structure and allow us to use certain terms with more precision in order to facilitate later discussion.
+In some cases, I will be using terms in a context that may differ from other academic works, and so it is important at the outset to be clear what is meant by the terms seen throughout this document.
 %
-In some cases, I will be using terms in a context that may differ from other academic works, and so it is important at the outset to be clear what is meant by the terms you will see throughout this document.
-%
-For example, let me begin with a term that has already been used heavily in Chapter~\ref{ch:introduction}: \emph{data}.
+For example, let me begin with a term that has already been used frequently in Chapter~\ref{ch:introduction}: \emph{data}.
 
 Colloquially, we know data to be a collection of information.
 %
@@ -17,7 +15,7 @@ However, data can come in many forms, sizes, and structures, so if we are to spe
 %
 For example, data may be numeric or nominal, as in the case of text-based data.
 %
-With numeric data, a common task is to compute statistical information which cannot be done directly on nominal data.
+With numeric data, a common task is to compute statistical information, which cannot be done directly on nominal data.
 %
 Instead, we may look into building relationships between items in a nominal dataset.
 %
@@ -27,33 +25,29 @@ Treating time as a standalone entity rather than as another dimension in the dat
 %
 For this work, we are focusing on \emph{point cloud} data of \emph{arbitrary dimension} that is defined or can approximated by a \emph{scalar function}.
 %
-By the end of this chapter, we should have the necessary vocabulary to precisely define what kinds of data this includes.
+By the end of this chapter, we should have the necessary vocabulary to precisely define what kinds of data this focus includes.
 
-We shal assume such data can be stored in a tabular format and we will refer to such a table as a dataset where each row represents a different point and the columns represent different dimensions. This leads us to the following set of elementary definitions:
+We shall assume such data can be stored in a tabular format, and we will refer to such a table as a dataset where each row represents a different point and the columns represent different dimensions. This assumption leads us to the following set of elementary definitions:
 
 \begin{defn}
-  \textbf{Tuple}/\textbf{vector}/\textbf{point} ($\mathbf{x}$) - an ordered collection of real-valued, numeric elements. A tuple will be represented using a bold-faced, lowercase letter.
+  \textbf{Tuple}/\textbf{vector}/\textbf{point} ($\mathbf{x}$) - An ordered collection of real-valued, numeric elements. A tuple will be represented using a bold-faced, lowercase letter.
 \end{defn}
 
 \begin{defn}
-  \textbf{Dataset} ($\mathbf{X}$) - a finite sequence of tuples, each of the
-  same length. We will use a bold-faced, capital letter to denote a full dataset.
+  \textbf{Dataset} ($\mathbf{X}$) - A finite sequence of tuples, each of the same length. We will use a bold-faced, capital letter to denote a full dataset.
 \end{defn}
 
 \begin{defn}
-  \textbf{Dimension} - either a single element of a tuple or the
-  union of all of corresponding elements in all tuples of a dataset.
-  The \textbf{dimensionality} of a dataset is the length of any constituent
-  tuple.
+  \textbf{Dimension} - A scalar measurement represented by any single element of a tuple. For a dataset, we define the term to be the union of all of corresponding elements in all tuples of a dataset. In this sense, a tuple is made up of dimensions and a dataset is a collection of tuples with the same dimensions. The \textbf{dimensionality} of a dataset is the length of any constituent tuple. The dimensionality of a point or dataset is the count of the dimensions.
 \end{defn}
 
-An optional subscript may be used when referencing a point to denote its position in $\mathbf{X}$, for example $\mathbf{x_i}$ represents the $i$th entry in the dataset $\mathbf{X}$ where $i$ is a non-negative integer index into the dataset.
+An optional subscript may be used when referencing a point to denote its position in $\mathbf{X}$, for example $\mathbf{x_i}$ represents the $i$th entry in the dataset $\mathbf{X}$, where $i$ is a non-negative integer index into the dataset.
 %
 When referencing a single element of a point, we will use the convention of an italicized lowercase letter, with either one or two subscripts.
 %
 For example, $x_{i,j}$ references the $j$th dimension of the $i$th point.
 %
-In the case, where a point does not define its index, such as $\mathbf{x}$, then $x_j$ represents the $j$th element of the point.
+When a point does not define its index, such as $\mathbf{x}$, then $x_j$ represents the $j$th element of the point.
 
 The table or matrix format is a convenient representation, and thus, we can interchangeably use the terms ``row,'' ``entry,'' ``tuple,'' or ``point,'' to describe a horizontal row in the table.
 %
@@ -97,12 +91,14 @@ The terms ``column,'' ``parameter,'' ``factor,'' and ``dimension'' all describe 
 As we will be discussing collections of data objects and decomposing them into groups or sets, we begin by defining concepts from set theory.
 %
 \begin{defn}
-  \textbf{Set} ($x \in A$) - an unordered collection of finite or infinite objects, $x$.
+  \textbf{Set} ($x \in A$) - An unordered collection of finite or infinite objects, $x$.
   %
-  A constituent object, $x$, of $A$ is known as a \textbf{member}/\textbf{element}, the relationship being denoted as $x \in A$.
+  A constituent object $x$ of $A$ is known as a \textbf{member}/\textbf{element}, the relationship being denoted as $x \in A$.
 \end{defn}
 
-Numeric sets can be \emph{uncountable} such as the set of all real numbers, $\{x| x \in \mathbb{R}\}$, or \emph{countable} such as the set of all integers, $\{x| x \in \mathbb{Z}\}$ where each item is discrete and isolated.
+Numeric sets can be \emph{uncountable}, such as the set of all real numbers, $\{x| x \in \mathbb{R}\}$, or \emph{countable}, such as the set of all integers, $\{x| x \in \mathbb{Z}\}$, where each item is discrete and isolated.
+%
+A countable set $A$ is one such that each element can be mapped onto $\mathbb{Z}$ in a manner that exhausts $A$.
 %
 In addition, a set may be \emph{unbounded} as in the above two examples or either \emph{open} or \emph{closed bounded} such as the set $\{x \in \mathbb{R} | x \in [0,1)\}$ which exhibits both characteristics.
 %
@@ -113,15 +109,13 @@ That is, $0 \le x < 1$, where the lower boundary is closed as it includes the lo
 \end{defn}
 
 \begin{defn}
-  \textbf{Empty set}/\textbf{null set} ($\emptyset$) - a set containing no members.
+  \textbf{Empty set}/\textbf{null set} ($\emptyset$) - A set containing no members.
 \end{defn}
 
 \begin{defn}
-  \textbf{subset} ($C \subseteq A$) - If every element of $C$ exists in $A$, then $C$ is a subset of $A$.
+  \textbf{Subset} ($C \subseteq A$) - If every element of $C$ is also a member of $A$, then $C$ is a subset of $A$.
   %
-  Furthermore, $C$ is a \textbf{proper subset} ($C \subset A$) when $C \neq A$.
-  %
-  In other words, when $A$ contains at least one member that is not in $C$.
+  Furthermore, $C$ is a \textbf{proper subset} ($C \subset A$) when $C \neq A$, in other words, when $A$ contains at least one member that is not in $C$.
 \end{defn}
 
 The following operators apply to example sets $A$ and $B$:
@@ -141,9 +135,9 @@ The following operators apply to example sets $A$ and $B$:
 \end{defn}
 
 \begin{defn}
-  \textbf{Partition} - A collection of subsets of $A$ such that every element of $A$ exists in one and only one of the subsets.
+  \textbf{Partition} - A collection of subsets, ${P_1, P_2, ... P_n}$, of $A$ such that every element of $A$ exists in one and only one of the subsets $A = \bigcup_{i=1}^{n} P_i$, $x \in P_i$ and $x \in P_j \rightarrow i = j$ for $i,j \in [1, 2, ..., n]$.
   %
-  That is, the intersection of any subsets making up a partition will be empty: $C \cap D = \emptyset$, if $C$ and $D$ are part of the same partition.
+  That is, the intersection of any distinct subsets making up a partition will be empty: $C \cap D = \emptyset$, if $C$ and $D$ are part of the same partition and $C \neq D$.
 \end{defn}
 
 \section{Calculus}
@@ -154,7 +148,7 @@ In these cases, the same notations apply except that the letter $x$ will be used
 %
 Such datasets exist when $\mathbf{y}$ (either a scalar or vector) can be represented as a function of a tuple of inputs $\mathbf{x}$, $\mathbf{y}=f(\mathbf{x})$.
 %
-A function, $f$, fulfills the requirement that any input $\mathbf{x}$ be associated to at most one output, or set of outputs in the case where $\mathbf{y}$ is defined by multiple dimensions.
+A function $f$ fulfills the requirement that any input $\mathbf{x}$ be associated to at most one output, or set of outputs in the case where $\mathbf{y}$ is defined by multiple dimensions.
 %
 Below is the formal definition of a function as it relates to the earlier described set theory:
 
@@ -165,7 +159,7 @@ Below is the formal definition of a function as it relates to the earlier descri
   maps $X$ into $Y$, and in terms of elements $f(x)=y$ is read as $f$ maps $x$
   to $y$.
   In this example, $X$ is the \textbf{domain} of $f$ and $Y$ is the
-  \textbf{codomain}, or \textbf{range}, of $f$. Also, $y$ is the \textbf{image},
+  \textbf{codomain} or \textbf{range} of $f$. Also, $y$ is the \textbf{image}
   of $x$ under $f$.
 \end{defn}
 
@@ -179,40 +173,37 @@ Relevant functional properties are described below:
 
 \begin{defn}
   \textbf{Surjection}/\textbf{Onto function} - Every point in the codomain is
-  associated to some point in the domain. Symbolically, the function
-  $f:X \rightarrow Y$ is surjective if $\forall y \in Y,\exists x \in X,f(x)=y$
+  associated with some point in the domain. Symbolically, the function
+  $f:X \rightarrow Y$ is surjective if $\forall y \in Y,\exists x \in X$ such that $f(x)=y$
 \end{defn}
 
 \begin{defn}
   \textbf{Bijection} - A function that is both injective and surjective. As a
-  result, a bijective function $f: X \rightarrow Y$ also has an inverse mapping
-  $f^{-1} : Y \rightarrow X$.
+  result, a bijective function $f: X \rightarrow Y$ also has a well-defined inverse mapping
+  $f^{-1} : Y \rightarrow X$. Given $f(a) = b)$, then $f^{-1}(b) = a$.
 \end{defn}
 
 \begin{defn}
 \textbf{Derivative}$\mathbf{(\frac{df}{dx})}$ - Given a function $f(x)$ defined
- as $f : \mathbb{R} \rightarrow \mathbb{R}$,
- $\frac{df}{dx} = \lim_{h\rightarrow 0}\frac{f(x+h)-f(x)}{h}$.
- The generalization to an $n$-dimensional domain adds the notion of a
- \textbf{partial derivative} ($\frac{\partial f}{\partial x_0}$), where all but
- one parameter are held constant, thus: $\frac{df}{dx_i} =
- \lim_{h\rightarrow 0}\frac{f(x_1,...,x_i+h,...x_n)-f(x_1,...,x_i,...,x_n)}{h}$.
- The derivative is itself a function, and thus the $n^{th}$-derivative is
- achieved by successively applying the derivative operation and is deonted
- as $\frac{d^nf}{dx^n}$. For the multidimensional case, partials of partials can
- be applied along arbitrary dimensions to achieve mixed partials.
+ as $f : \mathbb{R} \rightarrow \mathbb{R}$, \\
+ $\frac{df}{dx} = \lim_{h\rightarrow 0}\frac{f(x+h)-f(x)}{h}$ when the limit exists.
+ %
+ The generalization to an $n$-dimensional domain adds the notion of a \textbf{partial derivative} ($\frac{\partial f}{\partial x_0}$), where all parameters but one are held constant, thus:\\
+ $\frac{\partial f}{\partial x_i} = \lim_{h\rightarrow 0}\frac{f(x_1,...,x_i+h,...x_n)-f(x_1,...,x_i,...,x_n)}{h}$.
+ %
+ The derivative is itself a function, and thus the $n^{th}$-derivative is achieved by successively applying the derivative operation and is denoted as $\frac{d^nf}{dx^n}$.
+ %
+ For the multidimensional case, partials of partials can be applied along arbitrary dimensions to achieve mixed partials, e.g., $\frac{\partial^2 f}{\partial x_i \partial x_j}$.
 \end{defn}
 
 \begin{defn}
   \textbf{Gradient}$\mathbf{(\nabla f(\mathbf{x}))}$ - Given $f : \mathbb{R}^n \rightarrow \mathbb{R}$, then $\nabla f = \left(\frac{\partial f}{\partial
-  x_1},...,\frac{\partial f}{\partial x_{n}}\right)$
+  x_1},...,\frac{\partial f}{\partial x_{n}}\right)$.
   The gradient of a function where the domain is scalar (not multidimensional) is equivalent to the derivative.
 \end{defn}
 
 \begin{defn}
-  $\mathbf{C^n}$\textbf{Continuity} - $f : A \rightarrow \mathbb{R}^d$ is
-  continuous of order $n$ if all orders of differentiation up to $n$ exist and
-  are continuously defined on the domain $A$.
+  $\mathbf{C^n}$\textbf{Continuity} - $f : A \rightarrow \mathbb{R}^d$ is continuous of order $n$ if all orders of differentiation up to $n$ exist and are continuous on the domain $A$.
 \end{defn}
 
 \begin{defn}
@@ -242,24 +233,23 @@ Relevant functional properties are described below:
 \end{defn}
 
 \begin{defn}
-  \textbf{Degenerate critical point} - A critical point, $\mathbf{p}$, with a
-  singular Hessian matrix: $det(H_f(\mathbf{p})) = 0$.
+  \textbf{Degenerate critical point} - A critical point $\mathbf{p}$ with a singular Hessian matrix: $det(H_f(\mathbf{p})) = 0$.
 \end{defn}
 
 \begin{defn}
- \textbf{Level set}/\textbf{contour}/\textbf{iso-contour}/\textbf{iso-surface} -
- The collection of domain locations which under a given function ($f : A
- \rightarrow \mathbb{R}$) map to the same constant $c$: $\{\mathbf{x} \in A |
+ \textbf{Level set}/\textbf{contour}/\textbf{iso-contour}/\textbf{iso-surface}  ($L$) -
+ The collection of domain locations that, under a given function ($f : A
+ \rightarrow \mathbb{R}$), maps to the same constant $c$: $L = \{\mathbf{x} \in A |
  f(\mathbf{x}) = c\}$.
 \end{defn}
 
 \section{Topology}
 
-Though the name of a field of study, there is also a technical definition attached to the word topology that can be formalized through set theory:
+Although the name of a field of study, there is also a technical definition attached to the word topology that can be formalized through set theory:
 
 \begin{defn}
-  \textbf{Topology} - a set $A$ along with a collection of its subsets,
-  $\mathcal{T}$, where the subsets of $\mathcal{T}$ satisfy three conditions:
+  \textbf{Topology} - A set $A$ along with a collection of its subsets
+  $\mathcal{T}$ where the subsets of $\mathcal{T}$ satisfy three conditions:
 
   \begin{enumerate}
   \item $A \in \mathcal{T}$ and $\emptyset \in \mathcal{T}$
@@ -269,7 +259,7 @@ Though the name of a field of study, there is also a technical definition attach
 \end{defn}
 
 \begin{defn}
-  \textbf{Open set} - Given the topology above $\mathcal{T}$, any set $S$ such
+  \textbf{Open set} - Given the topology $\mathcal{T}$, any set $S$ such
   that $S \in \mathcal{T}$.
 \end{defn}
 
@@ -278,26 +268,35 @@ Though the name of a field of study, there is also a technical definition attach
   given above, any set $U$ such that $U = A$ $\backslash$ $S$.
 \end{defn}
 
-In the abstract sense, this definition is precise, however potentially somewhat unintuitive.
+\begin{defn}
+    \textbf{Cover} of set $A$ - A collection of sets whose union contains $A$ as a subset. A covering is \textbf{open} if it consists of open sets. A \textbf{subcovering} of a covering is a subset that is still a covering of the original set.
+\end{defn}
+
+\begin{defn}
+    \textbf{Compact set} - A set where every open cover contains a finite subcovering.
+\end{defn}
+
+
+In the abstract sense, this definition is precise, but potentially somewhat unintuitive.
 %
-When we restrict our topology to metric spaces, the intuition is that open/closed sets are $n$-dimensional generalizations of an open and closed interval in a 1-dimensional space, respectively.
+When we restrict our topology to metric spaces, the intuition is that open/closed sets are $n$-dimensional generalizations of an open and closed interval in a one-dimensional space, respectively.
 
 \begin{defn}
   \textbf{Topological space} - The pair $(A,\mathcal{T}) = \mathbb{A}$ given in
-  the defintion of a topology above.
+  the definition of a topology above.
 \end{defn}
 
 \begin{defn}
-  \textbf{Interior} ($A^{\circ}$) - the union of all open sets
+  \textbf{Interior} ($A^{\circ}$) - The union of all open sets
   contained in $A$. Alternatively, it is the maximal open set of $A$.
 \end{defn}
 \begin{defn}
-  \textbf{Closure} ($A^{-}$) - the intersection of all closed sets containing
-  $A^{-}$. The closure represents the minimal closed set of $\mathcal{T}$ that
+  \textbf{Closure} ($A^{-}$) - The intersection of all closed sets containing
+  $A$. The closure represents the minimal closed set relative to $\mathcal{T}$ that
   contains $A$.
 \end{defn}
 \begin{defn}
-  \textbf{Boundary} ($\delta A$) - the closure without the interior:
+  \textbf{Boundary} ($\delta A$) - The closure without the interior:
   $\delta A = A^{-} \backslash A^{\circ}$.
 \end{defn}
 
@@ -310,7 +309,7 @@ When we restrict our topology to metric spaces, the intuition is that open/close
 \begin{defn}
   \textbf{Neighborhood basis} - A set of neighborhoods of $C$,
   from the previous definition, denoted $\mathcal{B}$, where for each
-  neighborhood $N$ of $C$, there exists a subset, $M$, in $\mathcal{B}$ such
+  neighborhood $N$ of $C$, there exists a subset $M$ in $\mathcal{B}$ such
   that $M \subseteq N$.
   $\{\forall N \in \mathcal{N}_C, \exists M \in \mathcal{B} | M \subseteq N\}$
 \end{defn}
@@ -331,12 +330,12 @@ When we restrict our topology to metric spaces, the intuition is that open/close
 
 \begin{defn}
   \textbf{Metric} - A function, $d: A \times A \rightarrow \mathbb{R}$,
-  satisfying four conditions:
+  satisfying four conditions. Let $x,y,z \in A$ then $\forall x,y,z$:
   \begin{enumerate}
-  \item Positivity: $\forall x,y \in S, d(x,y) \ge 0$
-  \item Non-Degeneracy: $d(x,y)=0 \Rightarrow x=y$
-  \item Symmetry: $\forall x,y \in S, d(x,y) = d(y,x)$
-  \item Triangle Inequality: $\forall x,y,z \in S, d(x,y) + d(y,z) \ge d(x,z)$
+  \item Positivity: $d(x, y) \ge 0$
+  \item Nondegeneracy: $d(x, y)=0 \Rightarrow x=y$
+  \item Symmetry: $d(x, y) = d(y, x)$
+  \item Triangle Inequality: $d(x, y) + d(y, z) \ge d(x, z)$
   \end{enumerate}
 \end{defn}
 \begin{defn}
@@ -344,12 +343,12 @@ When we restrict our topology to metric spaces, the intuition is that open/close
   every element closer than $r$ to the element $x$: $B(x,r) = \{y| d(x,y) < r\}$.
 \end{defn}
 \begin{defn}
-  \textbf{Metric space} - A set with a metric function.
+  \textbf{Metric space} ($(M,d)$) - A set $M$ with a metric function $d$ defined on it.
 \end{defn}
 
 Within a metric space, the abstract concepts of topology become more concrete and easier to understand.
 %
-For instance, open balls become the realization of the notion of open set, and the boundary of the open ball is given by $\{y| d(x,y) = r\}$, and thus the closure of an open set is given by $\{y| d(x,y) \leq r\}$.
+For instance, open balls become the realization of the notion of open set, and the boundary of the open ball defined by $r$ is given by $\{y| d(x,y) = r\}$, and thus the closure of an open set is given by $\{y| d(x,y) \leq r\}$.
 %
 A neighborhood of an element can then be thought of as an open ball.
 %
@@ -357,17 +356,17 @@ A few examples of the definitions above are given for Euclidean space in Figure~
 
 \begin{defn}
   \textbf{$n$-dimensional Euclidean space} ($\mathbb{E}^n$) - The combination of
-  the set defined by the n-dimensional real space, $\mathbb{R}^n$ and the
+  the set defined by the n-dimensional real space $\mathbb{R}^n$ and the
   \textbf{Euclidean metric}: d(x,y) = $\sqrt{\sum_{i=0}^n(x_i-y_i)^2}$.
 \end{defn}
 
-\begin{figure}[t]
+\begin{figure}[b]
   \centering
   \includegraphics[width=.75\textwidth]{figs/chap2/openSet}
   \caption[Open ball as an example of an open set]{From left to right: An open
-  ball as an example of an open set around point
-  $\mathbf{p}$ in $\mathbb{E}^2$, the interior of the open set, the boundary of
-  the open set, and the closure of the open set.}
+  ball as an example of an aribtrary open set $A$ around point
+  $\mathbf{p}$ in $\mathbb{E}^2$, the interior of $A$, the boundary of
+  $A$, and the closure of $A$ (includes poitns not in $A$).}
   \label{fig:sets}
 \end{figure}
 
@@ -411,76 +410,57 @@ As we discuss topological spaces, it is also important to define a topological m
 %
 The formal definition implies some terminology from the field of algebraic topology, so first let us informally define what is meant by a manifold.
 %
-An $n$-manifold (without boundary), $\mathcal{M}$, is a space that locally resembles $\mathbb{R}^n$.
+An open $n$-manifold (also an $n$-manifold without boundary) $\mathcal{M}$ is a space that locally resembles $\mathbb{R}^n$.
 %
 That is, given any point in the manifold, its neighborhood of points lying on the manifold maps to a continuous space in $n$-dimensions.
 %
-This implies a manifold spans a continuous, unbounded space since no point has neighbors on just one ``side'' of the space.
+This informal definition implies a manifold spans a continuous, unbounded space since no point has neighbors on just one ``side'' of the space.
 %
 For example, consider a line and a circle, both 1-manifolds.
 %
 In each case, one can define a forward and backward neighbor at any point.
 %
-The difference being that the circle case has a finite subcover, a finite number of open sets can be used to cover the entire space, making it a \emph{compact} manifold, whereas the line is \emph{non-compact}.
+The difference is that the circle case has a finite subcover and a finite number of open sets can be used to cover the entire space, making it a \emph{compact} manifold, whereas the line is \emph{noncompact}.
 %
-At times, we will discuss a \emph{manifold with boundary} where this property does not hold.
+When discussing a \emph{manifold with boundary}, this property does not hold.
 %
 That is, in the 1-manifold case there may be points where only a forward or backward neighbor is defined, but not both, such as the case of a line segment or a ray.
 %
 The boundary encompassing a $n$-manifold with boundary is itself an $n-1$-manifold without boundary.
 %
-An $n$-manifold is a space that is locally \emph{homeomorphic} to the $n$-dimensional real space, $\mathbb{R}^n$, but the manifold itself, is not necessarily homeomorphic to $\mathbb{R}^n$.
+An $n$-manifold is a space that is locally \emph{homeomorphic} to the $n$-dimensional real space, $\mathbb{R}^n$, but the manifold itself is not necessarily homeomorphic to $\mathbb{R}^n$.
 %
-To put it in the language, we have thus far formally introduced:
+To put it in the language we have thus far formally introduced:
 
 \begin{defn}
-  \textbf{n-manifold} - a topological space such that every point in the
-  space has a neighborhood that is homeomorphic to the $n$-dimensional Euclidean
-  space.
+  \textbf{n-manifold} - A topological space such that every point in the space has a neighborhood that is homeomorphic to the $n$-dimensional Euclidean space.
 \end{defn}
 
 A manifold can be described using charts:
 
 \begin{defn}
-  \textbf{Chart} at $a \in \mathbb{A}$ - a homeomorphism mapping a
-  neighbhorhood of $a$, $N_a$ to an open set in $\mathbb{R}^n$. Symbolically,
-  a chart can be denoted as an ordered pair: $(N_a,f)$, where $f: N_a
-  \rightarrow \mathbb{R}^n$ and $n$ is the dimension of the chart.
+  \textbf{Chart} at $a \in \mathbb{A}$ - A homeomorphism mapping $N_a$, a neighborhood of $a$, to an open set in $\mathbb{R}^n$. Symbolically, a chart can be denoted as an ordered pair: $(N_a,f)$, where $f: N_a \rightarrow \mathbb{R}^n$ and $n$ is the dimension of the chart.
 \end{defn}
 
 \begin{defn}
-  \textbf{Atlas} - a collection of charts $\{(N_a,f_a)\}$ defined on a
-  topological space $\mathbb{A}$ such that $\cup N_a = \mathbb{A}$.
+  \textbf{Atlas} - A collection of charts $\{(N_a,f_a)\}$ defined on a topological space $\mathbb{A}$ such that $\cup N_a = \mathbb{A}$.
 \end{defn}
 
 \begin{defn}
-  \textbf{Hausdorff space} - A topological space where distinct points can
-  be identified by disjoint neighborhoods: $\{\forall x,y \in \mathbb{A},
-  \exists N_x,N_y | x \in N_x, y \in N_y, x \neq y, N_x \cap N_y = \emptyset\}$.
+  \textbf{Hausdorff space} - A topological space where distinct points (${\forall x,y \in \mathbb{A} | x \neq y}$) can be identified by disjoint neighborhoods $N_x$ and $N_y$: $\{\exists N_x,N_y | x \in N_x, y \in N_y, N_x \cap N_y = \emptyset\}$.
 \end{defn}
 \begin{defn}
   \textbf{Separable} topological space - A topological space with a countable
   basis of neighborhoods.
 \end{defn}
 \begin{defn}
-  \textbf{$d$-manifold with boundary} - a manifold such that every point in
+  \textbf{$d$-manifold with boundary} - A manifold such that every point in
   it is homeomorphic to either $\mathbb{R}^d$ or $\mathbb{H}^d$ and the boundary
   is the set of all points with neighborhoods homeomorphic to $\mathbb{H}^d$.
 \end{defn}
-\begin{defn}
-  \textbf{Cover} of set $A$ - a collection of sets whose union contains $A$
-  as a subset. A covering is \textbf{open} if it consists of open sets. A
-  \textbf{subcovering} of a covering is a subset that is still a covering of the
-  original set.
-\end{defn}
 
 \begin{defn}
-  \textbf{Compact set} - A set where every open cover contains a finite
-  subcovering.
-\end{defn}
-
-\begin{defn}
-  \textbf{Embedding} - a map $f : X \rightarrow Y$ that is a homeomorphism onto
+  \textbf{Embedding} - A map $f : X \rightarrow Y$ that is a homeomorphism onto
   its image, $f(X)$.
 \end{defn}
 
@@ -499,9 +479,7 @@ As we move from the abstract concepts of topology to the concrete, it will be us
 \end{defn}
 
 \begin{defn}
-  \textbf{Graph neighbors} - $\{v_1,v_2 \in V(G) | \exists e\; \psi_G(e) =
-  (v_1,v_2) \;\text{or}\; \psi_G(e) = (v_2,v_1) \}$. Two graph vertices $v_1$ and $v_2$ are
-  neighbors if there exists an edge $e$ associating them.
+  \textbf{Graph neighbors} - $\{v_1,v_2 \in V(G) | \exists e\; \psi_G(e) = (v_1,v_2) \;\text{or}\; \psi_G(e) = (v_2,v_1) \}$. Two graph vertices $v_1$ and $v_2$ are neighbors if there exists an edge $e$ associating them. Graph neighbors are known as \textbf{adjacent}.
 \end{defn}
 
 \begin{defn}
@@ -531,11 +509,11 @@ As we move from the abstract concepts of topology to the concrete, it will be us
 \begin{defn}
   \textbf{Path} - A simple graph whose vertices can be arranged into a sequence
   such that the adjacency in the sequence implies connectivity, and
-  non-adjacency implies the vertices are not connected in the graph.
+  nonadjacency implies the vertices are not connected in the graph.
 \end{defn}
 
 \begin{defn}
-  \textbf{Cycle} - A path where the first and last vertices are also adjacent.
+  \textbf{Cycle} - A nondegenerate path where the first and last vertices are also adjacent.
 \end{defn}
 
 \begin{defn}
@@ -554,20 +532,15 @@ As we move from the abstract concepts of topology to the concrete, it will be us
 \end{defn}
 
 \begin{defn}
-  \textbf{Convex set} - In Euclidean space, a set such that for every pair of
-  points in the set, there exists a straight line segment that is entirely
-  inside the set.
+  \textbf{Convex set} - In Euclidean space, a set such that for every pair of points in the set, there exists a straight line segment that lies entirely inside the set.
 \end{defn}
 
 \begin{defn}
-  \textbf{Convex hull} of a set - The smallest convex set containing a set of
-  points.
+  \textbf{Convex hull} of a set - The smallest convex set containing a set of points.
 \end{defn}
 
 \begin{defn}
-  \textbf{$n$-Simplex} - A bipartite graph of $n+1$ vertices in $n$-dimensions
-   (plus all \emph{faces} enclosed by cycles of edges).
-  Alternatively, it is the convex hull of $n+1$ vertices in $n$-dimension.
+  \textbf{$n$-Simplex} - A bipartite graph of $n+1$ vertices in $n$-dimensions (plus all \emph{faces} enclosed by cycles of edges). Alternatively, it is the convex hull of $n+1$ vertices in arbitrary position in $n$-dimension.
 \end{defn}
 
 \begin{defn}
@@ -583,29 +556,21 @@ As we move from the abstract concepts of topology to the concrete, it will be us
 
 \begin{defn}
   \textbf{Triangulation} - A simplicial complex, $K$ defined on a topological
-  space, $\mathbb{A}$, such that $K \sim \mathbb{A}$
+  space $\mathbb{A}$ such that $K$ is homeomorphic to $\mathbb{A}$.
 \end{defn}
 
 \begin{defn}
-  \textbf{n-Skeleton} - A simplicial complex that includes only up to dimension
+  \textbf{$n$-Skeleton} - A simplicial complex that includes only up to dimension
   $n$ simplices.
 \end{defn}
 
-We will make use of 1-skeletons heavily for approximating topology in high
-dimensions.
+We will rely on one-skeletons for approximating topology in high dimensions.
 %
-An important caveat to note is that the families of graphs we use do not always
-result in a true 1-skeleton as we cannot guarantee that there are no crossing
-edges for some parameterizations of our graphs.
+An important caveat to note is that the families of graphs we use do not always result in a true one-skeleton, because we cannot guarantee that there are no crossing edges for some parameterizations of our graphs.
 %
-This condition is relaxed for many of our cases as the expense to detect and
-remove what amount to somewhat rare cases for points in general position in
-high dimension seems to outweigh the benefits of imposing this rule strictly.
+This condition is relaxed for many of our cases because the expense to detect and remove what amount to somewhat rare cases for points in general position in high dimension seems to outweigh the benefits of strictly imposing this rule.
 %
-However, it is important to note that in general, crossing edges are not a
-desirable quality for many of the analyses presented and we discuss their
-presence in practice and how we can choose graphs that mitigate their appearance
-in Chapter~\ref{ch:graphs}.
+However, it is important to note that in general, crossing edges are not a desirable quality for many of the analyses presented, and we discuss their presence in practice and how we can choose graphs that mitigate their appearance in Chapter~\ref{ch:graphs}.
 
 % \section{Information Theory}
 
