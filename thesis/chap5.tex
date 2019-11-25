@@ -15,7 +15,7 @@ Then, we address selecting batches of candidates in both the global and limit su
 %
 We then conclude this chapter by performing adaptive sampling exclusively in the limit surface case on nuclear power plant safety simulation data~\cite{MaljovecWangMandelli2013b}.
 
-\section{Adaptive Sampling With Topological Scores}
+\section{Adaptive Sampling with Topological Scores}
 \label{paper:ijuq2013}
 In this first work, we look at the problem of designing experiments in order to globally fit a surrogate model to data that is assumed to be represented by a smooth function.
 %
@@ -201,7 +201,7 @@ $TopoB(\x)$ is defined as the bottleneck distance between them.
 
 This section summarizes the different experiments and highlights apparent trends and interesting behaviors.
 
-\subsubsubsection{Example Datasets} To evaluate the different scoring functions and understand the behavior in different scenarios, we have conducted a series of experiments with well-known analytic functions, which can be generalized to high-dimensions.
+\subsubsection{Example Datasets} To evaluate the different scoring functions and understand the behavior in different scenarios, we have conducted a series of experiments with well-known analytic functions, which can be generalized to high-dimensions.
 %
 For example, we use a widely used multimodal test function from the optimization literature, the Ackley function~\cite{Ackley1987}, as well as easily controlled test functions such as a Gaussian mixture and the diagonal function.
 %
@@ -211,7 +211,7 @@ The diagonal function is attractive for testing because it is not axis aligned, 
 %
 Section~\ref{sec:test} details the closed forms of each function and illustrates their behavior by using two-dimensional contour plots.
 
-\subsubsubsection{Plot and Specifications}
+\subsubsection{Plot and Specifications}
 All graphs show the root mean squared error (RMSE) of a given regression model versus the number of samples used for training.
 %
 The RMSE is computed using points evaluated on a grid.
@@ -251,7 +251,7 @@ Nevertheless, as discussed below, even without an explicit representation, sever
 \end{center}
 \end{figure}
 
-\subsubsubsection{Results} Unsurprisingly, the most significant factor in the success of any scoring function is the quality of the regression model.
+\subsubsection{Results} Unsurprisingly, the most significant factor in the success of any scoring function is the quality of the regression model.
 %
 Unfortunately, many experiments even in lower dimensions failed in the sense that the regression based on the space-filling design did not converge within the number of samples tried.
 %
@@ -754,7 +754,7 @@ Formally, this process is described in Algorithm \ref{algo:believe}, where $M(x)
 \end{algorithm}
 }
 
-\subsection{Topology-Based Batch Selection: Points with\\Maximum Persistence}
+\subsection{Topology-Based Batch Selection: Points with Maximum Persistence}
 \label{subsection:topology-maxp}
 
 We now utilize the topological method described earlier to study the topology of the scoring function.
@@ -817,7 +817,7 @@ Since we would like to generalize our batch selection process to any arbitrary d
 \label{fig:persistence}
 \end{figure}
 
-\subsection{Topology-Based Batch Selection:\\Maximum Persistence and Believer Hybrid}
+\subsection{Topology-Based Batch Selection:Maximum Persistence and Believer\\Hybrid}
 Our final strategy creates a hybrid between the maximum persistence strategy and the surrogate believer strategy.
 %
 That is, we proceed with the believer strategy by temporarily adding points with the highest persistence.
