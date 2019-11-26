@@ -74,8 +74,8 @@ The true response at a point $\z \in \Tcal$ is denoted as $y(\z)$.
 Let $\Scal = \{\x\}_{i=1}^{m}$ be the set of $m$ candidate points in dimension $d$.
 %
 The predicted response at a point $\x \in \Scal$ is denoted as $\hat{y}(\x)$.
-
-\subsubsubsection{Delta} This criterion can be seen as a way to evenly sample the range space of the function.
+\begin{itemize}
+\item{Delta - This criterion can be seen as a way to evenly sample the range space of the function.
 %
 It is defined as the absolute value of the difference between the predicted response at a candidate point and the response at the nearest training point.
 %
@@ -91,25 +91,23 @@ Formally, for a point $\x \in \Scal$, $Delta(\x)$ is the absolute difference, to
 %
 Said another way, for some fixed parameters $p$ and $q$, let $\x^* = \argmin_{\z \in \Tcal} d(\x,\z)$, then $Delta(\x) = |\hat{y}(\x) - y(\x^*)|^q$.
 %
-In the default setting, $p = 2$ and $q = 2$.
+In the default setting, $p = 2$ and $q = 2$.}
 
-\subsubsubsection{Active Learning MacKay (ALM)} The ALM criterion, described in~\cite{MacKay1992}, attempts to optimize the predictive variance.
+\item{Active Learning MacKay (ALM) - The ALM criterion, described in~\cite{MacKay1992}, attempts to optimize the predictive variance.
 %
 The idea is that the variance represents a notion of uncertainty in the prediction, and new samples should be evaluated in the least well understood regions of the parameter space.
 %
 For the GPM, the variance can be computed directly from the model, which appears to be a significant advantage (see Section~\ref{sec:exp}).
 %
-For the other prediction models, we use bootstrapping (as described in Sections~\ref{sec:regression} and~\ref{sec:package}) to estimate the variance.
+For the other prediction models, we use bootstrapping (as described in Sections~\ref{sec:regression} and~\ref{sec:package}) to estimate the variance.}
 
-\subsubsubsection{Expected Improvement (EI)}
-%
-As discussed in Section~\ref{sec:sampling}, EI can be seen as a combination of the expected prediction error used in the ALM method and the Delta criterion.
+\item{Expected Improvement (EI) - As discussed in Section~\ref{sec:sampling}, EI can be seen as a combination of the expected prediction error used in the ALM method and the Delta criterion.
 %
 Points are chosen that either show a large uncertainty in their current prediction or have a large discrepancy with the closest existing sample.
 %
-Our predication model uses $EI(\x) = \left(\left(\hat{y}(\x) - y(\x^*)\right)^2+ ALM(\x)\right)^{1/2}$.
+Our predication model uses $EI(\x) = \left(\left(\hat{y}(\x) - y(\x^*)\right)^2+ ALM(\x)\right)^{1/2}$.}
 
-\subsubsubsection{Distance Penalization (DP)} Each of the above three scoring functions can be augmented with a distance penalization factor, thereby creating three additional scoring functions: \emph{DeltaDP}, \emph{ALMDP} and \emph{EIDP}.
+\item{Distance Penalization (DP) - Each of the above three scoring functions can be augmented with a distance penalization factor, thereby creating three additional scoring functions: \emph{DeltaDP}, \emph{ALMDP} and \emph{EIDP}.
 %
 For DeltaDP, the Delta criterion with an additional penalty term, we can prevent samples from lying too close to the training set.
 %
@@ -127,8 +125,8 @@ A semivariogram is a graph of the dependence of two observations as a function o
 %
 Similarly, we define $ALMDP(\x) = ALM(\x) * \rho_\x$, where we approach a more space-filling point selection; and $EIDP(\x) = EI(\x) * \rho_\x$.
 %
-By default, we use $q_0 = 0.5$.
-
+By default, we use $q_0 = 0.5$.}
+\end{itemize}
 \subsubsection{Topological Scoring Functions}
 \label{sec:toposcoring}
 The scoring functions discussed above pick sample points more or less directly based on the idea of globally improving the prediction accuracy.
@@ -147,8 +145,24 @@ This rationale leads to topology based scoring functions aimed at discovering th
 %
 In particular, we propose three topology-based scoring functions, \emph{TopoHP}, \emph{TopoP} and \emph{TopoB} as detailed below and illustrated in Figure~\ref{fig:topo-all}.
 
+\begin{figure}[!t]
+  \begin{center}
+  \includegraphics[width=1.0\linewidth]{figs/chap5/topo-all}
+  \caption[Illustration of topological scoring methods]{(a) TopoHP: Construct a Morse-Smale complex from training data (silver) as well as all candidates with predicted responses (purple), and return the persistence of the critical points within the candidates.
+  %
+  Point $\protect\x$ is selected with the highest $TopoHP(\protect\x)$.
+  %
+  (b) TopoP: average change in persistence for all extrema before (left) and after (right) inserting a candidate $\protect\x$ into the Morse-Smale complex.
+  %
+  (c) Morse-Smale complexes before (left) and after (middle) inserting a candidate point $\protect\x$;
+  %
+  TopoB (right): bottleneck distance between the corresponding persistence diagrams before (circles) and after (squares) insertion.}
+  \label{fig:topo-all}
+  \end{center}
+\end{figure}
 
-\subsubsubsection{TopoHP} The first strategy is aimed at sampling at or near predicted critical points with significant influence on the topology.
+\begin{itemize}
+\item{TopoHP - The first strategy is aimed at sampling at or near predicted critical points with significant influence on the topology.
 %
 It is defined as the persistence of a candidate point within an (approximated) Morse-Smale complex constructed from oversampling the current response model.
 %
@@ -160,25 +174,9 @@ Referring to Figure~\ref{fig:topo-all}(a), the silver points illustrate the trai
 %
 We construct a Morse-Smale complex over $\Tcal \cup \Scal$ and return the persistence of the critical points within the candidates.
 %
-Here, point $\x$ is selected with the highest persistence, and therefore, the highest $TopoHP(\x)$.
+Here, point $\x$ is selected with the highest persistence, and therefore, the highest $TopoHP(\x)$.}
 
-\begin{figure}[!t]
-\begin{center}
-\includegraphics[width=1.0\linewidth]{figs/chap5/topo-all}
-\caption[Illustration of topological scoring methods]{(a) TopoHP: Construct a Morse-Smale complex from training data (silver) as well as all candidates with predicted responses (purple), and return the persistence of the critical points within the candidates.
-%
-Point $\protect\x$ is selected with the highest $TopoHP(\protect\x)$.
-%
-(b) TopoP: average change in persistence for all extrema before (left) and after (right) inserting a candidate $\protect\x$ into the Morse-Smale complex.
-%
-(c) Morse-Smale complexes before (left) and after (middle) inserting a candidate point $\protect\x$;
-%
-TopoB (right): bottleneck distance between the corresponding persistence diagrams before (circles) and after (squares) insertion.}
-\label{fig:topo-all}
-\end{center}
-\end{figure}
-
-\subsubsubsection{TopoP} Similar to a bootstrapping approach, this strategy aims to evaluate how much the topology (as represented by the persistences) would change if a new candidate point is added.
+\item{TopoP - Similar to a bootstrapping approach, this strategy aims to evaluate how much the topology (as represented by the persistences) would change if a new candidate point is added.
 %
 It is defined as the average change of persistence for all current extrema when a given candidate point with its predicted response is inserted into the Morse-Smale complex.
 %
@@ -186,15 +184,16 @@ As shown in Figure~\ref{fig:topo-all}(b), we first construct the Morse-Smale com
 %
 Then for each candidate point $\x \in \Scal$, we construct a new Morse-Smale complex consisting of $\Tcal \cup \x$ (Figure~\ref{fig:topo-all}(b) right).
 %
-To score the candidate $\x$, we compute the change in persistence for each training point $\x \in \Tcal$ that remains as an extrema point between the original and enhanced Morse-Smale complex, and average these changes to obtain a single, non-negative value.
+To score the candidate $\x$, we compute the change in persistence for each training point $\x \in \Tcal$ that remains as an extrema point between the original and enhanced Morse-Smale complex, and average these changes to obtain a single, non-negative value.}
 
-\subsubsubsection{TopoB} For each point $\x \in \Scal$, $TopoB(\x)$ is defined as the bottleneck distance between the persistence diagram of the Morse-Smale complex over $\Tcal$ versus the Morse-Smale complex consisting of $\Tcal \cup \x$.
+\item{TopoB - For each point $\x \in \Scal$, $TopoB(\x)$ is defined as the bottleneck distance between the persistence diagram of the Morse-Smale complex over $\Tcal$ versus the Morse-Smale complex consisting of $\Tcal \cup \x$.
 %
 This strategy is similar to the TopoP scoring except that the bottleneck distance takes not only the persistence values into account but also the order and nesting of the corresponding simplification.
 %
 This strategy is shown in Figure~\ref{fig:topo-all}(c), where left and middle images illustrate the (approximated) Morse-Smale complexes before and after inserting a candidate point $\x$, and the right image displays the corresponding persistence diagrams of these complexes.
 %
-$TopoB(\x)$ is defined as the bottleneck distance between them.
+$TopoB(\x)$ is defined as the bottleneck distance between them.}
+\end{itemize}
 
 \subsection{Experiments}
 \label{sec:exp}
@@ -239,8 +238,7 @@ We have opted to not show variances or percentiles alongside the medians because
 %
 Nevertheless, as discussed below, even without an explicit representation, several of the plots suggest drastic differences in the stability of the regression.
 
-
-\begin{figure}[!ht]
+\begin{figure}[b]
 \begin{center}
 \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Ackley_td=20}
 \includegraphics[width=0.45\linewidth]{figs/chap5/earth_Ackley_td=20}
@@ -264,19 +262,6 @@ Furthermore, any manual or semiautomatic parameter tuning would make comparing m
 Therefore, we have selected to run all experiments with the default values provided with the various regression packages listed in Section~\ref{sec:package}.
 %
 Subsequently, we consider only experiments in which the space-filling design indicated a valid surrogate model.
-
-\begin{figure}[htbp]
-\begin{center}
- \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Diag2Max_td=20}
- \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Diag4Max_td=20}
- \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_GMM5_2D_td=20}
- \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_MGR_td=20}
- \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Salomon_td=20}
- \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Whitley_td=20}
- \caption{Adaptive sampling various two-dimensional test functions using the GPM. From left to right and top to bottom the following functions are shown: the two-maxima diagonal, the four-maxima diagonal, the mixture of five Gaussians, the MGR, the Salomon, and the Whitley.}
-\label{fig:2D_gpm_results}
-\end{center}
-\end{figure}
 
 In general, the GPM-based regression produces the smoothest and most distinctive plots showing clear differences between scoring functions.
 %
@@ -314,6 +299,19 @@ The four-maxima diagonal version shows a similar behavior even though small diff
 %
 The mixture of five Gaussians again shows a clear preference for the error-driven criteria and the Delta function performs worse than the topological scoring functions.
 
+\begin{figure}[t]
+  \begin{center}
+   \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Diag2Max_td=20}
+   \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Diag4Max_td=20}
+   \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_GMM5_2D_td=20}
+   \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_MGR_td=20}
+   \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Salomon_td=20}
+   \includegraphics[width=0.45\linewidth]{figs/chap5/gpm_Whitley_td=20}
+   \caption{Adaptive sampling various two-dimensional test functions using the GPM. From left to right and top to bottom the following functions are shown: the two-maxima diagonal, the four-maxima diagonal, the mixture of five Gaussians, the MGR, the Salomon, and the Whitley.}
+  \label{fig:2D_gpm_results}
+  \end{center}
+\end{figure}
+
 The remaining functions show a very similar pattern with the noticeable exception that now the EI criteria no longer perform as well as the ALM.
 %
 For the MGR function, TopoHP performs second best, with EI and Delta mirroring the LHS line.
@@ -338,7 +336,7 @@ In such cases, the Delta functional may perform well because it picks values pur
 %
 It is unclear, however, why such a behavior is not present in the two-dimensional versions.
 
-\begin{figure}[htbp]
+\begin{figure}[t]
   \begin{center}
    \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Ackley_td=30}\label{fig:ackley3D_gpm}
    \includegraphics[width=0.24\linewidth]{figs/chap5/gpm_Diag2Max_3D_td=30}\label{fig:2diag3D_gpm}
@@ -368,6 +366,22 @@ Overall, the two-dimensional Whitley function shows a good performance, with nea
 %
 Interestingly, in its three-dimensional incarnation, the adaptive sampling does not work nearly as well and also shows excessive variations in several curves.
 
+\begin{figure}[t]
+  \begin{center}
+   \includegraphics[width=0.3\linewidth]{figs/chap5/earth_Diag2Max_td=20}
+   \includegraphics[width=0.3\linewidth]{figs/chap5/earth_GMM5_2D_td=20}
+   \includegraphics[width=0.3\linewidth]{figs/chap5/earth_MGR_td=20}
+   \includegraphics[width=0.3\linewidth]{figs/chap5/earth_Whitley_td=20}
+   \includegraphics[width=0.3\linewidth]{figs/chap5/earth_Ackley_td=30}
+   \includegraphics[width=0.3\linewidth]{figs/chap5/earth_Whitley_td=30}
+   \includegraphics[width=0.3\linewidth]{figs/chap5/earth_MGR_td=30}
+   \includegraphics[width=0.3\linewidth]{figs/chap5/earth_GMM2_3D_td=30}
+   \caption{Adaptive sampling of various test functions using the EARTH regression model.
+   From left to right, top to bottom the graphs for each of the following datasets are shown: the two-dimensional, two-maxima diagonal function, the two-dimensional mixture of five Gaussians, two-dimensional MGR function, the two-dimensional Whitley functions, the three-dimensional Ackley function, the three-dimensional Whitley function, the three-dimensional MGR function, and the three-dimensional mixture of two Gaussians.}
+  \label{fig:earth_results}
+  \end{center}
+  \end{figure}
+
 Still looking at Figure~\ref{fig:earth_results}, in general, there appears to be no significant advantage of one scoring function over another.
 However, for many cases with the EARTH model, the TopoHP seems to perform especially bad; for example, see the three-dimensional Whitley and three-dimensional MGR functions.
 %
@@ -385,30 +399,14 @@ A failed but nevertheless interesting result comes from the mixture of two Gauss
 
 \begin{figure}[t]
 \begin{center}
- \includegraphics[width=0.45\linewidth]{figs/chap5/earth_Diag2Max_td=20}
- \includegraphics[width=0.45\linewidth]{figs/chap5/earth_GMM5_2D_td=20}
- \includegraphics[width=0.45\linewidth]{figs/chap5/earth_MGR_td=20}
- \includegraphics[width=0.45\linewidth]{figs/chap5/earth_Whitley_td=20}
- \includegraphics[width=0.45\linewidth]{figs/chap5/earth_Ackley_td=30}
- \includegraphics[width=0.45\linewidth]{figs/chap5/earth_Whitley_td=30}
- \includegraphics[width=0.45\linewidth]{figs/chap5/earth_MGR_td=30}
- \includegraphics[width=0.45\linewidth]{figs/chap5/earth_GMM2_3D_td=30}
- \caption{Adaptive sampling of various test functions using the EARTH regression model.
- From left to right, top to bottom the graphs for each of the following datasets are shown: the two-dimensional, two-maxima diagonal function, the two-dimensional mixture of five Gaussians, two-dimensional MGR function, the two-dimensional Whitley functions, the three-dimensional Ackley function, the three-dimensional Whitley function, the three-dimensional MGR function, and the three-dimensional mixture of two Gaussians.}
-\label{fig:earth_results}
-\end{center}
-\end{figure}
-
-\begin{figure}[t]
-\begin{center}
-  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_Diag2Max_td=20}
-  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_GMM5_2D_td=20}
-  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_MGR_td=20}
-  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_Whitley_td=20}
-  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_Ackley_td=30}
-  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_Whitley_td=30}
-  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_MGR_td=30}
-  \includegraphics[width=0.45\linewidth]{figs/chap5/mda_GMM2_3D_td=30}
+  \includegraphics[width=0.3\linewidth]{figs/chap5/mda_Diag2Max_td=20}
+  \includegraphics[width=0.3\linewidth]{figs/chap5/mda_GMM5_2D_td=20}
+  \includegraphics[width=0.3\linewidth]{figs/chap5/mda_MGR_td=20}
+  \includegraphics[width=0.3\linewidth]{figs/chap5/mda_Whitley_td=20}
+  \includegraphics[width=0.3\linewidth]{figs/chap5/mda_Ackley_td=30}
+  \includegraphics[width=0.3\linewidth]{figs/chap5/mda_Whitley_td=30}
+  \includegraphics[width=0.3\linewidth]{figs/chap5/mda_MGR_td=30}
+  \includegraphics[width=0.3\linewidth]{figs/chap5/mda_GMM2_3D_td=30}
 \caption{Adaptive sampling of various test functions using the MDA model. From left to right and top to bottom, the plots for the following cases are shown: the two-dimensional two-maxima diagonal, the two-dimensional mixture of five Gaussians, the two-dimensional MGR function, the two-dimensional Whitley function, the three-dimensional Ackley function, the three-dimensional Whitley function, the three-dimensional MGR function, and the three-dimensional mixture of two Gaussians.}
 \label{fig:mda}
 \end{center}
@@ -811,13 +809,13 @@ Since we would like to generalize our batch selection process to any arbitrary d
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.32\textwidth]{figs/chap5/persistence}
-\includegraphics[width=0.32\textwidth]{figs/chap5/persistence2}
+\includegraphics[width=0.45\textwidth]{figs/chap5/persistence}
+\includegraphics[width=0.45\textwidth]{figs/chap5/persistence2}
 \caption{A simple one-dimensional function with four maxima showing a selection strategy that chooses the two highest-valued maxima (left) and the strategy we employ in MaxP, which selects the two highest persistence maxima.}
 \label{fig:persistence}
 \end{figure}
 
-\subsection{Topology-Based Batch Selection:Maximum Persistence and Believer\\Hybrid}
+\subsection{Topology-Based Batch Selection: Maximum Persistence and Believer\\Hybrid}
 Our final strategy creates a hybrid between the maximum persistence strategy and the surrogate believer strategy.
 %
 That is, we proceed with the believer strategy by temporarily adding points with the highest persistence.
@@ -963,7 +961,7 @@ They are shown with superimposed limit surfaces in Figure~\ref{fig:images}.
 %
 The limit surfaces are highly irregular with many small components, and their corresponding threshold values are $125$, $30$, $80$, and $100$, respectively.
 
-\begin{figure}[b]
+\begin{figure}[!hb]
 \centering
 \includegraphics[width=0.98\textwidth]{figs/chap5/images}
 \caption[Test images for batch adaptive sampling]{Test images. True limit surfaces are marked with yellow curves.
@@ -1004,6 +1002,7 @@ If the best strategy is topology-based, it is colored in red.
 \begin{table}[t]
 \scriptsize
 \centering
+\caption[RMSE convergence results for synthetic test functions]{RMSE convergence results for synthetic test functions.}
 \begin{tabular}{l || c | c | c}
    & GMM  & Salomon  & Sinusoidal \\
   &  ( $\leq$ 0.07818 )  &  ( $\leq$ 0.07169 )  &  ( $\leq$ 0.04674 ) \\
@@ -1032,7 +1031,6 @@ MaxP             & 99.2 $\pm$ 17.23 (96)        & 140.8 $\pm$ 15.68 (128)    & 1
 2-MaxP + Believe & \myemph{67.2 $\pm$ 9.6 (64)} & 99.2 $\pm$ 9.6 (96)        & 83.2 $\pm$ 15.68 (96)\\
 4-MaxP + Believe & 70.4 $\pm$ 12.8 (64)         & \myemph{96.0 $\pm$ 0 (96)} & 86.4 $\pm$ 14.66 (96)\\
 \end{tabular}
-\caption[RMSE convergence results for synthetic test functions]{RMSE convergence results for synthetic test functions.}
 \label{table:global-synthetic}
 \end{table}
 
@@ -1051,6 +1049,7 @@ By coupling the MaxP strategy with the believe strategy, we see relatively good 
 \begin{table}[h]
 \scriptsize
 \centering
+\caption[RMSE convergence results for image datasets]{RMSE convergence results for image datasets.}
 \begin{tabular}{l || c | c | c | c }
    & Face  & Nebula  & Tiger  & Valve \\
   &  ( $\leq$ 29.83 )  &  ( $\leq$ 19.8 )  &  ( $\leq$ 51.94 )  &  ( $\leq$ 38.52 ) \\
@@ -1078,7 +1077,6 @@ MaxP             & 828.8 $\pm$ 36.35 (832)          & 742.4 $\pm$ 104.0 (736)   
 2-MaxP + Believe & 787.2 $\pm$ 32.63 (784)          & 739.2 $\pm$ 103.6 (704)          & 806.4 $\pm$ 129.4 (784)          & \myemph{617.6 $\pm$ 116.3 (608)} \\
 4-MaxP + Believe & \myemph{761.6 $\pm$ 49.16 (768)} & 656.0 $\pm$ 90.79 (608)          & 803.2 $\pm$ 84.0 (800)           & 630.4 $\pm$ 79.74 (640)\\
 \end{tabular}
-\caption[RMSE convergence results for image datasets]{RMSE convergence results for image datasets.}
 \label{table:global-images}
 \end{table}
 
@@ -1142,6 +1140,7 @@ As the topology-based methods are believed to be more judicious about not placin
 \begin{table}[t]
 \scriptsize
 \centering
+\caption[F1-Score convergence results for synthetic datasets]{F1-Score convergence results for synthetic datasets.}
 \begin{tabular}{l || c | c | c }
  & GMM & Salomon & Sinusoidal \\
  & ( $\leq$ 0.9871 ) & ( $\leq$ 0.988 ) & ( $\leq$ 0.9942 ) \\
@@ -1168,13 +1167,13 @@ As the topology-based methods are believed to be more judicious about not placin
  2-MaxP + Believe & 86.4 $\pm$ 20.49 (96)         & 147.2 $\pm$ 15.68 (160)         & \myemph{131.2 $\pm$ 22.4 (128)} \\
  4-MaxP + Believe & 86.4 $\pm$ 14.66 (96)         & \myemph{134.4 $\pm$ 12.8 (128)} & 128.0 $\pm$ 14.31 (128)\\
 \end{tabular}
-\caption[F1-Score convergence results for synthetic datasets]{F1-Score convergence results for synthetic datasets.}
 \label{table:f1_synthetics}
 \end{table}
 
 \begin{table}[b]
 \scriptsize
 \centering
+\caption[F1-Score convergence results for image datasets]{F1-Score convergence results for image datasets. *Denotes where the fastest median convergence differs from the fastest mean convergence.}
 \begin{tabular}{l || c | c | c | c }
  & Face & Nebula & Tiger & Valve \\
  & ( $\leq$ 0.9281 ) & ( $\leq$ 0.9387 ) & ( $\leq$ 0.6933 ) & ( $\leq$ 0.8547 ) \\
@@ -1203,7 +1202,6 @@ As the topology-based methods are believed to be more judicious about not placin
  2-MaxP + Believe & \myemph{60.8 $\pm$ 17.23 (64)} & \myemph{118.4 $\pm$ 38.0 (128)} & \myemph{166.4 $\pm$ 103.0 (144)} & 198.4 $\pm$ 104.0 (192)\\
  4-MaxP + Believe & \myemph{60.8 $\pm$ 17.23 (64)} & \myemph{118.4 $\pm$ 38.0 (128)} & 169.6 $\pm$ 103.2 (160)          & 198.4 $\pm$ 104.0 (192)\\
 \end{tabular}
-\caption[F1-Score convergence results for image datasets]{F1-Score convergence results for image datasets. *Denotes where the fastest median convergence differs from the fastest mean convergence.}
 \label{table:f1_images}
 \end{table}
 
@@ -1213,7 +1211,7 @@ With a more complicated response surface, the corresponding scoring function als
 %
 For a fixed dataset (e.g., Face, Nebula), the topology-based methods can perform better than the believe strategy as $b$ increases, because the topology of the scoring function is complex enough that even after $32$ samples, we can still find additional candidates that are structurally informative.
 
-\subsubsection{Hausdorff Distance Convergence Results.}
+\subsubsection{Hausdorff Distance Convergence Results}
 Finally, we report the Hausdorff distance metric convergence results in Table~\ref{table:hausdorff_synthetics}, computed between the true limit surfaces and the predicted limit surfaces.
 %
 We omit the image datasets as the Hausdorff distances did not converge on these tests, most likely due to the many small components of the true limit surfaces.
@@ -1225,6 +1223,7 @@ Thus, this metric is better suited for the synthetic functions that have large, 
 \begin{table}[t]
 \scriptsize
 \centering
+\caption{Hausdorff distance convergence results for synthetic datasets.}
 \begin{tabular}{l || c | c | c }
  & GMM & Salomon & Sinusoidal \\
  & ( $\leq$ 0.1878 ) & ( $\leq$ 0.03332 ) & ( $\leq$ 0.1213 ) \\
@@ -1265,7 +1264,6 @@ Thus, this metric is better suited for the synthetic functions that have large, 
 \hline
  4-MaxP + Believe & \myemph{57.6 $\pm$ 19.2 (64)} & 102.4 $\pm$ 34.47 (96) & \myemph{32.0 $\pm$ 0 (32)}\\
 \end{tabular}
-\caption{Hausdorff distance convergence results for synthetic datasets.}
 \label{table:hausdorff_synthetics}
 \end{table}
 
@@ -1418,7 +1416,7 @@ By relaxing our notion of spanning, we give the algorithm a chance to explore th
 % This will become more clear subsequently when $\Mtwo$ is described in detail.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{$M_1$: Global Prediction Model Limit Surface Recovery.}
+\subsubsection{$M_1$: Global Prediction Limit Surface Recovery}
 As illustrated in Figure~\ref{fig:pipelines} top right, we begin with a set of training points and build a prediction model using the GPM.
 %
 Second, we \emph{densely} sample the GPM over the entire domain using a CVT scheme, and construct a relaxed Gabriel graph on the union of these CVT samples with the training points.
@@ -1429,7 +1427,7 @@ Fourth, the set of candidate points are ranked based on the point density criter
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{$M_2$: Topology-Based Prediction Model Limit Surface Recovery.}
+\subsubsection{$M_2$: Topology Prediction Limit Surface Recovery}
 As illustrated in Figure~\ref{fig:pipelines} bottom left, $\Mtwo$ improves the global prediction model query by extracting the topology of the prediction model and focusing samples in specific regions.
 %
 First, we fit a GPM on the initial set of training points.
@@ -1470,11 +1468,8 @@ Second, $\Mtwo$ introduces a tolerance parameter $\delta$ in defining the relaxe
 %Third, we expect when dimension of the response surface is high and/or when the failure regions are small with respect to the entire domain area, $\Mtwo$ query much smaller number of points from the prediction model, which is cost effective.
 Overall, as we demonstrate in Section \ref{sec:experiments}, $\Mtwo$ behaves comparably with $\Mone$ under general settings, and for certain special scenarios it performs drastically better.
 
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{$M_3$: Data-Driven Limit Surface Recovery.}
+\subsubsection{$M_3$: Data-Driven Limit Surface Recovery}
 As opposed to building a prediction model, $\Mthree$ (Figure~\ref{fig:pipelines} bottom right) begins by directly building a neighborhood structure as the surrogate model (e.g., a relaxed Gabriel graph) on the initial training data.
 %
 It then creates a candidate set by first obtaining linearly interpolated points at $t$ along spanning edges of the graph, and introducing a random perturbation $\epsilon$ along all dimensions to these points.
@@ -1593,7 +1588,7 @@ As we will see in Section \ref{subsec:df}, in certain situations, varying $\delt
 \subsubsection{Distance Field and Inverted Distance Field}
 \label{subsec:df}
 
-\begin{figure}[b]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=1.0\textwidth]{figs/chap5/synthetic-D-E-DF.pdf}
 \caption{Synthetic datasets $\protect\SD$ (top) and $\protect\SE$ (bottom).
@@ -1622,9 +1617,9 @@ $f(\mathbf{x}) = \bigl(\sum_i \langle\mathbf{x}-\mathbf{c_i},A_i(\mathbf{x}-\mat
 %
 We set $p=2$ here.
 
-\begin{figure}[b]
+\begin{figure}[ht]
 \centering
-\includegraphics[width=0.7\textwidth]{figs/chap5/synthetic-D-20percent.pdf}
+\includegraphics[width=0.8\textwidth]{figs/chap5/synthetic-D-20percent.pdf}
 \caption{
 $\protect\Mtwo$ for $\protect\SD$: Increasing limit surface tolerance parameter $\protect\delta$
 from $5\%$ to $20\%$ of the range space allows us to accurately capture the third component of the limit surface even though we have no initial training data whose response is above the threshold for this region.
@@ -1657,12 +1652,19 @@ To place our techniques in the appropriate setting, we test the validity of our 
 %
 The simulation considers a simplified PWR primary loop including the following systems: automatic depressurization, high-pressure injection system (HPIS), low-pressure injection systems (LPIS), and diesel generators (DG).
 %
-The scope of this analysis is to evaluate the impact of loss of offsite power (LOOP) on the maximum fuel temperature.
+The scope of this analysis is to evaluate the impact of the loss of offsite power (LOOP) on the maximum fuel temperature.
 %
 In particular, domain scientists aim to analyze uncertainties associated with the time at which the power grid is disconnected from the plant and the time associated with the diesel generators starting successfully.
 %
 There are two input variables of interests in the simulation: $T_{PG\_SD}$ and $T_{DG}$, and the output variable is the core temperature.
-%
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figs/chap5/scenExample.pdf}
+  \caption[Example of a transient for a LOOP scenario]{$\protect\NF$: Example of a transient for a LOOP scenario.}
+  \label{fig:nuclearTransient}
+\end{figure}
+
 A typical scenario is as follows (see Figure~\ref{fig:nuclearTransient}):
 \begin{itemize} \denselist
   \item External events force the reactor trip at time $0$;
@@ -1671,13 +1673,6 @@ A typical scenario is as follows (see Figure~\ref{fig:nuclearTransient}):
   \item The temperature of the core starts to rise since heat removal is incapacitated. A failure condition is reached when the temperature reaches 800$^{\circ}$C;
   \item Diesel generators become available $T_{DG}$ after the LOOP condition, and the ECCS is now able to remove decay heat.
 \end{itemize}
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=0.6\textwidth]{figs/chap5/scenExample.pdf}
-  \caption[Example of a transient for a LOOP scenario]{$\protect\NF$: Example of a transient for a LOOP scenario.}
-  \label{fig:nuclearTransient}
-\end{figure}
 
 For the above dataset named $\NF$, the results of the adaptive sampling models are shown in Figure~\ref{fig:nuclear-F}.
 %
@@ -1691,7 +1686,7 @@ Both $\Mone$ and $\Mtwo$ explore more of the domain space, at the cost of wastin
 %
 The catch here is that if we do not know what regions are interesting, it might be good to explore the domain for validation and verification purposes through $\Mone$ or $\Mtwo$.
 
-\begin{figure}[!ht]
+\begin{figure}[t]
   \centering
   \includegraphics[width=1.0\textwidth]{figs/chap5/nuclear-F.pdf}
   \caption{Nuclear dataset $\protect\NF$.
@@ -1710,32 +1705,36 @@ The surfaces of Figure~\ref{fig:nuclear-F-surface-converge} are rendered after e
 It is again evident that $\Mone$ and $\Mtwo$ based upon the GPM introduce a bias toward response surface fitting and that more adaptively sampled points do not improve the fit drastically after 50 points or so.
 %
 On the other hand, since $\Mthree$ is not dependent on the prediction model, it converges to the true limit surface (through visual inspection) reasonably fast after only 30 adaptively sampled points.
+%
+In the next section, we complement this qualitative analysis with a quantative one by evaluating the root-mean-square error (RMSE) convergence.
 
-\begin{figure}%[!ht]
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.85\textwidth]{figs/chap5/nuclear-F-surface-converge.pdf}
   \caption{Convergence of estimated response surfaces and estimated limit surfaces for $\protect\NF$,  with all three models. Images are obtained after every additional $10$ adaptively sampled points.}
   \label{fig:nuclear-F-surface-converge}
 \end{figure}
 
+\clearpage
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \subsubsection[Root-Mean-Square Error Convergence]{Root-Mean-Square Error Convergence for $\Mone$ and $\Mtwo$}
-\subsubsection{Root-Mean-Square Error Convergence for $\protect\Mone$ and $\protect\Mtwo$}
+\subsubsection{Error Convergence for $\protect\Mone$ and $\protect\Mtwo$}
 
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-convergence.pdf}
-\caption{Convergence of RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ for a single trial.}
-\label{fig:RMSE-convergence}
-\end{figure}
-
-To further understand the convergence behavior of the limit surfaces estimated by $\Mone$ and $\Mtwo$, we obtain convergence plots in terms of the root mean squared error (RMSE) in Figure~\ref{fig:RMSE-convergence}.
+To further understand the convergence behavior of the limit surfaces estimated by $\Mone$ and $\Mtwo$, we obtain convergence plots in terms of the RMSE in Figure~\ref{fig:RMSE-convergence}.
 %
 All plots show the RMSE between estimated limit surfaces and the true limit surface\footnote{In the case where ground-truth limit surface is not available, we could compute RMSE with respect to the previous round to estimate the convergence behavior.}, versus the number of samples added in the training data up to $100$ points.
 %
 The RMSE is computed using a dense sampling of points located on the true limit surfaces.
 
-$\Mtwo$ behaves comparably with $\Mone$ for general cases, e.g., for $\SA$, $\SB$, $\SC$, and $\SD$; and for $\SD$, $\Mtwo$ converges to the same level only faster than $\Mone$.
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-convergence.pdf}
+  \caption{Convergence of RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ for a single trial.}
+  \label{fig:RMSE-convergence}
+  \end{figure}
+  
+$\Mtwo$ behaves comparably with $\Mone$ for general cases, e.g., for $\SA$, $\SB$,\\
+$\SC$, and $\SD$; and for $\SD$, $\Mtwo$ converges to the same level only faster than $\Mone$.
 %
 $\Mtwo$ appears to perform dramatically better in certain situations, e.g., for $\SE$ and $\NF$.
 %
@@ -1761,11 +1760,18 @@ In the case of $\SE$, $\Mtwo$ performs drastically better than $\Mone$ for both 
 %
 The lack of exploration in the other models allows them to recover this component only if the initial sampling identifies it.
 
-\begin{figure}[t]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-mean.pdf}
 \caption{Convergence of mean RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ across $10$ trials.}
 \label{fig:RMSE-mean}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-median.pdf}
+\caption{Convergence of median RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ across $10$ trials.}
+\label{fig:RMSE-median}
 \end{figure}
 
 Since $\Mthree$ does not rely on a prediction model, it is difficult to evaluate the estimated function values of the set of points located on the true limit surface from $\Mthree$\footnote{However, limit surface estimation is not entirely impossible. In two dimensions, the process involves linearly interpolating within triangles; in high dimensions, the process becomes more difficult and requires construction of high-dimensional simplexes.}.
@@ -1773,15 +1779,6 @@ Since $\Mthree$ does not rely on a prediction model, it is difficult to evaluate
 Thus, we do not have RMSE convergence for $\Mthree$.
 %
 A more reasonable metric to measure the convergence of limit surfaces would be the dynamic time warping (DTW) distance, which is currently under consideration.
-
-\clearpage
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-median.pdf}
-\caption{Convergence of median RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ across $10$ trials.}
-\label{fig:RMSE-median}
-\end{figure}
 
 \subsection{Conclusions and Discussions}
 \label{sec:discussion}
