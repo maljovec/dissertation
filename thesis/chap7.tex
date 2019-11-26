@@ -2,9 +2,7 @@
 
 \chapter{Graphs for Data Analysis}
 \label{ch:graphs}
-
-% \DPM{Final results to be updated for this chapter.}
-
+\vspace{-2em}
 \section{The $\beta_p$-Skeleton}
 \label{sec:bpskeleton}
 Let us begin with a formal definition of the lune-based $\beta$-skeleton.
@@ -79,7 +77,7 @@ One caveat with our GPU implementation outlined in Section~\ref{sec:gpu_graphs} 
     \label{fig:gabriel_p_shapes}
 \end{figure}
 
-\section{Approximate Cone Graphs for High-Dimensional\\Analysis}
+\section{Approximate Cone Graphs for High-Dimensional Analysis}
 
 A major challenge of working with cone-based graphs is in the generation of equally sized high-dimensional cones.
 %
@@ -255,7 +253,7 @@ The upper limit of this shape implies that only points that have $t$ value on th
 %
 For the neighbors whose $t_q \in (0,1)$, we compute the $L^2$-norm from $q$ to the edge and compare it with the empty region.
 
-\begin{figure}[b]
+\begin{figure}[h]
     \includegraphics[width=0.34\linewidth]{figs/chap7/infinite_slab.png}
     \includegraphics[width=0.64\linewidth]{figs/chap7/variable_parameters.png}
     \caption[Illustration of various $\beta_p$-skeleton shapes]{Left: Consider an edge between points $a$ and $b$ and neighbors to $a$, $q_{i}$.
@@ -303,7 +301,7 @@ In the left image, we see how the points are arranged in the input space.
 %
 In the right image, the point $q$ is shown parameterized along the edge $ab$.
 
-\begin{figure}[b]
+\begin{figure}[h]
     \includegraphics[width=0.48\linewidth]{figs/chap7/bskeleton.png}
     \includegraphics[width=0.48\linewidth]{figs/chap7/bskeletonParameter.png}
     \caption[Illustration of the one-dimensional edge test]{Left: An example of a two-dimensional edge defined by points $a$ and $b$.
@@ -335,7 +333,7 @@ We compare these results with the standard $L^p$ norm example and note that the 
 %
 This generalization allows for much more flexibility in designing an optimal graph for a specific problem, and the merits of using different kernel shapes require further investigation.
 
-\begin{figure}[htbp]
+\begin{figure}[t]
     \includegraphics[width=\linewidth]{figs/chap7/beta_shapes.png}
     \caption[Empty region graphs derived using kernel functions]{Using discretization to precompute a template function, we can employ arbitrarily complex functions without incurring any additional overhead cost.
     %
@@ -487,7 +485,7 @@ Two of the quality measures are computed from the properties of the graph, and t
 %
 Examples of the point distributions evaluated and their extracted alpha shapes are given in Figure~\ref{fig:shapes}.
 
-\begin{figure}[htbp]
+\begin{figure}[t]
     \includegraphics[width=\linewidth]{figs/chap7/sample_shapes.png}
     \caption[$\alpha$-shapes of the two-dimensional distributions used for graph quality study]{Two-dimensional point distributions used for our graph quality analysis and their $\alpha$-shapes.}
     \label{fig:shapes}
@@ -715,7 +713,7 @@ this single point, making the saturation point for this example $k=n$.
 %
 A demonstration of the $d=2$ case is shown in left image of Figure~\ref{fig:circle_graphs}.
 
-\begin{figure}[b]
+\begin{figure}[h]
     \centering
       \includegraphics[width=.3\linewidth]{figs/chap7/circle_2.png}
       \includegraphics[width=.3\linewidth]{figs/chap7/circle_3.png}
@@ -782,14 +780,6 @@ Furthermore, the discretized version can add a modest improvement to the GPU alg
 Here we evaluate the measures defined in Section~\ref{sec:graph_quality_measures}
 on various 2D distributions using a fixed sample size of 200 points.
 
-\begin{figure}[htbp]
-  \includegraphics[width=\linewidth]{figs/chap7/Combined5graphs.png}
-  \caption[Heatmaps for identifying optimal graph quality]{A graph quality heatmap based on the aggregation of five graph quality measures on five proximity graphs for eight distributions.
-  %
-  The optimal parameter setting for each graph is highlighted.}
-  \label{fig:teaser}
-\end{figure}
-
 Figure~\ref{fig:teaser} shows the shows the values of $M_{composite}$ computed over different parameterizations of our 5 graphs, $\beta$-skeleton, relaxed $\beta$-skeleton, Yao graph, $\Theta$-graph, and $k$-nn graph, on 8 distinct distributions of points.
 %
 Each large gray-outlined box contains multiple subcells denoting the $M_{composite}$ value for various parameter settings, and the optimal setting for each graph is outlined with a red box.
@@ -814,7 +804,17 @@ For instance, with the 4 non-space-filling distributions on the right that someh
 %
 The strict $\beta$-skeleton seems to favor lower $p$ values for all cases.
 
+\begin{figure}[htbp]
+    \includegraphics[width=\linewidth]{figs/chap7/Combined5graphs.png}
+    \caption[Heatmaps for identifying optimal graph quality]{A graph quality heatmap based on the aggregation of five graph quality measures on five proximity graphs for eight distributions.
+    %
+    The optimal parameter setting for each graph is highlighted.}
+    \label{fig:teaser}
+\end{figure}
+
 In Figure~\ref{fig:graph_quality}, we attempt to directly compare the optimal graph performance for the composite graph measure for each of the eight distributions considered.
+%
+The settings found to be optimal for each combination of graph and data distribution is given in Table~\ref{tab:optimal_settings_quality}.
 %
 Note, we explore a more thorough search space than the values presented in Figure~\ref{fig:teaser}.
 %
@@ -844,23 +844,34 @@ Tuning the parameters for the Yao and $\Theta$ graphs for high-dimensional data 
     \includegraphics[width=0.45\linewidth]{figs/chap7/shell_quality.png}
     \includegraphics[width=0.45\linewidth]{figs/chap7/distinct_quality.png}
     \includegraphics[width=0.45\linewidth]{figs/chap7/overlap_quality.png}
-    \caption[Two-dimensional optimal graph quality results]{Analysis of five graphs using our graph quality measures.
+    \caption[Two-dimensional optimal graph quality results]{Analysis of five graphs on different distributions using our graph quality measures after optimizing each graph class.
     %
-    Once an optimal setting is decided for each distribution, we compare it with the optimal composite quality measures of the other graphs.
-    %
-    The figures rows are described from left to right below.
-    %
-    Top row: a uniform distribution and an LHS design.
-    %
-    Second row: a CVT design and a Halton sequence.
-    %
-    Third row: a sinusoidal shaped manifold and an annulus.
-    %
-    Bottom row: a mixture of three distinct normal distributions with low probability of overlap, and a mixture with the same centers but with significant overlap.}
+    clockwise from top left: uniform, LHS design, Halton sequence, annulus, Gaussian mixture with high probability of overlap, Gaussian mixture with a low probability of overlap, sinusoidal, and CVT design.}
     \label{fig:graph_quality}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{table}[ht]
+    \scriptsize
+    \centering
+    \caption[Optimal graph parameters used in Figures~\ref{fig:graph_quality}-~\ref{fig:theta_quality}]{Optimal parameter settings used in Figures~\ref{fig:graph_quality}-~\ref{fig:theta_quality}.}
+    \begin{tabular}{| l || c | c | c | c | c |}
+    \hline
+    \textbf{Distribution}  & \textbf{Strict $\beta$-Skeleton} & \textbf{Relaxed $\beta$-Skeleton} & \textbf{$k$-NN Graph} & \textbf{Yao Graph} & \textbf{$\Theta$ Graph} \\
+    \hline
+    \textbf{Uniform} & $\beta=0.25, p=0.8$ & $\beta=1, p=2$  & $k=4$ & $c=3, m=1$ & $c=3, m=1$\\
+    \textbf{CVT} & $\beta=1, p=2$ & $\beta=1, p=4$  & $k=4$ & $c=1, m=4$ & $c=4, m=1$\\
+    \textbf{Halton} & $\beta=1, p=2$ & $\beta=1, p=2$  & $k=4$ & $c=3, m=1$ & $c=4, m=1$\\
+    \textbf{LHS} & $\beta=0.25, p=0.8$ & $\beta=1, p=2$  & $k=4$ & $c=3, m=1$ & $c=4, m=1$\\
+    \textbf{Overlapping Mixture} & $\beta=0.5, p=0.8$ & $\beta=1, p=2$  & $k=3$ & $c=3, m=1$ & $c=4, m=1$\\
+    \textbf{Distinct Mixture} & $\beta=0.25, p=0.8$ & $\beta=1, p=2$  & $k=3$ & $c=3, m=1$ & $c=4, m=1$\\
+    \textbf{Shell} & $\beta=0.25, p=0.8$ & $\beta=1, p=2$  & $k=3$ & $c=3, m=1$ & $c=3, m=1$\\
+    \textbf{Sinusoidal} & $\beta=1, p=2$ & $\beta=1, p=2$  & $k=3$ & $c=3, m=1$ & $c=3, m=1$\\
+    \hline
+    \end{tabular}
+    \label{tab:optimal_settings_quality}
+\end{table}
+
+\begin{figure}[b]
     \centering
     \includegraphics[width=\linewidth]{figs/chap7/bs_quality.png}
     \caption[Optimal strict $\beta$-skeletons for various two-dimensional distributions]{Examples of the best performing strict $\beta$-skeleton are shown for each distribution under consideration.}
@@ -893,27 +904,6 @@ Tuning the parameters for the Yao and $\Theta$ graphs for high-dimensional data 
     \caption[Optimal $\Theta$-graphs for various two-dimensional distributions]{Examples of the best performing $\Theta$-graph are shown for each distribution under consideration.}
     \label{fig:theta_quality}
 \end{figure}
-
-\begin{table}[htbp]
-    \scriptsize
-    \centering
-    \begin{tabular}{| l || c | c | c | c | c |}
-    \hline
-    \textbf{Distribution}  & \textbf{Strict $\beta$-Skeleton} & \textbf{Relaxed $\beta$-Skeleton} & \textbf{$k$-NN Graph} & \textbf{Yao Graph} & \textbf{$\Theta$ Graph} \\
-    \hline
-    \textbf{Uniform} & $\beta=0.25, p=0.8$ & $\beta=1, p=2$  & $k=4$ & $c=3, m=1$ & $c=3, m=1$\\
-    \textbf{CVT} & $\beta=1, p=2$ & $\beta=1, p=4$  & $k=4$ & $c=1, m=4$ & $c=4, m=1$\\
-    \textbf{Halton} & $\beta=1, p=2$ & $\beta=1, p=2$  & $k=4$ & $c=3, m=1$ & $c=4, m=1$\\
-    \textbf{LHS} & $\beta=0.25, p=0.8$ & $\beta=1, p=2$  & $k=4$ & $c=3, m=1$ & $c=4, m=1$\\
-    \textbf{Overlapping Mixture} & $\beta=0.5, p=0.8$ & $\beta=1, p=2$  & $k=3$ & $c=3, m=1$ & $c=4, m=1$\\
-    \textbf{Distinct Mixture} & $\beta=0.25, p=0.8$ & $\beta=1, p=2$  & $k=3$ & $c=3, m=1$ & $c=4, m=1$\\
-    \textbf{Shell} & $\beta=0.25, p=0.8$ & $\beta=1, p=2$  & $k=3$ & $c=3, m=1$ & $c=3, m=1$\\
-    \textbf{Sinusoidal} & $\beta=1, p=2$ & $\beta=1, p=2$  & $k=3$ & $c=3, m=1$ & $c=3, m=1$\\
-    \hline
-    \end{tabular}
-    \caption[Optimal graph parameters used in Figures~\ref{fig:graph_quality}-~\ref{fig:theta_quality}]{Optimal parameter settings used for each test distribution shown in Figures~\ref{fig:graph_quality}-~\ref{fig:theta_quality}.}
-    \label{tab:optimal_settings_quality}
-\end{table}
 
 \subsection{Topological Accuracy and Stability}
 
@@ -1023,24 +1013,6 @@ We report the optimal parameter settings for the examples shown in Figure~\ref{f
     \label{fig:graph_topo}
 \end{figure}
 
-\begin{table}[htbp]
-    \scriptsize
-    \centering
-    \begin{tabular}{| l | c | c | c |}
-    \hline
-    \textbf{Graph}  & \textbf{4D Diagonal with 4 maxima} & \textbf{5D DF with 5 maxima} & \textbf{5D DF with 15 maxima} \\
-    \hline
-    Strict $\beta$-Skeleton & $\beta=0.5, p=2$ & $\beta=1, p=2$  & $\beta=1, p=4$ \\
-    Relaxed $\beta$-Skeleton & $\beta=0.5, p=4$ & $\beta=1, p=1$  & $\beta=1.5, p=2$ \\
-    $k$-Nearest Neighbor Graph & $k=128$ & $k=64$  & $k=64$ \\
-    Yao Graph & $c=32, m=2$ & $c=10, m=3$  & $c=32, m=1$ \\
-    $\Theta$ Graph & $c=24, m=2$ & $c=25, m=1$  & $c=20, m=2$ \\
-    \hline
-    \end{tabular}
-    \caption[Optimal graph parameters used in Figure~\ref{fig:graph_topo}]{Optimal parameter settings used for each test function shown in Figure~\ref{fig:graph_topo}.}
-    \label{tab:optimal_settings}
-\end{table}
-
 \subsection{SVM Classification Enhancement}
 
 Various studies have shown that utilizing proximity graphs can effectively reduce the amount of data needed to train a classifier with little to no impact on the trained model's accuracy~\cite{BhattacharyaPoulsenToussaint1981,GotoIshidaUchida2015,Toussaint2005,ToussaintBerzan2012,ZhangKing2002a,ZhangKing2002b}.
@@ -1067,6 +1039,24 @@ In this latter simulation ensemble, we study the recovery procedure from an acci
 %
 The dimensions of the two examples are 16 and 12, respectively, and each is made up of roughly 20,000 point samples.
 
+\begin{table}[t]
+    \scriptsize
+    \centering
+    \caption[Optimal graph parameters used in Figure~\ref{fig:graph_topo}]{Optimal parameter settings used for each test function shown in Figure~\ref{fig:graph_topo}.}
+    \begin{tabular}{| l | c | c | c |}
+    \hline
+    \textbf{Graph}  & \textbf{4D Diagonal with 4 maxima} & \textbf{5D DF with 5 maxima} & \textbf{5D DF with 15 maxima} \\
+    \hline
+    Strict $\beta$-Skeleton & $\beta=0.5, p=2$ & $\beta=1, p=2$  & $\beta=1, p=4$ \\
+    Relaxed $\beta$-Skeleton & $\beta=0.5, p=4$ & $\beta=1, p=1$  & $\beta=1.5, p=2$ \\
+    $k$-Nearest Neighbor Graph & $k=128$ & $k=64$  & $k=64$ \\
+    Yao Graph & $c=32, m=2$ & $c=10, m=3$  & $c=32, m=1$ \\
+    $\Theta$ Graph & $c=24, m=2$ & $c=25, m=1$  & $c=20, m=2$ \\
+    \hline
+    \end{tabular}
+    \label{tab:optimal_settings}
+\end{table}
+
 The results of this study are shown in the two images of Figure~\ref{fig:graph_svm}, in which we show a Pareto front of parameter settings for each graph, trading off data reduction with accuracy.
 %
 Note, the scale of the horizontal axis in both images varies drastically.
@@ -1075,10 +1065,10 @@ For the nuclear dataset (right), the upper left point of the strict $\beta$-skel
 %
 For the handwriting dataset, the strict $\beta$-skeleton is still Pareto dominant, but the degradation in performance is much worse, and the other methods are more competitive in the range of accuracy most would deem acceptable.
 
-\begin{figure}[t]
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=0.48\linewidth]{figs/chap7/pareto_letters.png}
-    \includegraphics[width=0.48\linewidth]{figs/chap7/pareto_sbo.png}
+    \includegraphics[width=0.45\linewidth]{figs/chap7/pareto_letters.png}
+    \includegraphics[width=0.45\linewidth]{figs/chap7/pareto_sbo.png}
     \caption[Trade-off analysis of graphs for SVM classification]{Analysis of five graphs for two classification datasets.
     %
     Left: For the SVM evaluation, we report a Pareto front over the handwritten dataset.

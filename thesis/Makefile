@@ -134,6 +134,7 @@ TEXFILES       = abstract.tex      \
 				 chap4.tex         \
 				 chap5.tex         \
 				 chap6.tex         \
+				 chap7.tex         \
 				 notation.tex      \
 				 appa.tex
 
