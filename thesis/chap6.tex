@@ -1,6 +1,6 @@
 %%% -*-LaTeX-*-
 
-\chapter{Rethinking Sensitivity Analysis: A Visualization \protect\\ Application in Nuclear Engineering}
+\chapter{A Visualization Application in Nuclear Engineering}
 \label{ch:visualization}
 Nuclear fuel performance behavior is a complex and multiphysical phenomenon that is, nonetheless, crucial in determining both the economic and safety performance of a nuclear power plant.
 %
@@ -75,7 +75,7 @@ During this phase, we listen to their description of domain problems, characteri
 %
 We identify several challenges in the existing workflow that are summarized into the design requirements described below.
 
-\subsection{Design Requirement A: Structure-Based Domain Partitioning Amenable\\to Local SA}
+\subsection{Requirement A: Structure-Based Domain Partitioning Amenable\\to Local SA}
 As suggested by Gerber et al.~\cite{GerberRubelBremer2011}, we first considered numerous forms of partition-based regression that can be applied for local SA.
 %
 However, most of these systems are based on greedy, local operations focusing on optimizing some quality metric.
@@ -103,7 +103,7 @@ Using HDViz as a starting point (see Figure~\ref{fig:hdviz}), we iteratively def
   \label{fig:hdviz}
 \end{figure}
 
-\subsection{Design Requirement B: Intuitive Visualization of Data Hierarchy}
+\subsection{Requirement B: Intuitive Visualization of Data Hierarchy}
 Existing visualization using HDViz suffered from three drawbacks for this application.
 %
 First, it has a very steep learning curve for data practitioners in general.
@@ -129,7 +129,7 @@ partitions within a fixed scale.
 %
 The topology map described in Section~\ref{sec:saDesign} is designed to fulfill such requirements.
 
-\subsection{Design Requirement C: Integration of Common Practices with New\\Designs}
+\subsection{Requirement C: Integration of Common Practices with New Designs}
 
 We incorporate visual tools that are familiar to the nuclear scientists (e.g., scatterplots) into our new visual design to ease the knowledge discovery process.
 %
@@ -141,7 +141,9 @@ In addition, the scientists find that the scatterplots also provide some sense o
 %
 Knowing such details also allows us to encode density information into other representations not prone to the occlusion problem.
 
-\subsection{Design Requirement D: Presentation of Comparative and\\Quantitative Information}
+\clearpage
+
+\subsection{Requirement D: Presentation of Comparative and\\Quantitative Information}
 
 Initial visualizations of the sensitivity information focus on a comparative analysis that uses shapes of different sizes to convey differences among individual  partitions in the data.
 %
@@ -149,7 +151,7 @@ Although it is useful for quickly detecting major trends, the scientists have re
 %
 Additional designs have been suggested (such as the fitness view detailed in Section~\ref{sec:saDesign}) by the scientists that allow us to better understand their mental model of the data and design our visualization accordingly.
 
-\subsection{Design Requirement E: Scalable Analysis and Visualization}
+\subsection{Requirement E: Scalable Analysis and Visualization}
 
 The existing SA capabilities do not scale well with the increasing number of parameters/dimensions, but our proposed SA using MSR scales well in high dimensions.
 %
@@ -172,7 +174,7 @@ We have proposed multiple visual encodings where the feedback from nuclear scien
 %
 These solutions were integrated into a linked view system with multiple visual components providing interactive functionalities, as illustrated in Figure~\ref{fig:design-overview}.
 
-\begin{figure}[b]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=\linewidth]{figs/chap6/design-overview}
   \caption[RAVEN visual interface applied to synthetic data]{Our linked view visualization system using a synthetic two-dimensional test function.
@@ -356,7 +358,7 @@ Such a programming environment supports rapid software prototyping and ensures t
 %
 In addition, our modular implementation and linked view design~\cite{Roberts2007}  are also suitable for extending and expanding the visualization capabilities of RAVEN in the future.
 
-\section{Deployment and Evaluation: Nuclear\\Fuel Design}
+\section{Deployment and Evaluation: Nuclear Fuel Design}
 \label{sec:saApplication}
 The final \emph{deploy} stage of our design study involves software release and evaluation.
 %
