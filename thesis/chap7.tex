@@ -61,7 +61,7 @@ Our generalization allows us to still compute both strict and relaxed versions o
 %
 One caveat with our GPU implementation outlined in Section~\ref{sec:gpu_graphs} is that we consider only \textit{symmetric} graphs and not \textit{mutual} versions as defined by Correa and Lindstrom~\cite{CorreaLindstrom2011}.
 
-\begin{figure}[htbp]
+\begin{figure}[!b]
     \includegraphics[width=\linewidth]{figs/chap7/emptyRegions}
     \caption[Example $L_p$-norm functions]{The generalization of the Gabriel graph ($\beta$-skeleton where $\beta=1$) using balls defined under different $p$-norms.
     %
@@ -176,7 +176,7 @@ We then parallelize the pruning operation by associating individual GPU threads 
 %
 For each thread/point, we iteratively perform the edge test on each of its neighbors.
 %
-Thus, each of $n$ threads will perform $k$ edge tests.
+Thus, each of the $n$ threads will perform $k$ edge tests.
 
 For smaller datasets, we can fit the entire $n \times d$ dataset plus its $n \times k$ graph on GPU RAM, and thus we can trivially parallelize the problem using the method described.
 %
@@ -253,10 +253,10 @@ The upper limit of this shape implies that only points that have $t$ value on th
 %
 For the neighbors whose $t_q \in (0,1)$, we compute the $L^2$-norm from $q$ to the edge and compare it with the empty region.
 
-\begin{figure}[h]
+\begin{figure}[!b]
     \includegraphics[width=0.34\linewidth]{figs/chap7/infinite_slab.png}
     \includegraphics[width=0.64\linewidth]{figs/chap7/variable_parameters.png}
-    \caption[Illustration of various $\beta_p$-skeleton shapes]{Left: Consider an edge between points $a$ and $b$ and neighbors to $a$, $q_{i}$.
+    \caption[Illustration of various $\beta_p$-skeleton shapes]{Illustration of various $\beta_p$-skeleton shapes. Left: Consider an edge between points $a$ and $b$ and neighbors to $a$, $q_{i}$.
     %
     The shaded region represents $R$ for the infinite slab graph ($p < 1, \beta \rightarrow 0$).
     %
@@ -301,10 +301,10 @@ In the left image, we see how the points are arranged in the input space.
 %
 In the right image, the point $q$ is shown parameterized along the edge $ab$.
 
-\begin{figure}[h]
+\begin{figure}[!b]
     \includegraphics[width=0.48\linewidth]{figs/chap7/bskeleton.png}
     \includegraphics[width=0.48\linewidth]{figs/chap7/bskeletonParameter.png}
-    \caption[Illustration of the one-dimensional edge test]{Left: An example of a two-dimensional edge defined by points $a$ and $b$.
+    \caption[Illustration of the one-dimensional edge test]{Illustration of the one-dimensional edge test. Left: An example of a two-dimensional edge defined by points $a$ and $b$.
     %
     We test whether the query point $q$ is interior to the region $R_{\beta,p}(a,b)$.
     %
@@ -378,7 +378,7 @@ The logistic function proposed here gives the user more control on the shape of 
 %
 We can modulate the steepness through a parameter $k$, and the probability ramp is no longer linear, but instead an s-shaped curve.
 %
-The point here is to demonstrate here the probability can be formulated using any monotonic function and could vary depending on the demands of the specific application.
+The point here is to demonstrate the probability can be formulated using any monotonic function and could vary depending on the demands of the specific application.
 
 An example probabilistic graph is shown in the rightmost image of Figure~\ref{fig:probabilistic_beta}.
 %
@@ -430,7 +430,7 @@ Thus, we can incur a $\bigO(k \log k)$ sort operation per query point/thread to 
 %
 For most practical settings, $m$ is set to 1 or 2 and we seek to use a minimal $c$ that achieves the fidelity we want, whereas $k$ is often maximized in order to start with the most information possible for pruning.
 %
-These observations would seem to favor the latter methodology, however the sorts can be done in parallel for each query.
+These observations would seem to favor the latter methodology; however the sorts can be done in parallel for each query.
 %
 % We examine both implementations in Section~\ref{exp:performance}.
 % %
@@ -575,7 +575,7 @@ Then, we evaluate the speed of our GPU implementation compared with the existing
 %
 Finally, we compare the traits of $k$-nn graphs, empty region graphs, and cone graphs in three tests.
 %
-The first uses our quality measures defined in Section~\ref{sec:graph_quality_measures}, the next seeks to determine the topological stability imposed by different graphs, and the last we apply these graphs to the classification algorithm.
+The first uses our quality measures defined in Section~\ref{sec:graph_quality_measures}, the next seeks to determine the topological stability imposed by different graphs, and last we apply these graphs to the classification algorithm.
 
 \subsection{$K$-NN Comparison}
 \label{sec:knn_benchmark}
@@ -608,7 +608,9 @@ In our case, preprocessing time represents a significant portion of the computat
 %
 We do not need the $k$-nn structure once we have computed our approximate proximity graph.
 %
-Thus, we perform additional analysis where parameters are set to default values or when not default values are not available, we choose to favor speed over accuracy, and where build time is included in the analysis.
+Thus, we perform additional analysis where parameters are set to default values or when no default values are available, we choose to favor speed over accuracy.  
+%
+Build time is included in the analysis.
 
 \begin{figure}[t]
     \centering
@@ -618,7 +620,7 @@ Thus, we perform additional analysis where parameters are set to default values 
        %
        The data was sampled using a uniform random strategy so the domain should be
        considered to be more evenly and densely sampled in this benchmark as
-       opposed to those provided in the study of Aum{\"{u}}ller et
+       opposed to the datasets provided in the study of Aum{\"{u}}ller et
        al.~\cite{AumullerBernhardssonFaithfull2018}.
        %
        The horizontal axis represents the ability of the algorithm to recall the
@@ -654,7 +656,7 @@ Otherwise, as is the case in our example, the $k$-nn search index must be deallo
     %
     For all examples, $k=1024$, averages are reported over five trials
     of different random, uniform point sets; graph pruning is done
-    in batches of one hundred thousand points; and results have been
+    in batches of $100000$ points; and results have been
     validated against a true relaxed Gabriel graph on the same datasets.
     %
     All results are within an acceptable tolerance of error.
@@ -692,7 +694,7 @@ This analysis demonstrates the need for the streaming computation of these graph
     \centering
       \includegraphics[width=.45\linewidth]{figs/chap7/n-1M_d-5_s-0_k-1000_relaxed_gabriel_histogram.png}
       \includegraphics[width=.45\linewidth]{figs/chap7/saturation_1000000_5D.png}
-     \caption[Exploration of edge density on five-dimensional Gabriel graph]{
+     \caption[Exploration of edge density on five-dimensional Gabriel graph]{Exploration of edge density on five-dimensional Gabriel graph. 
      Left: A histogram of the degree (count of emanating edges) for each point in a symmetric, relaxed Gabriel graph constructed in 5D on a uniformly sampled data with one million points.
      %
      Right: A plot showing the total edges extracted from a symmetric, relaxed Gabriel graph computed on the same dataset as a function of the $k$ used in the initial $k$-nearest neighbor graph.
@@ -713,7 +715,7 @@ this single point, making the saturation point for this example $k=n$.
 %
 A demonstration of the $d=2$ case is shown in left image of Figure~\ref{fig:circle_graphs}.
 
-\begin{figure}[h]
+\begin{figure}[!b]
     \centering
       \includegraphics[width=.3\linewidth]{figs/chap7/circle_2.png}
       \includegraphics[width=.3\linewidth]{figs/chap7/circle_3.png}
@@ -814,7 +816,7 @@ The strict $\beta$-skeleton seems to favor lower $p$ values for all cases.
 
 In Figure~\ref{fig:graph_quality}, we attempt to directly compare the optimal graph performance for the composite graph measure for each of the eight distributions considered.
 %
-The settings found to be optimal for each combination of graph and data distribution is given in Table~\ref{tab:optimal_settings_quality}.
+The settings found to be optimal for each combination of graph and data distribution are given in Table~\ref{tab:optimal_settings_quality}.
 %
 Note, we explore a more thorough search space than the values presented in Figure~\ref{fig:teaser}.
 %
@@ -967,12 +969,12 @@ The convenience of these functions is that the locations of the true maxima are 
 %
 We can then measure an approximation's ability to correctly detect these features.
 %
-Figure \ref{fig:datasets} visually depicts 2D versions of the test functions where we use two different values for the .
+Figure \ref{fig:datasets} visually depicts 2D versions of the test functions where we use two different values for the DF function.
 %
 The blue regions denote regions of maxima whereas the orange/brown regions denote regions of minima.
 In addition, blue dots represent local maxima, white dots represent saddle points, red dots denote local minima, and the thick lines separate the cells of the Morse complex of the function, $f$.
 
-\begin{figure}[htbp]
+\begin{figure}[!b]
     \includegraphics[width=0.32\textwidth]{figs/chap7/diag4.png}
     \includegraphics[width=0.32\textwidth]{figs/chap7/df5.png}
     \includegraphics[width=0.32\textwidth]{figs/chap7/df15.png}
@@ -1008,8 +1010,8 @@ We report the optimal parameter settings for the examples shown in Figure~\ref{f
     %
     Right: Along with NVI we report the persistence lifespan that each graph is able to maintain the correct partition.
     Top Row: Diagonal test function in four dimensions.
-    Middle Row: A distance field function with five maxima in five dimensions.
-    Bottom Row: A distance field function with 15 maxima in five dimensions.}
+    Middle Row: A distance field function with 5 maxima in 5 dimensions.
+    Bottom Row: A distance field function with 15 maxima in 5 dimensions.}
     \label{fig:graph_topo}
 \end{figure}
 

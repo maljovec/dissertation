@@ -75,7 +75,7 @@ During this phase, we listen to their description of domain problems, characteri
 %
 We identify several challenges in the existing workflow that are summarized into the design requirements described below.
 
-\subsection{Requirement A: Structure-Based Domain Partitioning Amenable\\to Local SA}
+\subsection{Requirement A: Structure-Based Domain Partitioning\\Amenable to Local SA}
 As suggested by Gerber et al.~\cite{GerberRubelBremer2011}, we first considered numerous forms of partition-based regression that can be applied for local SA.
 %
 However, most of these systems are based on greedy, local operations focusing on optimizing some quality metric.
@@ -86,11 +86,11 @@ In fact, MSR is particularly suited to this task as each partition is assumed mo
 %
 In addition, its flexibility and robustness to noise allow it to be used in an exploratory task such as SA.
 %
-Existing local SA is restricted to be point-wise, and domain partitioning is done manually via a time-consuming process; whereas our proposed SA, built upon MSR, applies automatically and efficiently to partitions at multiple scales.
+Existing local SA is restricted to be point-wise, and domain partitioning is done manually via a time-consuming process, whereas our proposed SA, built upon MSR, applies automatically and efficiently to partitions at multiple scales.
 %
-Using HDViz as a starting point (see Figure~\ref{fig:hdviz}), we iteratively defined and redefined new visual design requirements as well as refined existing ones that satisfy the various SA tasks.
+Using HDViz as a starting point (see Figure~\ref{fig:hdviz}), we iteratively defined and redefined new visual design requirements as well as refining existing ones that satisfy the various SA tasks.
 
-\begin{figure}[htbp]
+\begin{figure}[!b]
   \centering
   \includegraphics[width=1.0\linewidth]{figs/chap6/HDViz-original}
   \caption[Application of HDViz to nuclear fuel dataset]{HDViz applied to the nuclear fuel
@@ -129,7 +129,7 @@ partitions within a fixed scale.
 %
 The topology map described in Section~\ref{sec:saDesign} is designed to fulfill such requirements.
 
-\subsection{Requirement C: Integration of Common Practices with New Designs}
+\subsection{Requirement C: Integration of Common Practices\\with New Designs}
 
 We incorporate visual tools that are familiar to the nuclear scientists (e.g., scatterplots) into our new visual design to ease the knowledge discovery process.
 %
@@ -300,7 +300,7 @@ For each partition, the fitness view reports the fit accuracy as well as its inc
 %
 Based on the linear coefficients described in the sensitivity view, the dimensions are ordered by their magnitude and visualized via vertical bar charts.
 %
-Based on this sorted order of dimensions as a heuristic, we build lower dimensional linear fits beginning with only the dimension with the largest coefficient in magnitude.
+Based on this sorted order of dimensions as a heuristic, we build lower-dimensional linear fits beginning with only the dimension with the largest coefficient in magnitude.
 %
 We then iteratively add one dimension at a time and recompute an updated linear model.
 %
@@ -352,7 +352,7 @@ Close user interactions help us refine our design and implementation in an itera
 %
 RAVEN is written in Python with a collection of C++ bindings for back-end algorithms.
 %
-The approximate MSC computation and our costumed version of MSR are implemented in C++, and the graphical interface is implemented using the PySide binding of Qt.
+The approximate MSC computation and our version of MSR are implemented in C++, and the graphical interface is implemented using the PySide binding of Qt.
 %
 Such a programming environment supports rapid software prototyping and ensures tight integration with the existing RAVEN Python code.
 %
@@ -539,7 +539,7 @@ On the other hand, the topology-inspired, partition-based SA is able to capture 
 
 Using our framework, the scientists have validated the behaviors of a nuclear fuel simulation to be well aligned with their expectations.
 %
-They are actively investigating higher dimensional problems where topological partitioning could offer them additional insights that are not readily available via traditional visualization such as scatterplot projections.
+They are actively investigating higher-dimensional problems where topological partitioning could offer them additional insights that are not readily available via traditional visualization such as scatterplot projections.
 %
 Our objective in validation has been confirmed by the scientists where they could perform SA faster and with higher accuracy.
 %

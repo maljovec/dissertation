@@ -12,7 +12,7 @@ Under certain conditions, the input parameters may be observed rather than selec
 %
 Here, we formalize the different methods by which data samples can be selected for measurement/experimentation.
 %
-There exists two major branches on how this can be done.
+There exist two major branches on how this can be done.
 %
 In the first case, all of the samples are preselected and run in bulk.
 %
@@ -169,7 +169,7 @@ The low-discrepancy paradigm is similar in spirit to the category of blue-noise 
 %
 One drawback is that these methods are deterministic and can result in repeating patterns that could suffer from the aliasing artifact highlighted in Figure~\ref{fig:samplingArtifacts}.
 %
-Examples include the one-dimensional Van der Corput sequence~\cite{vanderCorput1935}, its higher dimensional generalization known as the Halton sequence~\cite{Halton1964,BraatenWeller1979}, the Hammersley set~\cite{HammersleyHandscomb1964}, and the Sobol sequence~\cite{Sobol1967}.
+Examples include the one-dimensional Van der Corput sequence~\cite{vanderCorput1935}, its higher-dimensional generalization known as the Halton sequence~\cite{Halton1964,BraatenWeller1979}, the Hammersley set~\cite{HammersleyHandscomb1964}, and the Sobol sequence~\cite{Sobol1967}.
 
 \subsection{Adaptive Designs}
 \label{sec:adaptiveSampling}
@@ -323,7 +323,7 @@ Depending on several factors---the questions being asked, the dimensionality of 
 %
 For example, in low-dimensional settings, it is often common to polygonize or triangulate point-sampled data, but the combinatorics of representing the high-dimensional equivalents of surfaces and volumes of even a simplicial complex quickly become infeasible to store and operate on.
 %
-What is more often found in higher dimensional settings is the use of one-skeleton structures, such as those given by proximity graphs.
+What is more often found in higher-dimensional settings is the use of one-skeleton structures, such as those given by proximity graphs.
 %
 Proximity graphs connect nearby points in a point set via a set of edges where the presence of an edge is based on different geometric constraints depending on the choice of graph.
 
@@ -411,7 +411,7 @@ Furthermore, under discretization (see Section~\ref{sec:gpu_bp_discrete}), we ar
 
 Lastly, $\gamma$-visibility graphs~\cite{KatzTalBasri2007,KatzTal2015,KatzTal2017} are another means of generalizing $\beta$ skeletons to include not only nonuniform shapes but also nonsymmetric shapes.
 %
-In some ways, this technique allows for more generic shapes than our own, which is restricted to radially symmetric shapes, but as noted by the authors, the work is largely theoretical, and we instead focus on an intuitive shape parameterization that generalizes well to higher dimensions.
+In some ways, this technique allows for more generic shapes than our own, which is restricted to radially symmetric shapes, but as noted by the authors, the work is largely theoretical, and we instead focus on an intuitive shape parameterization that generalizes well to higher-dimensions.
 
 \subsection{Cone-Based Graphs}
 \label{sec:bg_cones}
@@ -516,7 +516,7 @@ Each column of the transformation matrix tells us how much weight a particular i
 %
 For example, a column of small magnitude (relative to the rest of the matrix) or zero values tell us that the corresponding original input parameter represents redundant information that is less useful in identifying distinct data points when compared to the expressive power of the other input parameters.
 %
-Looking at it another way, the rows of the transformation matrix tell us which original input parameters are combined in order to construct one dimension of the lower dimensional space.
+Looking at it another way, the rows of the transformation matrix tell us which original input parameters are combined in order to construct one dimension of the lower-dimensional space.
 %
 For a comprehensive survey of linear dimensionality techniques, I defer to the excellent work of Cunningham and Ghahramani~\cite{CunninghamGhahramani2015}.
 %
@@ -526,7 +526,7 @@ Principal component analysis (PCA) is a common technique that can be described i
 %
 The first formulates the dimensionality reduction problem as minimizing the sum of squared residuals between projected data points and their original counterparts~\cite{Pearson1901}.
 %
-Equivalently, PCA maximizes the variance of the data in the lower dimensional space~\cite{Hotelling1933}.
+Equivalently, PCA maximizes the variance of the data in the lower-dimensional space~\cite{Hotelling1933}.
 %
 Several extensions have been made to the classical PCA solution framing the problem in unique settings, such as a probabilistic model, kernel feature space, robustness to outliers, sparse solutions, and nonlinear solutions.
 
@@ -548,7 +548,7 @@ For more on robust PCA, refer to the survey by Bouwmans and Zahzah~\cite{Bouwman
 
 As we will see later in Section~\ref{sec:regularization}, a technique known as regularization can be used to reduce the dimensionality of a problem by penalizing model complexity and thus favor models that use fewer dimensions.
 %
-This technique can be applied to PCA to generate a set of sparse methods that generate lower dimensional spaces that utilize only a subset of the original parameters~\cite{dAspremontBachGhaoui2008,dAspremontGhaouiJordan2007,JourneeNesterovRichtarik2010,ZouHastieTibshirani2006}.
+This technique can be applied to PCA to generate a set of sparse methods that generate lower-dimensional spaces that utilize only a subset of the original parameters~\cite{dAspremontBachGhaoui2008,dAspremontGhaouiJordan2007,JourneeNesterovRichtarik2010,ZouHastieTibshirani2006}.
 %
 In the sensitivity setting, the weights of the principal components are nonzero only in the positions corresponding to the most sensitive subset of original inputs.
 
@@ -558,7 +558,7 @@ However, the main advantage of PPCA is that the maximum likelihood estimates can
 %
 The PPCA model is closely related to a method developed much earlier known as factor analysis~\cite{Spearman1904b}.
 
-Multidimensional scaling (MDS)~\cite{BorgGroenen2005,CoxCox2000,Torgerson1952} attempts to construct a linear projection that maximizes the scatter or spread of the data in the lower dimensional space.
+Multidimensional scaling (MDS)~\cite{BorgGroenen2005,CoxCox2000,Torgerson1952} attempts to construct a linear projection that maximizes the scatter or spread of the data in the lower-dimensional space.
 %
 In the classical setting, this is accomplished by maximizing the pairwise Euclidean distance among points in the reduced space.
 %
@@ -594,7 +594,7 @@ In more informal terms, we seek a projection that clusters similar labels togeth
 %
 One limitation of LDA is that for a $k$-class problem, the solution can be rank-deficient, allowing us to project onto at most a $k-1$ space~\cite{MaszczykDuch2008}.
 %
-However, Cheng et al. have offered several solutions for allowing construction of higher dimensional spaces~\cite{ChengZhuangYang1992}.
+However, Cheng et al. have offered several solutions for allowing construction of higher-dimensional spaces~\cite{ChengZhuangYang1992}.
 %
 Similar to PCA, LDA has been augmented to allow for more robust settings, such as nonlinear LDA~\cite{MikaRatschWeston1999,McLachlan2004} and local LDA~\cite{Sugiyama2006}.
 %
@@ -629,7 +629,7 @@ SDR can be extended to both an unsupervised setting~\cite{WangShaJordan2010} and
 \subsubsection{Nonlinear Dimensionality Reduction Methods}
 \label{sec:nonlinearDR}
 
-This class of techniques is also often called manifold learning because the goal is to find a lower dimensional manifold embedded in the high-dimensional space.
+This class of techniques is also often called manifold learning because the goal is to find a lower-dimensional manifold embedded in the high-dimensional space.
 %
 Because the learned manifold can twist and bend through the high-dimensional space, there is no guarantee that a single linear projection method will work for such datasets.
 %
@@ -851,7 +851,7 @@ They can be classified based on their partitioning criteria: those seeking to mi
 %
 In particular, regression trees are constructed by recursively partitioning the domain into multiple partitions at \emph{optimal} locations in the domain (where the optimal criteria can vary), and each partition is fitted with constant~\cite{BreimanFriedmanOlshen1984a}, linear~\cite{AlexanderGrimshaw1996,LiLueChen2000}, low-order spline~\cite{Friedman1991} or polynomial~\cite{ChaudhuriHuangLoh1994} models.
 
-A popular class of regression tree is Friedman's multivariate adaptive regression splines (MARS)~\cite{Friedman1991}, which is utilized in Section~\ref{paper:ijuq2013} (see also Hastie et al.~\cite{HastieTibshiraniFriedman2008} for a gentle introduction).
+A popular class of regression tree is Friedman's multivariate adaptive regression splines (MARS)~\cite{Friedman1991}, which is utilized in Section~\ref{paper:ijuq2013} (see also Hastie et al.~\cite{HastieTibshiraniFriedman2008} for an introduction).
 %
 MARS is a nonparametric regression method that uses a collection of simple basis functions to build a complex and flexible response function.
 %
@@ -916,9 +916,9 @@ The universal approximation theorem does not state the exact size/complexity req
 %
 For these reasons and the lack of interpretability of such complicated models, some researchers are still slow to adopt these methods.
 %
-Deep learning algorithms are still largely considered a black-box solution to a problem since it difficult to trace the result of a prediction to a specific collection of neurons/coefficients, especially those with several layers of abstraction.
+Deep learning algorithms are still largely considered a black-box solution to a problem since it is difficult to trace the result of a prediction to a specific collection of neurons/coefficients, especially those with several layers of abstraction.
 %
-Nonetheless, empirically they have proven successful as predictors on many datasets in varied domains such as image analysis~\cite{Daugman1988,FarabetCouprieNajman2012,HadsellSermanetPierre2009,KrizhevskySutskeverHinton2017,MillertariNavabAhmadi2016,YasminSharifMohsin2013}, text, speech, natural language processing~\cite{BengioDucharmeVincent2003,GravesMohamedHinton2013,GravesWayneDanihelka2014,HochreiterSchmidhuber1997,MaPrincipe2018,SutskeverVinyalsLe2014,WestonBordesChopra2015}, graph-based problems~\cite{WuPanChen2019,ZhangCuiZhu2018,ZhouCuiZhang2018}, and even outperforming humans in complex games~\cite{MnihKavukcuogluSilver2013,SilverHuangMaddison2016}.
+Nonetheless, empirically they have proven successful as predictors on many datasets in varied domains such as image analysis~\cite{Daugman1988,FarabetCouprieNajman2012,HadsellSermanetPierre2009,KrizhevskySutskeverHinton2017,MillertariNavabAhmadi2016,YasminSharifMohsin2013}, text, speech, natural language processing~\cite{BengioDucharmeVincent2003,GravesMohamedHinton2013,GravesWayneDanihelka2014,HochreiterSchmidhuber1997,MaPrincipe2019,SutskeverVinyalsLe2014}, graph-based problems~\cite{WuPanChen2019,ZhangCuiZhu2018,ZhouCuiZhang2018}, and even outperforming humans in complex games~\cite{MnihKavukcuogluSilver2013,SilverHuangMaddison2016}.
 
 To introduce the topic, I will explain a simple feed-forward neural network with a single hidden layer that we can later generalize to more arbitrarily complex models.
 %
@@ -1029,7 +1029,7 @@ However, we can note that by applying a transformation operator, $K$ on the orig
 %
 In this case, we have kept the dimensionality the same ($d=2$), but we have transformed our Cartesian coordinates ($x_1$ and $x_2$) into polar coordinates ($r$ and $\theta$).
 %
-This notion of transforming the input space is the main concept behind kernel-based SVMs where often the data is projected into a higher dimensional feature space.
+This notion of transforming the input space is the main concept behind kernel-based SVMs where often the data is projected into a higher-dimensional feature space.
 
 \begin{figure}[t]
   \centering
@@ -1038,7 +1038,7 @@ This notion of transforming the input space is the main concept behind kernel-ba
   \label{fig:kernelSvmExample}
 \end{figure}
 
-When applying a kernel on the data, the same optimization process can be applied in the higher dimensional feature space in order to determine the maximum-margin linear separator in the feature space~\cite{BoserGuyonVapnik1992}.
+When applying a kernel on the data, the same optimization process can be applied in the higher-dimensional feature space in order to determine the maximum-margin linear separator in the feature space~\cite{BoserGuyonVapnik1992}.
 %
 Common kernels include polynomial, radial basis, sigmoid, and hyperbolic tangent functions.
 %
@@ -1109,12 +1109,12 @@ p(f(z)|X,y) = \mathcal{N}(0,k(X,z))
 \end{equation}
 
 Of general importance are the mean and variance prediction at an arbitrary location and the equations for computing these are shown below.
-
+%
 \begin{eqnarray}
 \mu(z|X,y) & = & k(X,z)k(X,X)^{-1}y\\
 \sigma(z|X,y) & = & k(z,z) - k(X,z)k(X,X)^{-1}k(X,z)^T
 \end{eqnarray}
-
+%
 $k(X,X)$ denotes a matrix of all possible covariances of the input samples, and $k(X,z)$ represents a vector of the covariances of each input sample with the query location $z$.
 
 From Equation~\ref{eq:gpSimple}, the user needs to select only a covariance function to use and then set the value of its hyperparameters, in order to query a GP at an arbitrary location.
@@ -1156,7 +1156,7 @@ Among the commonly used TDA approaches, Reeb graphs/contour trees capture very d
   \label{fig:topo-structure}
 \end{figure}
 
-They both provide meaningful abstractions of high-dimensional data, which reduces the amount of data needed to be processed or stored; and they utilize sophisticated hierarchical representations that capture features at multiple scales, which enables progressive simplifications of features differentiating small- and large-scale structures in the data.
+They both provide meaningful abstractions of high-dimensional data, which reduces the amount of data needed to be processed or stored, and they utilize sophisticated hierarchical representations that capture features at multiple scales, which enables progressive simplifications of features differentiating small- and large-scale structures in the data.
 
 \subsection{Gradient-Based Partitioning}
 The Morse-Smale complex (MSC)~\cite{EdelsbrunnerHarerNatarajan2003,EdelsbrunnerHarerZomorodian2003} describes the topology of a function by clustering the points in the domain into regions of monotonic gradient flow, where each region is associated with a sink-source pair defined by local minima and maxima of the function.
@@ -1232,7 +1232,7 @@ Mapper~\cite{SinghMemoliCarlsson2007} is a software tool that decomposes data in
 The software has been shown to extract salient features in a study of medical data by correctly classifying normal patients and patients with two different causes of diabetes~\cite{SarikondaPettusPhatak2014}.
 %and various other applications~\cite{SchwartzFriedbergIvanov2012,KnightDavidsonHerman2014}.
 %
-It is shown, in a restrictive sense, that Mapper converges to the Reeb space (a higher dimensional generalization of Reeb graph) in the limit~\cite{MunchWang2016}.
+It is shown, in a restrictive sense, that Mapper converges to the Reeb space (a higher-dimensional generalization of Reeb graph) in the limit~\cite{MunchWang2016}.
 %
 To this end, there have been some very recent efforts in understanding Reeb spaces and fiber surfaces via visualization, although those works have largely focused on bivariate functions on tetrahedral meshes~\cite{CarrGengTierny2015,KlacanskyTiernyCarr2016,TiernyCarr2016}.
 %

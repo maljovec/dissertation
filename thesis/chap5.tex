@@ -148,7 +148,7 @@ In particular, we propose three topology-based scoring functions, \emph{TopoHP},
 \begin{figure}[!t]
   \begin{center}
   \includegraphics[width=1.0\linewidth]{figs/chap5/topo-all}
-  \caption[Illustration of topological scoring methods]{(a) TopoHP: Construct a Morse-Smale complex from training data (silver) as well as all candidates with predicted responses (purple), and return the persistence of the critical points within the candidates.
+  \caption[Illustration of topological scoring methods]{Illustration of topological scoring methods. (a) TopoHP: Construct a Morse-Smale complex from training data (silver) as well as all candidates with predicted responses (purple), and return the persistence of the critical points within the candidates.
   %
   Point $\protect\x$ is selected with the highest $TopoHP(\protect\x)$.
   %
@@ -200,7 +200,7 @@ $TopoB(\x)$ is defined as the bottleneck distance between them.}
 
 This section summarizes the different experiments and highlights apparent trends and interesting behaviors.
 
-\subsubsection{Example Datasets} To evaluate the different scoring functions and understand the behavior in different scenarios, we have conducted a series of experiments with well-known analytic functions, which can be generalized to high-dimensions.
+\subsubsection{Example Datasets} To evaluate the different scoring functions and understand the behavior in different scenarios, we have conducted a series of experiments with well-known analytic functions, which can be generalized to high dimensions.
 %
 For example, we use a widely used multimodal test function from the optimization literature, the Ackley function~\cite{Ackley1987}, as well as easily controlled test functions such as a Gaussian mixture and the diagonal function.
 %
@@ -377,13 +377,13 @@ Interestingly, in its three-dimensional incarnation, the adaptive sampling does 
    \includegraphics[width=0.3\linewidth]{figs/chap5/earth_MGR_td=30}
    \includegraphics[width=0.3\linewidth]{figs/chap5/earth_GMM2_3D_td=30}
    \caption{Adaptive sampling of various test functions using the EARTH regression model.
-   From left to right, top to bottom the graphs for each of the following datasets are shown: the two-dimensional, two-maxima diagonal function, the two-dimensional mixture of five Gaussians, two-dimensional MGR function, the two-dimensional Whitley functions, the three-dimensional Ackley function, the three-dimensional Whitley function, the three-dimensional MGR function, and the three-dimensional mixture of two Gaussians.}
+   From left to right, top to bottom the graphs for each of the following datasets are shown: the two-dimensional, two-maxima diagonal function, the two-dimensional mixture of five Gaussians, two-dimensional MGR function, the two-dimensional Whitley function, the three-dimensional Ackley function, the three-dimensional Whitley function, the three-dimensional MGR function, and the three-dimensional mixture of two Gaussians.}
   \label{fig:earth_results}
   \end{center}
   \end{figure}
 
 Still looking at Figure~\ref{fig:earth_results}, in general, there appears to be no significant advantage of one scoring function over another.
-However, for many cases with the EARTH model, the TopoHP seems to perform especially bad; for example, see the three-dimensional Whitley and three-dimensional MGR functions.
+However, for many cases with the EARTH model, the TopoHP seems to perform especially badly; for example, see the three-dimensional Whitley and three-dimensional MGR functions.
 %
 This poor performance is rather surprising since, for the GPM model, TopoHP performed rather well and typically better than the other topological scoring functions.
 %
@@ -636,7 +636,7 @@ The set of candidate points and the initial training data are selected using a c
 %
 A CVT sampling strategy gives high-quality samples without the biases introduced by a uniform grid sampling, although it can become cost prohibitive in high dimensions.
 %
-A Latin hypercube sampling (LHS)~\cite{ImanDavenportZeigler1980} strategy can be used for higher dimensional examples.
+A Latin hypercube sampling (LHS)~\cite{ImanDavenportZeigler1980} strategy can be used for higher-dimensional examples.
 %
 For each dataset, we measure the accuracy of our global or local fitting by comparing to the ground-truth at each iteration, under different metrics described in Section~\ref{sec:evaluation_metrics}.
 
@@ -723,7 +723,7 @@ It takes advantage of the scoring function's reliance on the uncertainty of the 
 %
 The main idea is that temporarily adding a point and its model-predicted response value to refit (update) the surrogate model will not drastically alter the response surface, but it will reduce the variance in the area surrounding this point.
 %
-As both scoring functions used are variance-based, re-scoring the candidates based on the updated surrogate model would likely cause the new highest scoring candidate to be farther away from the last selected point.
+As both scoring functions used are variance-based, rescoring the candidates based on the updated surrogate model would likely cause the new highest scoring candidate to be farther away from the last selected point.
 %
 Formally, this process is described in Algorithm \ref{algo:believe}, where $M(x)$ returns the predicted response value using the surrogate model at point(s) $x$.
 
@@ -815,7 +815,7 @@ Since we would like to generalize our batch selection process to any arbitrary d
 \label{fig:persistence}
 \end{figure}
 
-\subsection{Topology-Based Batch Selection: Maximum Persistence and Believer\\Hybrid}
+\subsection{Topology-Based Batch Selection: Maximum Persistence\\and Believer Hybrid}
 Our final strategy creates a hybrid between the maximum persistence strategy and the surrogate believer strategy.
 %
 That is, we proceed with the believer strategy by temporarily adding points with the highest persistence.
@@ -938,16 +938,16 @@ The GMM has three limit surface components with one designed to be smaller and l
 %
 The limit surface of the Salomon function contains three concentric rings, where the outermost ring is split into four components due to the selected boundary location.
 %
-The Sinusoidal function has a relatively complex limit surface with multiple components, but spans a large portion of the domain.
-%Thus, one might expect a faster Hausdorff convergence on the Sinusoidal
+The sinusoidal function has a relatively complex limit surface with multiple components, but spans a large portion of the domain.
+%Thus, one might expect a faster Hausdorff convergence on the sinusoidal
 %function than the GMM, but the  $F_1$-score ...nevermind
 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figs/chap5/synthetic}
 \caption[Test functions for batch adaptive sampling]{Synthetic test functions and their designated limit surfaces.
-(a)-(c): True response surfaces for (a) GMM, (b) Salomon and (c) Sinusoidal.
-(d)-(f): True limit surfaces for (d) GMM, (e) Salomon and (f) Sinusoidal.}
+(a)-(c): True response surfaces for (a) GMM, (b) Salomon and (c) sinusoidal.
+(d)-(f): True limit surfaces for (d) GMM, (e) Salomon and (f) sinusoidal.}
 \label{fig:synthetic}
 \end{figure}
 
@@ -961,7 +961,7 @@ They are shown with superimposed limit surfaces in Figure~\ref{fig:images}.
 %
 The limit surfaces are highly irregular with many small components, and their corresponding threshold values are $125$, $30$, $80$, and $100$, respectively.
 
-\begin{figure}[!hb]
+\begin{figure}[!b]
 \centering
 \includegraphics[width=0.98\textwidth]{figs/chap5/images}
 \caption[Test images for batch adaptive sampling]{Test images. True limit surfaces are marked with yellow curves.
@@ -1030,6 +1030,7 @@ Believe          & \textbf{67.2 $\pm$ 9.6 (64)} & \textbf{96.0 $\pm$ 0 (96)} & \
 MaxP             & 99.2 $\pm$ 17.23 (96)        & 140.8 $\pm$ 15.68 (128)    & 124.8 $\pm$ 9.6 (128)\\
 2-MaxP + Believe & \myemph{67.2 $\pm$ 9.6 (64)} & 99.2 $\pm$ 9.6 (96)        & 83.2 $\pm$ 15.68 (96)\\
 4-MaxP + Believe & 70.4 $\pm$ 12.8 (64)         & \myemph{96.0 $\pm$ 0 (96)} & 86.4 $\pm$ 14.66 (96)\\
+\hline
 \end{tabular}
 \label{table:global-synthetic}
 \end{table}
@@ -1040,7 +1041,7 @@ The naive method typically gives a baseline performance that is much worse than 
 %
 On these smooth, relatively simple surfaces, the results shown here slightly favor the believe strategy, in most cases.
 %
-The MaxP strategy degrades poorly when increasing the batch size from $16$ to $32$, most likely due to the fact that there are likely less than $32$ local maxima extracted from the ALM scoring function.
+The MaxP strategy degrades poorly when increasing the batch size from $16$ to $32$, most likely due to the fact that there are likely fewer than $32$ local maxima extracted from the ALM scoring function.
 %
 When all the local maxima have been selected, the remaining candidates are chosen based on the naive method.
 %
@@ -1096,7 +1097,7 @@ In many other cases, the hybrid strategies have the best performance in terms of
 \label{sec:limit_results}
 We discuss results for limit surface recovery in this section.
 %
-First, to understand the difference between the believe strategy and the topology-based MaxP strategy, we show some snapshots of the predicted response surfaces, as well as the corresponding scoring landscapes  (i.e. straddle) during the active learning process in Figure~\ref{fig:exampleLimits}, when $152$ candidates have already been added to the original $100$ training points.
+First, to understand the difference between the believe strategy and the topology-based MaxP strategy, we show some snapshots of the predicted response surfaces, as well as the corresponding scoring landscapes  (i.e., straddle) during the active learning process in Figure~\ref{fig:exampleLimits}, when $152$ candidates have already been added to the original $100$ training points.
 %
 The yellow contours denote the predicted limit surface.
 %
@@ -1114,7 +1115,7 @@ However, we emphasize that our purpose of using batch selection is to explore di
 %
 We believe our topology-based designs are more advantageous in such a context, as illustrated in Figure~\ref{fig:exampleLimits}(c)-(d), where the (green) points selected are well spaced from one another, capturing structural information from different areas of the domain.
 
-\begin{figure}[!ht]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=0.98\textwidth]{figs/chap5/example-limits}
 \caption{(a)-(b): (a) Predicted response surface based on surrogate model using
@@ -1125,7 +1126,7 @@ corresponding scoring function.}
 \label{fig:exampleLimits}
 \end{figure}
 
-\subsubsection{F1-Score Convergence Results.}
+\subsubsection{F1-Score Convergence Results}
 Treating the limit surface recovery problem as a binary classification, the F1-score can be used to understand our model's ability to correctly classify points.
 %
 Table \ref{table:f1_synthetics} presents the convergence results.
@@ -1166,6 +1167,7 @@ As the topology-based methods are believed to be more judicious about not placin
  MaxP             & 118.4 $\pm$ 28.8 (112)        & 169.6 $\pm$ 14.66 (160)         & 144.0 $\pm$ 21.47 (128) \\
  2-MaxP + Believe & 86.4 $\pm$ 20.49 (96)         & 147.2 $\pm$ 15.68 (160)         & \myemph{131.2 $\pm$ 22.4 (128)} \\
  4-MaxP + Believe & 86.4 $\pm$ 14.66 (96)         & \myemph{134.4 $\pm$ 12.8 (128)} & 128.0 $\pm$ 14.31 (128)\\
+ \hline
 \end{tabular}
 \label{table:f1_synthetics}
 \end{table}
@@ -1201,6 +1203,7 @@ As the topology-based methods are believed to be more judicious about not placin
  MaxP             & 64.0 $\pm$ 14.31 (64)          & 121.6 $\pm$ 39.97 (128)         & 169.6 $\pm$ 129.6 (128*)      & \myemph{160.0 $\pm$ 72.97 (160)} \\
  2-MaxP + Believe & \myemph{60.8 $\pm$ 17.23 (64)} & \myemph{118.4 $\pm$ 38.0 (128)} & \myemph{166.4 $\pm$ 103.0 (144)} & 198.4 $\pm$ 104.0 (192)\\
  4-MaxP + Believe & \myemph{60.8 $\pm$ 17.23 (64)} & \myemph{118.4 $\pm$ 38.0 (128)} & 169.6 $\pm$ 103.2 (160)          & 198.4 $\pm$ 104.0 (192)\\
+ \hline
 \end{tabular}
 \label{table:f1_images}
 \end{table}
@@ -1216,7 +1219,9 @@ Finally, we report the Hausdorff distance metric convergence results in Table~\r
 %
 We omit the image datasets as the Hausdorff distances did not converge on these tests, most likely due to the many small components of the true limit surfaces.
 %
-As stated earlier, the Hausdorff distance is a measure of the largest minimum distance between two datasets, therefore failing to capture even a single small component will cause the reported  distance to be fairly large.
+As stated earlier, the Hausdorff distance is a measure of the largest minimum distance between two datasets.
+%
+Therefore failing to capture even a single small component will cause the reported  distance to be fairly large.
 %
 Thus, this metric is better suited for the synthetic functions that have large, simple limit surface components.
 
@@ -1263,6 +1268,7 @@ Thus, this metric is better suited for the synthetic functions that have large, 
  2-MaxP + Believe & 60.8 $\pm$ 22.4 (64) & 99.2 $\pm$ 30.19 (96) & \myemph{32.0 $\pm$ 0 (32)} \\
 \hline
  4-MaxP + Believe & \myemph{57.6 $\pm$ 19.2 (64)} & 102.4 $\pm$ 34.47 (96) & \myemph{32.0 $\pm$ 0 (32)}\\
+ \hline
 \end{tabular}
 \label{table:hausdorff_synthetics}
 \end{table}
@@ -1303,7 +1309,7 @@ Consequently, the space of the possible solutions, which we call the response su
 %
 For safety analysis applications, the following points often emerge: (1) many regions of the response surface are not of interest; and (2) the set of parameters that are of safety concern is a small subset of the original set of uncertainty parameters.
 
-Currently, the class of most used sampling algorithms includes classic stochastic sampling (e.g., Monte-Carlo \cite{Hastings1970,Liu2001}, stratified sampling such as Latin hypercube sampling \cite{HeltonDavis2003}, importance sampling~\cite{Geweke1989}, and orthogonal-arrays-based~\cite{Owen1992} algorithms) and deterministic algorithms (e.g., polynomial chaos expansions~\cite{Najm2009} and quasi-Monte Carlo~\cite{Caflisch1998}).
+Currently, the class of most used sampling algorithms includes classic stochastic sampling (e.g., Monte Carlo \cite{Hastings1970,Liu2001}, stratified sampling such as Latin hypercube sampling \cite{HeltonDavis2003}, importance sampling~\cite{Geweke1989}, and orthogonal-arrays-based~\cite{Owen1992} algorithms) and deterministic algorithms (e.g., polynomial chaos expansions~\cite{Najm2009} and quasi-Monte Carlo~\cite{Caflisch1998}).
 %
 However, none of these sampling algorithms explicitly takes into account the results of previous simulations.
 %
@@ -1313,7 +1319,7 @@ In this section, we present three adaptive sampling models that can be used to i
 %
 All three models share a general adaptive sampling pipeline but differ from one another in terms of the candidate selection process.
 %
-The first model relies on globally probing a prediction model to estimate the limit surface as an iso-surface of the global response surface.
+The first model relies on globally probing a prediction model to estimate the limit surface as an isosurface of the global response surface.
 %
 The second model is topology based.
 %
@@ -1383,7 +1389,7 @@ In terms of the chosen adaptive sampling scoring function, we utilize one based 
 %
 This strategy is similar to the distance penalty function introduced in Section~\ref{sec:classic}.
 %
-Other scoring criteria could also being employed (e.g., Active Learning MacKay criterion \cite{MacKay1992} or expected improvement criterion~\cite{Lam2008,JonesSchonlauWelch1998,Schonlau1997}), arguably leading to different convergence behaviors.
+Other scoring criteria could also be employed (e.g., Active Learning MacKay criterion \cite{MacKay1992} or expected improvement criterion~\cite{Lam2008,JonesSchonlauWelch1998,Schonlau1997}), arguably leading to different convergence behaviors.
 %
 However, since our focus in this paper is not on scoring function design but rather model selection, we employ a simple and model-agnostic scoring function.
 %
@@ -1438,7 +1444,7 @@ Sparsity means that we query just enough points to obtain a reasonable estimatio
 %
 Then we impose a relaxed Gabriel graph on the union of these CVT samples with the training points, and approximate a Morse-Smale complex based on the graph structure.
 %
-Third, by examining the local extrema of each crystal in the Morse-Smale complex, we can quickly discard those crystals that are far away from the limit surface, and keep only the crystals that are located in regions of interests.
+Third, by examining the local extrema of each crystal in the Morse-Smale complex, we can quickly discard those crystals that are far away from the limit surface, and keep only the crystals that are located in regions of interest.
 %
 The remaining crystals are precisely the relaxed spanning crystals defined previously, which are on or near the limit surface of the current surrogate model.
 %
@@ -1524,7 +1530,7 @@ The limit surface threshold values are $0.6$ for $\SA$, $\SB$, $\SC$, and $\SD$;
 %
 $2.58$ for $\SE$; $800$ for $\NF$.
 %
-For $\Mone$, we need to sample the GPM densely to recover the points on or near the estimated limit surface, therefore we use $2000$ CVT samples.
+For $\Mone$, we need to sample the GPM densely to recover the points on or near the estimated limit surface; therefore we use $2000$ CVT samples.
 %
 On the other hand, for $\Mtwo$, we need to sample the GPM only sparsely, using just enough samples to recover its topology, and thus we query $200$ CVT samples and generate more samples from the random walks.
 
@@ -1722,11 +1728,11 @@ In the next section, we complement this qualitative analysis with a quantative o
 
 To further understand the convergence behavior of the limit surfaces estimated by $\Mone$ and $\Mtwo$, we obtain convergence plots in terms of the RMSE in Figure~\ref{fig:RMSE-convergence}.
 %
-All plots show the RMSE between estimated limit surfaces and the true limit surface\footnote{In the case where ground-truth limit surface is not available, we could compute RMSE with respect to the previous round to estimate the convergence behavior.}, versus the number of samples added in the training data up to $100$ points.
+All plots show the RMSE between estimated limit surfaces and the true limit surface\footnote{In the case where ground-truth limit surface is not available, we could compute RMSE with respect to the previous round to estimate the convergence behavior.} versus the number of samples added in the training data up to $100$ points.
 %
 The RMSE is computed using a dense sampling of points located on the true limit surfaces.
 
-\begin{figure}[!ht]
+\begin{figure}[!b]
   \centering
   \includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-convergence.pdf}
   \caption{Convergence of RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ for a single trial.}
@@ -1760,7 +1766,7 @@ In the case of $\SE$, $\Mtwo$ performs drastically better than $\Mone$ for both 
 %
 The lack of exploration in the other models allows them to recover this component only if the initial sampling identifies it.
 
-\begin{figure}[ht]
+\begin{figure}[!b]
 \centering
 \includegraphics[width=1.0\textwidth]{figs/chap5/RMSE-mean.pdf}
 \caption{Convergence of mean RMSE of the estimated limit surfaces based on $\protect\Mone$ and $\protect\Mtwo$ across $10$ trials.}
@@ -1774,7 +1780,7 @@ The lack of exploration in the other models allows them to recover this componen
 \label{fig:RMSE-median}
 \end{figure}
 
-Since $\Mthree$ does not rely on a prediction model, it is difficult to evaluate the estimated function values of the set of points located on the true limit surface from $\Mthree$\footnote{However, limit surface estimation is not entirely impossible. In two dimensions, the process involves linearly interpolating within triangles; in high dimensions, the process becomes more difficult and requires construction of high-dimensional simplexes.}.
+Since $\Mthree$ does not rely on a prediction model, it is difficult to evaluate the estimated function values of the set of points located on the true limit surface from $\Mthree$.\footnote{However, limit surface estimation is not entirely impossible. In two dimensions, the process involves linearly interpolating within triangles; in high dimensions, the process becomes more difficult and requires construction of high-dimensional simplexes.}
 %
 Thus, we do not have RMSE convergence for $\Mthree$.
 %
@@ -1785,7 +1791,7 @@ A more reasonable metric to measure the convergence of limit surfaces would be t
 
 In this section, we explored three adaptive sampling models to recover the limit surface.
 %
-From $\Mone$ and $\Mthree$,  we learn a global model of the entire response surface using prediction models such as GPMs or neighborhood graphs such as relaxed Gabriel graphs, and extract the limit surface as an iso-surface of the global model.
+From $\Mone$ and $\Mthree$,  we learn a global model of the entire response surface using prediction models such as GPMs or neighborhood graphs such as relaxed Gabriel graphs, and extract the limit surface as an isosurface of the global model.
 %
 For $\Mtwo$, we first study the topological segmentation of the global model and estimate the limit surface locally through the relaxed spanning crystals of the corresponding Morse-Smale complex of the global model.
 %
@@ -1809,9 +1815,9 @@ In particular, it introduces a limit surface tolerance parameter $\delta$ that a
 %
 This phenomenon could be investigated further in the near future if one could establish a multiscale uncertainty characterization of the response surface by gradually varying $\delta$.
 %
-Second, we suspect that when the dimension of the response surface is high and/or when the failure regions are small with respect to the entire domain area, $\Mtwo$ could be an efficient model that queries much smaller number of points from the prediction model.
+Second, we suspect that when the dimension of the response surface is high and/or when the failure regions are small with respect to the entire domain area, $\Mtwo$ could be an efficient model that queries a much smaller number of points from the prediction model.
 %
-The work is ongoing to validate our claim by applying the model to datasets whose response surface is high dimensional and/or with small failure regions.
+The work is ongoing to validate our claim by applying the model to datasets whose response surface is high-dimensional and/or with small failure regions.
 %
 We may further extend topology-driven adaptive sampling schemes to include other topological structures such as contour trees or Reeb graphs, which may offer new insights into our understanding of the response surfaces.
 
@@ -1840,6 +1846,6 @@ It is hard to explore any of these concepts in isolation, but throughout these s
 %
 The results here are not overwhelmingly in favor of topological techniques across the board, but it is important to note that these concepts can have broader impact beyond just the work presented here.
 %
-As an example, Liu et al.~\cite{LiuBremerJayaraman2016} have used a similar strategy as the one proposed in Section~\ref{paper:batch} in order to identify visually significant, but topologically well-spaced random projections for exploring high-dimensional spaces.
+As an example, Liu et al.~\cite{LiuBremerJayaraman2016} have used a similar strategy to the one proposed in Section~\ref{paper:batch} in order to identify visually significant, but topologically well-spaced random projections for exploring high-dimensional spaces.
 
 % \bibliography{\jobname}
