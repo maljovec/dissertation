@@ -8,12 +8,12 @@
 Let us begin with a formal definition of the lune-based $\beta$-skeleton.
 %
 First, we define the open $p$-ball $B$ of radius $r$ centered at some point $c$ in $d$-dimensions to be:
-
+%
 \begin{equation}
 \label{eq:ball}
     B_{r,p}(c) = \{x \in \mathbb{R}^d : || x  - c ||_p < r\}
 \end{equation}
-
+%
 This is the standard definition of an open ball defined using the $p$-norm.
 %
 In previous literature, typically $p$ is set to $2$.
@@ -253,7 +253,7 @@ The upper limit of this shape implies that only points that have $t$ value on th
 %
 For the neighbors whose $t_q \in (0,1)$, we compute the $L^2$-norm from $q$ to the edge and compare it with the empty region.
 
-\begin{figure}[!b]
+\begin{figure}[!t]
     \includegraphics[width=0.34\linewidth]{figs/chap7/infinite_slab.png}
     \includegraphics[width=0.64\linewidth]{figs/chap7/variable_parameters.png}
     \caption[Illustration of various $\beta_p$-skeleton shapes]{Illustration of various $\beta_p$-skeleton shapes. Left: Consider an edge between points $a$ and $b$ and neighbors to $a$, $q_{i}$.
@@ -545,12 +545,12 @@ We perform a difference operator on all edges, such that we include only the por
 
 \subsection{Composite Measure}
 In order to digest these five measures, we normalize them over their respective ranges and perform linear scalarization~\cite{HwangMasud1979} to create a composite measure that we can use to optimize the parameters of each graph type,
-
+%
 \begin{equation}
     M_{composite} = \sum_{i=1}^5 M_iw_i.
 \label{eq:composite_measure}
 \end{equation}
-
+%
 For the experiments in this chapter we use $w_i=1$.
 %
 For all but one of our measures a lower value is better.

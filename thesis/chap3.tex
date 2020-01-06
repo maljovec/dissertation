@@ -1095,19 +1095,19 @@ Therefore, a GP can be characterized on a dataset through the use of a mean and 
 Kriging provides a \emph{best unbiased linear prediction} for unobserved locations by averaging a neighborhood of points around the query location weighted by a mean and covariance function.
 
 The response variable, $y=f(x)$ at any arbitrary location $z$ has a normal probability distribution given in Equation~\ref{eq:gp} where $X$ is a given $n \times d$ design matrix of inputs, $m(X) = \mu_y$ is the expected value of an associated given output vector of size $n$.
-
+%
 \begin{equation}
 p(f(z)|X,y) = \mathcal{N}(m(X),k(X,z))
 \label{eq:gp}
 \end{equation}
-
+%
 Often the mean function is assumed to be zero, which can simplify the computation and can be done without loss of generality~\cite{Seeger2004}.
-
+%
 \begin{equation}
 p(f(z)|X,y) = \mathcal{N}(0,k(X,z))
 \label{eq:gpSimple}
 \end{equation}
-
+%
 Of general importance are the mean and variance prediction at an arbitrary location and the equations for computing these are shown below.
 %
 \begin{eqnarray}

@@ -878,30 +878,29 @@ For the limit surface recovery problem, we use two metrics to try to quantify th
 The \emph{Hausdorff distance} between the true limit surface and the approximated limit surface based on the surrogate model is computed to measure curve similarity.
 %
 This metric represents the maximum separation of the two limit surfaces represented as point set samples $X$ and $Y$. It is defined as:
-
+%
 \begin{equation}
 d_H(X,Y) = \max \left( \sup_{x \in X} \inf_{y \in Y}
 d(x,y),\sup_{y \in Y} \inf_{x \in X} d(x,y)\right).
 \end{equation}
-
+%
 In addition, we treat our model as a binary classifier with the limit surface being the boundary and compute the \emph{$F_1$-score}.
 %
 Given a ground-truth validation grid, we can evaluate \emph{precision} $p$ and \emph{recall} $r$ of the classification and compute the harmonic mean of these two values to get the $F_1$-score.
 %
 The relevant equations are listed below, where $t_+$ means the count of `true positives' or correctly identified labels above the limit surface, $f_+$ means the count of `false positives' or incorrectly identified labels above the limit surface, and $f_-$ means the count of `false negatives' or incorrectly identified labels below the limit surface.
-
+%
 \begin{equation}
 p = \frac{t_+}{t_+ + f_+}
 \end{equation}
-
+%
 \begin{equation}
 r = \frac{t_+}{t_+ + f_-}
 \end{equation}
-
+%
 \begin{equation}
 F_1 = \frac{2pr}{p+r}
 \end{equation}
-
 
 The \emph{$F_1$-score} demonstrates the surrogate model's ability to correctly classify points as being either above or below the threshold value.
 %
