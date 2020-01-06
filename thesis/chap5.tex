@@ -501,54 +501,54 @@ We use several testing functions with closed forms described below.
 %
 All functions can be generalized to higher dimensions, and their two-dimensional contour plots are shown in Figure~\ref{fig:original}.
 %
-Let $D$ be the dimension of the input vector $\mathbf{\theta}$.
+Let $D$ be the dimension of the input vector $\boldsymbol{\theta}$.
 
-\subsubsubsection{Ackley}
+\subsubsection{Ackley}
 $$
-f(\mathbf{\theta}) = \sum_{i=1}^{D-1}\left(e^{-0.2}\sqrt{\theta_i^2+\theta_{i+1}^2} + 3(\cos(2\theta_i) + \sin(2\theta_{i+1}))\right),
+f(\boldsymbol{\theta}) = \sum_{i=1}^{D-1}\left(e^{-0.2}\sqrt{\theta_i^2+\theta_{i+1}^2} + 3(\cos(2\theta_i) + \sin(2\theta_{i+1}))\right),
 $$
-where $\{\mathbf{\theta}|\theta_i\in [-3,3]\}$.
+where $\{\boldsymbol{\theta}|\theta_i\in [-3,3]\}$.
 
-\subsubsubsection{Diagonal}
+\subsubsection{Diagonal}
 Let $m$ be the number of maxima along the main diagonal,
 \begin{eqnarray*}
-f(\mathbf{\theta}) = & \frac{1}{2}\sin\left(\pi\left(\frac{1}{2} + \left((m+1) \bmod{2}\right) + \frac{m\left(\sum_{i=1}^{D}\theta_i\right)}{D}\right)\right)
+f(\boldsymbol{\theta}) = & \frac{1}{2}\sin\left(\pi\left(\frac{1}{2} + \left((m+1) \bmod{2}\right) + \frac{m\left(\sum_{i=1}^{D}\theta_i\right)}{D}\right)\right)
  \times e^{\left(\left(\sum_{i=1}^{D}\theta_i^2 -\frac{\left(\sum_{i=1}^{D}\theta_i\right)^2}{D}\right)\left(\frac{\log(0.001)}{\sqrt{D}}\right)\right)},
 \end{eqnarray*}
 where
-$\{\mathbf{\theta}|\theta_i\in [-1,1]\}$.
+$\{\boldsymbol{\theta}|\theta_i\in [-1,1]\}$.
 
-\subsubsubsection{Random Gaussian Mixture Model}
+\subsubsection{Random Gaussian Mixture Model}
 
 Let $m$ be the number of extrema for the domain.
 Let $a_i$ be the amplitude of the $i^{th}$ extrema.
 Let $c_{i,j}$ be the $j^{th}$ coordinate of the $i^{th}$ extrema.
 Let $\sigma_{i,j}$ be the standard deviation of the $i^{th}$ extrema with respect to the  $j^{th}$ coordinate.
 $$
-f(\mathbf{\theta}) = \sum_{i=1}^{m}\left(a_i e^{-\left(\sum_{j=1}^{D}\frac{\left(\theta_{i,j}-c_{i,j}\right)^2}{2\sigma_{i,j}^2}\right)}\right)
+f(\boldsymbol{\theta}) = \sum_{i=1}^{m}\left(a_i e^{-\left(\sum_{j=1}^{D}\frac{\left(\theta_{i,j}-c_{i,j}\right)^2}{2\sigma_{i,j}^2}\right)}\right)
 $$
-where $\{\mathbf{\theta}|\theta_i\in [0,1]\}$.
+where $\{\boldsymbol{\theta}|\theta_i\in [0,1]\}$.
 
 
-\subsubsubsection{Mis-scaled Generalized Rastrigin}
+\subsubsection{Mis-scaled Generalized Rastrigin}
 $$
-f(\mathbf{\theta}) = 10D + \sum_{i=1}^{D}\left((10^{\frac{i-1}{D-1}}\theta_i)^2 - 10\cos(2\pi(10^{\frac{i-1}{D-1}}\theta_i))\right)
+f(\boldsymbol{\theta}) = 10D + \sum_{i=1}^{D}\left((10^{\frac{i-1}{D-1}}\theta_i)^2 - 10\cos(2\pi(10^{\frac{i-1}{D-1}}\theta_i))\right)
 $$
 where
-$\{\mathbf{\theta}|\theta_i\in [-2,2]\}$.
+$\{\boldsymbol{\theta}|\theta_i\in [-2,2]\}$.
 
 
-\subsubsubsection{Salomon}
+\subsubsection{Salomon}
 $$
-f(\mathbf{\theta}) = -\cos\left(2\pi\sum_{i=1}^D\theta_i^2\right) + 0.1\sqrt{\sum_{i=1}^D\theta_i^2} + 1
+f(\boldsymbol{\theta}) = -\cos\left(2\pi\sum_{i=1}^D\theta_i^2\right) + 0.1\sqrt{\sum_{i=1}^D\theta_i^2} + 1
 $$
-where $\{\mathbf{\theta}|\theta_i\in [-1,1]\}$.
+where $\{\boldsymbol{\theta}|\theta_i\in [-1,1]\}$.
 
-\subsubsubsection{Whitley}
+\subsubsection{Whitley}
 $$
-f(\mathbf{\theta}) = \sum_{i=1}^{D}\sum_{j=1}^{D}\left(\frac{k_{ij}^2}{4000} - cos(k_{ij}) + 1\right)
+f(\boldsymbol{\theta}) = \sum_{i=1}^{D}\sum_{j=1}^{D}\left(\frac{k_{ij}^2}{4000} - cos(k_{ij}) + 1\right)
 $$
-where $\{\mathbf{\theta}|\theta_i\in [-1,2]\}$, and
+where $\{\boldsymbol{\theta}|\theta_i\in [-1,2]\}$, and
 $k_{ij} = (100(\theta_i^2-\theta_j)^2 + (1-\theta_j)^2)$.
 
 \subsection{Software Packages and Parameter Settings}
@@ -1077,6 +1077,7 @@ Believe          & 768.0 $\pm$ 68.63 (784)          & \textbf{608.0 $\pm$ 108.0 
 MaxP             & 828.8 $\pm$ 36.35 (832)          & 742.4 $\pm$ 104.0 (736)          & 832.0 $\pm$ 91.63 (832)          & \myemph{617.6 $\pm$ 111.8 (576)} \\
 2-MaxP + Believe & 787.2 $\pm$ 32.63 (784)          & 739.2 $\pm$ 103.6 (704)          & 806.4 $\pm$ 129.4 (784)          & \myemph{617.6 $\pm$ 116.3 (608)} \\
 4-MaxP + Believe & \myemph{761.6 $\pm$ 49.16 (768)} & 656.0 $\pm$ 90.79 (608)          & 803.2 $\pm$ 84.0 (800)           & 630.4 $\pm$ 79.74 (640)\\
+\hline
 \end{tabular}
 \label{table:global-images}
 \end{table}
@@ -1236,37 +1237,25 @@ Thus, this metric is better suited for the synthetic functions that have large, 
  ($b=8$) & & & \\
 \hline
  Naive & 84.8 $\pm$ 25.6 (88) & 117.6 $\pm$ 44.26 (108) & 37.6 $\pm$ 9.499 (40) \\
-\hline
  Believe & \textbf{40.0 $\pm$ 10.12 (36)} & 61.6 $\pm$ 27.02 (56) & 20.0 $\pm$ 4.0 (20)\\
-\hline
  MaxP & \myemph{40.8 $\pm$ 12.62 (40)} & \myemph{48.0 $\pm$ 17.16 (44)} & 19.2 $\pm$ 6.4 (16) \\
-\hline
  2-MaxP + Believe & \myemph{40.0 $\pm$ 7.155 (40)} & 75.2 $\pm$ 33.98 (68) & 18.4 $\pm$ 5.122 (16) \\
-\hline
  4-MaxP + Believe & 44.8 $\pm$ 19.98 (36) & 53.6 $\pm$ 16.41 (56) & \myemph{17.6 $\pm$ 5.987 (16)} \\
 \hline\hline
  ($b=16$) & & & \\
 \hline
  Naive & 113.6 $\pm$ 30.73 (104) & 132.8 $\pm$ 30.4 (136) & 51.2 $\pm$ 13.95 (56) \\
-\hline
  Believe & 48.0 $\pm$ 10.12 (48) & 67.2 $\pm$ 26.58 (64) & 19.2 $\pm$ 6.4 (16) \\
-\hline
  MaxP & \myemph{44.8 $\pm$ 21.23 (40)} & \myemph{52.8 $\pm$ 17.6 (48)} & 22.4 $\pm$ 7.838 (16) \\
-\hline
  2-MaxP + Believe & 46.4 $\pm$ 11.2 (48) & 72.0 $\pm$ 27.01 (64) & \myemph{17.6 $\pm$ 4.8 (16)} \\
-\hline
  4-MaxP + Believe & 48.0 $\pm$ 16.0 (48) & 56.0 $\pm$ 16.4 (56) & 22.4 $\pm$ 7.838 (16)\\
 \hline\hline
  ($b=32$) & & & \\
 \hline
  Naive & 169.6 $\pm$ 43.05 (160) & 169.6 $\pm$ 47.57 (160) & 76.8 $\pm$ 15.68 (64)\\
-\hline
  Believe & 64.0 $\pm$ 20.24 (64) & 99.2 $\pm$ 26.58 (96) & \textbf{32.0 $\pm$ 0 (32)} \\
-\hline
  MaxP & 67.2 $\pm$ 30.19 (64) & \myemph{83.2 $\pm$ 21.23 (80)} & 35.2 $\pm$ 9.6 (32) \\
-\hline
  2-MaxP + Believe & 60.8 $\pm$ 22.4 (64) & 99.2 $\pm$ 30.19 (96) & \myemph{32.0 $\pm$ 0 (32)} \\
-\hline
  4-MaxP + Believe & \myemph{57.6 $\pm$ 19.2 (64)} & 102.4 $\pm$ 34.47 (96) & \myemph{32.0 $\pm$ 0 (32)}\\
  \hline
 \end{tabular}
